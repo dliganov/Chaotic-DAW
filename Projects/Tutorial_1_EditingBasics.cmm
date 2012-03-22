@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<ChaoticProject CMMVersion="100" BPM="120" TPB="4" BPB="4" Octave="5">
+  <Parameter GlobalIndex="0" name="MasterVolume" index="0" val="0.761499643"/>
+  <Instrument InstrIndex="0" InstrType="0" InstrName="808.wav" InstrPath=".\Samples\808.wav"
+              InstrAlias="8" MixChannel="--" Mute="0" Solo="0" Normalized="0"
+              LoopStart="0" LoopEnd="6143" LoopType="0">
+    <Parameter GlobalIndex="187" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="188" name="Pan" index="1" val="0"/>
+    <SmpEnv Len="2" Hgt="40" sustainable="0" folded="0">
+      <EnvPoint xval="0" yval="1" sustainpoint="1" big="1"/>
+    </SmpEnv>
+  </Instrument>
+  <Instrument InstrIndex="1" InstrType="0" InstrName="Closed Hat.wav" InstrPath=".\Samples\Closed Hat.wav"
+              InstrAlias="c" MixChannel="--" Mute="0" Solo="0" Normalized="0"
+              LoopStart="0" LoopEnd="2802" LoopType="0">
+    <Parameter GlobalIndex="189" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="190" name="Pan" index="1" val="0"/>
+    <SmpEnv Len="2" Hgt="88" sustainable="0" folded="0">
+      <EnvPoint xval="0" yval="1" sustainpoint="1" big="1"/>
+    </SmpEnv>
+  </Instrument>
+  <Instrument InstrIndex="2" InstrType="0" InstrName="Brush Ping.wav" InstrPath=".\Samples\Brush Ping.wav"
+              InstrAlias="b" MixChannel="--" Mute="0" Solo="0" Normalized="0"
+              LoopStart="0" LoopEnd="11289" LoopType="0">
+    <Parameter GlobalIndex="191" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="192" name="Pan" index="1" val="0"/>
+    <SmpEnv Len="2" Hgt="88" sustainable="0" folded="0">
+      <EnvPoint xval="0" yval="1" sustainpoint="1" big="1"/>
+    </SmpEnv>
+  </Instrument>
+  <Instrument InstrIndex="3" InstrType="0" InstrName="Zheng_64.wav" InstrPath=".\Samples\Zheng_64.wav"
+              InstrAlias="z" MixChannel="--" Mute="0" Solo="0" Normalized="0"
+              LoopStart="0" LoopEnd="12518" LoopType="0">
+    <Parameter GlobalIndex="193" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="194" name="Pan" index="1" val="0"/>
+    <SmpEnv Len="2" Hgt="88" sustainable="0" folded="0">
+      <EnvPoint xval="0" yval="1" sustainpoint="1" big="1"/>
+    </SmpEnv>
+  </Instrument>
+  <MixChannel Index="01" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="2" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="3" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="4" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="5" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="6" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="02" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="7" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="8" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="9" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="10" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="11" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="03" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="12" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="13" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="14" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="15" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="16" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="04" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="17" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="18" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="19" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="20" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="21" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="05" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="22" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="23" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="24" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="25" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="26" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="06" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="27" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="28" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="29" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="30" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="31" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="07" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="32" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="33" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="34" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="35" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="36" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="08" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="37" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="38" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="39" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="40" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="41" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="09" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="42" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="43" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="44" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="45" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="46" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="10" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="47" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="48" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="49" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="50" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="51" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="11" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="52" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="53" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="54" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="55" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="56" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="12" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="57" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="58" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="59" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="60" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="61" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="13" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="62" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="63" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="64" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="65" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="66" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="14" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="67" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="68" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="69" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="70" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="71" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="15" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="72" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="73" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="74" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="75" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="76" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="16" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="77" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="78" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="79" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="80" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="81" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="17" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="82" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="83" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="84" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="85" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="86" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="18" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="87" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="88" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="89" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="90" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="91" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="19" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="92" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="93" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="94" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="95" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="96" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="20" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="97" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="98" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="99" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="100" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="101" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="21" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="102" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="103" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="104" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="105" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="106" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="22" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="107" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="108" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="109" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="110" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="111" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="23" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="112" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="113" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="114" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="115" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="116" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="24" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="117" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="118" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="119" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="120" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="121" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="25" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="122" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="123" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="124" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="125" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="126" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="26" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="127" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="128" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="129" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="130" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="131" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="27" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="132" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="133" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="134" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="135" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="136" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="28" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="137" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="138" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="139" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="140" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="141" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="29" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="142" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="143" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="144" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="145" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="146" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="30" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="147" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="148" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="149" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="150" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="151" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="31" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="152" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="153" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="154" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="155" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="156" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="32" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="157" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="158" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="159" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="160" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="161" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="Send1" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="162" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="163" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="164" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="165" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="166" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="Send2" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="167" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="168" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="169" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="170" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="171" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="Send3" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="172" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="173" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="174" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="175" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="176" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="M" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="182" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="183" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="184" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="185" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="186" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <Pattern Name="auto" PattType="0" PattIndex="1" IsAuto="1" TickWidth="-1"
+           InstrOwnerIndex="1"/>
+  <Pattern Name="auto" PattType="0" PattIndex="2" IsAuto="1" TickWidth="-1"
+           InstrOwnerIndex="2"/>
+  <Element Type="1" StartTick="3" EndTick="217" TickLength="214" TrackLine="8"
+           PattIndex="0" Text="To the left, you can see the Instruments Panel, where all loaded instruments are located. Instruments can be either samples or plugins."
+           Bookmark="0"/>
+  <Element Type="1" StartTick="3" EndTick="278.666656" TickLength="275.666656"
+           TrackLine="9" PattIndex="0" Text="Each instrument has a standard set of controls: VU, window button, autopattern button, mute toggle, solo toggle, volume slider, panning slider, alias box and mixer channel box."
+           Bookmark="0"/>
+  <Element Type="1" StartTick="3" EndTick="84.6666641" TickLength="81.6666641"
+           TrackLine="10" PattIndex="0" Text="Click VU of an instrument if you want to pre-listen to it."
+           Bookmark="0"/>
+  <Element Type="1" StartTick="3" EndTick="212.333328" TickLength="209.333328"
+           TrackLine="11" PattIndex="0" Text="Alias can be used to directly sequence an instrument in the Main Editor. Just place the green cursor wherever you want and type some alias:"
+           Bookmark="0"/>
+  <Element Type="1" StartTick="5" EndTick="265.666656" TickLength="260.666656"
+           TrackLine="0" PattIndex="0" Text="Hi there. This is the Main Editor. This is the place, where you sequence your song using various elements. You can even directly type any text on it, as you can see."
+           Bookmark="0"/>
+  <Element Type="2" StartTick="4" EndTick="6.27102041" TickLength="2.27102041"
+           TrackLine="13" PattIndex="0" InstrIndex="3" Volume="1" Panning="0"
+           Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0" Reversed="0"/>
+  <Element Type="2" StartTick="14" EndTick="16.2710209" TickLength="2.27102089"
+           TrackLine="13" PattIndex="0" InstrIndex="3" Volume="1" Panning="0"
+           Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0" Reversed="0"/>
+  <Element Type="2" StartTick="19" EndTick="21.2710209" TickLength="2.27102089"
+           TrackLine="14" PattIndex="0" InstrIndex="3" Volume="1" Panning="0"
+           Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0" Reversed="0"/>
+  <Element Type="2" StartTick="8" EndTick="8.74746704" TickLength="0.747467041"
+           TrackLine="13" PattIndex="0" InstrIndex="1" Volume="1" Panning="0"
+           Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0" Reversed="0"/>
+  <Element Type="2" StartTick="22" EndTick="26.1054535" TickLength="4.10545349"
+           TrackLine="14" PattIndex="0" InstrIndex="2" Volume="1" Panning="0"
+           Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0" Reversed="0"/>
+  <Element Type="2" StartTick="28" EndTick="29.9660797" TickLength="1.96607971"
+           TrackLine="14" PattIndex="0" InstrIndex="0" Volume="1" Panning="0"
+           Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0" Reversed="0"/>
+  <Element Type="1" StartTick="3" EndTick="301.666656" TickLength="298.666656"
+           TrackLine="19" PattIndex="0" Text="Or you can switch to the keyboard-sequencing mode using the note button, located after zoom progress bar and sequence various notes of the current instrument:"
+           Bookmark="0"/>
+  <Element Type="2" StartTick="39" EndTick="41.271019" TickLength="2.27101898"
+           TrackLine="21" PattIndex="0" InstrIndex="3" Volume="1" Panning="0"
+           Note="60" NoteVisible="1" NoteRelative="0" TouchResized="0" Reversed="0"/>
+  <Element Type="2" StartTick="41" EndTick="42.9096947" TickLength="1.90969467"
+           TrackLine="23" PattIndex="0" InstrIndex="3" Volume="1" Panning="0"
+           Note="63" NoteVisible="1" NoteRelative="0" TouchResized="0" Reversed="0"/>
+  <Element Type="2" StartTick="43" EndTick="44" TickLength="1" TrackLine="22"
+           PattIndex="0" InstrIndex="3" Volume="1" Panning="0" Note="67"
+           NoteVisible="1" NoteRelative="0" TouchResized="1" Reversed="0"/>
+  <Element Type="2" StartTick="45" EndTick="46.4306526" TickLength="1.43065262"
+           TrackLine="21" PattIndex="0" InstrIndex="3" Volume="1" Panning="0"
+           Note="68" NoteVisible="1" NoteRelative="0" TouchResized="0" Reversed="0"/>
+  <Element Type="2" StartTick="49" EndTick="50.1355095" TickLength="1.13550949"
+           TrackLine="22" PattIndex="0" InstrIndex="3" Volume="1" Panning="0"
+           Note="72" NoteVisible="1" NoteRelative="0" TouchResized="0" Reversed="0"/>
+  <Element Type="1" StartTick="73" EndTick="199.666672" TickLength="126.666672"
+           TrackLine="21" PattIndex="0" Text="(To change the octave, use the Octave Control on the Main Panel, near the Play button)"
+           Bookmark="0"/>
+  <Element Type="1" StartTick="46" EndTick="144.333328" TickLength="98.3333282"
+           TrackLine="13" PattIndex="0" Text="(To play your sequence, press Play button or just Space key)"
+           Bookmark="0"/>
+  <Element Type="5" StartTick="1" EndTick="3" TickLength="2" TrackLine="2"
+           PattIndex="0"/>
+  <Element Type="5" StartTick="5" EndTick="6" TickLength="1" TrackLine="2"
+           PattIndex="0"/>
+  <Element Type="5" StartTick="2" EndTick="4" TickLength="2" TrackLine="3"
+           PattIndex="0"/>
+  <Element Type="5" StartTick="4" EndTick="5" TickLength="1" TrackLine="4"
+           PattIndex="0"/>
+  <Element Type="1" StartTick="9" EndTick="275" TickLength="266" TrackLine="5"
+           PattIndex="0" Text="Elements can be dragged, deleted (right mouse button), cloned (Shift + drag), selected (Ctrl + mouse) and resized (hover mouse over an element's right edge and pull)."
+           Bookmark="0"/>
+  <Element Type="5" StartTick="6" EndTick="12" TickLength="6" TrackLine="3"
+           PattIndex="0"/>
+  <Element Type="1" StartTick="12" EndTick="186.666672" TickLength="174.666672"
+           TrackLine="2" PattIndex="0" Text="These red boxes are an example of such an element. They temporarily mute sound on the lines, they placed on."
+           Bookmark="0"/>
+  <Element Type="1" StartTick="3" EndTick="164.333328" TickLength="161.333328"
+           TrackLine="28" PattIndex="0" Text="Each note has its velocity and panning. You can change them in the Aux Editor, located at the bottom."
+           Bookmark="0"/>
+  <Element Type="1" StartTick="3" EndTick="247" TickLength="244" TrackLine="29"
+           PattIndex="0" Text="Also you can create patterns of various types, containing various elements inside. Read more about work with patterns in the corresponding tutorial project."
+           Bookmark="0"/>
+  <Element Type="1" StartTick="7" EndTick="132.666672" TickLength="125.666672"
+           TrackLine="6" PattIndex="0" Text="See more information on editor operations in menu Help &gt; Keyboard reference."
+           Bookmark="0"/>
+</ChaoticProject>

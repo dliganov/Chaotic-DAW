@@ -1,0 +1,1157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<ChaoticProject CMMVersion="101" BPM="136" TPB="4" BPB="4" Octave="5">
+  <Parameter GlobalIndex="0" name="MasterVolume" index="0" val="0.3240906"/>
+  <Instrument InstrIndex="0" InstrType="1" InstrName="Chaosynth" InstrPath="internal://chaotic"
+              InstrAlias="sy" MixChannel="03" Mute="0" Solo="0">
+    <Parameter GlobalIndex="371" name="Vol" index="0" val="0.966379285"/>
+    <Parameter GlobalIndex="372" name="Pan" index="1" val="-0.399999976"/>
+    <Module Name="Chaosynth" ID="1129535822" Preset="Current">
+      <Parameter GlobalIndex="373" name="Osc1.3x" index="2" val="0" bval="0"/>
+      <Parameter GlobalIndex="374" name="Osc2.3x" index="3" val="0" bval="0"/>
+      <Parameter GlobalIndex="375" name="Osc3.3x" index="4" val="0" bval="0"/>
+      <Parameter GlobalIndex="376" name="Osc1.saw" index="5" val="0" bval="0"/>
+      <Parameter GlobalIndex="377" name="Osc1.sine" index="6" val="0" bval="1"/>
+      <Parameter GlobalIndex="378" name="Osc1.triangle" index="7" val="0" bval="0"/>
+      <Parameter GlobalIndex="379" name="Osc1.pulse" index="8" val="0" bval="0"/>
+      <Parameter GlobalIndex="380" name="Osc1.noise" index="9" val="0" bval="0"/>
+      <Parameter GlobalIndex="381" name="Osc2.saw" index="10" val="0" bval="0"/>
+      <Parameter GlobalIndex="382" name="Osc2.sine" index="11" val="0" bval="1"/>
+      <Parameter GlobalIndex="383" name="Osc2.triangle" index="12" val="0" bval="0"/>
+      <Parameter GlobalIndex="384" name="Osc2.pulse" index="13" val="0" bval="0"/>
+      <Parameter GlobalIndex="385" name="Osc2.noise" index="14" val="0" bval="0"/>
+      <Parameter GlobalIndex="386" name="Osc3.saw" index="15" val="0" bval="1"/>
+      <Parameter GlobalIndex="387" name="Osc3.sine" index="16" val="0" bval="0"/>
+      <Parameter GlobalIndex="388" name="Osc3.triangle" index="17" val="0" bval="0"/>
+      <Parameter GlobalIndex="389" name="Osc3.pulse" index="18" val="0" bval="0"/>
+      <Parameter GlobalIndex="390" name="Osc3.noise" index="19" val="0" bval="0"/>
+      <Parameter GlobalIndex="391" name="Osc1.level" index="20" val="1"/>
+      <Parameter GlobalIndex="392" name="Osc1.detune" index="21" val="-0.0036257985"/>
+      <Parameter GlobalIndex="393" name="Osc1.octave" index="22" val="0"/>
+      <Parameter GlobalIndex="394" name="Osc1.pwidth" index="23" val="0.295121968"/>
+      <Parameter GlobalIndex="395" name="Osc2.level" index="24" val="1"/>
+      <Parameter GlobalIndex="396" name="Osc2.detune" index="25" val="0.0036257985"/>
+      <Parameter GlobalIndex="397" name="Osc2.octave" index="26" val="0"/>
+      <Parameter GlobalIndex="398" name="Osc2.pwidth" index="27" val="0.5"/>
+      <Parameter GlobalIndex="399" name="Osc3.level" index="28" val="1"/>
+      <Parameter GlobalIndex="400" name="Osc3.detune" index="29" val="0"/>
+      <Parameter GlobalIndex="401" name="Osc3.octave" index="30" val="1"/>
+      <Parameter GlobalIndex="402" name="Osc3.pwidth" index="31" val="0.202439025"/>
+      <Parameter GlobalIndex="403" name="Flt1.Osc1" index="32" val="0" bval="0"/>
+      <Parameter GlobalIndex="404" name="Flt1.Osc2" index="33" val="0" bval="1"/>
+      <Parameter GlobalIndex="405" name="Flt1.Osc3" index="34" val="0" bval="0"/>
+      <Parameter GlobalIndex="406" name="Flt2.Osc1" index="35" val="0" bval="0"/>
+      <Parameter GlobalIndex="407" name="Flt2.Osc2" index="36" val="0" bval="0"/>
+      <Parameter GlobalIndex="408" name="Flt2.Osc3" index="37" val="0" bval="0"/>
+      <Parameter GlobalIndex="409" name="Chorus ON" index="38" val="0" bval="1"/>
+      <Parameter GlobalIndex="410" name="Delay ON" index="39" val="0" bval="1"/>
+      <Parameter GlobalIndex="411" name="Reverb ON" index="40" val="0" bval="0"/>
+      <Parameter GlobalIndex="412" name="LFOAmp.Osc1.level" index="41" val="0.555555582"/>
+      <Parameter GlobalIndex="413" name="LFORate.Osc1.level" index="42" val="3.94736838"/>
+      <Parameter GlobalIndex="414" name="LFOAmp.Osc2.level" index="43" val="0"/>
+      <Parameter GlobalIndex="415" name="LFORate.Osc2.level" index="44" val="4.73684216"/>
+      <Parameter GlobalIndex="416" name="LFOAmp.Osc3.level" index="45" val="0"/>
+      <Parameter GlobalIndex="417" name="LFORate.Osc3.level" index="46" val="3"/>
+      <Parameter GlobalIndex="418" name="LFOAmp.Osc1.pitch" index="47" val="0"/>
+      <Parameter GlobalIndex="419" name="LFORate.Osc1.pitch" index="48" val="3"/>
+      <Parameter GlobalIndex="420" name="LFOAmp.Osc2.pitch" index="49" val="0.00440467382"/>
+      <Parameter GlobalIndex="421" name="LFORate.Osc2.pitch" index="50" val="3"/>
+      <Parameter GlobalIndex="422" name="LFOAmp.Osc3.pitch" index="51" val="0"/>
+      <Parameter GlobalIndex="423" name="LFORate.Osc3.pitch" index="52" val="3"/>
+      <Parameter GlobalIndex="424" name="LFOAmp.Flt1.freq" index="53" val="0.172839507"/>
+      <Parameter GlobalIndex="425" name="LFORate.Flt1.freq" index="54" val="1.31578946"/>
+      <Parameter GlobalIndex="426" name="LFOAmp.Flt2.freq" index="55" val="0"/>
+      <Parameter GlobalIndex="427" name="LFORate.Flt2.freq" index="56" val="1.18421054"/>
+      <Parameter GlobalIndex="428" name="Osc1.FM.Osc2" index="57" val="0.353658527"/>
+      <Parameter GlobalIndex="429" name="Osc2.FM.Osc3" index="58" val="0"/>
+      <Parameter GlobalIndex="430" name="Osc1.FM.Osc3" index="59" val="0"/>
+      <Parameter GlobalIndex="431" name="Osc1.RM.Osc2" index="60" val="0"/>
+      <Parameter GlobalIndex="432" name="Osc2.RM.Osc3" index="61" val="0"/>
+      <Parameter GlobalIndex="433" name="Osc1.RM.Osc3" index="62" val="0"/>
+      <EnvIndex Osc1="1" Osc2="2" Osc3="2" Filt1="3" Filt2="3"/>
+      <Envelope1 Len="3" Hgt="49" sustainable="1" folded="0">
+        <EnvPoint xval="0" yval="0.489795923" sustainpoint="0" big="0"/>
+        <EnvPoint xval="0.0704960823" yval="0.387755096" sustainpoint="0" big="0"/>
+        <EnvPoint xval="0.101827681" yval="1" sustainpoint="1" big="0"/>
+      </Envelope1>
+      <Envelope2 Len="3" Hgt="49" sustainable="1" folded="0">
+        <EnvPoint xval="0" yval="1" sustainpoint="0" big="0"/>
+        <EnvPoint xval="0.0704960823" yval="1" sustainpoint="0" big="0"/>
+        <EnvPoint xval="0.148825064" yval="0.326530606" sustainpoint="0" big="0"/>
+        <EnvPoint xval="0.391644925" yval="0.46938777" sustainpoint="0" big="0"/>
+        <EnvPoint xval="0.556135774" yval="0.20408164" sustainpoint="0" big="0"/>
+        <EnvPoint xval="0.791122735" yval="0" sustainpoint="1" big="0"/>
+      </Envelope2>
+      <Envelope3 Len="3" Hgt="49" sustainable="1" folded="0">
+        <EnvPoint xval="0" yval="1" sustainpoint="0" big="0"/>
+        <EnvPoint xval="0.0939947814" yval="1" sustainpoint="0" big="0"/>
+        <EnvPoint xval="0.227154046" yval="0.387755096" sustainpoint="0" big="0"/>
+        <EnvPoint xval="0.407310724" yval="0.10204082" sustainpoint="0" big="0"/>
+        <EnvPoint xval="0.861618817" yval="0" sustainpoint="1" big="0"/>
+      </Envelope3>
+      <Envelope4 Len="3" Hgt="49" sustainable="1" folded="0">
+        <EnvPoint xval="0" yval="1" sustainpoint="1" big="0"/>
+      </Envelope4>
+      <Envelope5 Len="3" Hgt="49" sustainable="1" folded="0">
+        <EnvPoint xval="0" yval="1" sustainpoint="1" big="0"/>
+      </Envelope5>
+      <Module Name="Reverb" ID="1380275794" Preset="default">
+        <Parameter GlobalIndex="517" name="PreDelay" index="0" val="15"/>
+        <Parameter GlobalIndex="518" name="Roomsize" index="1" val="77"/>
+        <Parameter GlobalIndex="519" name="Decay" index="2" val="6"/>
+        <Parameter GlobalIndex="520" name="HighCut" index="3" val="0.200000003"/>
+        <Parameter GlobalIndex="521" name="LowCut" index="4" val="1"/>
+        <Parameter GlobalIndex="522" name="DryWet" index="5" val="40"/>
+        <Parameter GlobalIndex="523" name="LowDecScale" index="6" val="0.5"/>
+        <Parameter GlobalIndex="524" name="HighDecScale" index="7" val="0.239999995"/>
+      </Module>
+      <Module Name="Delay" ID="1347437644" Preset="default">
+        <Parameter GlobalIndex="510" name="Mode" index="0" val="0" bval="1"/>
+        <Parameter GlobalIndex="511" name="Delay" index="1" val="3"/>
+        <Parameter GlobalIndex="512" name="Amount" index="2" val="1"/>
+        <Parameter GlobalIndex="513" name="Feedback" index="3" val="55"/>
+        <Parameter GlobalIndex="514" name="Pan" index="4" val="0"/>
+        <Parameter GlobalIndex="515" name="LowCut" index="5" val="0.899999976"/>
+        <Parameter GlobalIndex="516" name="DryWet" index="6" val="20"/>
+      </Module>
+      <Module Name="Chorus" ID="1128812370" Preset="default">
+        <Parameter GlobalIndex="506" name="Delay" index="0" val="5"/>
+        <Parameter GlobalIndex="507" name="Mod. Freq" index="1" val="2"/>
+        <Parameter GlobalIndex="508" name="Depth" index="2" val="0.25"/>
+        <Parameter GlobalIndex="509" name="DryWet" index="3" val="0.524390221"/>
+      </Module>
+      <Module Name="Filter2" ID="1128680532" Preset="default">
+        <Parameter GlobalIndex="440" name="Cutoff" index="0" val="0.542553186"/>
+        <Parameter GlobalIndex="441" name="Resonance" index="1" val="0"/>
+        <Parameter GlobalIndex="442" name="LP12" index="2" val="0" bval="1"/>
+        <Parameter GlobalIndex="443" name="HP12" index="3" val="0" bval="0"/>
+        <Parameter GlobalIndex="444" name="BP" index="4" val="0" bval="0"/>
+        <Parameter GlobalIndex="445" name="Mode" index="5" val="0" bval="0"/>
+      </Module>
+      <Module Name="Filter" ID="1128680532" Preset="default">
+        <Parameter GlobalIndex="434" name="Cutoff" index="0" val="1"/>
+        <Parameter GlobalIndex="435" name="Resonance" index="1" val="0"/>
+        <Parameter GlobalIndex="436" name="LP12" index="2" val="0" bval="1"/>
+        <Parameter GlobalIndex="437" name="HP12" index="3" val="0" bval="0"/>
+        <Parameter GlobalIndex="438" name="BP" index="4" val="0" bval="0"/>
+        <Parameter GlobalIndex="439" name="Mode" index="5" val="0" bval="1"/>
+      </Module>
+    </Module>
+  </Instrument>
+  <Instrument InstrIndex="1" InstrType="0" InstrName="Zheng_64.wav" InstrPath=".\Samples\Zheng_64.wav"
+              InstrAlias="zh" MixChannel="02" Mute="0" Solo="0" Normalized="0"
+              LoopStart="0" LoopEnd="12518" LoopType="0">
+    <Parameter GlobalIndex="525" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="526" name="Pan" index="1" val="0"/>
+    <SmpEnv Len="2" Hgt="88" sustainable="0" folded="0">
+      <EnvPoint xval="0" yval="1" sustainpoint="1" big="1"/>
+    </SmpEnv>
+  </Instrument>
+  <Instrument InstrIndex="2" InstrType="0" InstrName="Closed Hat.wav" InstrPath=".\Samples\Closed Hat.wav"
+              InstrAlias="cl" MixChannel="--" Mute="0" Solo="0" Normalized="0"
+              LoopStart="0" LoopEnd="2802" LoopType="0">
+    <Parameter GlobalIndex="527" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="528" name="Pan" index="1" val="0.514285684"/>
+    <SmpEnv Len="2" Hgt="40" sustainable="0" folded="0">
+      <EnvPoint xval="0" yval="1" sustainpoint="1" big="1"/>
+    </SmpEnv>
+  </Instrument>
+  <Instrument InstrIndex="3" InstrType="0" InstrName="Long OpnClsd Hat.wav"
+              InstrPath=".\Samples\Long OpnClsd Hat.wav" InstrAlias="lo" MixChannel="--"
+              Mute="0" Solo="0" Normalized="0" LoopStart="0" LoopEnd="22573"
+              LoopType="0">
+    <Parameter GlobalIndex="529" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="530" name="Pan" index="1" val="-0.485714257"/>
+    <SmpEnv Len="2" Hgt="40" sustainable="0" folded="0">
+      <EnvPoint xval="0" yval="1" sustainpoint="1" big="1"/>
+    </SmpEnv>
+  </Instrument>
+  <MixChannel Index="01" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="2" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="3" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="4" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="5" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="6" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="02" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="7" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="8" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="9" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="10" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="11" name="send3.amount" index="0" val="0"/>
+    <Effect EffIndex="0" EffType="14" EffName="Compressor" EffPath="internal://compressor"
+            Folded="1" Bypass="0">
+      <Module Name="Compressor" ID="1129270608" Preset="Current">
+        <Parameter GlobalIndex="531" name="Mode" index="0" val="0" bval="0"/>
+        <Parameter GlobalIndex="532" name="Threshold" index="1" val="-18"/>
+        <Parameter GlobalIndex="533" name="Ratio" index="2" val="6.33333349"/>
+        <Parameter GlobalIndex="534" name="Knee" index="3" val="0"/>
+        <Parameter GlobalIndex="535" name="Attack" index="4" val="10"/>
+        <Parameter GlobalIndex="536" name="Release" index="5" val="100"/>
+        <Parameter GlobalIndex="537" name="Gain" index="6" val="4.66666698"/>
+      </Module>
+    </Effect>
+    <Effect EffIndex="3" EffType="11" EffName="Delay" EffPath="internal://ppd"
+            Folded="1" Bypass="0">
+      <Module Name="Delay" ID="1347437644" Preset="Current">
+        <Parameter GlobalIndex="552" name="Mode" index="0" val="0" bval="1"/>
+        <Parameter GlobalIndex="553" name="Delay" index="1" val="3"/>
+        <Parameter GlobalIndex="554" name="Amount" index="2" val="1"/>
+        <Parameter GlobalIndex="555" name="Feedback" index="3" val="50"/>
+        <Parameter GlobalIndex="556" name="Pan" index="4" val="0.466666698"/>
+        <Parameter GlobalIndex="557" name="LowCut" index="5" val="1"/>
+        <Parameter GlobalIndex="558" name="DryWet" index="6" val="35.5555573"/>
+      </Module>
+    </Effect>
+  </MixChannel>
+  <MixChannel Index="03" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="12" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="13" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="14" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="15" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="16" name="send3.amount" index="0" val="0"/>
+    <Effect EffIndex="1" EffType="11" EffName="Delay" EffPath="internal://ppd"
+            Folded="1" Bypass="0">
+      <Module Name="Delay" ID="1347437644" Preset="Current">
+        <Parameter GlobalIndex="538" name="Mode" index="0" val="0" bval="1"/>
+        <Parameter GlobalIndex="539" name="Delay" index="1" val="3"/>
+        <Parameter GlobalIndex="540" name="Amount" index="2" val="1"/>
+        <Parameter GlobalIndex="541" name="Feedback" index="3" val="55"/>
+        <Parameter GlobalIndex="542" name="Pan" index="4" val="0"/>
+        <Parameter GlobalIndex="543" name="LowCut" index="5" val="0.899999976"/>
+        <Parameter GlobalIndex="544" name="DryWet" index="6" val="20"/>
+      </Module>
+    </Effect>
+    <Effect EffIndex="2" EffType="11" EffName="Delay" EffPath="internal://ppd"
+            Folded="1" Bypass="0">
+      <Module Name="Delay" ID="1347437644" Preset="Current">
+        <Parameter GlobalIndex="545" name="Mode" index="0" val="0" bval="1"/>
+        <Parameter GlobalIndex="546" name="Delay" index="1" val="5"/>
+        <Parameter GlobalIndex="547" name="Amount" index="2" val="0.577777803"/>
+        <Parameter GlobalIndex="548" name="Feedback" index="3" val="55"/>
+        <Parameter GlobalIndex="549" name="Pan" index="4" val="0.555555582"/>
+        <Parameter GlobalIndex="550" name="LowCut" index="5" val="0.899999976"/>
+        <Parameter GlobalIndex="551" name="DryWet" index="6" val="31.1111126"/>
+      </Module>
+    </Effect>
+  </MixChannel>
+  <MixChannel Index="04" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="17" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="18" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="19" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="20" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="21" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="05" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="22" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="23" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="24" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="25" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="26" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="06" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="27" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="28" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="29" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="30" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="31" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="07" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="32" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="33" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="34" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="35" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="36" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="08" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="37" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="38" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="39" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="40" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="41" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="09" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="42" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="43" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="44" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="45" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="46" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="10" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="47" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="48" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="49" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="50" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="51" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="11" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="52" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="53" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="54" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="55" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="56" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="12" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="57" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="58" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="59" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="60" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="61" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="13" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="62" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="63" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="64" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="65" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="66" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="14" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="67" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="68" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="69" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="70" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="71" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="15" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="72" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="73" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="74" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="75" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="76" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="16" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="77" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="78" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="79" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="80" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="81" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="17" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="82" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="83" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="84" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="85" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="86" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="18" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="87" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="88" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="89" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="90" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="91" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="19" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="92" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="93" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="94" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="95" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="96" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="20" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="97" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="98" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="99" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="100" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="101" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="21" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="102" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="103" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="104" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="105" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="106" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="22" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="107" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="108" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="109" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="110" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="111" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="23" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="112" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="113" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="114" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="115" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="116" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="24" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="117" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="118" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="119" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="120" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="121" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="25" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="122" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="123" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="124" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="125" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="126" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="26" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="127" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="128" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="129" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="130" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="131" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="27" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="132" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="133" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="134" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="135" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="136" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="28" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="137" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="138" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="139" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="140" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="141" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="29" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="142" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="143" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="144" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="145" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="146" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="30" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="147" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="148" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="149" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="150" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="151" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="31" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="152" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="153" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="154" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="155" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="156" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="32" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="157" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="158" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="159" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="160" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="161" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="Send1" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="162" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="163" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="164" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="165" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="166" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="Send2" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="167" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="168" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="169" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="170" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="171" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="Send3" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="172" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="173" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="174" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="175" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="176" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="M" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="182" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="183" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="184" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="185" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="186" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <Pattern Name="auto" PattType="0" PattIndex="1" IsAuto="1" TickWidth="-1"
+           InstrOwnerIndex="-1"/>
+  <Pattern Name="auto" PattType="0" PattIndex="2" IsAuto="1" TickWidth="-1"
+           InstrOwnerIndex="-1"/>
+  <Pattern Name="1" PattType="1" PattIndex="3" IsAuto="0" TickWidth="5">
+    <Derived Type="0" StartTick="80" EndTick="336" TickLength="256" TrackLine="1"
+             Volume="1" Panning="0" OffsLine="49" LastPianoOffs="39" Muted="0"
+             TouchResized="0" IsFat="1"/>
+  </Pattern>
+  <Pattern Name="2" PattType="1" PattIndex="4" IsAuto="0" TickWidth="12">
+    <Derived Type="0" StartTick="32" EndTick="48" TickLength="16" TrackLine="3"
+             Volume="1" Panning="0" OffsLine="46" LastPianoOffs="0" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="48" EndTick="64" TickLength="16" TrackLine="3"
+             Volume="1" Panning="0" OffsLine="46" LastPianoOffs="0" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="16" EndTick="32" TickLength="16" TrackLine="3"
+             Volume="1" Panning="0" OffsLine="62" LastPianoOffs="0" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="64" EndTick="80" TickLength="16" TrackLine="3"
+             Volume="1" Panning="0" OffsLine="46" LastPianoOffs="0" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="80" EndTick="96" TickLength="16" TrackLine="3"
+             Volume="1" Panning="0" OffsLine="46" LastPianoOffs="0" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="96" EndTick="112" TickLength="16" TrackLine="3"
+             Volume="1" Panning="0" OffsLine="46" LastPianoOffs="0" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="112" EndTick="128" TickLength="16" TrackLine="3"
+             Volume="1" Panning="0" OffsLine="46" LastPianoOffs="0" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="128" EndTick="144" TickLength="16" TrackLine="3"
+             Volume="1" Panning="0" OffsLine="46" LastPianoOffs="0" Muted="0"
+             TouchResized="0" IsFat="1"/>
+  </Pattern>
+  <Pattern Name="3" PattType="1" PattIndex="5" IsAuto="0" TickWidth="12">
+    <Derived Type="0" StartTick="144" EndTick="160" TickLength="16" TrackLine="3"
+             Volume="1" Panning="0" OffsLine="46" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="160" EndTick="176" TickLength="16" TrackLine="3"
+             Volume="1" Panning="0" OffsLine="46" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="176" EndTick="192" TickLength="16" TrackLine="3"
+             Volume="1" Panning="0" OffsLine="46" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="192" EndTick="208" TickLength="16" TrackLine="3"
+             Volume="1" Panning="0" OffsLine="46" LastPianoOffs="46" Muted="0"
+             TouchResized="1" IsFat="1"/>
+  </Pattern>
+  <Pattern Name="4" PattType="2" PattIndex="6" IsAuto="0" TickWidth="16">
+    <Derived Type="0" StartTick="16" EndTick="32" TickLength="16" TrackLine="5"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="32" EndTick="48" TickLength="16" TrackLine="5"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="48" EndTick="64" TickLength="16" TrackLine="5"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="64" EndTick="80" TickLength="16" TrackLine="5"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="80" EndTick="96" TickLength="16" TrackLine="5"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="96" EndTick="112" TickLength="16" TrackLine="5"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="112" EndTick="128" TickLength="16" TrackLine="5"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="128" EndTick="144" TickLength="16" TrackLine="5"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="144" EndTick="160" TickLength="16" TrackLine="5"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="160" EndTick="176" TickLength="16" TrackLine="5"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="176" EndTick="192" TickLength="16" TrackLine="5"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="192" EndTick="208" TickLength="16" TrackLine="5"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="208" EndTick="224" TickLength="16" TrackLine="5"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="0" EndTick="16" TickLength="16" TrackLine="5"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="224" EndTick="240" TickLength="16" TrackLine="5"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="240" EndTick="256" TickLength="16" TrackLine="5"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="256" EndTick="272" TickLength="16" TrackLine="5"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="272" EndTick="288" TickLength="16" TrackLine="5"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="288" EndTick="304" TickLength="16" TrackLine="5"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="304" EndTick="320" TickLength="16" TrackLine="5"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="320" EndTick="336" TickLength="16" TrackLine="5"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+  </Pattern>
+  <Pattern Name="5" PattType="1" PattIndex="7" IsAuto="0" TickWidth="12">
+    <Derived Type="0" StartTick="12" EndTick="28" TickLength="16" TrackLine="7"
+             Volume="1" Panning="0" OffsLine="46" LastPianoOffs="0" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="76" EndTick="92" TickLength="16" TrackLine="7"
+             Volume="1" Panning="0" OffsLine="46" LastPianoOffs="0" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="140" EndTick="156" TickLength="16" TrackLine="7"
+             Volume="1" Panning="0" OffsLine="46" LastPianoOffs="0" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="204" EndTick="220" TickLength="16" TrackLine="7"
+             Volume="1" Panning="0" OffsLine="46" LastPianoOffs="0" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="268" EndTick="284" TickLength="16" TrackLine="7"
+             Volume="1" Panning="0" OffsLine="46" LastPianoOffs="0" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="332" EndTick="348" TickLength="16" TrackLine="7"
+             Volume="1" Panning="0" OffsLine="46" LastPianoOffs="0" Muted="0"
+             TouchResized="0" IsFat="1"/>
+  </Pattern>
+  <Pattern Name="6" PattType="1" PattIndex="8" IsAuto="0" TickWidth="12">
+    <Derived Type="0" StartTick="208" EndTick="224" TickLength="16" TrackLine="3"
+             Volume="1" Panning="0" OffsLine="58" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="224" EndTick="240" TickLength="16" TrackLine="3"
+             Volume="1" Panning="0" OffsLine="58" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="240" EndTick="256" TickLength="16" TrackLine="3"
+             Volume="1" Panning="0" OffsLine="58" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="256" EndTick="272" TickLength="16" TrackLine="3"
+             Volume="1" Panning="0" OffsLine="58" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+  </Pattern>
+  <Pattern Name="7" PattType="1" PattIndex="9" IsAuto="0" TickWidth="12">
+    <Derived Type="0" StartTick="272" EndTick="336" TickLength="64" TrackLine="3"
+             Volume="1" Panning="0" OffsLine="58" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+  </Pattern>
+  <Element Type="3" StartTick="0" EndTick="1" TickLength="1" TrackLine="52"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="67"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="4" EndTick="5" TickLength="1" TrackLine="53"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="66"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="16" EndTick="17" TickLength="1" TrackLine="52"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="67"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="20" EndTick="21" TickLength="1" TrackLine="53"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="66"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="23" EndTick="24" TickLength="1" TrackLine="52"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="67"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="7" EndTick="8" TickLength="1" TrackLine="52"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="67"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="32" EndTick="33" TickLength="1" TrackLine="52"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="67"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="36" EndTick="37" TickLength="1" TrackLine="53"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="66"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="39" EndTick="40" TickLength="1" TrackLine="52"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="67"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="48" EndTick="49" TickLength="1" TrackLine="52"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="67"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="52" EndTick="53" TickLength="1" TrackLine="53"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="66"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="55" EndTick="56" TickLength="1" TrackLine="52"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="67"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="58" EndTick="59" TickLength="1" TrackLine="53"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="66"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="60" EndTick="61" TickLength="1" TrackLine="52"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="67"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="62" EndTick="63" TickLength="1" TrackLine="53"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="66"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="64" EndTick="65" TickLength="1" TrackLine="55"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="64"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="68" EndTick="69" TickLength="1" TrackLine="52"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="67"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="71" EndTick="72" TickLength="1" TrackLine="45"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="74"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="80" EndTick="81" TickLength="1" TrackLine="55"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="64"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="84" EndTick="85" TickLength="1" TrackLine="52"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="67"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="87" EndTick="88" TickLength="1" TrackLine="47"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="72"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="96" EndTick="97" TickLength="1" TrackLine="55"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="64"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="103" EndTick="104" TickLength="1" TrackLine="45"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="74"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="112" EndTick="113" TickLength="1" TrackLine="55"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="64"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="116" EndTick="117" TickLength="1" TrackLine="52"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="67"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="119" EndTick="120" TickLength="1" TrackLine="47"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="72"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="122" EndTick="123" TickLength="1" TrackLine="48"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="71"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="124" EndTick="125" TickLength="1" TrackLine="47"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="72"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="126" EndTick="127" TickLength="1" TrackLine="48"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="71"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="128" EndTick="129" TickLength="1" TrackLine="47"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="72"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="132" EndTick="133" TickLength="1" TrackLine="48"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="71"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="135" EndTick="136" TickLength="1" TrackLine="47"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="72"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="2" StartTick="0" EndTick="2" TickLength="2" TrackLine="71"
+           PattIndex="4" InstrIndex="1" Volume="0.791959584" Panning="0"
+           Note="48" NoteVisible="0" NoteRelative="0" TouchResized="1" Reversed="0"/>
+  <Element Type="2" StartTick="6" EndTick="8" TickLength="2" TrackLine="71"
+           PattIndex="4" InstrIndex="1" Volume="0.791959584" Panning="0"
+           Note="48" NoteVisible="0" NoteRelative="0" TouchResized="1" Reversed="0"/>
+  <Element Type="2" StartTick="0" EndTick="2" TickLength="2" TrackLine="75"
+           PattIndex="5" InstrIndex="1" Volume="0.791959584" Panning="0"
+           Note="44" NoteVisible="0" NoteRelative="0" TouchResized="1" Reversed="0"/>
+  <Element Type="2" StartTick="6" EndTick="8" TickLength="2" TrackLine="75"
+           PattIndex="5" InstrIndex="1" Volume="0.791959584" Panning="0"
+           Note="44" NoteVisible="0" NoteRelative="0" TouchResized="1" Reversed="0"/>
+  <Element Type="2" StartTick="14" EndTick="16" TickLength="2" TrackLine="63"
+           PattIndex="5" InstrIndex="1" Volume="0.791959584" Panning="0"
+           Note="56" NoteVisible="0" NoteRelative="0" TouchResized="1" Reversed="0"/>
+  <Element Type="2" StartTick="0" EndTick="0.847128868" TickLength="0.847128868"
+           TrackLine="2" PattIndex="6" InstrIndex="2" Volume="1" Panning="0"
+           Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0" Reversed="0"/>
+  <Element Type="2" StartTick="4" EndTick="4.84712887" TickLength="0.847128868"
+           TrackLine="2" PattIndex="6" InstrIndex="2" Volume="1" Panning="0"
+           Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0" Reversed="0"/>
+  <Element Type="2" StartTick="8" EndTick="8.84712887" TickLength="0.847128868"
+           TrackLine="2" PattIndex="6" InstrIndex="2" Volume="1" Panning="0"
+           Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0" Reversed="0"/>
+  <Element Type="2" StartTick="12" EndTick="12.8471289" TickLength="0.847128868"
+           TrackLine="2" PattIndex="6" InstrIndex="2" Volume="1" Panning="0"
+           Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0" Reversed="0"/>
+  <Element Type="2" StartTick="0" EndTick="5.68530369" TickLength="5.68530369"
+           TrackLine="59" PattIndex="7" InstrIndex="3" Volume="1" Panning="0"
+           Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0" Reversed="0"/>
+  <Element Type="2" StartTick="0" EndTick="2" TickLength="2" TrackLine="78"
+           PattIndex="8" InstrIndex="1" Volume="0.791959584" Panning="0"
+           Note="41" NoteVisible="0" NoteRelative="0" TouchResized="1" Reversed="0"/>
+  <Element Type="2" StartTick="6" EndTick="8" TickLength="2" TrackLine="78"
+           PattIndex="8" InstrIndex="1" Volume="0.791959584" Panning="0"
+           Note="41" NoteVisible="0" NoteRelative="0" TouchResized="1" Reversed="0"/>
+  <Element Type="2" StartTick="14" EndTick="16" TickLength="2" TrackLine="66"
+           PattIndex="8" InstrIndex="1" Volume="0.791959584" Panning="0"
+           Note="53" NoteVisible="0" NoteRelative="0" TouchResized="1" Reversed="0"/>
+  <Element Type="3" StartTick="144" EndTick="145" TickLength="1" TrackLine="47"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="72"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="148" EndTick="149" TickLength="1" TrackLine="48"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="71"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="151" EndTick="152" TickLength="1" TrackLine="47"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="72"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="160" EndTick="161" TickLength="1" TrackLine="47"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="72"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="164" EndTick="165" TickLength="1" TrackLine="48"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="71"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="167" EndTick="168" TickLength="1" TrackLine="47"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="72"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="176" EndTick="177" TickLength="1" TrackLine="47"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="72"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="180" EndTick="181" TickLength="1" TrackLine="48"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="71"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="183" EndTick="184" TickLength="1" TrackLine="47"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="72"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="182.5" EndTick="183.5" TickLength="1" TrackLine="48"
+           PattIndex="3" InstrIndex="0" Volume="0.65996635" Panning="0"
+           Note="71" NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="182" EndTick="183" TickLength="1" TrackLine="50"
+           PattIndex="3" InstrIndex="0" Volume="0.263986528" Panning="0"
+           Note="69" NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="186" EndTick="187" TickLength="1" TrackLine="48"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="71"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="188" EndTick="189" TickLength="1" TrackLine="47"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="72"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="190" EndTick="191" TickLength="1" TrackLine="43"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="76"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="192" EndTick="193" TickLength="1" TrackLine="50"
+           PattIndex="3" InstrIndex="0" Volume="0.99999994" Panning="0"
+           Note="69" NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="196" EndTick="197" TickLength="1" TrackLine="52"
+           PattIndex="3" InstrIndex="0" Volume="0.99999994" Panning="0"
+           Note="67" NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="208" EndTick="209" TickLength="1" TrackLine="50"
+           PattIndex="3" InstrIndex="0" Volume="0.99999994" Panning="0"
+           Note="69" NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="212" EndTick="213" TickLength="1" TrackLine="52"
+           PattIndex="3" InstrIndex="0" Volume="0.99999994" Panning="0"
+           Note="67" NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="215" EndTick="216" TickLength="1" TrackLine="50"
+           PattIndex="3" InstrIndex="0" Volume="0.99999994" Panning="0"
+           Note="69" NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="224" EndTick="225" TickLength="1" TrackLine="50"
+           PattIndex="3" InstrIndex="0" Volume="0.99999994" Panning="0"
+           Note="69" NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="228" EndTick="229" TickLength="1" TrackLine="52"
+           PattIndex="3" InstrIndex="0" Volume="0.99999994" Panning="0"
+           Note="67" NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="231" EndTick="232" TickLength="1" TrackLine="50"
+           PattIndex="3" InstrIndex="0" Volume="0.99999994" Panning="0"
+           Note="69" NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="240" EndTick="241" TickLength="1" TrackLine="50"
+           PattIndex="3" InstrIndex="0" Volume="0.99999994" Panning="0"
+           Note="69" NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="244" EndTick="245" TickLength="1" TrackLine="52"
+           PattIndex="3" InstrIndex="0" Volume="0.99999994" Panning="0"
+           Note="67" NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="247" EndTick="248" TickLength="1" TrackLine="50"
+           PattIndex="3" InstrIndex="0" Volume="0.99999994" Panning="0"
+           Note="69" NoteVisible="0" NoteRelative="0"/>
+  <Element Type="2" StartTick="0" EndTick="2" TickLength="2" TrackLine="73"
+           PattIndex="9" InstrIndex="1" Volume="0.791959584" Panning="0"
+           Note="46" NoteVisible="0" NoteRelative="0" TouchResized="1" Reversed="0"/>
+  <Element Type="2" StartTick="6" EndTick="8" TickLength="2" TrackLine="73"
+           PattIndex="9" InstrIndex="1" Volume="0.791959584" Panning="0"
+           Note="46" NoteVisible="0" NoteRelative="0" TouchResized="1" Reversed="0"/>
+  <Element Type="2" StartTick="14" EndTick="16" TickLength="2" TrackLine="61"
+           PattIndex="9" InstrIndex="1" Volume="0.791959584" Panning="0"
+           Note="58" NoteVisible="0" NoteRelative="0" TouchResized="1" Reversed="0"/>
+  <Element Type="2" StartTick="16" EndTick="18" TickLength="2" TrackLine="73"
+           PattIndex="9" InstrIndex="1" Volume="0.791959584" Panning="0"
+           Note="46" NoteVisible="0" NoteRelative="0" TouchResized="1" Reversed="0"/>
+  <Element Type="2" StartTick="22" EndTick="24" TickLength="2" TrackLine="73"
+           PattIndex="9" InstrIndex="1" Volume="0.791959584" Panning="0"
+           Note="46" NoteVisible="0" NoteRelative="0" TouchResized="1" Reversed="0"/>
+  <Element Type="2" StartTick="30" EndTick="32" TickLength="2" TrackLine="61"
+           PattIndex="9" InstrIndex="1" Volume="0.791959584" Panning="0"
+           Note="58" NoteVisible="0" NoteRelative="0" TouchResized="1" Reversed="0"/>
+  <Element Type="2" StartTick="32" EndTick="34" TickLength="2" TrackLine="73"
+           PattIndex="9" InstrIndex="1" Volume="0.791959584" Panning="0"
+           Note="46" NoteVisible="0" NoteRelative="0" TouchResized="1" Reversed="0"/>
+  <Element Type="2" StartTick="38" EndTick="40" TickLength="2" TrackLine="73"
+           PattIndex="9" InstrIndex="1" Volume="0.791959584" Panning="0"
+           Note="46" NoteVisible="0" NoteRelative="0" TouchResized="1" Reversed="0"/>
+  <Element Type="2" StartTick="46" EndTick="48" TickLength="2" TrackLine="61"
+           PattIndex="9" InstrIndex="1" Volume="0.791959584" Panning="0"
+           Note="58" NoteVisible="0" NoteRelative="0" TouchResized="1" Reversed="0"/>
+  <Element Type="2" StartTick="48" EndTick="50" TickLength="2" TrackLine="73"
+           PattIndex="9" InstrIndex="1" Volume="0.791959584" Panning="0"
+           Note="46" NoteVisible="0" NoteRelative="0" TouchResized="1" Reversed="0"/>
+  <Element Type="2" StartTick="54" EndTick="56" TickLength="2" TrackLine="73"
+           PattIndex="9" InstrIndex="1" Volume="0.791959584" Panning="0"
+           Note="46" NoteVisible="0" NoteRelative="0" TouchResized="1" Reversed="0"/>
+  <Element Type="2" StartTick="62" EndTick="64" TickLength="2" TrackLine="61"
+           PattIndex="9" InstrIndex="1" Volume="0.791959584" Panning="0"
+           Note="58" NoteVisible="0" NoteRelative="0" TouchResized="1" Reversed="0"/>
+  <Element Type="3" StartTick="100" EndTick="101" TickLength="1" TrackLine="52"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="67"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="199" EndTick="200" TickLength="1" TrackLine="50"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="69"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="3" EndTick="4" TickLength="1" TrackLine="60"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="59"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="1" EndTick="2" TickLength="1" TrackLine="79"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="40"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="2" EndTick="3" TickLength="1" TrackLine="64"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="55"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="5" EndTick="6" TickLength="1" TrackLine="79"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="40"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="6" EndTick="7" TickLength="1" TrackLine="64"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="55"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="19" EndTick="20" TickLength="1" TrackLine="60"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="59"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="17" EndTick="18" TickLength="1" TrackLine="79"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="40"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="18" EndTick="19" TickLength="1" TrackLine="64"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="55"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="21" EndTick="22" TickLength="1" TrackLine="79"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="40"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="22" EndTick="23" TickLength="1" TrackLine="64"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="55"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="35" EndTick="36" TickLength="1" TrackLine="60"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="59"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="33" EndTick="34" TickLength="1" TrackLine="79"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="40"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="34" EndTick="35" TickLength="1" TrackLine="64"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="55"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="37" EndTick="38" TickLength="1" TrackLine="79"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="40"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="38" EndTick="39" TickLength="1" TrackLine="64"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="55"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="51" EndTick="52" TickLength="1" TrackLine="60"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="59"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="49" EndTick="50" TickLength="1" TrackLine="79"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="40"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="50" EndTick="51" TickLength="1" TrackLine="64"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="55"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="53" EndTick="54" TickLength="1" TrackLine="67"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="52"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="54" EndTick="55" TickLength="1" TrackLine="64"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="55"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="56" EndTick="57" TickLength="1" TrackLine="79"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="40"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="57" EndTick="58" TickLength="1" TrackLine="64"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="55"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="59" EndTick="60" TickLength="1" TrackLine="67"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="52"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="61" EndTick="62" TickLength="1" TrackLine="64"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="55"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="63" EndTick="64" TickLength="1" TrackLine="67"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="52"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="65" EndTick="66" TickLength="1" TrackLine="83"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="36"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="66" EndTick="67" TickLength="1" TrackLine="67"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="52"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="67" EndTick="68" TickLength="1" TrackLine="59"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="60"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="69" EndTick="70" TickLength="1" TrackLine="67"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="52"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="70" EndTick="71" TickLength="1" TrackLine="64"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="55"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="81" EndTick="82" TickLength="1" TrackLine="83"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="36"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="82" EndTick="83" TickLength="1" TrackLine="67"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="52"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="83" EndTick="84" TickLength="1" TrackLine="59"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="60"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="97" EndTick="98" TickLength="1" TrackLine="83"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="36"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="98" EndTick="99" TickLength="1" TrackLine="67"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="52"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="99" EndTick="100" TickLength="1" TrackLine="59"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="60"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="85" EndTick="86" TickLength="1" TrackLine="67"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="52"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="86" EndTick="87" TickLength="1" TrackLine="64"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="55"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="101" EndTick="102" TickLength="1" TrackLine="67"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="52"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="102" EndTick="103" TickLength="1" TrackLine="64"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="55"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="113" EndTick="114" TickLength="1" TrackLine="83"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="36"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="114" EndTick="115" TickLength="1" TrackLine="67"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="52"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="115" EndTick="116" TickLength="1" TrackLine="59"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="60"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="117" EndTick="118" TickLength="1" TrackLine="67"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="52"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="118" EndTick="119" TickLength="1" TrackLine="64"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="55"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="121" EndTick="122" TickLength="1" TrackLine="64"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="55"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="123" EndTick="124" TickLength="1" TrackLine="67"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="52"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="125" EndTick="126" TickLength="1" TrackLine="64"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="55"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="127" EndTick="128" TickLength="1" TrackLine="67"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="52"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="129" EndTick="130" TickLength="1" TrackLine="74"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="45"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="130" EndTick="131" TickLength="1" TrackLine="59"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="60"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="131" EndTick="132" TickLength="1" TrackLine="55"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="64"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="133" EndTick="134" TickLength="1" TrackLine="74"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="45"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="134" EndTick="135" TickLength="1" TrackLine="59"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="60"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="145" EndTick="146" TickLength="1" TrackLine="74"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="45"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="146" EndTick="147" TickLength="1" TrackLine="59"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="60"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="147" EndTick="148" TickLength="1" TrackLine="55"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="64"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="149" EndTick="150" TickLength="1" TrackLine="74"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="45"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="150" EndTick="151" TickLength="1" TrackLine="59"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="60"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="161" EndTick="162" TickLength="1" TrackLine="74"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="45"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="162" EndTick="163" TickLength="1" TrackLine="59"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="60"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="163" EndTick="164" TickLength="1" TrackLine="55"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="64"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="165" EndTick="166" TickLength="1" TrackLine="74"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="45"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="166" EndTick="167" TickLength="1" TrackLine="59"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="60"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="177" EndTick="178" TickLength="1" TrackLine="74"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="45"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="178" EndTick="179" TickLength="1" TrackLine="59"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="60"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="179" EndTick="180" TickLength="1" TrackLine="55"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="64"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="181" EndTick="182" TickLength="1" TrackLine="74"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="45"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="182" EndTick="183" TickLength="1" TrackLine="59"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="60"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="184" EndTick="185" TickLength="1" TrackLine="74"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="45"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="185" EndTick="186" TickLength="1" TrackLine="59"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="60"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="187" EndTick="188" TickLength="1" TrackLine="55"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="64"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="189" EndTick="190" TickLength="1" TrackLine="74"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="45"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="193" EndTick="194" TickLength="1" TrackLine="81"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="38"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="194" EndTick="195" TickLength="1" TrackLine="69"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="50"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="195" EndTick="196" TickLength="1" TrackLine="65"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="54"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="197" EndTick="198" TickLength="1" TrackLine="81"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="38"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="198" EndTick="199" TickLength="1" TrackLine="69"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="50"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="209" EndTick="210" TickLength="1" TrackLine="81"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="38"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="210" EndTick="211" TickLength="1" TrackLine="69"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="50"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="211" EndTick="212" TickLength="1" TrackLine="65"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="54"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="213" EndTick="214" TickLength="1" TrackLine="81"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="38"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="214" EndTick="215" TickLength="1" TrackLine="69"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="50"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="225" EndTick="226" TickLength="1" TrackLine="81"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="38"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="226" EndTick="227" TickLength="1" TrackLine="69"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="50"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="227" EndTick="228" TickLength="1" TrackLine="65"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="54"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="229" EndTick="230" TickLength="1" TrackLine="81"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="38"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="230" EndTick="231" TickLength="1" TrackLine="69"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="50"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="241" EndTick="242" TickLength="1" TrackLine="81"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="38"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="242" EndTick="243" TickLength="1" TrackLine="69"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="50"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="243" EndTick="244" TickLength="1" TrackLine="65"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="54"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="245" EndTick="246" TickLength="1" TrackLine="81"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="38"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="246" EndTick="247" TickLength="1" TrackLine="69"
+           PattIndex="3" InstrIndex="0" Volume="1" Panning="0" Note="50"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="2" StartTick="14" EndTick="16" TickLength="2" TrackLine="59"
+           PattIndex="4" InstrIndex="1" Volume="0.791959584" Panning="0"
+           Note="60" NoteVisible="0" NoteRelative="0" TouchResized="1" Reversed="0"/>
+</ChaoticProject>

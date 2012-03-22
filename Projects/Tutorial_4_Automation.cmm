@@ -1,0 +1,1191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<ChaoticProject CMMVersion="101" BPM="130" TPB="4" BPB="4" Octave="5">
+  <Parameter GlobalIndex="0" name="MasterVolume" index="0" val="0.326356977"/>
+  <Instrument InstrIndex="0" InstrType="0" InstrName="Jazzy Hat.wav" InstrPath=".\Samples\Jazzy Hat.wav"
+              InstrAlias="j" MixChannel="01" Mute="0" Solo="0" Normalized="0"
+              LoopStart="0" LoopEnd="6396" LoopType="0">
+    <Parameter GlobalIndex="911" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="912" name="Pan" index="1" val="0.0666667223"/>
+    <SmpEnv Len="2" Hgt="40" sustainable="0" folded="0">
+      <EnvPoint xval="0" yval="1" sustainpoint="1" big="1"/>
+    </SmpEnv>
+  </Instrument>
+  <Instrument InstrIndex="1" InstrType="1" InstrName="Chaosynth" InstrPath="internal://chaotic"
+              InstrAlias="s" MixChannel="--" Mute="0" Solo="0">
+    <Parameter GlobalIndex="913" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="914" name="Pan" index="1" val="0"/>
+    <Module Name="Chaosynth" ID="1129535822" Preset="Current">
+      <Parameter GlobalIndex="915" name="Osc1.3x" index="2" val="0" bval="0"/>
+      <Parameter GlobalIndex="916" name="Osc2.3x" index="3" val="0" bval="0"/>
+      <Parameter GlobalIndex="917" name="Osc3.3x" index="4" val="0" bval="1"/>
+      <Parameter GlobalIndex="918" name="Osc1.saw" index="5" val="0" bval="0"/>
+      <Parameter GlobalIndex="919" name="Osc1.sine" index="6" val="0" bval="0"/>
+      <Parameter GlobalIndex="920" name="Osc1.triangle" index="7" val="0" bval="0"/>
+      <Parameter GlobalIndex="921" name="Osc1.pulse" index="8" val="0" bval="1"/>
+      <Parameter GlobalIndex="922" name="Osc1.noise" index="9" val="0" bval="0"/>
+      <Parameter GlobalIndex="923" name="Osc2.saw" index="10" val="0" bval="0"/>
+      <Parameter GlobalIndex="924" name="Osc2.sine" index="11" val="0" bval="0"/>
+      <Parameter GlobalIndex="925" name="Osc2.triangle" index="12" val="0" bval="0"/>
+      <Parameter GlobalIndex="926" name="Osc2.pulse" index="13" val="0" bval="1"/>
+      <Parameter GlobalIndex="927" name="Osc2.noise" index="14" val="0" bval="0"/>
+      <Parameter GlobalIndex="928" name="Osc3.saw" index="15" val="0" bval="0"/>
+      <Parameter GlobalIndex="929" name="Osc3.sine" index="16" val="0" bval="0"/>
+      <Parameter GlobalIndex="930" name="Osc3.triangle" index="17" val="0" bval="0"/>
+      <Parameter GlobalIndex="931" name="Osc3.pulse" index="18" val="0" bval="1"/>
+      <Parameter GlobalIndex="932" name="Osc3.noise" index="19" val="0" bval="0"/>
+      <Parameter GlobalIndex="933" name="Osc1.level" index="20" val="1"/>
+      <Parameter GlobalIndex="934" name="Osc1.detune" index="21" val="-0.00290063885"/>
+      <Parameter GlobalIndex="935" name="Osc1.octave" index="22" val="-2"/>
+      <Parameter GlobalIndex="936" name="Osc1.pwidth" index="23" val="0.5"/>
+      <Parameter GlobalIndex="937" name="Osc2.level" index="24" val="1"/>
+      <Parameter GlobalIndex="938" name="Osc2.detune" index="25" val="0.00256939302"/>
+      <Parameter GlobalIndex="939" name="Osc2.octave" index="26" val="-2"/>
+      <Parameter GlobalIndex="940" name="Osc2.pwidth" index="27" val="0.5"/>
+      <Parameter GlobalIndex="941" name="Osc3.level" index="28" val="1"/>
+      <Parameter GlobalIndex="942" name="Osc3.detune" index="29" val="0"/>
+      <Parameter GlobalIndex="943" name="Osc3.octave" index="30" val="-1"/>
+      <Parameter GlobalIndex="944" name="Osc3.pwidth" index="31" val="0.5"/>
+      <Parameter GlobalIndex="945" name="Flt1.Osc1" index="32" val="0" bval="1"/>
+      <Parameter GlobalIndex="946" name="Flt1.Osc2" index="33" val="0" bval="1"/>
+      <Parameter GlobalIndex="947" name="Flt1.Osc3" index="34" val="0" bval="1"/>
+      <Parameter GlobalIndex="948" name="Flt2.Osc1" index="35" val="0" bval="0"/>
+      <Parameter GlobalIndex="949" name="Flt2.Osc2" index="36" val="0" bval="0"/>
+      <Parameter GlobalIndex="950" name="Flt2.Osc3" index="37" val="0" bval="0"/>
+      <Parameter GlobalIndex="951" name="Chorus ON" index="38" val="0" bval="1"/>
+      <Parameter GlobalIndex="952" name="Delay ON" index="39" val="0" bval="1"/>
+      <Parameter GlobalIndex="953" name="Reverb ON" index="40" val="0" bval="0"/>
+      <Parameter GlobalIndex="954" name="LFOAmp.Osc1.level" index="41" val="0.234567896"/>
+      <Parameter GlobalIndex="955" name="LFORate.Osc1.level" index="42" val="4.21052647"/>
+      <Parameter GlobalIndex="956" name="LFOAmp.Osc2.level" index="43" val="0.135802463"/>
+      <Parameter GlobalIndex="957" name="LFORate.Osc2.level" index="44" val="2.63157892"/>
+      <Parameter GlobalIndex="958" name="LFOAmp.Osc3.level" index="45" val="0.209876537"/>
+      <Parameter GlobalIndex="959" name="LFORate.Osc3.level" index="46" val="6.3157897"/>
+      <Parameter GlobalIndex="960" name="LFOAmp.Osc1.pitch" index="47" val="0.00587289827"/>
+      <Parameter GlobalIndex="961" name="LFORate.Osc1.pitch" index="48" val="2.10526323"/>
+      <Parameter GlobalIndex="962" name="LFOAmp.Osc2.pitch" index="49" val="0.00660701049"/>
+      <Parameter GlobalIndex="963" name="LFORate.Osc2.pitch" index="50" val="3"/>
+      <Parameter GlobalIndex="964" name="LFOAmp.Osc3.pitch" index="51" val="0.0110116843"/>
+      <Parameter GlobalIndex="965" name="LFORate.Osc3.pitch" index="52" val="5"/>
+      <Parameter GlobalIndex="966" name="LFOAmp.Flt1.freq" index="53" val="0.185185179"/>
+      <Parameter GlobalIndex="967" name="LFORate.Flt1.freq" index="54" val="4.21052647"/>
+      <Parameter GlobalIndex="968" name="LFOAmp.Flt2.freq" index="55" val="0"/>
+      <Parameter GlobalIndex="969" name="LFORate.Flt2.freq" index="56" val="3"/>
+      <Parameter GlobalIndex="970" name="Osc1.FM.Osc2" index="57" val="0"/>
+      <Parameter GlobalIndex="971" name="Osc2.FM.Osc3" index="58" val="1"/>
+      <Parameter GlobalIndex="972" name="Osc1.FM.Osc3" index="59" val="0"/>
+      <Parameter GlobalIndex="973" name="Osc1.RM.Osc2" index="60" val="1"/>
+      <Parameter GlobalIndex="974" name="Osc2.RM.Osc3" index="61" val="0"/>
+      <Parameter GlobalIndex="975" name="Osc1.RM.Osc3" index="62" val="0"/>
+      <EnvIndex Osc1="4" Osc2="4" Osc3="4" Filt1="3" Filt2="3"/>
+      <Envelope1 Len="3" Hgt="49" sustainable="1" folded="0">
+        <EnvPoint xval="0" yval="0.693877578" sustainpoint="0" big="0"/>
+        <EnvPoint xval="0.0704960823" yval="0.897959173" sustainpoint="0" big="0"/>
+        <EnvPoint xval="0.140992165" yval="0.183673471" sustainpoint="0" big="0"/>
+        <EnvPoint xval="0.203655362" yval="0" sustainpoint="1" big="0"/>
+      </Envelope1>
+      <Envelope2 Len="3" Hgt="49" sustainable="1" folded="0">
+        <EnvPoint xval="0" yval="1" sustainpoint="1" big="0"/>
+      </Envelope2>
+      <Envelope3 Len="3" Hgt="49" sustainable="1" folded="0">
+        <EnvPoint xval="0" yval="1" sustainpoint="0" big="0"/>
+        <EnvPoint xval="0.0469973907" yval="0.775510192" sustainpoint="1" big="0"/>
+        <EnvPoint xval="0.101827681" yval="0" sustainpoint="0" big="0"/>
+      </Envelope3>
+      <Envelope4 Len="3" Hgt="49" sustainable="1" folded="0">
+        <EnvPoint xval="0" yval="1" sustainpoint="0" big="0"/>
+        <EnvPoint xval="0.0626631901" yval="0.612244904" sustainpoint="0" big="1"/>
+        <EnvPoint xval="0.180156663" yval="0.367346942" sustainpoint="0" big="1"/>
+        <EnvPoint xval="0.305483043" yval="0.163265303" sustainpoint="0" big="1"/>
+        <EnvPoint xval="0.53263706" yval="0" sustainpoint="1" big="1"/>
+      </Envelope4>
+      <Envelope5 Len="3" Hgt="49" sustainable="1" folded="0">
+        <EnvPoint xval="0" yval="1" sustainpoint="1" big="0"/>
+      </Envelope5>
+      <Module Name="Reverb" ID="1380275794" Preset="default">
+        <Parameter GlobalIndex="1059" name="PreDelay" index="0" val="15"/>
+        <Parameter GlobalIndex="1060" name="Roomsize" index="1" val="77"/>
+        <Parameter GlobalIndex="1061" name="Decay" index="2" val="6"/>
+        <Parameter GlobalIndex="1062" name="HighCut" index="3" val="0.200000003"/>
+        <Parameter GlobalIndex="1063" name="LowCut" index="4" val="1"/>
+        <Parameter GlobalIndex="1064" name="DryWet" index="5" val="40"/>
+        <Parameter GlobalIndex="1065" name="LowDecScale" index="6" val="0.5"/>
+        <Parameter GlobalIndex="1066" name="HighDecScale" index="7" val="0.239999995"/>
+      </Module>
+      <Module Name="Delay" ID="1347437644" Preset="default">
+        <Parameter GlobalIndex="1052" name="Mode" index="0" val="0" bval="1"/>
+        <Parameter GlobalIndex="1053" name="Delay" index="1" val="3"/>
+        <Parameter GlobalIndex="1054" name="Amount" index="2" val="1"/>
+        <Parameter GlobalIndex="1055" name="Feedback" index="3" val="55"/>
+        <Parameter GlobalIndex="1056" name="Pan" index="4" val="0"/>
+        <Parameter GlobalIndex="1057" name="LowCut" index="5" val="0.899999976"/>
+        <Parameter GlobalIndex="1058" name="DryWet" index="6" val="20"/>
+      </Module>
+      <Module Name="Chorus" ID="1128812370" Preset="default">
+        <Parameter GlobalIndex="1048" name="Delay" index="0" val="5"/>
+        <Parameter GlobalIndex="1049" name="Mod. Freq" index="1" val="2"/>
+        <Parameter GlobalIndex="1050" name="Depth" index="2" val="0.25"/>
+        <Parameter GlobalIndex="1051" name="DryWet" index="3" val="0.5"/>
+      </Module>
+      <Module Name="Filter2" ID="1128680532" Preset="default">
+        <Parameter GlobalIndex="982" name="Cutoff" index="0" val="0.882978737"/>
+        <Parameter GlobalIndex="983" name="Resonance" index="1" val="0"/>
+        <Parameter GlobalIndex="984" name="LP12" index="2" val="0" bval="0"/>
+        <Parameter GlobalIndex="985" name="HP12" index="3" val="0" bval="0"/>
+        <Parameter GlobalIndex="986" name="BP" index="4" val="0" bval="1"/>
+        <Parameter GlobalIndex="987" name="Mode" index="5" val="0" bval="0"/>
+      </Module>
+      <Module Name="Filter" ID="1128680532" Preset="default">
+        <Parameter GlobalIndex="976" name="Cutoff" index="0" val="0.659574449"/>
+        <Parameter GlobalIndex="977" name="Resonance" index="1" val="0.0619148947"/>
+        <Parameter GlobalIndex="978" name="LP12" index="2" val="0" bval="1"/>
+        <Parameter GlobalIndex="979" name="HP12" index="3" val="0" bval="0"/>
+        <Parameter GlobalIndex="980" name="BP" index="4" val="0" bval="0"/>
+        <Parameter GlobalIndex="981" name="Mode" index="5" val="0" bval="0"/>
+      </Module>
+    </Module>
+  </Instrument>
+  <MixChannel Index="01" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="2" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="3" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="4" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="5" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="6" name="send3.amount" index="0" val="0"/>
+    <Effect EffIndex="0" EffType="12" EffName="Reverb" EffPath="internal://reverb"
+            Folded="0" Bypass="0">
+      <Module Name="Reverb" ID="1380275794" Preset="Current">
+        <Parameter GlobalIndex="1067" name="PreDelay" index="0" val="6.66666698"/>
+        <Parameter GlobalIndex="1068" name="Roomsize" index="1" val="100"/>
+        <Parameter GlobalIndex="1069" name="Decay" index="2" val="4.73333359"/>
+        <Parameter GlobalIndex="1070" name="HighCut" index="3" val="0.200000003"/>
+        <Parameter GlobalIndex="1071" name="LowCut" index="4" val="1"/>
+        <Parameter GlobalIndex="1072" name="DryWet" index="5" val="0"/>
+        <Parameter GlobalIndex="1073" name="LowDecScale" index="6" val="0.5"/>
+        <Parameter GlobalIndex="1074" name="HighDecScale" index="7" val="0.239999995"/>
+      </Module>
+    </Effect>
+  </MixChannel>
+  <MixChannel Index="02" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="7" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="8" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="9" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="10" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="11" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="03" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="12" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="13" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="14" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="15" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="16" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="04" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="17" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="18" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="19" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="20" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="21" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="05" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="22" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="23" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="24" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="25" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="26" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="06" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="27" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="28" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="29" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="30" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="31" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="07" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="32" name="Vol" index="0" val="0.445574105"/>
+    <Parameter GlobalIndex="33" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="34" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="35" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="36" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="08" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="37" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="38" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="39" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="40" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="41" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="09" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="42" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="43" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="44" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="45" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="46" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="10" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="47" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="48" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="49" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="50" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="51" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="11" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="52" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="53" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="54" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="55" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="56" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="12" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="57" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="58" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="59" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="60" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="61" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="13" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="62" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="63" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="64" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="65" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="66" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="14" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="67" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="68" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="69" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="70" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="71" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="15" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="72" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="73" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="74" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="75" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="76" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="16" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="77" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="78" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="79" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="80" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="81" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="17" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="82" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="83" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="84" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="85" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="86" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="18" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="87" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="88" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="89" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="90" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="91" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="19" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="92" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="93" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="94" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="95" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="96" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="20" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="97" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="98" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="99" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="100" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="101" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="21" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="102" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="103" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="104" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="105" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="106" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="22" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="107" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="108" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="109" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="110" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="111" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="23" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="112" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="113" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="114" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="115" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="116" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="24" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="117" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="118" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="119" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="120" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="121" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="25" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="122" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="123" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="124" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="125" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="126" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="26" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="127" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="128" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="129" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="130" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="131" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="27" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="132" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="133" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="134" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="135" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="136" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="28" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="137" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="138" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="139" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="140" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="141" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="29" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="142" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="143" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="144" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="145" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="146" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="30" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="147" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="148" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="149" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="150" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="151" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="31" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="152" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="153" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="154" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="155" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="156" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="32" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="157" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="158" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="159" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="160" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="161" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="Send1" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="162" name="Vol" index="0" val="0.639302015"/>
+    <Parameter GlobalIndex="163" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="164" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="165" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="166" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="Send2" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="167" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="168" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="169" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="170" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="171" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="Send3" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="172" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="173" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="174" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="175" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="176" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="M" Mute="0" Solo="0" VOffset="0" OutMixChannel="--">
+    <Parameter GlobalIndex="182" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="183" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="184" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="185" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="186" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <Pattern Name="auto" PattType="0" PattIndex="1" IsAuto="1" TickWidth="-1"
+           InstrOwnerIndex="-1"/>
+  <Pattern Name="auto" PattType="0" PattIndex="2" IsAuto="1" TickWidth="-1"
+           InstrOwnerIndex="-1"/>
+  <Pattern Name="auto" PattType="0" PattIndex="3" IsAuto="1" TickWidth="-1"
+           InstrOwnerIndex="1"/>
+  <Pattern Name="2" PattType="2" PattIndex="4" IsAuto="0" TickWidth="16">
+    <Derived Type="0" StartTick="0" EndTick="16" TickLength="16" TrackLine="8"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="16" EndTick="32" TickLength="16" TrackLine="8"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="32" EndTick="48" TickLength="16" TrackLine="8"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="48" EndTick="64" TickLength="16" TrackLine="8"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="64" EndTick="80" TickLength="16" TrackLine="8"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="80" EndTick="96" TickLength="16" TrackLine="8"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="96" EndTick="112" TickLength="16" TrackLine="8"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="112" EndTick="128" TickLength="16" TrackLine="8"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="0" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="128" EndTick="144" TickLength="16" TrackLine="8"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="0" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="144" EndTick="160" TickLength="16" TrackLine="8"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="0" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="160" EndTick="176" TickLength="16" TrackLine="8"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="0" Muted="0"
+             TouchResized="0" IsFat="1"/>
+  </Pattern>
+  <Pattern Name="3" PattType="2" PattIndex="5" IsAuto="0" TickWidth="16">
+    <Derived Type="0" StartTick="144" EndTick="176" TickLength="32" TrackLine="7"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="46" Muted="0"
+             TouchResized="1" IsFat="0"/>
+  </Pattern>
+  <Pattern Name="5" PattType="1" PattIndex="6" IsAuto="0" TickWidth="12">
+    <Derived Type="0" StartTick="176" EndTick="192" TickLength="16" TrackLine="8"
+             Volume="1" Panning="0" OffsLine="44" LastPianoOffs="0" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="192" EndTick="208" TickLength="16" TrackLine="8"
+             Volume="1" Panning="0" OffsLine="56" LastPianoOffs="0" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="208" EndTick="224" TickLength="16" TrackLine="8"
+             Volume="1" Panning="0" OffsLine="56" LastPianoOffs="0" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="224" EndTick="240" TickLength="16" TrackLine="8"
+             Volume="1" Panning="0" OffsLine="56" LastPianoOffs="0" Muted="0"
+             TouchResized="0" IsFat="1"/>
+  </Pattern>
+  <Pattern Name="6" PattType="1" PattIndex="7" IsAuto="0" TickWidth="12">
+    <Derived Type="0" StartTick="240" EndTick="272" TickLength="32" TrackLine="8"
+             Volume="1" Panning="0" OffsLine="52" LastPianoOffs="52" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="272" EndTick="304" TickLength="32" TrackLine="8"
+             Volume="1" Panning="0" OffsLine="56" LastPianoOffs="56" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="304" EndTick="336" TickLength="32" TrackLine="8"
+             Volume="1" Panning="0" OffsLine="56" LastPianoOffs="56" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="336" EndTick="368" TickLength="32" TrackLine="8"
+             Volume="1" Panning="0" OffsLine="46" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+  </Pattern>
+  <Pattern Name="1" PattType="2" PattIndex="8" IsAuto="0" TickWidth="16">
+    <Derived Type="0" StartTick="240" EndTick="256" TickLength="16" TrackLine="6"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="256" EndTick="272" TickLength="16" TrackLine="6"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="272" EndTick="288" TickLength="16" TrackLine="6"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="288" EndTick="304" TickLength="16" TrackLine="6"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="304" EndTick="320" TickLength="16" TrackLine="6"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="320" EndTick="336" TickLength="16" TrackLine="6"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="336" EndTick="352" TickLength="16" TrackLine="6"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="352" EndTick="368" TickLength="16" TrackLine="6"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="368" EndTick="384" TickLength="16" TrackLine="6"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="384" EndTick="400" TickLength="16" TrackLine="6"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="400" EndTick="416" TickLength="16" TrackLine="6"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="416" EndTick="432" TickLength="16" TrackLine="6"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="0" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="432" EndTick="448" TickLength="16" TrackLine="6"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="0" Muted="0"
+             TouchResized="0" IsFat="1"/>
+  </Pattern>
+  <Element Type="1" StartTick="2" EndTick="86.5" TickLength="84.5" TrackLine="0"
+           PattIndex="0" Text="You can create automation envelope for almost any parameter of any instrument, effect or mixer channel."
+           Bookmark="0"/>
+  <Element Type="1" StartTick="2" EndTick="133" TickLength="131" TrackLine="1"
+           PattIndex="0" Text="To create an envelope, place the green cursor in needed position, then right click required slider and choose &quot;Create envelope at cursor pos.&quot; from the popup menu."
+           Bookmark="0"/>
+  <Element Type="2" StartTick="0" EndTick="1.7325207" TickLength="1.7325207"
+           TrackLine="0" PattIndex="4" InstrIndex="0" Volume="1" Panning="0"
+           Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0" Reversed="0"/>
+  <Element Type="2" StartTick="1" EndTick="2.73252058" TickLength="1.73252058"
+           TrackLine="0" PattIndex="4" InstrIndex="0" Volume="0.764439702"
+           Panning="0" Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0"
+           Reversed="0"/>
+  <Element Type="2" StartTick="3" EndTick="4.73252058" TickLength="1.73252058"
+           TrackLine="0" PattIndex="4" InstrIndex="0" Volume="1" Panning="0"
+           Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0" Reversed="0"/>
+  <Element Type="2" StartTick="4" EndTick="5.73252058" TickLength="1.73252058"
+           TrackLine="0" PattIndex="4" InstrIndex="0" Volume="0.783550799"
+           Panning="0" Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0"
+           Reversed="0"/>
+  <Element Type="2" StartTick="6" EndTick="7.73252058" TickLength="1.73252058"
+           TrackLine="0" PattIndex="4" InstrIndex="0" Volume="1" Panning="0"
+           Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0" Reversed="0"/>
+  <Element Type="2" StartTick="8" EndTick="9.73252106" TickLength="1.73252106"
+           TrackLine="0" PattIndex="4" InstrIndex="0" Volume="1" Panning="0"
+           Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0" Reversed="0"/>
+  <Element Type="2" StartTick="9" EndTick="10.7325211" TickLength="1.73252106"
+           TrackLine="0" PattIndex="4" InstrIndex="0" Volume="0.783550799"
+           Panning="0" Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0"
+           Reversed="0"/>
+  <Element Type="2" StartTick="11" EndTick="12.7325211" TickLength="1.73252106"
+           TrackLine="0" PattIndex="4" InstrIndex="0" Volume="1" Panning="0"
+           Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0" Reversed="0"/>
+  <Element Type="2" StartTick="12" EndTick="13.7325211" TickLength="1.73252106"
+           TrackLine="0" PattIndex="4" InstrIndex="0" Volume="0.802661777"
+           Panning="0" Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0"
+           Reversed="0"/>
+  <Element Type="2" StartTick="14" EndTick="15.7325211" TickLength="1.73252106"
+           TrackLine="0" PattIndex="4" InstrIndex="0" Volume="1" Panning="0"
+           Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0" Reversed="0"/>
+  <Element Type="4" StartTick="0" EndTick="72" TickLength="72" TrackLine="9"
+           PattIndex="0" CmdType="12" ParamIndex="911" InstrIndex="0">
+    <Envelope Len="72" Hgt="40" sustainable="0" folded="0">
+      <EnvPoint xval="0" yval="0" sustainpoint="0" big="1"/>
+      <EnvPoint xval="33.3333321" yval="0.150000006" sustainpoint="0" big="1"/>
+      <EnvPoint xval="54.6666679" yval="0.349999994" sustainpoint="0" big="1"/>
+      <EnvPoint xval="72" yval="0.699999988" sustainpoint="0" big="1"/>
+    </Envelope>
+  </Element>
+  <Element Type="4" StartTick="108" EndTick="189" TickLength="81" TrackLine="9"
+           PattIndex="0" CmdType="17" ParamIndex="1072" EffIndex="0">
+    <Envelope Len="81" Hgt="40" sustainable="0" folded="0">
+      <EnvPoint xval="0" yval="0" sustainpoint="0" big="1"/>
+      <EnvPoint xval="40.3333321" yval="0.324999988" sustainpoint="0" big="1"/>
+      <EnvPoint xval="56.6666679" yval="0.649999976" sustainpoint="0" big="1"/>
+      <EnvPoint xval="65.3333359" yval="0.975000024" sustainpoint="0" big="1"/>
+      <EnvPoint xval="71.6666641" yval="1" sustainpoint="0" big="1"/>
+      <EnvPoint xval="74.6666641" yval="0.774999976" sustainpoint="0" big="1"/>
+      <EnvPoint xval="79.6666641" yval="0" sustainpoint="0" big="1"/>
+    </Envelope>
+  </Element>
+  <Element Type="3" StartTick="0" EndTick="1" TickLength="1" TrackLine="74"
+           PattIndex="6" InstrIndex="1" Volume="1" Panning="0" Note="45"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="1" EndTick="2" TickLength="1" TrackLine="62"
+           PattIndex="6" InstrIndex="1" Volume="1" Panning="0" Note="57"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="3" EndTick="4" TickLength="1" TrackLine="62"
+           PattIndex="6" InstrIndex="1" Volume="1" Panning="0" Note="57"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="4" EndTick="5" TickLength="1" TrackLine="74"
+           PattIndex="6" InstrIndex="1" Volume="1" Panning="0" Note="45"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="6" EndTick="7" TickLength="1" TrackLine="74"
+           PattIndex="6" InstrIndex="1" Volume="1" Panning="0" Note="45"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="7" EndTick="8" TickLength="1" TrackLine="62"
+           PattIndex="6" InstrIndex="1" Volume="1" Panning="0" Note="57"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="9" EndTick="10" TickLength="1" TrackLine="62"
+           PattIndex="6" InstrIndex="1" Volume="1" Panning="0" Note="57"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="10" EndTick="11" TickLength="1" TrackLine="76"
+           PattIndex="6" InstrIndex="1" Volume="1" Panning="0" Note="43"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="14" EndTick="15" TickLength="1" TrackLine="64"
+           PattIndex="6" InstrIndex="1" Volume="1" Panning="0" Note="55"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="4" StartTick="176" EndTick="232" TickLength="56" TrackLine="13"
+           PattIndex="0" CmdType="17" ParamIndex="976" InstrIndex="1">
+    <Envelope Len="56" Hgt="40" sustainable="0" folded="0">
+      <EnvPoint xval="0" yval="0.75" sustainpoint="0" big="1"/>
+      <EnvPoint xval="9.66666698" yval="0.550000012" sustainpoint="0" big="1"/>
+      <EnvPoint xval="19.7999992" yval="0.324999988" sustainpoint="0" big="1"/>
+      <EnvPoint xval="26.666666" yval="0.5" sustainpoint="0" big="1"/>
+      <EnvPoint xval="55" yval="1" sustainpoint="0" big="1"/>
+    </Envelope>
+  </Element>
+  <Element Type="3" StartTick="0" EndTick="1" TickLength="1" TrackLine="74"
+           PattIndex="7" InstrIndex="1" Volume="1" Panning="0" Note="45"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="1" EndTick="2" TickLength="1" TrackLine="62"
+           PattIndex="7" InstrIndex="1" Volume="1" Panning="0" Note="57"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="3" EndTick="4" TickLength="1" TrackLine="62"
+           PattIndex="7" InstrIndex="1" Volume="1" Panning="0" Note="57"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="4" EndTick="5" TickLength="1" TrackLine="74"
+           PattIndex="7" InstrIndex="1" Volume="1" Panning="0" Note="45"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="6" EndTick="7" TickLength="1" TrackLine="74"
+           PattIndex="7" InstrIndex="1" Volume="1" Panning="0" Note="45"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="7" EndTick="8" TickLength="1" TrackLine="62"
+           PattIndex="7" InstrIndex="1" Volume="1" Panning="0" Note="57"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="9" EndTick="10" TickLength="1" TrackLine="62"
+           PattIndex="7" InstrIndex="1" Volume="1" Panning="0" Note="57"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="10" EndTick="11" TickLength="1" TrackLine="76"
+           PattIndex="7" InstrIndex="1" Volume="1" Panning="0" Note="43"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="4" StartTick="0" EndTick="31.666666" TickLength="31.666666"
+           TrackLine="2" PattIndex="7" CmdType="17" ParamIndex="976" InstrIndex="1">
+    <Envelope Len="31.666666" Hgt="40" sustainable="0" folded="0">
+      <EnvPoint xval="0" yval="0.850000024" sustainpoint="0" big="1"/>
+      <EnvPoint xval="2.58333325" yval="0.425000012" sustainpoint="0" big="1"/>
+      <EnvPoint xval="4" yval="0.875" sustainpoint="0" big="1"/>
+      <EnvPoint xval="4.83333349" yval="0.474999994" sustainpoint="0" big="1"/>
+      <EnvPoint xval="6.58333349" yval="1" sustainpoint="0" big="1"/>
+      <EnvPoint xval="7.5" yval="0.774999976" sustainpoint="0" big="1"/>
+      <EnvPoint xval="10.083333" yval="0.699999988" sustainpoint="0" big="1"/>
+      <EnvPoint xval="11.916667" yval="0.875" sustainpoint="0" big="1"/>
+      <EnvPoint xval="13.166667" yval="0.75" sustainpoint="0" big="1"/>
+      <EnvPoint xval="14.25" yval="0.850000024" sustainpoint="0" big="1"/>
+      <EnvPoint xval="15" yval="0.925000012" sustainpoint="0" big="1"/>
+      <EnvPoint xval="15.916667" yval="0.574999988" sustainpoint="0" big="1"/>
+      <EnvPoint xval="17" yval="0.649999976" sustainpoint="0" big="1"/>
+      <EnvPoint xval="18.666666" yval="1" sustainpoint="0" big="1"/>
+      <EnvPoint xval="19.666666" yval="0.649999976" sustainpoint="0" big="1"/>
+      <EnvPoint xval="21.416666" yval="0.649999976" sustainpoint="0" big="1"/>
+      <EnvPoint xval="22.583334" yval="0.550000012" sustainpoint="0" big="1"/>
+      <EnvPoint xval="23.416666" yval="0.725000024" sustainpoint="0" big="1"/>
+      <EnvPoint xval="24.666666" yval="0.899999976" sustainpoint="0" big="1"/>
+      <EnvPoint xval="25.25" yval="0.774999976" sustainpoint="0" big="1"/>
+      <EnvPoint xval="26.583334" yval="0.774999976" sustainpoint="0" big="1"/>
+      <EnvPoint xval="27.916666" yval="0.975000024" sustainpoint="0" big="1"/>
+      <EnvPoint xval="29.416666" yval="0.600000024" sustainpoint="0" big="1"/>
+      <EnvPoint xval="31.666666" yval="0.975000024" sustainpoint="0" big="1"/>
+    </Envelope>
+  </Element>
+  <Element Type="4" StartTick="0" EndTick="31.583334" TickLength="31.583334"
+           TrackLine="7" PattIndex="7" CmdType="17" ParamIndex="971" InstrIndex="1">
+    <Envelope Len="31.583334" Hgt="40" sustainable="0" folded="0">
+      <EnvPoint xval="0" yval="1" sustainpoint="0" big="1"/>
+      <EnvPoint xval="3.58333325" yval="0" sustainpoint="0" big="1"/>
+      <EnvPoint xval="7.75" yval="1" sustainpoint="0" big="1"/>
+      <EnvPoint xval="11.583333" yval="0" sustainpoint="0" big="1"/>
+      <EnvPoint xval="14.833333" yval="1" sustainpoint="0" big="1"/>
+      <EnvPoint xval="15.833333" yval="0.474999994" sustainpoint="0" big="1"/>
+      <EnvPoint xval="18.666666" yval="0" sustainpoint="0" big="1"/>
+      <EnvPoint xval="22" yval="1" sustainpoint="0" big="1"/>
+      <EnvPoint xval="26.083334" yval="0" sustainpoint="0" big="1"/>
+      <EnvPoint xval="28.666666" yval="1" sustainpoint="0" big="1"/>
+      <EnvPoint xval="31.333334" yval="0" sustainpoint="0" big="1"/>
+    </Envelope>
+  </Element>
+  <Element Type="4" StartTick="296" EndTick="376.333344" TickLength="80.3333435"
+           TrackLine="17" PattIndex="0" CmdType="12" ParamIndex="913" InstrIndex="1">
+    <Envelope Len="80.3333359" Hgt="44" sustainable="0" folded="0">
+      <EnvPoint xval="0" yval="0.707106769" sustainpoint="0" big="1"/>
+      <EnvPoint xval="13" yval="0.649999976" sustainpoint="0" big="1"/>
+      <EnvPoint xval="28" yval="0.524999976" sustainpoint="0" big="1"/>
+      <EnvPoint xval="40.3333321" yval="0.300000012" sustainpoint="0" big="1"/>
+      <EnvPoint xval="55.3333321" yval="0.102941178" sustainpoint="0" big="1"/>
+      <EnvPoint xval="74" yval="0" sustainpoint="0" big="1"/>
+    </Envelope>
+  </Element>
+  <Element Type="1" StartTick="2" EndTick="58.5" TickLength="56.5" TrackLine="4"
+           PattIndex="0" Text="Envelopes can be placed directly on the main editor or inside a pattern."
+           Bookmark="0"/>
+  <Element Type="1" StartTick="2" EndTick="91" TickLength="89" TrackLine="2"
+           PattIndex="0" Text="Another way to make envelope from a slider is to pull it out from it with left mouse button, while holding Ctrl key."
+           Bookmark="0"/>
+  <Element Type="1" StartTick="2" EndTick="99.3333359" TickLength="97.3333359"
+           TrackLine="3" PattIndex="0" Text="Once created, an envelope can be freely edited, resized horizontally or vertically, folded and cloned as any other element."
+           Bookmark="0"/>
+  <Element Type="1" StartTick="2" EndTick="108.833336" TickLength="106.833336"
+           TrackLine="21" PattIndex="0" Text="Envelopes consist of breakpoints with lines between them. You can edit envelopes by adding, deleting and moving these breakpoints."
+           Bookmark="0"/>
+  <Element Type="1" StartTick="2" EndTick="59.1666679" TickLength="57.1666679"
+           TrackLine="22" PattIndex="0" Text="Left mouse click adds a breakpoint while right click deletes breakpoints."
+           Bookmark="0"/>
+  <Element Type="1" StartTick="2" EndTick="73" TickLength="71" TrackLine="23"
+           PattIndex="0" Text="Ctrl + left mouse button allows to draw envelope directly, overriding existing breakpoints."
+           Bookmark="0"/>
+  <Element Type="1" StartTick="2" EndTick="98.8333359" TickLength="96.8333359"
+           TrackLine="24" PattIndex="0" Text="Shift + left mouse button over a breakpoint allows to move the part of the envelope to the right from the target breakpoint."
+           Bookmark="0"/>
+  <Element Type="1" StartTick="2" EndTick="135.833328" TickLength="133.833328"
+           TrackLine="25" PattIndex="0" Text="Alt + left mouse button draws a breakpoint in the default position of the envelope, if it is applicable (e.g. the default position of a panning envelope is its central position)."
+           Bookmark="0"/>
+  <Element Type="4" StartTick="240" EndTick="361" TickLength="121" TrackLine="13"
+           PattIndex="0" CmdType="13" ParamIndex="914" InstrIndex="1">
+    <Envelope Len="121" Hgt="38" sustainable="0" folded="0">
+      <EnvPoint xval="0" yval="0.5" sustainpoint="0" big="1"/>
+      <EnvPoint xval="15.5" yval="0" sustainpoint="0" big="1"/>
+      <EnvPoint xval="24.5" yval="1" sustainpoint="0" big="1"/>
+      <EnvPoint xval="28" yval="0.899999976" sustainpoint="0" big="1"/>
+      <EnvPoint xval="33.6666679" yval="0.524999976" sustainpoint="0" big="1"/>
+      <EnvPoint xval="41.3333321" yval="0.174999997" sustainpoint="0" big="1"/>
+      <EnvPoint xval="52.3333321" yval="0.550000012" sustainpoint="0" big="1"/>
+      <EnvPoint xval="61" yval="1" sustainpoint="0" big="1"/>
+      <EnvPoint xval="67" yval="0" sustainpoint="0" big="1"/>
+      <EnvPoint xval="82.6666641" yval="1" sustainpoint="0" big="1"/>
+      <EnvPoint xval="91.6666641" yval="0.324999988" sustainpoint="0" big="1"/>
+      <EnvPoint xval="95.3333359" yval="0" sustainpoint="0" big="1"/>
+      <EnvPoint xval="97" yval="1" sustainpoint="0" big="1"/>
+      <EnvPoint xval="103" yval="0" sustainpoint="0" big="1"/>
+      <EnvPoint xval="107" yval="1" sustainpoint="0" big="1"/>
+      <EnvPoint xval="112" yval="0" sustainpoint="0" big="1"/>
+      <EnvPoint xval="117.666664" yval="0.605263174" sustainpoint="0" big="1"/>
+    </Envelope>
+  </Element>
+  <Element Type="1" StartTick="2" EndTick="143.166672" TickLength="141.166672"
+           TrackLine="27" PattIndex="0" Text="Automation data can also be recorded, using the &quot;&#26;record&quot; button on the transport panel. If it is pressed, then every movement of any slider will be recorded into a new envelope."
+           Bookmark="0"/>
+  <Element Type="4" StartTick="0.222070694" EndTick="127.222069" TickLength="127"
+           TrackLine="29" PattIndex="0" CmdType="13" ParamIndex="912" InstrIndex="0">
+    <Envelope Len="127" Hgt="40" sustainable="0" folded="0">
+      <EnvPoint xval="0" yval="0.483333349" sustainpoint="0" big="0"/>
+      <EnvPoint xval="0.260000229" yval="0.516666651" sustainpoint="0" big="0"/>
+      <EnvPoint xval="0.7159338" yval="0.516666651" sustainpoint="0" big="0"/>
+      <EnvPoint xval="0.975933075" yval="0.516666651" sustainpoint="0" big="0"/>
+      <EnvPoint xval="1.17186642" yval="0.516666651" sustainpoint="0" big="0"/>
+      <EnvPoint xval="1.62779999" yval="0.516666651" sustainpoint="0" big="0"/>
+      <EnvPoint xval="2.08373356" yval="0.516666651" sustainpoint="0" big="0"/>
+      <EnvPoint xval="2.34373379" yval="0.516666651" sustainpoint="0" big="0"/>
+      <EnvPoint xval="2.53966713" yval="0.516666651" sustainpoint="0" big="0"/>
+      <EnvPoint xval="2.99560165" yval="0.516666651" sustainpoint="0" big="0"/>
+      <EnvPoint xval="3.45153427" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="3.7115345" yval="0.466666669" sustainpoint="0" big="0"/>
+      <EnvPoint xval="3.90746689" yval="0.466666669" sustainpoint="0" big="0"/>
+      <EnvPoint xval="4.36340141" yval="0.449999988" sustainpoint="0" big="0"/>
+      <EnvPoint xval="4.81933403" yval="0.416666657" sustainpoint="0" big="0"/>
+      <EnvPoint xval="5.27526855" yval="0.383333325" sustainpoint="0" big="0"/>
+      <EnvPoint xval="5.73120117" yval="0.383333325" sustainpoint="0" big="0"/>
+      <EnvPoint xval="5.9912014" yval="0.349999994" sustainpoint="0" big="0"/>
+      <EnvPoint xval="6.1871357" yval="0.333333343" sustainpoint="0" big="0"/>
+      <EnvPoint xval="6.64306831" yval="0.333333343" sustainpoint="0" big="0"/>
+      <EnvPoint xval="7.09900284" yval="0.316666663" sustainpoint="0" big="0"/>
+      <EnvPoint xval="7.35900116" yval="0.316666663" sustainpoint="0" big="0"/>
+      <EnvPoint xval="7.55493546" yval="0.300000012" sustainpoint="0" big="0"/>
+      <EnvPoint xval="8.01086807" yval="0.266666681" sustainpoint="0" big="0"/>
+      <EnvPoint xval="8.2708683" yval="0.25" sustainpoint="0" big="0"/>
+      <EnvPoint xval="8.4668026" yval="0.216666669" sustainpoint="0" big="0"/>
+      <EnvPoint xval="8.92273521" yval="0.183333337" sustainpoint="0" big="0"/>
+      <EnvPoint xval="9.37866974" yval="0.183333337" sustainpoint="0" big="0"/>
+      <EnvPoint xval="9.83460236" yval="0.166666687" sustainpoint="0" big="0"/>
+      <EnvPoint xval="10.0946026" yval="0.166666687" sustainpoint="0" big="0"/>
+      <EnvPoint xval="10.2905369" yval="0.150000006" sustainpoint="0" big="0"/>
+      <EnvPoint xval="10.7464695" yval="0.133333325" sustainpoint="0" big="0"/>
+      <EnvPoint xval="11.0064697" yval="0.116666675" sustainpoint="0" big="0"/>
+      <EnvPoint xval="11.202404" yval="0.099999994" sustainpoint="0" big="0"/>
+      <EnvPoint xval="11.6583366" yval="0.0666666627" sustainpoint="0" big="0"/>
+      <EnvPoint xval="12.1142693" yval="0.0666666627" sustainpoint="0" big="0"/>
+      <EnvPoint xval="12.3742695" yval="0.0500000119" sustainpoint="0" big="0"/>
+      <EnvPoint xval="12.5702038" yval="0.0500000119" sustainpoint="0" big="0"/>
+      <EnvPoint xval="13.0261364" yval="0.0333333313" sustainpoint="0" big="0"/>
+      <EnvPoint xval="13.4820709" yval="0.0166666806" sustainpoint="0" big="0"/>
+      <EnvPoint xval="13.7420712" yval="0" sustainpoint="0" big="0"/>
+      <EnvPoint xval="13.9380035" yval="0" sustainpoint="0" big="0"/>
+      <EnvPoint xval="14.3939381" yval="0" sustainpoint="0" big="0"/>
+      <EnvPoint xval="14.6539383" yval="0" sustainpoint="0" big="0"/>
+      <EnvPoint xval="14.8498707" yval="0" sustainpoint="0" big="0"/>
+      <EnvPoint xval="15.3058052" yval="0" sustainpoint="0" big="0"/>
+      <EnvPoint xval="15.7617378" yval="0" sustainpoint="0" big="0"/>
+      <EnvPoint xval="16.0217381" yval="0" sustainpoint="0" big="0"/>
+      <EnvPoint xval="16.2176723" yval="0" sustainpoint="0" big="0"/>
+      <EnvPoint xval="16.673605" yval="0" sustainpoint="0" big="0"/>
+      <EnvPoint xval="17.1295376" yval="0" sustainpoint="0" big="0"/>
+      <EnvPoint xval="17.3895378" yval="0" sustainpoint="0" big="0"/>
+      <EnvPoint xval="17.5854721" yval="0" sustainpoint="0" big="0"/>
+      <EnvPoint xval="18.0414047" yval="0" sustainpoint="0" big="0"/>
+      <EnvPoint xval="18.301405" yval="0" sustainpoint="0" big="0"/>
+      <EnvPoint xval="18.4973392" yval="0" sustainpoint="0" big="0"/>
+      <EnvPoint xval="18.9532719" yval="0" sustainpoint="0" big="0"/>
+      <EnvPoint xval="19.4092045" yval="0" sustainpoint="0" big="0"/>
+      <EnvPoint xval="19.6692066" yval="0" sustainpoint="0" big="0"/>
+      <EnvPoint xval="19.8651409" yval="0" sustainpoint="0" big="0"/>
+      <EnvPoint xval="20.3210735" yval="0" sustainpoint="0" big="0"/>
+      <EnvPoint xval="20.7770061" yval="0" sustainpoint="0" big="0"/>
+      <EnvPoint xval="21.0370045" yval="0" sustainpoint="0" big="0"/>
+      <EnvPoint xval="21.2329388" yval="0" sustainpoint="0" big="0"/>
+      <EnvPoint xval="21.6888714" yval="0" sustainpoint="0" big="0"/>
+      <EnvPoint xval="22.1448078" yval="0" sustainpoint="0" big="0"/>
+      <EnvPoint xval="22.4048061" yval="0" sustainpoint="0" big="0"/>
+      <EnvPoint xval="22.6007404" yval="0" sustainpoint="0" big="0"/>
+      <EnvPoint xval="23.056673" yval="0" sustainpoint="0" big="0"/>
+      <EnvPoint xval="23.3166752" yval="0" sustainpoint="0" big="0"/>
+      <EnvPoint xval="23.5126057" yval="0" sustainpoint="0" big="0"/>
+      <EnvPoint xval="23.9685421" yval="0" sustainpoint="0" big="0"/>
+      <EnvPoint xval="24.4244747" yval="0.0166666806" sustainpoint="0" big="0"/>
+      <EnvPoint xval="24.684473" yval="0.0333333313" sustainpoint="0" big="0"/>
+      <EnvPoint xval="24.8804073" yval="0.0333333313" sustainpoint="0" big="0"/>
+      <EnvPoint xval="25.33634" yval="0.0500000119" sustainpoint="0" big="0"/>
+      <EnvPoint xval="25.7922726" yval="0.0666666627" sustainpoint="0" big="0"/>
+      <EnvPoint xval="26.0522747" yval="0.0833333433" sustainpoint="0" big="0"/>
+      <EnvPoint xval="26.248209" yval="0.0833333433" sustainpoint="0" big="0"/>
+      <EnvPoint xval="26.7041416" yval="0.116666675" sustainpoint="0" big="0"/>
+      <EnvPoint xval="27.1600742" yval="0.183333337" sustainpoint="0" big="0"/>
+      <EnvPoint xval="27.6160069" yval="0.199999988" sustainpoint="0" big="0"/>
+      <EnvPoint xval="28.0719433" yval="0.233333349" sustainpoint="0" big="0"/>
+      <EnvPoint xval="28.3319416" yval="0.25" sustainpoint="0" big="0"/>
+      <EnvPoint xval="28.5278759" yval="0.266666681" sustainpoint="0" big="0"/>
+      <EnvPoint xval="28.9838085" yval="0.283333331" sustainpoint="0" big="0"/>
+      <EnvPoint xval="29.4397411" yval="0.316666663" sustainpoint="0" big="0"/>
+      <EnvPoint xval="29.6997433" yval="0.333333343" sustainpoint="0" big="0"/>
+      <EnvPoint xval="29.8956738" yval="0.349999994" sustainpoint="0" big="0"/>
+      <EnvPoint xval="30.3516102" yval="0.366666675" sustainpoint="0" big="0"/>
+      <EnvPoint xval="30.8075428" yval="0.400000006" sustainpoint="0" big="0"/>
+      <EnvPoint xval="31.0675411" yval="0.433333337" sustainpoint="0" big="0"/>
+      <EnvPoint xval="31.2634754" yval="0.433333337" sustainpoint="0" big="0"/>
+      <EnvPoint xval="31.719408" yval="0.449999988" sustainpoint="0" big="0"/>
+      <EnvPoint xval="31.9794102" yval="0.483333319" sustainpoint="0" big="0"/>
+      <EnvPoint xval="32.1753464" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="32.631279" yval="0.533333361" sustainpoint="0" big="0"/>
+      <EnvPoint xval="33.0872116" yval="0.550000012" sustainpoint="0" big="0"/>
+      <EnvPoint xval="33.5431442" yval="0.566666663" sustainpoint="0" big="0"/>
+      <EnvPoint xval="33.9990768" yval="0.583333313" sustainpoint="0" big="0"/>
+      <EnvPoint xval="34.4550095" yval="0.633333325" sustainpoint="0" big="0"/>
+      <EnvPoint xval="34.7150116" yval="0.633333325" sustainpoint="0" big="0"/>
+      <EnvPoint xval="34.9109421" yval="0.649999976" sustainpoint="0" big="0"/>
+      <EnvPoint xval="35.3668747" yval="0.666666687" sustainpoint="0" big="0"/>
+      <EnvPoint xval="35.6268768" yval="0.716666639" sustainpoint="0" big="0"/>
+      <EnvPoint xval="35.8228073" yval="0.716666639" sustainpoint="0" big="0"/>
+      <EnvPoint xval="36.2787476" yval="0.75" sustainpoint="0" big="0"/>
+      <EnvPoint xval="36.7346802" yval="0.75" sustainpoint="0" big="0"/>
+      <EnvPoint xval="37.1906128" yval="0.816666663" sustainpoint="0" big="0"/>
+      <EnvPoint xval="37.6465454" yval="0.850000024" sustainpoint="0" big="0"/>
+      <EnvPoint xval="38.102478" yval="0.850000024" sustainpoint="0" big="0"/>
+      <EnvPoint xval="38.3624802" yval="0.866666675" sustainpoint="0" big="0"/>
+      <EnvPoint xval="38.5584106" yval="0.883333325" sustainpoint="0" big="0"/>
+      <EnvPoint xval="39.0143433" yval="0.916666687" sustainpoint="0" big="0"/>
+      <EnvPoint xval="39.4702759" yval="0.949999988" sustainpoint="0" big="0"/>
+      <EnvPoint xval="39.730278" yval="0.949999988" sustainpoint="0" big="0"/>
+      <EnvPoint xval="39.9262085" yval="0.966666639" sustainpoint="0" big="0"/>
+      <EnvPoint xval="40.3821487" yval="0.966666639" sustainpoint="0" big="0"/>
+      <EnvPoint xval="40.8380814" yval="1" sustainpoint="0" big="0"/>
+      <EnvPoint xval="41.294014" yval="1" sustainpoint="0" big="0"/>
+      <EnvPoint xval="41.7499466" yval="1" sustainpoint="0" big="0"/>
+      <EnvPoint xval="42.0099487" yval="1" sustainpoint="0" big="0"/>
+      <EnvPoint xval="42.2058792" yval="1" sustainpoint="0" big="0"/>
+      <EnvPoint xval="42.6618118" yval="1" sustainpoint="0" big="0"/>
+      <EnvPoint xval="43.1177444" yval="1" sustainpoint="0" big="0"/>
+      <EnvPoint xval="43.3777466" yval="1" sustainpoint="0" big="0"/>
+      <EnvPoint xval="43.5736771" yval="1" sustainpoint="0" big="0"/>
+      <EnvPoint xval="44.0296097" yval="1" sustainpoint="0" big="0"/>
+      <EnvPoint xval="44.4855499" yval="1" sustainpoint="0" big="0"/>
+      <EnvPoint xval="44.7455444" yval="1" sustainpoint="0" big="0"/>
+      <EnvPoint xval="44.9414825" yval="1" sustainpoint="0" big="0"/>
+      <EnvPoint xval="45.3974152" yval="1" sustainpoint="0" big="0"/>
+      <EnvPoint xval="45.6574173" yval="1" sustainpoint="0" big="0"/>
+      <EnvPoint xval="45.8533478" yval="1" sustainpoint="0" big="0"/>
+      <EnvPoint xval="46.3092804" yval="1" sustainpoint="0" big="0"/>
+      <EnvPoint xval="46.765213" yval="1" sustainpoint="0" big="0"/>
+      <EnvPoint xval="47.2211456" yval="1" sustainpoint="0" big="0"/>
+      <EnvPoint xval="47.6770782" yval="1" sustainpoint="0" big="0"/>
+      <EnvPoint xval="48.1330109" yval="1" sustainpoint="0" big="0"/>
+      <EnvPoint xval="48.393013" yval="1" sustainpoint="0" big="0"/>
+      <EnvPoint xval="48.5889511" yval="1" sustainpoint="0" big="0"/>
+      <EnvPoint xval="49.0448837" yval="1" sustainpoint="0" big="0"/>
+      <EnvPoint xval="49.5008163" yval="1" sustainpoint="0" big="0"/>
+      <EnvPoint xval="49.956749" yval="1" sustainpoint="0" big="0"/>
+      <EnvPoint xval="50.4126816" yval="1" sustainpoint="0" big="0"/>
+      <EnvPoint xval="50.6726837" yval="1" sustainpoint="0" big="0"/>
+      <EnvPoint xval="50.8686142" yval="1" sustainpoint="0" big="0"/>
+      <EnvPoint xval="51.3245468" yval="1" sustainpoint="0" big="0"/>
+      <EnvPoint xval="51.7804871" yval="1" sustainpoint="0" big="0"/>
+      <EnvPoint xval="52.0404816" yval="1" sustainpoint="0" big="0"/>
+      <EnvPoint xval="52.2364197" yval="1" sustainpoint="0" big="0"/>
+      <EnvPoint xval="52.6923523" yval="1" sustainpoint="0" big="0"/>
+      <EnvPoint xval="53.1482849" yval="1" sustainpoint="0" big="0"/>
+      <EnvPoint xval="53.408287" yval="0.983333349" sustainpoint="0" big="0"/>
+      <EnvPoint xval="53.6042175" yval="0.966666639" sustainpoint="0" big="0"/>
+      <EnvPoint xval="54.0601501" yval="0.933333337" sustainpoint="0" big="0"/>
+      <EnvPoint xval="54.5160828" yval="0.933333337" sustainpoint="0" big="0"/>
+      <EnvPoint xval="54.7760849" yval="0.899999976" sustainpoint="0" big="0"/>
+      <EnvPoint xval="54.9720154" yval="0.883333325" sustainpoint="0" big="0"/>
+      <EnvPoint xval="55.427948" yval="0.850000024" sustainpoint="0" big="0"/>
+      <EnvPoint xval="55.6879501" yval="0.850000024" sustainpoint="0" big="0"/>
+      <EnvPoint xval="55.8838882" yval="0.850000024" sustainpoint="0" big="0"/>
+      <EnvPoint xval="56.3398209" yval="0.816666663" sustainpoint="0" big="0"/>
+      <EnvPoint xval="56.7957535" yval="0.800000012" sustainpoint="0" big="0"/>
+      <EnvPoint xval="57.0557556" yval="0.800000012" sustainpoint="0" big="0"/>
+      <EnvPoint xval="57.2516861" yval="0.783333361" sustainpoint="0" big="0"/>
+      <EnvPoint xval="57.7076187" yval="0.766666651" sustainpoint="0" big="0"/>
+      <EnvPoint xval="58.1635513" yval="0.733333349" sustainpoint="0" big="0"/>
+      <EnvPoint xval="58.4235535" yval="0.733333349" sustainpoint="0" big="0"/>
+      <EnvPoint xval="58.6194839" yval="0.716666639" sustainpoint="0" big="0"/>
+      <EnvPoint xval="59.0754166" yval="0.683333337" sustainpoint="0" big="0"/>
+      <EnvPoint xval="59.5313568" yval="0.683333337" sustainpoint="0" big="0"/>
+      <EnvPoint xval="59.7913513" yval="0.666666687" sustainpoint="0" big="0"/>
+      <EnvPoint xval="59.9872894" yval="0.666666687" sustainpoint="0" big="0"/>
+      <EnvPoint xval="60.443222" yval="0.649999976" sustainpoint="0" big="0"/>
+      <EnvPoint xval="60.7032166" yval="0.633333325" sustainpoint="0" big="0"/>
+      <EnvPoint xval="60.8991547" yval="0.616666675" sustainpoint="0" big="0"/>
+      <EnvPoint xval="61.3550873" yval="0.600000024" sustainpoint="0" big="0"/>
+      <EnvPoint xval="61.8110199" yval="0.566666663" sustainpoint="0" big="0"/>
+      <EnvPoint xval="62.071022" yval="0.566666663" sustainpoint="0" big="0"/>
+      <EnvPoint xval="62.2669525" yval="0.533333361" sustainpoint="0" big="0"/>
+      <EnvPoint xval="62.7228851" yval="0.533333361" sustainpoint="0" big="0"/>
+      <EnvPoint xval="63.1788177" yval="0.516666651" sustainpoint="0" big="0"/>
+      <EnvPoint xval="63.4388199" yval="0.516666651" sustainpoint="0" big="0"/>
+      <EnvPoint xval="63.634758" yval="0.516666651" sustainpoint="0" big="0"/>
+      <EnvPoint xval="64.0906906" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="64.5466232" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="65.0025558" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="65.4584885" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="65.7184906" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="65.9144211" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="66.3703537" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="66.8262863" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="67.0862885" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="67.2822189" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="67.7381592" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="67.9981537" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="68.1940918" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="68.6500244" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="69.105957" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="69.3659592" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="69.5618896" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="70.0178223" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="70.4737549" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="70.733757" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="70.9296875" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="71.3856201" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="71.8415604" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="72.1015549" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="72.297493" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="72.7534256" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="73.0134201" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="73.2093582" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="73.6652908" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="74.1212234" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="74.3812256" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="74.5771561" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="75.0330887" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="75.4890213" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="75.7490234" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="75.9449615" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="76.4008942" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="76.8568268" yval="0.850000024" sustainpoint="0" big="0"/>
+      <EnvPoint xval="77.3127594" yval="0.933333337" sustainpoint="0" big="0"/>
+      <EnvPoint xval="77.5727615" yval="0.933333337" sustainpoint="0" big="0"/>
+      <EnvPoint xval="77.768692" yval="0.933333337" sustainpoint="0" big="0"/>
+      <EnvPoint xval="78.2246246" yval="0.583333313" sustainpoint="0" big="0"/>
+      <EnvPoint xval="78.4846268" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="78.6805573" yval="0" sustainpoint="0" big="0"/>
+      <EnvPoint xval="79.1364899" yval="0" sustainpoint="0" big="0"/>
+      <EnvPoint xval="79.396492" yval="0" sustainpoint="0" big="0"/>
+      <EnvPoint xval="79.5924225" yval="0.266666681" sustainpoint="0" big="0"/>
+      <EnvPoint xval="80.0483627" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="80.5042953" yval="1" sustainpoint="0" big="0"/>
+      <EnvPoint xval="80.7642899" yval="0.983333349" sustainpoint="0" big="0"/>
+      <EnvPoint xval="80.960228" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="81.4161606" yval="0.0500000119" sustainpoint="0" big="0"/>
+      <EnvPoint xval="81.8720932" yval="0.0500000119" sustainpoint="0" big="0"/>
+      <EnvPoint xval="82.3280258" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="82.7839584" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="83.0439606" yval="0.933333337" sustainpoint="0" big="0"/>
+      <EnvPoint xval="83.2398911" yval="0.833333313" sustainpoint="0" big="0"/>
+      <EnvPoint xval="83.6958237" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="84.1517639" yval="0.0166666806" sustainpoint="0" big="0"/>
+      <EnvPoint xval="84.6076965" yval="0.0500000119" sustainpoint="0" big="0"/>
+      <EnvPoint xval="85.0636292" yval="1" sustainpoint="0" big="0"/>
+      <EnvPoint xval="85.5195618" yval="1" sustainpoint="0" big="0"/>
+      <EnvPoint xval="85.9754944" yval="0.983333349" sustainpoint="0" big="0"/>
+      <EnvPoint xval="86.2354965" yval="0.583333313" sustainpoint="0" big="0"/>
+      <EnvPoint xval="86.431427" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="86.8873596" yval="0.0666666627" sustainpoint="0" big="0"/>
+      <EnvPoint xval="87.1473618" yval="0" sustainpoint="0" big="0"/>
+      <EnvPoint xval="87.3432922" yval="0" sustainpoint="0" big="0"/>
+      <EnvPoint xval="87.7992249" yval="0.25" sustainpoint="0" big="0"/>
+      <EnvPoint xval="88.059227" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="88.2551651" yval="1" sustainpoint="0" big="0"/>
+      <EnvPoint xval="88.7110977" yval="1" sustainpoint="0" big="0"/>
+      <EnvPoint xval="89.1670303" yval="0.733333349" sustainpoint="0" big="0"/>
+      <EnvPoint xval="89.4270248" yval="0.566666663" sustainpoint="0" big="0"/>
+      <EnvPoint xval="89.622963" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="90.0788956" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="90.5348282" yval="0.666666687" sustainpoint="0" big="0"/>
+      <EnvPoint xval="90.7948303" yval="0.666666687" sustainpoint="0" big="0"/>
+      <EnvPoint xval="90.9907608" yval="0.600000024" sustainpoint="0" big="0"/>
+      <EnvPoint xval="91.4466934" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="91.7066956" yval="0.349999994" sustainpoint="0" big="0"/>
+      <EnvPoint xval="91.902626" yval="0.300000012" sustainpoint="0" big="0"/>
+      <EnvPoint xval="92.3585663" yval="0.300000012" sustainpoint="0" big="0"/>
+      <EnvPoint xval="92.8144989" yval="0.333333343" sustainpoint="0" big="0"/>
+      <EnvPoint xval="93.0744934" yval="0.483333319" sustainpoint="0" big="0"/>
+      <EnvPoint xval="93.2704315" yval="0.483333319" sustainpoint="0" big="0"/>
+      <EnvPoint xval="93.7263641" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="93.9863663" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="94.1822968" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="94.4422989" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="94.6382294" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="95.094162" yval="0.300000012" sustainpoint="0" big="0"/>
+      <EnvPoint xval="95.3541641" yval="0.300000012" sustainpoint="0" big="0"/>
+      <EnvPoint xval="95.5500946" yval="0.300000012" sustainpoint="0" big="0"/>
+      <EnvPoint xval="96.0060272" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="96.4619675" yval="0.733333349" sustainpoint="0" big="0"/>
+      <EnvPoint xval="96.9179001" yval="0.733333349" sustainpoint="0" big="0"/>
+      <EnvPoint xval="97.3738327" yval="0.400000006" sustainpoint="0" big="0"/>
+      <EnvPoint xval="97.8297653" yval="0.333333343" sustainpoint="0" big="0"/>
+      <EnvPoint xval="98.0897675" yval="0.283333331" sustainpoint="0" big="0"/>
+      <EnvPoint xval="98.2856979" yval="0.349999994" sustainpoint="0" big="0"/>
+      <EnvPoint xval="98.7416306" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="99.1975632" yval="0.699999988" sustainpoint="0" big="0"/>
+      <EnvPoint xval="99.4575653" yval="0.683333337" sustainpoint="0" big="0"/>
+      <EnvPoint xval="99.6534958" yval="0.533333361" sustainpoint="0" big="0"/>
+      <EnvPoint xval="100.109428" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="100.565369" yval="0.349999994" sustainpoint="0" big="0"/>
+      <EnvPoint xval="100.825363" yval="0.216666669" sustainpoint="0" big="0"/>
+      <EnvPoint xval="101.021301" yval="0.216666669" sustainpoint="0" big="0"/>
+      <EnvPoint xval="101.477234" yval="0.283333331" sustainpoint="0" big="0"/>
+      <EnvPoint xval="101.933167" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="102.389099" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="102.845032" yval="0.583333313" sustainpoint="0" big="0"/>
+      <EnvPoint xval="103.105034" yval="0.5" sustainpoint="0" big="0"/>
+      <EnvPoint xval="103.300964" yval="0.266666681" sustainpoint="0" big="0"/>
+      <EnvPoint xval="103.756897" yval="0.183333337" sustainpoint="0" big="0"/>
+      <EnvPoint xval="104.21283" yval="0.116666675" sustainpoint="0" big="0"/>
+      <EnvPoint xval="104.472832" yval="0.116666675" sustainpoint="0" big="0"/>
+      <EnvPoint xval="104.66877" yval="0.099999994" sustainpoint="0" big="0"/>
+      <EnvPoint xval="105.124702" yval="0.25" sustainpoint="0" big="0"/>
+      <EnvPoint xval="105.580635" yval="0.349999994" sustainpoint="0" big="0"/>
+      <EnvPoint xval="105.840637" yval="0.483333319" sustainpoint="0" big="0"/>
+      <EnvPoint xval="106.036568" yval="0.483333319" sustainpoint="0" big="0"/>
+      <EnvPoint xval="106.4925" yval="0.400000006" sustainpoint="0" big="0"/>
+      <EnvPoint xval="106.948433" yval="0.199999988" sustainpoint="0" big="0"/>
+      <EnvPoint xval="107.404366" yval="0.0833333433" sustainpoint="0" big="0"/>
+      <EnvPoint xval="107.860298" yval="0.133333325" sustainpoint="0" big="0"/>
+      <EnvPoint xval="108.316231" yval="0.233333349" sustainpoint="0" big="0"/>
+      <EnvPoint xval="108.576233" yval="0.300000012" sustainpoint="0" big="0"/>
+      <EnvPoint xval="108.772171" yval="0.333333343" sustainpoint="0" big="0"/>
+      <EnvPoint xval="109.228104" yval="0.283333331" sustainpoint="0" big="0"/>
+      <EnvPoint xval="109.684036" yval="0.133333325" sustainpoint="0" big="0"/>
+      <EnvPoint xval="110.139969" yval="0" sustainpoint="0" big="0"/>
+      <EnvPoint xval="110.399971" yval="0" sustainpoint="0" big="0"/>
+      <EnvPoint xval="110.595901" yval="0.0333333313" sustainpoint="0" big="0"/>
+      <EnvPoint xval="111.051834" yval="0.25" sustainpoint="0" big="0"/>
+      <EnvPoint xval="111.507767" yval="0.366666675" sustainpoint="0" big="0"/>
+      <EnvPoint xval="111.767769" yval="0.333333343" sustainpoint="0" big="0"/>
+      <EnvPoint xval="111.963699" yval="0.283333331" sustainpoint="0" big="0"/>
+      <EnvPoint xval="112.419632" yval="0.166666687" sustainpoint="0" big="0"/>
+      <EnvPoint xval="112.875572" yval="0.133333325" sustainpoint="0" big="0"/>
+      <EnvPoint xval="113.331505" yval="0.349999994" sustainpoint="0" big="0"/>
+      <EnvPoint xval="113.787437" yval="0.349999994" sustainpoint="0" big="0"/>
+      <EnvPoint xval="114.24337" yval="0.366666675" sustainpoint="0" big="0"/>
+      <EnvPoint xval="114.699303" yval="0.300000012" sustainpoint="0" big="0"/>
+      <EnvPoint xval="115.155235" yval="0.5" sustainpoint="0" big="0"/>
+    </Envelope>
+  </Element>
+  <Element Type="1" StartTick="2" EndTick="24.666666" TickLength="22.666666"
+           TrackLine="28" PattIndex="0" Text="This is a recorded envelope:"
+           Bookmark="0"/>
+  <Element Type="3" StartTick="14" EndTick="16" TickLength="2" TrackLine="61"
+           PattIndex="7" InstrIndex="1" Volume="1" Panning="0" Note="58"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="7" StartTick="15" EndTick="16" TickLength="1" TrackLine="62"
+           PattIndex="7" Volume="1" Panning="0" Note="57" NoteVisible="0"/>
+  <Element Type="3" StartTick="13" EndTick="14" TickLength="1" TrackLine="62"
+           PattIndex="7" InstrIndex="1" Volume="0.687995791" Panning="0"
+           Note="57" NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="16" EndTick="17" TickLength="1" TrackLine="74"
+           PattIndex="7" InstrIndex="1" Volume="1" Panning="0" Note="45"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="17" EndTick="18" TickLength="1" TrackLine="62"
+           PattIndex="7" InstrIndex="1" Volume="1" Panning="0" Note="57"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="19" EndTick="20" TickLength="1" TrackLine="62"
+           PattIndex="7" InstrIndex="1" Volume="1" Panning="0" Note="57"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="20" EndTick="21" TickLength="1" TrackLine="74"
+           PattIndex="7" InstrIndex="1" Volume="1" Panning="0" Note="45"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="22" EndTick="23" TickLength="1" TrackLine="74"
+           PattIndex="7" InstrIndex="1" Volume="1" Panning="0" Note="45"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="23" EndTick="24" TickLength="1" TrackLine="62"
+           PattIndex="7" InstrIndex="1" Volume="1" Panning="0" Note="57"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="25" EndTick="26" TickLength="1" TrackLine="62"
+           PattIndex="7" InstrIndex="1" Volume="1" Panning="0" Note="57"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="26" EndTick="27" TickLength="1" TrackLine="76"
+           PattIndex="7" InstrIndex="1" Volume="1" Panning="0" Note="43"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="30" EndTick="32" TickLength="2" TrackLine="61"
+           PattIndex="7" InstrIndex="1" Volume="1" Panning="0" Note="58"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="7" StartTick="31" EndTick="32" TickLength="1" TrackLine="54"
+           PattIndex="7" Volume="1" Panning="0" Note="65" NoteVisible="0"/>
+  <Element Type="3" StartTick="29" EndTick="30" TickLength="1" TrackLine="62"
+           PattIndex="7" InstrIndex="1" Volume="0.687995791" Panning="0"
+           Note="57" NoteVisible="0" NoteRelative="0"/>
+  <Element Type="2" StartTick="0" EndTick="1.7325207" TickLength="1.7325207"
+           TrackLine="0" PattIndex="8" InstrIndex="0" Volume="0.548758566"
+           Panning="0" Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0"
+           Reversed="0"/>
+  <Element Type="2" StartTick="1" EndTick="2.73252058" TickLength="1.73252058"
+           TrackLine="0" PattIndex="8" InstrIndex="0" Volume="0.439552844"
+           Panning="0" Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0"
+           Reversed="0"/>
+  <Element Type="2" StartTick="3" EndTick="4.73252058" TickLength="1.73252058"
+           TrackLine="0" PattIndex="8" InstrIndex="0" Volume="0.611551821"
+           Panning="0" Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0"
+           Reversed="0"/>
+  <Element Type="2" StartTick="4" EndTick="5.73252058" TickLength="1.73252058"
+           TrackLine="0" PattIndex="8" InstrIndex="0" Volume="0.343997896"
+           Panning="0" Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0"
+           Reversed="0"/>
+  <Element Type="2" StartTick="6" EndTick="7.73252058" TickLength="1.73252058"
+           TrackLine="0" PattIndex="8" InstrIndex="0" Volume="0.420441866"
+           Panning="0" Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0"
+           Reversed="0"/>
+  <Element Type="2" StartTick="8" EndTick="9.73252106" TickLength="1.73252106"
+           TrackLine="0" PattIndex="8" InstrIndex="0" Volume="0.382219851"
+           Panning="0" Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0"
+           Reversed="0"/>
+  <Element Type="2" StartTick="9" EndTick="10.7325211" TickLength="1.73252106"
+           TrackLine="0" PattIndex="8" InstrIndex="0" Volume="0.267553926"
+           Panning="0" Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0"
+           Reversed="0"/>
+  <Element Type="2" StartTick="11" EndTick="12.7325211" TickLength="1.73252106"
+           TrackLine="0" PattIndex="8" InstrIndex="0" Volume="0.535107851"
+           Panning="0" Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0"
+           Reversed="0"/>
+  <Element Type="2" StartTick="12" EndTick="13.7325211" TickLength="1.73252106"
+           TrackLine="0" PattIndex="8" InstrIndex="0" Volume="0.406496018"
+           Panning="0" Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0"
+           Reversed="0"/>
+  <Element Type="2" StartTick="15" EndTick="16.7325211" TickLength="1.73252106"
+           TrackLine="0" PattIndex="8" InstrIndex="0" Volume="0.531633019"
+           Panning="0" Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0"
+           Reversed="0"/>
+  <Element Type="2" StartTick="14" EndTick="15.7325211" TickLength="1.73252106"
+           TrackLine="0" PattIndex="8" InstrIndex="0" Volume="0.286664903"
+           Panning="0" Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0"
+           Reversed="0"/>
+  <Element Type="4" StartTick="364" EndTick="431" TickLength="67" TrackLine="13"
+           PattIndex="0" CmdType="17" ParamIndex="1072" EffIndex="0">
+    <Envelope Len="67" Hgt="40" sustainable="0" folded="0">
+      <EnvPoint xval="0" yval="0" sustainpoint="0" big="1"/>
+      <EnvPoint xval="40.3333321" yval="0.324999988" sustainpoint="0" big="1"/>
+      <EnvPoint xval="56.6666679" yval="0.649999976" sustainpoint="0" big="1"/>
+      <EnvPoint xval="65.3333359" yval="0.975000024" sustainpoint="0" big="1"/>
+    </Envelope>
+  </Element>
+  <Element Type="1" StartTick="2" EndTick="127.333336" TickLength="125.333336"
+           TrackLine="5" PattIndex="0" Text=" For example, the pattern, named &quot;6&quot;, contains envelopes for the Chaosynth's filter cutoff and FM index, constantly repeating with every clone of this pattern."
+           Bookmark="0"/>
+</ChaoticProject>

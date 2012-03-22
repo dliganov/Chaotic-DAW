@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<ChaoticPreset FormatVersion="1">
+  <Module Name="Synthesizer" ID="1129535822" Preset="Weird 1">
+    <Parameter name="Osc1.3x" index="2" val="0" bval="0"/>
+    <Parameter name="Osc2.3x" index="3" val="0" bval="1"/>
+    <Parameter name="Osc3.3x" index="4" val="0" bval="0"/>
+    <Parameter name="Osc1.saw" index="5" val="0" bval="0"/>
+    <Parameter name="Osc1.sine" index="6" val="0" bval="0"/>
+    <Parameter name="Osc1.triangle" index="7" val="0" bval="1"/>
+    <Parameter name="Osc1.pulse" index="8" val="0" bval="0"/>
+    <Parameter name="Osc1.noise" index="9" val="0" bval="0"/>
+    <Parameter name="Osc2.saw" index="10" val="0" bval="0"/>
+    <Parameter name="Osc2.sine" index="11" val="0" bval="1"/>
+    <Parameter name="Osc2.triangle" index="12" val="0" bval="0"/>
+    <Parameter name="Osc2.pulse" index="13" val="0" bval="0"/>
+    <Parameter name="Osc2.noise" index="14" val="0" bval="0"/>
+    <Parameter name="Osc3.saw" index="15" val="0" bval="0"/>
+    <Parameter name="Osc3.sine" index="16" val="0" bval="1"/>
+    <Parameter name="Osc3.triangle" index="17" val="0" bval="0"/>
+    <Parameter name="Osc3.pulse" index="18" val="0" bval="0"/>
+    <Parameter name="Osc3.noise" index="19" val="0" bval="0"/>
+    <Parameter name="Osc1.level" index="20" val="1"/>
+    <Parameter name="Osc1.detune" index="21" val="0.000295743201"/>
+    <Parameter name="Osc1.octave" index="22" val="-3"/>
+    <Parameter name="Osc1.pwidth" index="23" val="0.295121968"/>
+    <Parameter name="Osc2.level" index="24" val="1"/>
+    <Parameter name="Osc2.detune" index="25" val="-0.00725159701"/>
+    <Parameter name="Osc2.octave" index="26" val="0"/>
+    <Parameter name="Osc2.pwidth" index="27" val="0.202439025"/>
+    <Parameter name="Osc3.level" index="28" val="1"/>
+    <Parameter name="Osc3.detune" index="29" val="0"/>
+    <Parameter name="Osc3.octave" index="30" val="3"/>
+    <Parameter name="Osc3.pwidth" index="31" val="0.314634144"/>
+    <Parameter name="Flt1.Osc1" index="32" val="0" bval="0"/>
+    <Parameter name="Flt1.Osc2" index="33" val="0" bval="1"/>
+    <Parameter name="Flt1.Osc3" index="34" val="0" bval="1"/>
+    <Parameter name="Flt2.Osc1" index="35" val="0" bval="0"/>
+    <Parameter name="Flt2.Osc2" index="36" val="0" bval="0"/>
+    <Parameter name="Flt2.Osc3" index="37" val="0" bval="0"/>
+    <Parameter name="Chorus ON" index="38" val="0" bval="0"/>
+    <Parameter name="Delay ON" index="39" val="0" bval="1"/>
+    <Parameter name="Reverb ON" index="40" val="0" bval="1"/>
+    <Parameter name="LFOAmp.Osc1.level" index="41" val="0"/>
+    <Parameter name="LFORate.Osc1.level" index="42" val="3"/>
+    <Parameter name="LFOAmp.Osc2.level" index="43" val="0"/>
+    <Parameter name="LFORate.Osc2.level" index="44" val="4.73684216"/>
+    <Parameter name="LFOAmp.Osc3.level" index="45" val="0"/>
+    <Parameter name="LFORate.Osc3.level" index="46" val="3"/>
+    <Parameter name="LFOAmp.Osc1.pitch" index="47" val="0.0293644909"/>
+    <Parameter name="LFORate.Osc1.pitch" index="48" val="3"/>
+    <Parameter name="LFOAmp.Osc2.pitch" index="49" val="0.00807523541"/>
+    <Parameter name="LFORate.Osc2.pitch" index="50" val="3"/>
+    <Parameter name="LFOAmp.Osc3.pitch" index="51" val="0"/>
+    <Parameter name="LFORate.Osc3.pitch" index="52" val="3"/>
+    <Parameter name="LFOAmp.Flt1.freq" index="53" val="0"/>
+    <Parameter name="LFORate.Flt1.freq" index="54" val="3"/>
+    <Parameter name="LFOAmp.Flt2.freq" index="55" val="0"/>
+    <Parameter name="LFORate.Flt2.freq" index="56" val="3"/>
+    <Parameter name="Osc1.FM.Osc2" index="57" val="1"/>
+    <Parameter name="Osc2.FM.Osc3" index="58" val="0"/>
+    <Parameter name="Osc1.FM.Osc3" index="59" val="0"/>
+    <Parameter name="Osc1.RM.Osc2" index="60" val="0"/>
+    <Parameter name="Osc2.RM.Osc3" index="61" val="0.341463417"/>
+    <Parameter name="Osc1.RM.Osc3" index="62" val="0"/>
+    <EnvIndex Osc1="2" Osc2="2" Osc3="2" Filt1="3" Filt2="3"/>
+    <Envelope1>
+      <EnvPoint xval="0" yval="1" sustainpoint="1"/>
+    </Envelope1>
+    <Envelope2>
+      <EnvPoint xval="0" yval="1" sustainpoint="0"/>
+      <EnvPoint xval="0.0704960823" yval="0.673469365" sustainpoint="0"/>
+      <EnvPoint xval="0.148825064" yval="0.326530606" sustainpoint="0"/>
+      <EnvPoint xval="0.391644925" yval="0.46938777" sustainpoint="0"/>
+      <EnvPoint xval="0.556135774" yval="0.20408164" sustainpoint="0"/>
+      <EnvPoint xval="0.791122735" yval="0" sustainpoint="1"/>
+    </Envelope2>
+    <Envelope3>
+      <EnvPoint xval="0" yval="1" sustainpoint="1"/>
+      <EnvPoint xval="0.313315928" yval="0.591836751" sustainpoint="0"/>
+      <EnvPoint xval="0.548302889" yval="0.693877578" sustainpoint="0"/>
+      <EnvPoint xval="0.861618817" yval="0" sustainpoint="0"/>
+    </Envelope3>
+    <Envelope4>
+      <EnvPoint xval="0" yval="1" sustainpoint="1"/>
+    </Envelope4>
+    <Envelope5>
+      <EnvPoint xval="0" yval="1" sustainpoint="1"/>
+    </Envelope5>
+    <Module Name="Reverb" ID="1380275794" Preset="default">
+      <Parameter name="PreDelay" index="0" val="15"/>
+      <Parameter name="Roomsize" index="1" val="77"/>
+      <Parameter name="Decay" index="2" val="6"/>
+      <Parameter name="HighCut" index="3" val="0.200000003"/>
+      <Parameter name="LowCut" index="4" val="0.597561002"/>
+      <Parameter name="DryWet" index="5" val="40"/>
+    </Module>
+    <Module Name="X-Delay" ID="1347437644" Preset="default">
+      <Parameter name="Delay" index="0" val="1"/>
+      <Parameter name="Amount" index="1" val="1"/>
+      <Parameter name="Feedback" index="2" val="79.2682953"/>
+      <Parameter name="Pan" index="3" val="0.800000012"/>
+      <Parameter name="LowCut" index="4" val="0.899999976"/>
+      <Parameter name="DryWet" index="5" val="20"/>
+    </Module>
+    <Module Name="Chorus" ID="1128812370" Preset="default">
+      <Parameter name="Delay" index="0" val="5"/>
+      <Parameter name="Mod. Freq" index="1" val="2"/>
+      <Parameter name="Depth" index="2" val="0.25"/>
+      <Parameter name="DryWet" index="3" val="0.5"/>
+    </Module>
+    <Module Name="Filter2" ID="1128680532" Preset="default">
+      <Parameter name="Cutoff" index="0" val="1"/>
+      <Parameter name="Resonance" index="1" val="0"/>
+      <Parameter name="LP12" index="2" val="0" bval="1"/>
+      <Parameter name="HP12" index="3" val="0" bval="0"/>
+      <Parameter name="BP" index="4" val="0" bval="0"/>
+      <Parameter name="Mode" index="5" val="0" bval="0"/>
+    </Module>
+    <Module Name="Filter" ID="1128680532" Preset="default">
+      <Parameter name="Cutoff" index="0" val="0.744680822"/>
+      <Parameter name="Resonance" index="1" val="0"/>
+      <Parameter name="LP12" index="2" val="0" bval="1"/>
+      <Parameter name="HP12" index="3" val="0" bval="0"/>
+      <Parameter name="BP" index="4" val="0" bval="0"/>
+      <Parameter name="Mode" index="5" val="0" bval="0"/>
+    </Module>
+  </Module>
+</ChaoticPreset>

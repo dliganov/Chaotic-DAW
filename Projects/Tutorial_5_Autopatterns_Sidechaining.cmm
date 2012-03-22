@@ -1,0 +1,855 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<ChaoticProject CMMVersion="100" BPM="120" TPB="4" BPB="4" Octave="5">
+  <Parameter GlobalIndex="0" name="MasterVolume" index="0" val="0.462339044"/>
+  <Instrument InstrIndex="0" InstrType="0" InstrName="snar_04m1.wav" InstrPath="Samples\snar_04m1.wav"
+              InstrAlias="s" MixChannel="--" Mute="0" Solo="0" Normalized="0"
+              LoopStart="0" LoopEnd="4572" LoopType="0">
+    <Parameter GlobalIndex="427" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="428" name="Pan" index="1" val="0"/>
+    <SmpEnv Len="2" Hgt="40" sustainable="0" folded="0">
+      <EnvPoint xval="0" yval="1" sustainpoint="1" big="1"/>
+    </SmpEnv>
+  </Instrument>
+  <Instrument InstrIndex="1" InstrType="0" InstrName="snar_04m1.wav_1" InstrPath="Samples\snar_04m1.wav"
+              InstrAlias="s1" MixChannel="--" Mute="0" Solo="0" Normalized="0"
+              LoopStart="0" LoopEnd="4572" LoopType="0">
+    <Parameter GlobalIndex="429" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="430" name="Pan" index="1" val="0"/>
+    <SmpEnv Len="2" Hgt="88" sustainable="0" folded="0">
+      <EnvPoint xval="0" yval="1" sustainpoint="1" big="1"/>
+    </SmpEnv>
+  </Instrument>
+  <Instrument InstrIndex="2" InstrType="0" InstrName="rhodes58_L.wav" InstrPath="Samples\rhodes58_L.wav"
+              InstrAlias="r1" MixChannel="01" Mute="0" Solo="0" Normalized="0"
+              LoopStart="0" LoopEnd="62079" LoopType="0">
+    <Parameter GlobalIndex="431" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="432" name="Pan" index="1" val="0"/>
+    <SmpEnv Len="2" Hgt="40" sustainable="0" folded="0">
+      <EnvPoint xval="0" yval="1" sustainpoint="1" big="1"/>
+    </SmpEnv>
+  </Instrument>
+  <Instrument InstrIndex="3" InstrType="0" InstrName="808.wav" InstrPath="Samples\808.wav"
+              InstrAlias="8" MixChannel="--" Mute="0" Solo="0" Normalized="1"
+              LoopStart="0" LoopEnd="6143" LoopType="0">
+    <Parameter GlobalIndex="433" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="434" name="Pan" index="1" val="0.0666667223"/>
+    <SmpEnv Len="2" Hgt="88" sustainable="0" folded="0">
+      <EnvPoint xval="0" yval="1" sustainpoint="1" big="1"/>
+    </SmpEnv>
+  </Instrument>
+  <Instrument InstrIndex="4" InstrType="1" InstrName="Chaosynth" InstrPath="internal://chaotic"
+              InstrAlias="s2" MixChannel="02" Mute="0" Solo="0">
+    <Parameter GlobalIndex="435" name="Vol" index="0" val="0.565685451"/>
+    <Parameter GlobalIndex="436" name="Pan" index="1" val="0"/>
+    <Module Name="Chaosynth" ID="1129535822" Preset="Current">
+      <Parameter GlobalIndex="437" name="Osc1.3x" index="2" val="0" bval="0"/>
+      <Parameter GlobalIndex="438" name="Osc2.3x" index="3" val="0" bval="1"/>
+      <Parameter GlobalIndex="439" name="Osc3.3x" index="4" val="0" bval="0"/>
+      <Parameter GlobalIndex="440" name="Osc1.saw" index="5" val="0" bval="0"/>
+      <Parameter GlobalIndex="441" name="Osc1.sine" index="6" val="0" bval="0"/>
+      <Parameter GlobalIndex="442" name="Osc1.triangle" index="7" val="0" bval="1"/>
+      <Parameter GlobalIndex="443" name="Osc1.pulse" index="8" val="0" bval="0"/>
+      <Parameter GlobalIndex="444" name="Osc1.noise" index="9" val="0" bval="0"/>
+      <Parameter GlobalIndex="445" name="Osc2.saw" index="10" val="0" bval="0"/>
+      <Parameter GlobalIndex="446" name="Osc2.sine" index="11" val="0" bval="0"/>
+      <Parameter GlobalIndex="447" name="Osc2.triangle" index="12" val="0" bval="1"/>
+      <Parameter GlobalIndex="448" name="Osc2.pulse" index="13" val="0" bval="0"/>
+      <Parameter GlobalIndex="449" name="Osc2.noise" index="14" val="0" bval="0"/>
+      <Parameter GlobalIndex="450" name="Osc3.saw" index="15" val="0" bval="0"/>
+      <Parameter GlobalIndex="451" name="Osc3.sine" index="16" val="0" bval="0"/>
+      <Parameter GlobalIndex="452" name="Osc3.triangle" index="17" val="0" bval="1"/>
+      <Parameter GlobalIndex="453" name="Osc3.pulse" index="18" val="0" bval="0"/>
+      <Parameter GlobalIndex="454" name="Osc3.noise" index="19" val="0" bval="0"/>
+      <Parameter GlobalIndex="455" name="Osc1.level" index="20" val="1"/>
+      <Parameter GlobalIndex="456" name="Osc1.detune" index="21" val="0.000295743201"/>
+      <Parameter GlobalIndex="457" name="Osc1.octave" index="22" val="0"/>
+      <Parameter GlobalIndex="458" name="Osc1.pwidth" index="23" val="0.100000001"/>
+      <Parameter GlobalIndex="459" name="Osc2.level" index="24" val="1"/>
+      <Parameter GlobalIndex="460" name="Osc2.detune" index="25" val="0.000725159713"/>
+      <Parameter GlobalIndex="461" name="Osc2.octave" index="26" val="1"/>
+      <Parameter GlobalIndex="462" name="Osc2.pwidth" index="27" val="0.100000001"/>
+      <Parameter GlobalIndex="463" name="Osc3.level" index="28" val="0.5"/>
+      <Parameter GlobalIndex="464" name="Osc3.detune" index="29" val="0.0021754792"/>
+      <Parameter GlobalIndex="465" name="Osc3.octave" index="30" val="-1"/>
+      <Parameter GlobalIndex="466" name="Osc3.pwidth" index="31" val="0.100000001"/>
+      <Parameter GlobalIndex="467" name="Flt1.Osc1" index="32" val="0" bval="0"/>
+      <Parameter GlobalIndex="468" name="Flt1.Osc2" index="33" val="0" bval="0"/>
+      <Parameter GlobalIndex="469" name="Flt1.Osc3" index="34" val="0" bval="0"/>
+      <Parameter GlobalIndex="470" name="Flt2.Osc1" index="35" val="0" bval="1"/>
+      <Parameter GlobalIndex="471" name="Flt2.Osc2" index="36" val="0" bval="1"/>
+      <Parameter GlobalIndex="472" name="Flt2.Osc3" index="37" val="0" bval="1"/>
+      <Parameter GlobalIndex="473" name="Chorus ON" index="38" val="0" bval="1"/>
+      <Parameter GlobalIndex="474" name="Delay ON" index="39" val="0" bval="1"/>
+      <Parameter GlobalIndex="475" name="Reverb ON" index="40" val="0" bval="1"/>
+      <Parameter GlobalIndex="476" name="LFOAmp.Osc1.level" index="41" val="0.432098776"/>
+      <Parameter GlobalIndex="477" name="LFORate.Osc1.level" index="42" val="5.78947353"/>
+      <Parameter GlobalIndex="478" name="LFOAmp.Osc2.level" index="43" val="0.234567896"/>
+      <Parameter GlobalIndex="479" name="LFORate.Osc2.level" index="44" val="10.2631578"/>
+      <Parameter GlobalIndex="480" name="LFOAmp.Osc3.level" index="45" val="0.469135791"/>
+      <Parameter GlobalIndex="481" name="LFORate.Osc3.level" index="46" val="2.63157892"/>
+      <Parameter GlobalIndex="482" name="LFOAmp.Osc1.pitch" index="47" val="0.0124799088"/>
+      <Parameter GlobalIndex="483" name="LFORate.Osc1.pitch" index="48" val="3"/>
+      <Parameter GlobalIndex="484" name="LFOAmp.Osc2.pitch" index="49" val="0.00734112272"/>
+      <Parameter GlobalIndex="485" name="LFORate.Osc2.pitch" index="50" val="1.84210527"/>
+      <Parameter GlobalIndex="486" name="LFOAmp.Osc3.pitch" index="51" val="0"/>
+      <Parameter GlobalIndex="487" name="LFORate.Osc3.pitch" index="52" val="3"/>
+      <Parameter GlobalIndex="488" name="LFOAmp.Flt1.freq" index="53" val="0"/>
+      <Parameter GlobalIndex="489" name="LFORate.Flt1.freq" index="54" val="3"/>
+      <Parameter GlobalIndex="490" name="LFOAmp.Flt2.freq" index="55" val="0.135802463"/>
+      <Parameter GlobalIndex="491" name="LFORate.Flt2.freq" index="56" val="3"/>
+      <Parameter GlobalIndex="492" name="Osc1.FM.Osc2" index="57" val="0.47560975"/>
+      <Parameter GlobalIndex="493" name="Osc2.FM.Osc3" index="58" val="0"/>
+      <Parameter GlobalIndex="494" name="Osc1.FM.Osc3" index="59" val="0.280487806"/>
+      <Parameter GlobalIndex="495" name="Osc1.RM.Osc2" index="60" val="1"/>
+      <Parameter GlobalIndex="496" name="Osc2.RM.Osc3" index="61" val="0"/>
+      <Parameter GlobalIndex="497" name="Osc1.RM.Osc3" index="62" val="0.548780501"/>
+      <EnvIndex Osc1="2" Osc2="2" Osc3="2" Filt1="3" Filt2="3"/>
+      <Envelope1 Len="3" Hgt="49" sustainable="1" folded="0">
+        <EnvPoint xval="0" yval="1" sustainpoint="1" big="0"/>
+      </Envelope1>
+      <Envelope2 Len="3" Hgt="49" sustainable="1" folded="0">
+        <EnvPoint xval="0" yval="0" sustainpoint="0" big="0"/>
+        <EnvPoint xval="0.148825064" yval="0.265306115" sustainpoint="0" big="0"/>
+        <EnvPoint xval="0.344647527" yval="0.551020384" sustainpoint="0" big="0"/>
+        <EnvPoint xval="0.51697129" yval="1" sustainpoint="1" big="0"/>
+        <EnvPoint xval="0.712793767" yval="0.408163279" sustainpoint="0" big="0"/>
+        <EnvPoint xval="0.814621449" yval="0.224489793" sustainpoint="0" big="0"/>
+        <EnvPoint xval="0.939947784" yval="0.428571433" sustainpoint="0" big="0"/>
+        <EnvPoint xval="1.00261116" yval="0.20408164" sustainpoint="0" big="0"/>
+        <EnvPoint xval="1.23759818" yval="0" sustainpoint="0" big="0"/>
+      </Envelope2>
+      <Envelope3 Len="3" Hgt="49" sustainable="1" folded="0">
+        <EnvPoint xval="0" yval="0" sustainpoint="0" big="0"/>
+        <EnvPoint xval="0.0939947814" yval="0.775510192" sustainpoint="0" big="0"/>
+        <EnvPoint xval="0.172323763" yval="1" sustainpoint="1" big="0"/>
+        <EnvPoint xval="0.438642293" yval="0.46938777" sustainpoint="0" big="0"/>
+        <EnvPoint xval="0.548302889" yval="0.693877578" sustainpoint="0" big="0"/>
+        <EnvPoint xval="0.861618817" yval="0" sustainpoint="0" big="0"/>
+      </Envelope3>
+      <Envelope4 Len="3" Hgt="49" sustainable="1" folded="0">
+        <EnvPoint xval="0" yval="1" sustainpoint="1" big="0"/>
+      </Envelope4>
+      <Envelope5 Len="3" Hgt="49" sustainable="1" folded="0">
+        <EnvPoint xval="0" yval="1" sustainpoint="1" big="0"/>
+      </Envelope5>
+      <Module Name="Reverb" ID="1380275794" Preset="default">
+        <Parameter GlobalIndex="581" name="PreDelay" index="0" val="15"/>
+        <Parameter GlobalIndex="582" name="Roomsize" index="1" val="77"/>
+        <Parameter GlobalIndex="583" name="Decay" index="2" val="6"/>
+        <Parameter GlobalIndex="584" name="HighCut" index="3" val="0.200000003"/>
+        <Parameter GlobalIndex="585" name="LowCut" index="4" val="1"/>
+        <Parameter GlobalIndex="586" name="DryWet" index="5" val="24.3902435"/>
+        <Parameter GlobalIndex="587" name="LowDecScale" index="6" val="0.5"/>
+        <Parameter GlobalIndex="588" name="HighDecScale" index="7" val="0.239999995"/>
+      </Module>
+      <Module Name="Delay" ID="1347437644" Preset="default">
+        <Parameter GlobalIndex="574" name="Mode" index="0" val="0" bval="1"/>
+        <Parameter GlobalIndex="575" name="Delay" index="1" val="3"/>
+        <Parameter GlobalIndex="576" name="Amount" index="2" val="1"/>
+        <Parameter GlobalIndex="577" name="Feedback" index="3" val="55"/>
+        <Parameter GlobalIndex="578" name="Pan" index="4" val="0"/>
+        <Parameter GlobalIndex="579" name="LowCut" index="5" val="0.899999976"/>
+        <Parameter GlobalIndex="580" name="DryWet" index="6" val="40"/>
+      </Module>
+      <Module Name="Chorus" ID="1128812370" Preset="default">
+        <Parameter GlobalIndex="570" name="Delay" index="0" val="5"/>
+        <Parameter GlobalIndex="571" name="Mod. Freq" index="1" val="2"/>
+        <Parameter GlobalIndex="572" name="Depth" index="2" val="0.25"/>
+        <Parameter GlobalIndex="573" name="DryWet" index="3" val="0.5"/>
+      </Module>
+      <Module Name="Filter2" ID="1128680532" Preset="default">
+        <Parameter GlobalIndex="504" name="Cutoff" index="0" val="0.648936152"/>
+        <Parameter GlobalIndex="505" name="Resonance" index="1" val="0"/>
+        <Parameter GlobalIndex="506" name="LP12" index="2" val="0" bval="1"/>
+        <Parameter GlobalIndex="507" name="HP12" index="3" val="0" bval="0"/>
+        <Parameter GlobalIndex="508" name="BP" index="4" val="0" bval="0"/>
+        <Parameter GlobalIndex="509" name="Mode" index="5" val="0" bval="0"/>
+      </Module>
+      <Module Name="Filter" ID="1128680532" Preset="default">
+        <Parameter GlobalIndex="498" name="Cutoff" index="0" val="1"/>
+        <Parameter GlobalIndex="499" name="Resonance" index="1" val="0"/>
+        <Parameter GlobalIndex="500" name="LP12" index="2" val="0" bval="1"/>
+        <Parameter GlobalIndex="501" name="HP12" index="3" val="0" bval="0"/>
+        <Parameter GlobalIndex="502" name="BP" index="4" val="0" bval="0"/>
+        <Parameter GlobalIndex="503" name="Mode" index="5" val="0" bval="0"/>
+      </Module>
+    </Module>
+  </Instrument>
+  <MixChannel Index="01" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="2" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="3" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="4" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="5" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="6" name="send3.amount" index="0" val="0"/>
+    <Effect EffIndex="0" EffType="10" EffName="GraphicEQ" EffPath="internal://graphiceq"
+            Folded="1" Bypass="0">
+      <Module Name="GraphicEQ" ID="1196574033" Preset="Current">
+        <Parameter GlobalIndex="589" name="8000 Hz" index="0" val="0"/>
+        <Parameter GlobalIndex="590" name="6500 Hz" index="1" val="2.13333321"/>
+        <Parameter GlobalIndex="591" name="3000 Hz" index="2" val="21.3333321"/>
+        <Parameter GlobalIndex="592" name="900 Hz" index="3" val="2.66666794"/>
+        <Parameter GlobalIndex="593" name="500 Hz" index="4" val="0"/>
+        <Parameter GlobalIndex="594" name="150 Hz" index="5" val="0"/>
+        <Parameter GlobalIndex="595" name="70 Hz" index="6" val="0"/>
+      </Module>
+    </Effect>
+    <Effect EffIndex="1" EffType="11" EffName="Delay" EffPath="internal://ppd"
+            Folded="1" Bypass="0">
+      <Module Name="Delay" ID="1347437644" Preset="Current">
+        <Parameter GlobalIndex="596" name="Mode" index="0" val="0" bval="1"/>
+        <Parameter GlobalIndex="597" name="Delay" index="1" val="3"/>
+        <Parameter GlobalIndex="598" name="Amount" index="2" val="1"/>
+        <Parameter GlobalIndex="599" name="Feedback" index="3" val="55"/>
+        <Parameter GlobalIndex="600" name="Pan" index="4" val="0.755555511"/>
+        <Parameter GlobalIndex="601" name="LowCut" index="5" val="0.899999976"/>
+        <Parameter GlobalIndex="602" name="DryWet" index="6" val="40"/>
+      </Module>
+    </Effect>
+    <Effect EffIndex="2" EffType="11" EffName="Delay" EffPath="internal://ppd"
+            Folded="1" Bypass="0">
+      <Module Name="Delay" ID="1347437644" Preset="Current">
+        <Parameter GlobalIndex="603" name="Mode" index="0" val="0" bval="1"/>
+        <Parameter GlobalIndex="604" name="Delay" index="1" val="6"/>
+        <Parameter GlobalIndex="605" name="Amount" index="2" val="0.666666687"/>
+        <Parameter GlobalIndex="606" name="Feedback" index="3" val="42.2222214"/>
+        <Parameter GlobalIndex="607" name="Pan" index="4" val="-1"/>
+        <Parameter GlobalIndex="608" name="LowCut" index="5" val="1"/>
+        <Parameter GlobalIndex="609" name="DryWet" index="6" val="40"/>
+      </Module>
+    </Effect>
+  </MixChannel>
+  <MixChannel Index="02" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="7" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="8" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="9" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="10" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="11" name="send3.amount" index="0" val="0"/>
+    <Effect EffIndex="3" EffType="14" EffName="Compressor" EffPath="internal://compressor"
+            Folded="0" Bypass="0">
+      <Module Name="Compressor" ID="1129270608" Preset="Current">
+        <Parameter GlobalIndex="610" name="Mode" index="0" val="0" bval="0"/>
+        <Parameter GlobalIndex="611" name="Threshold" index="1" val="-19.9999981"/>
+        <Parameter GlobalIndex="612" name="Ratio" index="2" val="4"/>
+        <Parameter GlobalIndex="613" name="Knee" index="3" val="0"/>
+        <Parameter GlobalIndex="614" name="Attack" index="4" val="10"/>
+        <Parameter GlobalIndex="615" name="Release" index="5" val="100"/>
+        <Parameter GlobalIndex="616" name="Gain" index="6" val="9.33333397"/>
+      </Module>
+    </Effect>
+  </MixChannel>
+  <MixChannel Index="03" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="12" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="13" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="14" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="15" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="16" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="04" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="17" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="18" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="19" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="20" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="21" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="05" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="22" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="23" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="24" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="25" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="26" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="06" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="27" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="28" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="29" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="30" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="31" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="07" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="32" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="33" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="34" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="35" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="36" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="08" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="37" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="38" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="39" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="40" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="41" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="09" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="42" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="43" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="44" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="45" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="46" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="10" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="47" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="48" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="49" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="50" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="51" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="11" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="52" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="53" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="54" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="55" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="56" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="12" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="57" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="58" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="59" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="60" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="61" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="13" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="62" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="63" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="64" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="65" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="66" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="14" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="67" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="68" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="69" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="70" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="71" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="15" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="72" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="73" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="74" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="75" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="76" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="16" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="77" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="78" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="79" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="80" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="81" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="17" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="82" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="83" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="84" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="85" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="86" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="18" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="87" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="88" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="89" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="90" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="91" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="19" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="92" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="93" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="94" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="95" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="96" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="20" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="97" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="98" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="99" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="100" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="101" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="21" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="102" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="103" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="104" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="105" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="106" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="22" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="107" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="108" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="109" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="110" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="111" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="23" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="112" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="113" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="114" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="115" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="116" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="24" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="117" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="118" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="119" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="120" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="121" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="25" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="122" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="123" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="124" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="125" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="126" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="26" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="127" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="128" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="129" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="130" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="131" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="27" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="132" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="133" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="134" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="135" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="136" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="28" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="137" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="138" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="139" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="140" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="141" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="29" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="142" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="143" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="144" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="145" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="146" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="30" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="147" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="148" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="149" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="150" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="151" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="31" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="152" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="153" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="154" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="155" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="156" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="32" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="157" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="158" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="159" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="160" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="161" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="Send1" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="162" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="163" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="164" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="165" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="166" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="Send2" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="167" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="168" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="169" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="170" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="171" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="Send3" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="172" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="173" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="174" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="175" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="176" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <MixChannel Index="M" Mute="0" Solo="0" VOffset="0">
+    <Parameter GlobalIndex="182" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="183" name="Pan" index="0" val="0"/>
+    <Parameter GlobalIndex="184" name="send1.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="185" name="send2.amount" index="0" val="0"/>
+    <Parameter GlobalIndex="186" name="send3.amount" index="0" val="0"/>
+  </MixChannel>
+  <Pattern Name="auto" PattType="0" PattIndex="1" IsAuto="1" TickWidth="-1"
+           InstrOwnerIndex="0"/>
+  <Pattern Name="1" PattType="2" PattIndex="2" IsAuto="0" TickWidth="16">
+    <Derived Type="0" StartTick="0" EndTick="16" TickLength="16" TrackLine="9"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+  </Pattern>
+  <Pattern Name="auto" PattType="0" PattIndex="3" IsAuto="1" TickWidth="-1"
+           InstrOwnerIndex="1"/>
+  <Pattern Name="2" PattType="2" PattIndex="4" IsAuto="0" TickWidth="16">
+    <Derived Type="0" StartTick="16" EndTick="32" TickLength="16" TrackLine="11"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="32" EndTick="48" TickLength="16" TrackLine="11"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="48" EndTick="64" TickLength="16" TrackLine="11"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="0" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="64" EndTick="80" TickLength="16" TrackLine="11"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="0" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="80" EndTick="96" TickLength="16" TrackLine="11"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="0" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="96" EndTick="112" TickLength="16" TrackLine="11"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="0" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="112" EndTick="128" TickLength="16" TrackLine="11"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="0" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="128" EndTick="144" TickLength="16" TrackLine="11"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="0" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="144" EndTick="160" TickLength="16" TrackLine="11"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="0" Muted="0"
+             TouchResized="0" IsFat="1"/>
+  </Pattern>
+  <Pattern Name="auto" PattType="0" PattIndex="5" IsAuto="1" TickWidth="-1"
+           InstrOwnerIndex="2"/>
+  <Pattern Name="3" PattType="1" PattIndex="6" IsAuto="0" TickWidth="24">
+    <Derived Type="0" StartTick="48" EndTick="80" TickLength="32" TrackLine="13"
+             Volume="1" Panning="0" OffsLine="50" LastPianoOffs="0" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="80" EndTick="112" TickLength="32" TrackLine="13"
+             Volume="1" Panning="0" OffsLine="34" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="176" EndTick="208" TickLength="32" TrackLine="13"
+             Volume="1" Panning="0" OffsLine="60" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="240" EndTick="272" TickLength="32" TrackLine="13"
+             Volume="1" Panning="0" OffsLine="46" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="272" EndTick="304" TickLength="32" TrackLine="13"
+             Volume="1" Panning="0" OffsLine="46" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="208" EndTick="240" TickLength="32" TrackLine="13"
+             Volume="1" Panning="0" OffsLine="46" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+  </Pattern>
+  <Pattern Name="auto" PattType="0" PattIndex="7" IsAuto="1" TickWidth="-1"
+           InstrOwnerIndex="3"/>
+  <Pattern Name="5" PattType="1" PattIndex="8" IsAuto="0" TickWidth="12">
+    <Derived Type="0" StartTick="176" EndTick="208" TickLength="32" TrackLine="15"
+             Volume="1" Panning="0" OffsLine="52" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="272" EndTick="304" TickLength="32" TrackLine="15"
+             Volume="1" Panning="0" OffsLine="46" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="208" EndTick="240" TickLength="32" TrackLine="15"
+             Volume="1" Panning="0" OffsLine="46" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="240" EndTick="272" TickLength="32" TrackLine="15"
+             Volume="1" Panning="0" OffsLine="46" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+  </Pattern>
+  <Pattern Name="7" PattType="2" PattIndex="9" IsAuto="0" TickWidth="16">
+    <Derived Type="0" StartTick="240" EndTick="256" TickLength="16" TrackLine="11"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="0" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="256" EndTick="272" TickLength="16" TrackLine="11"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="0" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="272" EndTick="288" TickLength="16" TrackLine="11"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="0" Muted="0"
+             TouchResized="0" IsFat="1"/>
+    <Derived Type="0" StartTick="288" EndTick="304" TickLength="16" TrackLine="11"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="0" Muted="0"
+             TouchResized="0" IsFat="1"/>
+  </Pattern>
+  <Pattern Name="4" PattType="1" PattIndex="10" IsAuto="0" TickWidth="12">
+    <Derived Type="0" StartTick="112" EndTick="144" TickLength="32" TrackLine="13"
+             Volume="1" Panning="0" OffsLine="44" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+  </Pattern>
+  <Pattern Name="6" PattType="2" PattIndex="11" IsAuto="0" TickWidth="16">
+    <Derived Type="0" StartTick="160" EndTick="176" TickLength="16" TrackLine="11"
+             Volume="1" Panning="0" OffsLine="0" LastPianoOffs="0" Muted="0"
+             TouchResized="0" IsFat="1"/>
+  </Pattern>
+  <Pattern Name="8" PattType="1" PattIndex="12" IsAuto="0" TickWidth="12">
+    <Derived Type="0" StartTick="144" EndTick="176" TickLength="32" TrackLine="13"
+             Volume="1" Panning="0" OffsLine="42" LastPianoOffs="46" Muted="0"
+             TouchResized="0" IsFat="1"/>
+  </Pattern>
+  <Element Type="1" StartTick="2" EndTick="218.333328" TickLength="216.333328"
+           TrackLine="0" PattIndex="0" Text="Every instrument has its own autopattern, which is invisible and plays with every note of the instrument. Initially autopatterns are empty."
+           Bookmark="0"/>
+  <Element Type="2" StartTick="3" EndTick="3.8295691" TickLength="0.829569101"
+           TrackLine="4" PattIndex="1" InstrIndex="0" Volume="0.554218829"
+           Panning="0" Note="0" NoteVisible="0" NoteRelative="1" TouchResized="0"
+           Reversed="0"/>
+  <Element Type="2" StartTick="6" EndTick="6.82956934" TickLength="0.82956934"
+           TrackLine="4" PattIndex="1" InstrIndex="0" Volume="0.267553926"
+           Panning="0" Note="0" NoteVisible="0" NoteRelative="1" TouchResized="0"
+           Reversed="0"/>
+  <Element Type="2" StartTick="9" EndTick="9.82956886" TickLength="0.829568863"
+           TrackLine="4" PattIndex="1" InstrIndex="0" Volume="0.0955549628"
+           Panning="0" Note="0" NoteVisible="0" NoteRelative="1" TouchResized="0"
+           Reversed="0"/>
+  <Element Type="1" StartTick="2" EndTick="293.333344" TickLength="291.333344"
+           TrackLine="2" PattIndex="0" Text="For example, open autopattern editor for the first instrument, we have on the instruments panel, named &quot;snar_04m1.wav&quot;. The editor will appear in the bottom, with several notes inside it."
+           Bookmark="0"/>
+  <Element Type="1" StartTick="2" EndTick="257.333344" TickLength="255.333344"
+           TrackLine="3" PattIndex="0" Text="These notes will be played together with every note of the instrument. Click on the instrument's VU meter to preview it. As a result, we get unusual echo effect."
+           Bookmark="0"/>
+  <Element Type="2" StartTick="0" EndTick="0.829569161" TickLength="0.829569161"
+           TrackLine="0" PattIndex="2" InstrIndex="0" Volume="0.99999994"
+           Panning="0" Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0"
+           Reversed="0"/>
+  <Element Type="2" StartTick="4" EndTick="4.82956934" TickLength="0.82956934"
+           TrackLine="0" PattIndex="2" InstrIndex="0" Volume="0.99999994"
+           Panning="0" Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0"
+           Reversed="0"/>
+  <Element Type="2" StartTick="14" EndTick="14.8295689" TickLength="0.829568863"
+           TrackLine="0" PattIndex="2" InstrIndex="0" Volume="0.898216665"
+           Panning="0" Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0"
+           Reversed="0"/>
+  <Element Type="2" StartTick="12" EndTick="12.8295689" TickLength="0.829568863"
+           TrackLine="0" PattIndex="2" InstrIndex="0" Volume="0.210220933"
+           Panning="0" Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0"
+           Reversed="0"/>
+  <Element Type="2" StartTick="13" EndTick="13.8295689" TickLength="0.829568863"
+           TrackLine="0" PattIndex="2" InstrIndex="0" Volume="0.614634156"
+           Panning="0" Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0"
+           Reversed="0"/>
+  <Element Type="1" StartTick="22" EndTick="345.333344" TickLength="323.333344"
+           TrackLine="5" PattIndex="0" Text="Of course you can experiment with notes, control symbols (see the corresponding tutorial on control symbols), envelopes and any other elements inside autopatterns to get various echoes and other effects."
+           Bookmark="0"/>
+  <Element Type="2" StartTick="2" EndTick="2.8295691" TickLength="0.829569101"
+           TrackLine="3" PattIndex="3" InstrIndex="1" Volume="0.458663821"
+           Panning="0" Note="0" NoteVisible="0" NoteRelative="1" TouchResized="0"
+           Reversed="1"/>
+  <Element Type="2" StartTick="3" EndTick="3.8295691" TickLength="0.829569101"
+           TrackLine="4" PattIndex="3" InstrIndex="1" Volume="0.592440784"
+           Panning="0" Note="0" NoteVisible="0" NoteRelative="1" TouchResized="0"
+           Reversed="0"/>
+  <Element Type="2" StartTick="7" EndTick="7.82956934" TickLength="0.82956934"
+           TrackLine="3" PattIndex="3" InstrIndex="1" Volume="0.191109926"
+           Panning="0" Note="0" NoteVisible="0" NoteRelative="1" TouchResized="0"
+           Reversed="1"/>
+  <Element Type="2" StartTick="11" EndTick="11.8295689" TickLength="0.829568863"
+           TrackLine="3" PattIndex="3" InstrIndex="1" Volume="0.114665955"
+           Panning="0" Note="0" NoteVisible="0" NoteRelative="1" TouchResized="0"
+           Reversed="1"/>
+  <Element Type="2" StartTick="1" EndTick="1.8295691" TickLength="0.829569101"
+           TrackLine="4" PattIndex="3" InstrIndex="1" Volume="0.286664903"
+           Panning="0" Note="0" NoteVisible="0" NoteRelative="1" TouchResized="0"
+           Reversed="1"/>
+  <Element Type="1" StartTick="22" EndTick="130.333328" TickLength="108.333328"
+           TrackLine="6" PattIndex="0" Text="Check autopatterns of the following three instruments for examples."
+           Bookmark="0"/>
+  <Element Type="2" StartTick="0" EndTick="1.96607995" TickLength="1.96607995"
+           TrackLine="3" PattIndex="4" InstrIndex="3" Volume="1" Panning="0"
+           Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0" Reversed="0"/>
+  <Element Type="2" StartTick="3" EndTick="4.96607971" TickLength="1.96607971"
+           TrackLine="3" PattIndex="4" InstrIndex="3" Volume="1" Panning="0"
+           Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0" Reversed="0"/>
+  <Element Type="2" StartTick="4" EndTick="4.82956934" TickLength="0.82956934"
+           TrackLine="1" PattIndex="4" InstrIndex="1" Volume="0.936438739"
+           Panning="0" Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0"
+           Reversed="0"/>
+  <Element Type="2" StartTick="10" EndTick="10.8295689" TickLength="0.829568863"
+           TrackLine="1" PattIndex="4" InstrIndex="1" Volume="0.974660695"
+           Panning="0" Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0"
+           Reversed="0"/>
+  <Element Type="2" StartTick="7" EndTick="8.96607971" TickLength="1.96607971"
+           TrackLine="3" PattIndex="4" InstrIndex="3" Volume="1" Panning="0"
+           Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0" Reversed="0"/>
+  <Element Type="2" StartTick="14" EndTick="15.9660797" TickLength="1.96607971"
+           TrackLine="3" PattIndex="4" InstrIndex="3" Volume="1" Panning="0"
+           Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0" Reversed="0"/>
+  <Element Type="2" StartTick="13" EndTick="13.8295689" TickLength="0.829568863"
+           TrackLine="0" PattIndex="4" InstrIndex="0" Volume="0.611551821"
+           Panning="0" Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0"
+           Reversed="0"/>
+  <Element Type="5" StartTick="1" EndTick="2" TickLength="1" TrackLine="4"
+           PattIndex="5"/>
+  <Element Type="5" StartTick="3" EndTick="4" TickLength="1" TrackLine="4"
+           PattIndex="5"/>
+  <Element Type="5" StartTick="5" EndTick="6" TickLength="1" TrackLine="4"
+           PattIndex="5"/>
+  <Element Type="5" StartTick="7" EndTick="8" TickLength="1" TrackLine="4"
+           PattIndex="5"/>
+  <Element Type="5" StartTick="9" EndTick="10" TickLength="1" TrackLine="4"
+           PattIndex="5"/>
+  <Element Type="3" StartTick="0" EndTick="16" TickLength="16" TrackLine="67"
+           PattIndex="8" InstrIndex="4" Volume="1" Panning="-0.513513505"
+           Note="52" NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="0" EndTick="16" TickLength="16" TrackLine="52"
+           PattIndex="8" InstrIndex="4" Volume="1" Panning="1" Note="67"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="16" EndTick="32" TickLength="16" TrackLine="53"
+           PattIndex="8" InstrIndex="4" Volume="1" Panning="1" Note="66"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="16" EndTick="32" TickLength="16" TrackLine="67"
+           PattIndex="8" InstrIndex="4" Volume="1" Panning="0.576576591"
+           Note="52" NoteVisible="0" NoteRelative="0"/>
+  <Element Type="4" StartTick="0" EndTick="15" TickLength="15" TrackLine="4"
+           PattIndex="7" CmdType="17" ParamIndex="611" EffIndex="3">
+    <Envelope Len="15" Hgt="40" sustainable="0" folded="0">
+      <EnvPoint xval="0" yval="0" sustainpoint="0" big="1"/>
+      <EnvPoint xval="0.916666687" yval="0.300000012" sustainpoint="0" big="1"/>
+      <EnvPoint xval="2.5" yval="0.725000024" sustainpoint="0" big="1"/>
+    </Envelope>
+  </Element>
+  <Element Type="3" StartTick="0" EndTick="16" TickLength="16" TrackLine="74"
+           PattIndex="8" InstrIndex="4" Volume="1" Panning="0.675675631"
+           Note="45" NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="16" EndTick="32" TickLength="16" TrackLine="74"
+           PattIndex="8" InstrIndex="4" Volume="1" Panning="-0.64864862"
+           Note="45" NoteVisible="0" NoteRelative="0"/>
+  <Element Type="2" StartTick="0" EndTick="1.96607995" TickLength="1.96607995"
+           TrackLine="3" PattIndex="9" InstrIndex="3" Volume="1" Panning="0"
+           Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0" Reversed="0"/>
+  <Element Type="2" StartTick="4" EndTick="5.96607971" TickLength="1.96607971"
+           TrackLine="3" PattIndex="9" InstrIndex="3" Volume="1" Panning="0"
+           Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0" Reversed="0"/>
+  <Element Type="2" StartTick="8" EndTick="9.96607971" TickLength="1.96607971"
+           TrackLine="3" PattIndex="9" InstrIndex="3" Volume="1" Panning="0"
+           Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0" Reversed="0"/>
+  <Element Type="2" StartTick="12" EndTick="13.9660797" TickLength="1.96607971"
+           TrackLine="3" PattIndex="9" InstrIndex="3" Volume="1" Panning="0"
+           Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0" Reversed="0"/>
+  <Element Type="1" StartTick="2" EndTick="193.333328" TickLength="191.333328"
+           TrackLine="1" PattIndex="0" Text="Autopattern editor can be revealed with 'Edit autopattern' item of any instrument's popup menu."
+           Bookmark="0"/>
+  <Element Type="2" StartTick="2" EndTick="2.8295691" TickLength="0.829569101"
+           TrackLine="2" PattIndex="1" InstrIndex="0" Volume="0.229331911"
+           Panning="0" Note="0" NoteVisible="0" NoteRelative="1" TouchResized="0"
+           Reversed="0"/>
+  <Element Type="2" StartTick="6" EndTick="6.82956934" TickLength="0.82956934"
+           TrackLine="4" PattIndex="3" InstrIndex="1" Volume="0.401330888"
+           Panning="0" Note="0" NoteVisible="0" NoteRelative="1" TouchResized="0"
+           Reversed="0"/>
+  <Element Type="2" StartTick="10" EndTick="10.8295689" TickLength="0.829568863"
+           TrackLine="4" PattIndex="3" InstrIndex="1" Volume="0.363108873"
+           Panning="0" Note="0" NoteVisible="0" NoteRelative="1" TouchResized="0"
+           Reversed="0"/>
+  <Element Type="2" StartTick="0" EndTick="13.3924665" TickLength="13.3924665"
+           TrackLine="62" PattIndex="6" InstrIndex="2" Volume="1" Panning="0"
+           Note="57" NoteVisible="0" NoteRelative="0" TouchResized="0" Reversed="0"/>
+  <Element Type="2" StartTick="0" EndTick="8.93839931" TickLength="8.93839931"
+           TrackLine="55" PattIndex="6" InstrIndex="2" Volume="1" Panning="0"
+           Note="64" NoteVisible="0" NoteRelative="0" TouchResized="0" Reversed="0"/>
+  <Element Type="2" StartTick="0" EndTick="7.51626778" TickLength="7.51626778"
+           TrackLine="52" PattIndex="6" InstrIndex="2" Volume="1" Panning="0"
+           Note="67" NoteVisible="0" NoteRelative="0" TouchResized="0" Reversed="0"/>
+  <Element Type="2" StartTick="24" EndTick="31.9632092" TickLength="7.96320915"
+           TrackLine="53" PattIndex="6" InstrIndex="2" Volume="1" Panning="0"
+           Note="66" NoteVisible="0" NoteRelative="0" TouchResized="0" Reversed="0"/>
+  <Element Type="2" StartTick="23.5" EndTick="31.5330124" TickLength="8.03301239"
+           TrackLine="57" PattIndex="6" InstrIndex="2" Volume="1" Panning="0"
+           Note="62" NoteVisible="0" NoteRelative="0" TouchResized="1" Reversed="0"/>
+  <Element Type="2" StartTick="23" EndTick="32" TickLength="9" TrackLine="59"
+           PattIndex="6" InstrIndex="2" Volume="1" Panning="0" Note="60"
+           NoteVisible="0" NoteRelative="0" TouchResized="1" Reversed="0"/>
+  <Element Type="2" StartTick="0" EndTick="11.2616777" TickLength="11.2616777"
+           TrackLine="59" PattIndex="10" InstrIndex="2" Volume="1" Panning="0"
+           Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0" Reversed="0"/>
+  <Element Type="2" StartTick="0" EndTick="8.93839931" TickLength="8.93839931"
+           TrackLine="55" PattIndex="10" InstrIndex="2" Volume="1" Panning="0"
+           Note="64" NoteVisible="0" NoteRelative="0" TouchResized="0" Reversed="0"/>
+  <Element Type="2" StartTick="0" EndTick="7.51626778" TickLength="7.51626778"
+           TrackLine="52" PattIndex="10" InstrIndex="2" Volume="1" Panning="0"
+           Note="67" NoteVisible="0" NoteRelative="0" TouchResized="0" Reversed="0"/>
+  <Element Type="2" StartTick="24" EndTick="31.9632092" TickLength="7.96320915"
+           TrackLine="53" PattIndex="10" InstrIndex="2" Volume="1" Panning="0"
+           Note="66" NoteVisible="0" NoteRelative="0" TouchResized="0" Reversed="0"/>
+  <Element Type="2" StartTick="23.5" EndTick="31.5330124" TickLength="8.03301239"
+           TrackLine="57" PattIndex="10" InstrIndex="2" Volume="1" Panning="0"
+           Note="62" NoteVisible="0" NoteRelative="0" TouchResized="1" Reversed="0"/>
+  <Element Type="2" StartTick="23" EndTick="32" TickLength="9" TrackLine="59"
+           PattIndex="10" InstrIndex="2" Volume="1" Panning="0" Note="60"
+           NoteVisible="0" NoteRelative="0" TouchResized="1" Reversed="0"/>
+  <Element Type="1" StartTick="2" EndTick="307.666656" TickLength="305.666656"
+           TrackLine="17" PattIndex="0" Text="As you can see, the &quot;808.wav&quot; instrument has automation envelope inside its autopattern. This envelope increasingly changes threshold value of the compressor, placed in the second mixer channel."
+           Bookmark="0"/>
+  <Element Type="1" StartTick="2" EndTick="260.666656" TickLength="258.666656"
+           TrackLine="18" PattIndex="0" Text="As a result, we get sidechaining. Any sound, processed through the compressor will fall each time the trigger instrument note plays (808.wav in our case)."
+           Bookmark="0"/>
+  <Element Type="1" StartTick="2" EndTick="112" TickLength="110" TrackLine="19"
+           PattIndex="0" Text="You can hear the result starting from the 30th second of this demo song."
+           Bookmark="0"/>
+  <Element Type="3" StartTick="0" EndTick="16" TickLength="16" TrackLine="59"
+           PattIndex="8" InstrIndex="4" Volume="1" Panning="-1" Note="60"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="3" StartTick="16" EndTick="32" TickLength="16" TrackLine="59"
+           PattIndex="8" InstrIndex="4" Volume="1" Panning="-1" Note="60"
+           NoteVisible="0" NoteRelative="0"/>
+  <Element Type="2" StartTick="0" EndTick="1.96607995" TickLength="1.96607995"
+           TrackLine="3" PattIndex="11" InstrIndex="3" Volume="1" Panning="0"
+           Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0" Reversed="0"/>
+  <Element Type="2" StartTick="3" EndTick="4.96607971" TickLength="1.96607971"
+           TrackLine="3" PattIndex="11" InstrIndex="3" Volume="1" Panning="0"
+           Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0" Reversed="0"/>
+  <Element Type="2" StartTick="4" EndTick="4.82956934" TickLength="0.82956934"
+           TrackLine="1" PattIndex="11" InstrIndex="1" Volume="0.936438739"
+           Panning="0" Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0"
+           Reversed="0"/>
+  <Element Type="2" StartTick="10" EndTick="10.8295689" TickLength="0.829568863"
+           TrackLine="1" PattIndex="11" InstrIndex="1" Volume="0.974660695"
+           Panning="0" Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0"
+           Reversed="0"/>
+  <Element Type="2" StartTick="7" EndTick="8.96607971" TickLength="1.96607971"
+           TrackLine="3" PattIndex="11" InstrIndex="3" Volume="1" Panning="0"
+           Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0" Reversed="0"/>
+  <Element Type="2" StartTick="14" EndTick="15.9660797" TickLength="1.96607971"
+           TrackLine="3" PattIndex="11" InstrIndex="3" Volume="1" Panning="0"
+           Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0" Reversed="0"/>
+  <Element Type="2" StartTick="13" EndTick="13.8295689" TickLength="0.829568863"
+           TrackLine="0" PattIndex="11" InstrIndex="0" Volume="0.611551821"
+           Panning="0" Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0"
+           Reversed="0"/>
+  <Element Type="2" StartTick="9" EndTick="9.82956886" TickLength="0.829568863"
+           TrackLine="1" PattIndex="11" InstrIndex="1" Volume="1" Panning="0"
+           Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0" Reversed="0"/>
+  <Element Type="2" StartTick="13" EndTick="13.8295689" TickLength="0.829568863"
+           TrackLine="1" PattIndex="11" InstrIndex="1" Volume="1" Panning="0"
+           Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0" Reversed="0"/>
+  <Element Type="2" StartTick="15" EndTick="15.8295689" TickLength="0.829568863"
+           TrackLine="1" PattIndex="11" InstrIndex="1" Volume="1" Panning="0"
+           Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0" Reversed="0"/>
+  <Element Type="2" StartTick="12" EndTick="12.8295689" TickLength="0.829568863"
+           TrackLine="1" PattIndex="11" InstrIndex="1" Volume="0.993771672"
+           Panning="0" Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0"
+           Reversed="0"/>
+  <Element Type="2" StartTick="11.5" EndTick="12.3295689" TickLength="0.829568863"
+           TrackLine="1" PattIndex="11" InstrIndex="1" Volume="0.859994709"
+           Panning="0" Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0"
+           Reversed="0"/>
+  <Element Type="2" StartTick="24" EndTick="31.9632092" TickLength="7.96320915"
+           TrackLine="53" PattIndex="12" InstrIndex="2" Volume="1" Panning="0"
+           Note="66" NoteVisible="0" NoteRelative="0" TouchResized="0" Reversed="0"/>
+  <Element Type="2" StartTick="23.5" EndTick="31.5330124" TickLength="8.03301239"
+           TrackLine="57" PattIndex="12" InstrIndex="2" Volume="1" Panning="0"
+           Note="62" NoteVisible="0" NoteRelative="0" TouchResized="1" Reversed="0"/>
+  <Element Type="2" StartTick="23" EndTick="32" TickLength="9" TrackLine="59"
+           PattIndex="12" InstrIndex="2" Volume="1" Panning="0" Note="60"
+           NoteVisible="0" NoteRelative="0" TouchResized="1" Reversed="0"/>
+  <Element Type="2" StartTick="0" EndTick="10.0330143" TickLength="10.0330143"
+           TrackLine="57" PattIndex="12" InstrIndex="2" Volume="1" Panning="0"
+           Note="62" NoteVisible="0" NoteRelative="0" TouchResized="0" Reversed="0"/>
+  <Element Type="2" StartTick="0" EndTick="7.51626778" TickLength="7.51626778"
+           TrackLine="52" PattIndex="12" InstrIndex="2" Volume="1" Panning="0"
+           Note="67" NoteVisible="0" NoteRelative="0" TouchResized="0" Reversed="0"/>
+  <Element Type="2" StartTick="0" EndTick="11.2616777" TickLength="11.2616777"
+           TrackLine="59" PattIndex="12" InstrIndex="2" Volume="1" Panning="0"
+           Note="60" NoteVisible="0" NoteRelative="0" TouchResized="0" Reversed="0"/>
+  <Element Type="2" StartTick="0" EndTick="8.93839931" TickLength="8.93839931"
+           TrackLine="55" PattIndex="12" InstrIndex="2" Volume="1" Panning="0"
+           Note="64" NoteVisible="0" NoteRelative="0" TouchResized="0" Reversed="0"/>
+  <Element Type="2" StartTick="0" EndTick="13.3924665" TickLength="13.3924665"
+           TrackLine="62" PattIndex="12" InstrIndex="2" Volume="1" Panning="0"
+           Note="57" NoteVisible="0" NoteRelative="0" TouchResized="0" Reversed="0"/>
+</ChaoticProject>

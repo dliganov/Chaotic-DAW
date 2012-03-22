@@ -14210,7 +14210,8 @@ public:
         AssignImages();
 
         // If we were bought or not yet...
-        CheckRegistrationKey();
+        // CheckRegistrationKey();
+        RegisteredVersion = true;  // We went free alredy
 
         // Load settings from file, if it exists
         XmlElement* xmlAudio = NULL;

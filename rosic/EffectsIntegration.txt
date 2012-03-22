@@ -1,0 +1,42 @@
+-every effect need to be inherited from Eff class (Awful_effects.h/.cpp) 
+-main processing virtual method is ProcessData(float* in_buff, float* out_buff, int num_frames)
+-BlankEffect contains basic control set and simple data processing by multiplying it to some value.
+- After you create a new effect, perform the following steps to integrate it into the program:
+
+1. Add its type to EffType enum (Awful.h);
+2. Register its alias in Init_Aliases() function (Awful.cpp) similar to how other effects are registered (BlankEffect has the "blank" alias);
+3. Perform its creation in Browser::ActivateEntry() and Mixcell::Update() functions (Awful_panels.cpp) similar to other effects;
+4. Create effect drawing routine and add it in J_DrawMixcellContent() function (Awful_graphJuce.cpp) similar to others (you can just copy and 
+   rename J_BlankEffect() function providing it with your new class).
+
+
+
+
+you need to subclass the Parameter class to handle Frequency nonlinear issues. Generally parameters handling work as follows:
+
+-The Parameter class has the val member, containing normalized parameter value (used e.g. to interact with sliders, etc.) 
+-and the outval member which is supposed to contain the real value. 
+-to implement nonlinear scaling you'll need to overload Parameter::SetNormalValue(), where you need to perform the following:
+
+1. Remember passed normal value in val;
+2. Convert val to outval (this is where you need to do your scaling, see e.g. Vol class);
+3. Call Parameter::UpdatePerNormalValue() to do additional updates.
+
+
+-If you'll want to add a method in your Frequency or other param class, where you will set real frequency value as input e.g. 
+ Frequency::SetFrequency(float freq); then you'll also need to include its conversion to val and calling of 
+ Parameter::UpdatePerNormalValue() for extra updates.
+
+Regarding the ValueString class. This is a helper class used for displaying different params' values, basing on its type, defined in 
+VStrType enum.When you create it, you define this type in constructor (e.g. vfreq = new ValueString(VStr_kHz);), then you provide its pointer 
+to the target param (freq->vstring = vfreq) and then you set its value thru ValueString::SetValue() every time it gets changed, i.e. in 
+Eff::ParamUpdate() for effects.
+
+Displaying of ValueString is implemented in J_ValueString() function for every type of value. Feel free to correct or extend anything if 
+needed. If you need to add a new value type then you need to update the VStrType enum, ValueString::SetValue() (to add a case or overload it) 
+and the J_ValueString() correspondingly.
+
+To hear the effects, you either assign its index to a track or to an instrument. Both tracks and instruments have FX-strings 
+(looks as "--" when blank) for mixcell definition. You either place the cursor on it and type the mixcell index manually, or you can drag 
+and drop any mixcell index to any FX-string. The instruments and tracks with defined mixcells will be mixed through those mixcells. 
+E.g. if you create a pattern on a mixcell-defined track, this pattern will sound through this track's mixcell.
