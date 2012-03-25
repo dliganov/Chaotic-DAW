@@ -4,7 +4,7 @@
 #include "awful_preview.h"
 #include "awful_cursorandmouse.h"
 #include "awful_utils_common.h"
-#include "images.h"
+#include "Data sources/images.h"
 
 #define MAIN_WINDOW_TITLE_BAR_HEIGHT 18
 #define CHILD_WINDOW_TITLE_BAR_HEIGHT 20
@@ -59,11 +59,8 @@ void AwfulWindow::UpdateTitle()
     if(!PrjData.projpath.isEmpty())
         strcat(name, ".cmm");
 
-    if(ChangesAreHappened)
+    if(ChangesHappened)
         strcat(name, "*");
-
-    if(RegisteredVersion == false)
-        strcat(name, " (UNREGISTERED VERSION)");
 
     setName(name);
 }
@@ -99,7 +96,7 @@ SynthWindow* AwfulWindow::CreateSynthWindow(Synth* syn)
 
 ChildWindow* AwfulWindow::CreateAboutWindow()
 {
-    ChildWindow* wnd = new ChildWindow("About Chaotic");
+    ChildWindow* wnd = new ChildWindow("About Chaotic DAW");
     AddChild(wnd);
 
     AboutComponent* const contentComponent = new AboutComponent();
@@ -780,27 +777,27 @@ AboutComponent::AboutComponent()
     int x1 = 3;
     int y1 = 6;
     Colour clr = Colour(120, 185, 135);
-    PlaceTxtLabel1("Chaotic v.1.08", 
+    PlaceTxtLabel1("Version 1.08", 
                     x1, y1, Colour(170, 225, 185));
 
-    PlaceTxtLabel1("© 2010 Chaotic Team. Visit program website at www.chaoticdaw.com.", 
+    PlaceTxtLabel1("Visit program website at www.chaoticdaw.com", 
                     x1, y1 + 24, clr);
 
-    PlaceTxtLabel1("Written by Denis Liganov and Alexander Veprik.", 
+    PlaceTxtLabel1("", 
                     x1, y1 + 36, clr);
 
-    PlaceTxtLabel1("DSP algorithms by Robin Schmidt (www.rs-met.com).", 
+    PlaceTxtLabel1("DSP algorithms by Robin Schmidt (www.rs-met.com)", 
                     x1, y1 + 36 + 12, clr);
 
-    PlaceTxtLabel1("VST and ASIO are registered trademarks of Steinberg GmbH.", 
-                    x1, y1 + 36 + 12 + 12 + 7, clr);
+    PlaceTxtLabel1("VST and ASIO are registered trademarks of Steinberg GmbH", 
+                    x1, y1 + 36 + 12 + 12 + 12, clr);
 
     PlaceTxtLabel1("Chaotic also uses the following additional libraries:", 
-                    x1, y1 + 36 + 12 + 12 + 7 + 12 + 7, clr);
-    PlaceTxtLabel1("- Libsndfile library © by Eric de Castro Lopo;", 
-                    x1, y1 + 36 + 12 + 12 + 7 + 12 + 7 + 12, clr);
-    PlaceTxtLabel1("- JUCE library © by Raw Material Software.", 
-                    x1, y1 + 36 + 12 + 12 + 7 + 12 + 7 + 12 + 12, clr);
+                    x1, y1 + 36 + 12 + 12 + 12 + 12 + 12, clr);
+    PlaceTxtLabel1("    - Libsndfile library © by Eric de Castro Lopo;", 
+                    x1, y1 + 36 + 12 + 12 + 12 + 12 + 12 + 12, clr);
+    PlaceTxtLabel1("    - JUCE library © by Raw Material Software", 
+                    x1, y1 + 36 + 12 + 12 + 12 + 12 + 12 + 12 + 12, clr);
 
     HyperlinkButton* hbutt = new HyperlinkButton(T("www.rs-met.com"), URL(T("http://rs-met.com")));
     hbutt->setFont(*rox, false, Justification::left);
@@ -811,45 +808,6 @@ AboutComponent::AboutComponent()
     hbutt->setFont(*rox, false, Justification::left);
     addAndMakeVisible(hbutt);
     hbutt->setBounds(236, y1 + 26, 112, 15);
-
-    if(RegisteredVersion == false)
-    {
-        clr = Colour(215, 135, 120);
-        PlaceTxtLabel1("This is unregistered version with limited functionality. If you find the program", 
-                        x1, y1 + 88 + 48, clr);
-        PlaceTxtLabel1("useful, then don't hesitate to register it and unlock all its features.", 
-                        x1, y1 + 88 + 48 + 12, clr);
-        PlaceTxtLabel1("Registration costs 65 euro. After registering, you get the following:", 
-                        x1, y1 + 88 + 48 + 12 + 12, clr);
-        PlaceTxtLabel1("- Loading unlimited number of instruments;", 
-                        x1, y1 + 88 + 48 + 12 + 12 + 12, clr);
-        PlaceTxtLabel1("- Loading unlimited number of effects;", 
-                        x1, y1 + 88 + 48 + 12 + 12 + 12 + 12, clr);
-        PlaceTxtLabel1("- Rendering to WAV, OGG Vorbis or FLAC formats;", 
-                        x1, y1 + 88 + 48 + 12 + 12 + 12 + 12 + 12, clr);
-        PlaceTxtLabel1("- ASIO devices support;", 
-                        x1, y1 + 88 + 48 + 12 + 12 + 12 + 12 + 12 + 12, clr);
-        //PlaceTxtLabel1("- Lifetime free updates;", 
-        //                x1, y1 + 88 + 48 + 12 + 12 + 12 + 12 + 12 + 12 + 12, clr);
-
-        PlaceTxtLabel1("For more information, visit www.chaoticdaw.com/purchase.html.", 
-                        x1, y1 + 88 + 48 + 12 + 12 + 12 + 12 + 12 + 12 + 12 + 12, clr);
-
-        hbutt = new HyperlinkButton(T("www.chaoticdaw.com/purchase.html"), URL(T("http://chaoticdaw.com/purchase.html")));
-        hbutt->setFont(*rox, false, Justification::left);
-        addAndMakeVisible(hbutt);
-        hbutt->setBounds(x1 + 134, y1 + 8 + 88 + 48 + 14 + 4 + 12*6, 182, 15);
-    }
-    else
-    {
-        clr = Colour(255, 255, 20);
-        char u[333];
-        strcpy(u, "This copy is registered to ");
-        strcat(u, (const char*)userName);
-        strcat(u, ".");
-        PlaceTxtLabel1(u, x1 + 13, y1 + 88 + 48 + 12 + 12 + 22, clr);
-        //PlaceTxtLabel1(u, x1 + 13, y1 + 88 + 48 + 12 + 12 + 12 + 12, clr);
-    }
 }
 
 void AboutComponent::buttonClicked(Button* button)
@@ -4525,25 +4483,13 @@ void ToggleConfigWindow()
 
 void ToggleRenderWindow()
 {
-    if(RegisteredVersion == false)
+    if(RenderWnd->Showing() == true)
     {
-        AlertWindow w (T("Restriction warning"),
-                       T("Rendering is disabled in the unregistered version."),
-                       AlertWindow::WarningIcon);
-        w.setSize(122, 55);
-        w.addButton (T("OK"), 1, KeyPress (KeyPress::returnKey, 0, 0));
-        int result = w.runModalLoop();
+        RenderWnd->Hide();
     }
     else
     {
-        if(RenderWnd->Showing() == true)
-        {
-            RenderWnd->Hide();
-        }
-        else
-        {
-            RenderWnd->Show();
-        }
+        RenderWnd->Show();
     }
 }
 

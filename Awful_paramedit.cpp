@@ -1706,7 +1706,7 @@ void Envelope::Check(int mouse_x, int mouse_y)
                     }
                     else if(M.mmode & MOUSE_AUXAUXING)
                     {
-                        R(Refresh_Auxaux);
+                        R(Refresh_SubAux);
                     }
 
                     if(p == p_first)
@@ -1729,7 +1729,7 @@ void Envelope::Check(int mouse_x, int mouse_y)
                     }
                     else if(M.mmode & MOUSE_AUXAUXING)
                     {
-                        R(Refresh_Auxaux);
+                        R(Refresh_SubAux);
                     }
                 }
                 p = p->next;
@@ -1777,7 +1777,7 @@ void Envelope::Check(int mouse_x, int mouse_y)
         }
         else if(M.mmode & MOUSE_AUXAUXING)
         {
-            R(Refresh_Auxaux);
+            R(Refresh_SubAux);
         }
     }
 }
@@ -2198,7 +2198,7 @@ void TString::ProcessChar(char character)
         }
     }
 
-    ChangesHappened();
+    ChangesIndicate();
 }
 
 void TString::ProcessKey(unsigned int key, unsigned int flags)
@@ -2255,7 +2255,7 @@ void TString::ProcessKey(unsigned int key, unsigned int flags)
         instr->ParamEditUpdate(this);
     }
 
-    ChangesHappened();
+    ChangesIndicate();
 }
 
 void TString::PackZeros()

@@ -51,7 +51,7 @@ typedef enum RefreshType
     Refresh_GridLanes       = 0x80000,
     Refresh_AuxLanes        = 0x100000,
     Refresh_UnderPanel      = 0x200000,
-    Refresh_Auxaux          = 0x400000,
+    Refresh_SubAux          = 0x400000,
     Refresh_AuxHighlights   = 0x800000,
     Refresh_SelMain         = 0x1000000,
     Refresh_SelAux          = 0x2000000,
@@ -188,6 +188,6 @@ extern bool             Render_Start();
 extern void             Render_Stop();
 extern void             Process_MouseLeave(int mouse_x, int mouse_y, unsigned flags);
 extern void             Process_MouseEnter(int mouse_x, int mouse_y, unsigned flags);
-extern void             CreateEnvelopeCommon(Parameter* param);
+extern void             CreateElement_EnvelopeCommon(Parameter* param);
 
 #endif

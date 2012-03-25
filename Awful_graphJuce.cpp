@@ -16,20 +16,20 @@
 #include "awful_cursorandmouse.h"
 #include "awful_jucecomponents.h"
 #include "awful_undoredo.h"
-#include "mfont.h"
-#include "tahoma.h"
-#include "tiny.h"
-#include "tiny1.h"
-#include "aripix.h"
-#include "instrum.h"
-#include "big.h"
-#include "images.h"
-#include "projs.h"
-#include "roxx.h"
-#include "dpix.h"
-#include "fixed.h"
-#include "bold.h"
-#include "visitor.h"
+#include "Data sources/mfont.h"
+#include "Data sources/tahoma.h"
+#include "Data sources/tiny.h"
+#include "Data sources/tiny1.h"
+#include "Data sources/aripix.h"
+#include "Data sources/instrum.h"
+#include "Data sources/big.h"
+#include "Data sources/images.h"
+#include "Data sources/projs.h"
+#include "Data sources/roxx.h"
+#include "Data sources/dpix.h"
+#include "Data sources/fixed.h"
+#include "Data sources/bold.h"
+#include "Data sources/visitor.h"
 
 
 Font*   taho;
@@ -449,7 +449,7 @@ Image*  img_paramback;
 Image*  img_parambody;
 Image*  img_parambody1;
 
-void InitImages()
+void Init_Images()
 {
     img_paramback = ImageFileFormat::loadFrom(images::paramslider_back_png, images::paramslider_back_pngSize);
     img_parambody = ImageFileFormat::loadFrom(images::paramslider_body_png, images::paramslider_body_pngSize);
@@ -750,7 +750,7 @@ void InitImages()
     img_auxgrid2 = NULL;
 }
 
-void AssignImages()
+void AssignLoadedImages()
 {
     for(int mc = 0; mc < NUM_MIXCHANNELS; mc++)
     {
@@ -8021,7 +8021,7 @@ void J_MainBar(Graphics& g)
     if(!PrjData.projpath.isEmpty())
         strcat(tstr, ".cmm");
 
-    if(ChangesAreHappened)
+    if(ChangesHappened)
         strcat(tstr, "*");
 
     g.setColour(Colour(0xffDFDFDF));
@@ -14652,7 +14652,7 @@ INLINE void J_Separates(Graphics& g)
     }
 }
 
-void J_InitFonts()
+void Init_Fonts()
 {
 	MemoryInputStream fontStream5(tahoma::fontbin_bin, tahoma::fontbin_binSize, false );
 #ifdef USE_OLD_JUCE

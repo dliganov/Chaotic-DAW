@@ -12,7 +12,7 @@
 #include "Awful_panels.h"
 #include "Awful_utils_common.h"
 #include "Awful_cursorandmouse.h"
-#include "images.h"
+#include "Data sources/images.h"
 
 int PosWidth = 7;
 
@@ -1569,7 +1569,7 @@ void ListeningComponent::Redraw(int redraw)
             J_UnderPanelRefresh();
         }
 
-        if(redraw & Refresh_Auxaux)
+        if(redraw & Refresh_SubAux)
         {
             repaint(GridXS1, GridYS2 + 2, GridXS2 - GridXS1, WindHeight - GridYS2 - 5);
         }
@@ -1723,7 +1723,7 @@ void ListeningComponent::CheckAndRedraw()
 				J_Content_Aux(imG);
             }
 
-            if(maincomp->refresh & Refresh_Auxaux)
+            if(maincomp->refresh & Refresh_SubAux)
             {
                 J_Auxaux(imG);
             }
@@ -2692,25 +2692,15 @@ void ConfigComponent::comboBoxChanged (AComboBox* comboBoxThatHasChanged)
         }
         else
         {
-	        CAudioDeviceManager::AudioDeviceSetup oldSetup;
-	        CAudioDeviceManager::AudioDeviceSetup setup;
+            CAudioDeviceManager::AudioDeviceSetup oldSetup;
+            CAudioDeviceManager::AudioDeviceSetup setup;
             audioDeviceManager->getAudioDeviceSetup(setup);
-			oldSetup = setup;
+            oldSetup = setup;
             setup.outputDeviceName = juceAudioDeviceDropDown->getText();
             setup.bufferSize = DEFAULT_BUFFER_SIZE;
-			AudioIODeviceType* type = audioDeviceManager->getDeviceTypeObjectByDeviceName(setup.outputDeviceName);
-			if(type != 0 && type->typeName == T("ASIO") && RegisteredVersion == false)
-			{
-				AlertWindow w (T("Restriction warning"),
-							   T("ASIO support is disabled in the unregistered version."),
-							   AlertWindow::WarningIcon);
-				w.setSize(122, 55);
-				w.addButton (T("OK"), 1, KeyPress (KeyPress::returnKey, 0, 0));
-				int result = w.runModalLoop();
-				setup = oldSetup;
-			}
+            AudioIODeviceType* type = audioDeviceManager->getDeviceTypeObjectByDeviceName(setup.outputDeviceName);
 
-			String error (audioDeviceManager->setAudioDeviceSetup(setup, true));
+            String error (audioDeviceManager->setAudioDeviceSetup(setup, true));
 
             //String error (audioDeviceManager->setAudioDevice (juceAudioDeviceDropDown->getText(),
             //                                            0, 0, 0, 0, true));
@@ -5948,7 +5938,7 @@ void ASlider::mouseDown (const MouseEvent& e)
 
             if (r == 11)
             {
-                CreateEnvelopeCommon(param);
+                CreateElement_EnvelopeCommon(param);
                 MC->listen->CommonInputActions();  // force content refreshing
             }
             /*

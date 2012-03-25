@@ -882,7 +882,7 @@ void CtrlPanel::HandleButtUp(Butt* bt)
 		{
 		    if(!CheckSave())
             {
-                ExitOut();
+                ExitFromApp();
             }
 		}
 
@@ -4159,7 +4159,7 @@ void InstrPanel::RemoveInstrument(Instrument* i)
     UpdateIndices();
 
     if(i->temp == false)
-        ChangesHappened();
+        ChangesIndicate();
 
     i->DereferenceElements();
     delete i;
@@ -4174,88 +4174,75 @@ void InstrPanel::RemoveInstrument(Instrument* i)
 
 Instrument* InstrPanel::AddInstrumentFromBrowser(FileData * fdi, bool bottom)
 {
-    if(RegisteredVersion == false && num_instrs >= 10 && ProjectLoadingInProgress == false)
+    Instrument* ni = NULL;
+    if(fdi->ftype == FType_Wave)
     {
-        AlertWindow w (T("Restriction warning"),
-                       T("You cannot load more than 10 instruments in the unregistered version."),
-                       AlertWindow::WarningIcon);
-        w.setSize(122, 55);
-        w.addButton (T("OK"), 1, KeyPress(KeyPress::returnKey, 0, 0));
-        int result = w.runModalLoop();
-        return NULL;
-    }
-    else
-    {
-        Instrument* ni = NULL;
-        if(fdi->ftype == FType_Wave)
-        {
-            char fullpath[MAX_PATH_STRING];
-            strcpy(fullpath, fdi->path);
-            char alias[MAX_ALIAS_STRING];
-            char name[MAX_NAME_STRING];
-            strcpy(name, fdi->name);
-            LowerCase(name);
-            GetOriginalInstrumentAlias(name, alias);
-            ni = (Instrument*)Add_Sample(fullpath, fdi->name, alias);
+        char fullpath[MAX_PATH_STRING];
+        strcpy(fullpath, fdi->path);
+        char alias[MAX_ALIAS_STRING];
+        char name[MAX_NAME_STRING];
+        strcpy(name, fdi->name);
+        LowerCase(name);
+        GetOriginalInstrumentAlias(name, alias);
+        ni = (Instrument*)Add_Sample(fullpath, fdi->name, alias);
 
+        if(bottom)
+            IP->GoDown();
+    }
+    else if(fdi->ftype == FType_VST)
+    {
+        char fullpath[MAX_PATH_STRING] = {0};
+        char alias[MAX_ALIAS_STRING]   = {0};
+        char name[MAX_NAME_STRING]     = {0};
+        long ret_val = -1;
+
+        strcpy(fullpath, fdi->path);
+
+        strcpy(name, fdi->name);
+        LowerCase(name);
+        GetOriginalInstrumentAlias(name, alias);
+        VSTGenerator* vstgen = Add_VSTGenerator(fullpath, fdi->name, alias);
+        ni = (Instrument*)vstgen;
+        if(vstgen == NULL)
+        {
+            AlertWindow::showMessageBox(AlertWindow::InfoIcon,
+                                        T("Can't load FX"),
+                                        T("Can't load this DLL as an instrument."),
+                                        T("OK"));
+        }
+        else
+        {
             if(bottom)
                 IP->GoDown();
         }
-        else if(fdi->ftype == FType_VST)
-        {
-            char fullpath[MAX_PATH_STRING] = {0};
-            char alias[MAX_ALIAS_STRING]   = {0};
-            char name[MAX_NAME_STRING]     = {0};
-            long ret_val = -1;
-
-            strcpy(fullpath, fdi->path);
-
-            strcpy(name, fdi->name);
-            LowerCase(name);
-            GetOriginalInstrumentAlias(name, alias);
-            VSTGenerator* vstgen = Add_VSTGenerator(fullpath, fdi->name, alias);
-            ni = (Instrument*)vstgen;
-            if(vstgen == NULL)
-            {
-                AlertWindow::showMessageBox(AlertWindow::InfoIcon,
-                                            T("Can't load FX"),
-                                            T("Can't load this DLL as an instrument."),
-                                            T("OK"));
-            }
-            else
-            {
-                if(bottom)
-                    IP->GoDown();
-            }
-        }
-        else if(fdi->ftype == FType_Native)
-        {
-            char alias[MAX_ALIAS_STRING] = {0};
-            if(strcmp(fdi->name, "Chaotic Synthesizer") == 0)
-            {
-                GetOriginalInstrumentAlias("synthesizer", alias);
-                ni = Add_Synth(alias);
-            }
-
-            if(bottom && ni != NULL)
-                IP->GoDown();
-        }
-
-        if(ni != NULL)
-        {
-            ChangeCurrentInstrument(ni);
-
-            UpdateStepSequencers();
-
-            R(Refresh_InstrPanel);
-            if(gAux->auxmode == AuxMode_Pattern && gAux->workPt->ptype == Patt_StepSeq)
-            {
-                R(Refresh_Aux);
-            }
-        }
-
-        return ni;
     }
+    else if(fdi->ftype == FType_Native)
+    {
+        char alias[MAX_ALIAS_STRING] = {0};
+        if(strcmp(fdi->name, "Chaotic Synthesizer") == 0)
+        {
+            GetOriginalInstrumentAlias("synthesizer", alias);
+            ni = Add_Synth(alias);
+        }
+
+        if(bottom && ni != NULL)
+            IP->GoDown();
+    }
+
+    if(ni != NULL)
+    {
+        ChangeCurrentInstrument(ni);
+
+        UpdateStepSequencers();
+
+        R(Refresh_InstrPanel);
+        if(gAux->auxmode == AuxMode_Pattern && gAux->workPt->ptype == Patt_StepSeq)
+        {
+            R(Refresh_Aux);
+        }
+    }
+
+    return ni;
 }
 
 void EffFoldClick(Object* owner, Object* self)
@@ -5617,7 +5604,7 @@ void Aux::ConvertPatternType(Pattern* patt, PattType ptype)
 
     patt->UpdateScaledImage();
 
-    ChangesHappened();
+    ChangesIndicate();
 }
 
 void Aux::DeactivatePRHeight()
@@ -5942,7 +5929,7 @@ void Aux::HandleButtDown(Butt* bt)
 			if(MC->listen->comboCC != NULL)
                 MC->listen->comboCC->setSelectedId(Lane_Vol);
 
-            R(Refresh_Auxaux);
+            R(Refresh_SubAux);
         }
     }
     else if(bt == Pans1)
@@ -5956,7 +5943,7 @@ void Aux::HandleButtDown(Butt* bt)
 			if(MC->listen->comboCC != NULL)
 				MC->listen->comboCC->setSelectedId(Lane_Pan);
 
-            R(Refresh_Auxaux);
+            R(Refresh_SubAux);
         }
     }
     else if(bt == Pitch1)
@@ -5972,7 +5959,7 @@ void Aux::HandleButtDown(Butt* bt)
             if(gAux->workPt->OrigPt->pitch == NULL)
                 gAux->workPt->OrigPt->AddEnvelope(Param_Pitch);
 
-            R(Refresh_Auxaux);
+            R(Refresh_SubAux);
         }
     }
     else if(bt == IncrScale)
@@ -6389,7 +6376,7 @@ void Aux::SetScale(float scale)
 
     R(Refresh_AuxGrid);
     R(Refresh_AuxScale);
-    R(Refresh_Auxaux);
+    R(Refresh_SubAux);
 }
 
 void Aux::IncreaseScale(bool mouse)
@@ -6939,102 +6926,89 @@ void Aux::HandleTweak(Control* ct, int mouse_x, int mouse_y)
 
 Eff* Aux::AddEffectByType(EffType etype, MixChannel* mchan)
 {
-    if(RegisteredVersion == false && last_eff != NULL && last_eff->index >= 9 && ProjectLoadingInProgress == false)
+    Eff* pEff;
+    switch(etype)
     {
-        AlertWindow w (T("Restriction warning"),
-                       T("You cannot load more than 10 effects in the unregistered version."),
-                       AlertWindow::WarningIcon);
-        w.setSize(122, 55);
-        w.addButton (T("OK"), 1, KeyPress (KeyPress::returnKey, 0, 0));
-        int result = w.runModalLoop();
-        return NULL;
+        case EffType_Gain:
+            //pEff = new Gain(mchan->mc_main, NULL);
+            break;
+        case EffType_Send:
+            //pEff = new Send(mchan->mc_main, NULL);
+            break;
+        case EffType_Filter:
+            pEff = new Filter(mchan->mc_main, NULL);
+            break;
+        case EffType_CFilter:
+            pEff = new CFilter(mchan->mc_main, NULL);
+            break;
+        case EffType_Equalizer1:
+            pEff = new EQ1(mchan->mc_main, NULL);
+            break;
+        case EffType_Equalizer3:
+            pEff = new EQ3(mchan->mc_main, NULL);
+            break;
+        case EffType_GraphicEQ:
+            pEff = new GraphicEQ(mchan->mc_main, NULL);
+            break;
+        case EffType_XDelay:
+            pEff = new XDelay(mchan->mc_main, NULL);
+            break;
+        case EffType_Reverb:
+            pEff = new CReverb(mchan->mc_main, NULL);
+            break;
+        case EffType_Tremolo:
+            pEff = new CTremolo(mchan->mc_main, NULL);
+            break;
+        case EffType_Compressor:
+            pEff = new Compressor(mchan->mc_main, NULL);
+            break;
+        case EffType_Chorus:
+            pEff = new CChorus(mchan->mc_main, NULL);
+            break;
+        case EffType_Flanger:
+            pEff = new CFlanger(mchan->mc_main, NULL);
+            break;
+        case EffType_Phaser:
+            pEff = new CPhaser(mchan->mc_main, NULL);
+            break;
+        case EffType_WahWah:
+            pEff = new CWahWah(mchan->mc_main, NULL);
+            break;
+        case EffType_Distortion:
+            pEff = new CDistort(mchan->mc_main, NULL);
+            break;
+        case EffType_BitCrusher:
+            pEff = new CBitCrusher(mchan->mc_main, NULL);
+            break;
+        case EffType_Stereo:
+            pEff = new CStereo(mchan->mc_main, NULL);
+            break;
+        case EffType_CFilter2:
+            pEff = new CFilter2(mchan->mc_main, NULL);
+            break;
+        case EffType_CFilter3:
+            pEff = new CFilter3(mchan->mc_main, NULL);
+            break;
+        case EffType_Default:
+            pEff = new BlankEffect(mchan->mc_main, NULL);
+            break;
+        default:
+            break;
     }
-    else
+
+    if(pEff != NULL)
     {
-        Eff* pEff;
-        switch(etype)
-        {
-            case EffType_Gain:
-                //pEff = new Gain(mchan->mc_main, NULL);
-                break;
-            case EffType_Send:
-                //pEff = new Send(mchan->mc_main, NULL);
-                break;
-            case EffType_Filter:
-                pEff = new Filter(mchan->mc_main, NULL);
-                break;
-            case EffType_CFilter:
-                pEff = new CFilter(mchan->mc_main, NULL);
-                break;
-            case EffType_Equalizer1:
-                pEff = new EQ1(mchan->mc_main, NULL);
-                break;
-            case EffType_Equalizer3:
-                pEff = new EQ3(mchan->mc_main, NULL);
-                break;
-            case EffType_GraphicEQ:
-                pEff = new GraphicEQ(mchan->mc_main, NULL);
-                break;
-            case EffType_XDelay:
-                pEff = new XDelay(mchan->mc_main, NULL);
-                break;
-            case EffType_Reverb:
-                pEff = new CReverb(mchan->mc_main, NULL);
-                break;
-            case EffType_Tremolo:
-                pEff = new CTremolo(mchan->mc_main, NULL);
-                break;
-            case EffType_Compressor:
-                pEff = new Compressor(mchan->mc_main, NULL);
-                break;
-            case EffType_Chorus:
-                pEff = new CChorus(mchan->mc_main, NULL);
-                break;
-            case EffType_Flanger:
-                pEff = new CFlanger(mchan->mc_main, NULL);
-                break;
-            case EffType_Phaser:
-                pEff = new CPhaser(mchan->mc_main, NULL);
-                break;
-            case EffType_WahWah:
-                pEff = new CWahWah(mchan->mc_main, NULL);
-                break;
-            case EffType_Distortion:
-                pEff = new CDistort(mchan->mc_main, NULL);
-                break;
-            case EffType_BitCrusher:
-                pEff = new CBitCrusher(mchan->mc_main, NULL);
-                break;
-            case EffType_Stereo:
-                pEff = new CStereo(mchan->mc_main, NULL);
-                break;
-            case EffType_CFilter2:
-                pEff = new CFilter2(mchan->mc_main, NULL);
-                break;
-            case EffType_CFilter3:
-                pEff = new CFilter3(mchan->mc_main, NULL);
-                break;
-            case EffType_Default:
-                pEff = new BlankEffect(mchan->mc_main, NULL);
-                break;
-            default:
-                break;
-        }
+        WaitForSingleObject(hMixMutex, INFINITE);
+        AddEff(pEff);
+        mchan->AddEffect(pEff);
+        SetCurrentEffect(pEff);
+        ReleaseMutex(hMixMutex);
 
-        if(pEff != NULL)
-        {
-            WaitForSingleObject(hMixMutex, INFINITE);
-            AddEff(pEff);
-            mchan->AddEffect(pEff);
-            SetCurrentEffect(pEff);
-            ReleaseMutex(hMixMutex);
-
-            R(Refresh_Aux);
-            R(Refresh_AuxHighlights);
-        }
-
-        return pEff;
+        R(Refresh_Aux);
+        R(Refresh_AuxHighlights);
     }
+
+    return pEff;
 }
 
 Eff* Aux::AddVSTEffectByPath(const char * fullpath, MixChannel * mchan)
@@ -7082,118 +7056,105 @@ Eff* Aux::AddVSTEffectByPath(const char * fullpath, MixChannel * mchan)
 
 Eff* Aux::AddEffectFromBrowser(FileData * fdi, MixChannel* mchan)
 {
-    if(RegisteredVersion == false && last_eff != NULL && last_eff->index >= 9 && ProjectLoadingInProgress == false)
+    char fullpath[MAX_PATH_STRING] = {0};
+
+    strcpy(fullpath, fdi->path);
+
+    char alias[MAX_ALIAS_STRING] = {0};
+    char *pAlias = NULL;
+
+    /* If effect is external plugin */
+    if ((pAlias = strstr(fullpath, "internal://")) == NULL)
     {
-        AlertWindow w (T("Restriction warning"),
-                       T("You cannot load more than 10 effects in the unregistered version."),
-                       AlertWindow::WarningIcon);
-        w.setSize(122, 55);
-        w.addButton (T("OK"), 1, KeyPress (KeyPress::returnKey, 0, 0));
-        int result = w.runModalLoop();
-        return NULL;
+        return AddVSTEffectByPath(fullpath, mchan);
     }
-    else
+    else /* it is internal FX */
     {
-        char fullpath[MAX_PATH_STRING] = {0};
+        AliasRecord* ar = NULL;
+        Eff* pEff = NULL;
+        pAlias += strlen("internal://");
+        ar = GetAliasRecordFromString(pAlias);
 
-        strcpy(fullpath, fdi->path);
-
-        char alias[MAX_ALIAS_STRING] = {0};
-        char *pAlias = NULL;
-
-        /* If effect is external plugin */
-        if ((pAlias = strstr(fullpath, "internal://")) == NULL)
+        switch(ar->type)
         {
-            return AddVSTEffectByPath(fullpath, mchan);
+            case EffType_Gain:
+                pEff = new Gain(mchan->mc_main, ar);
+                break;
+            case EffType_Filter:
+                pEff = new Filter(mchan->mc_main, ar);
+                break;
+            case EffType_CFilter:
+                pEff = new CFilter(mchan->mc_main, ar);
+                break;
+            case EffType_CFilter3:
+                pEff = new CFilter3(mchan->mc_main, ar);
+                break;
+            case EffType_Equalizer1:
+                pEff = new EQ1(mchan->mc_main, ar);
+                break;
+            case EffType_Equalizer3:
+                pEff = new EQ3(mchan->mc_main, ar);
+                break;
+            case EffType_GraphicEQ:
+                pEff = new GraphicEQ(mchan->mc_main, ar);
+                break;
+            case EffType_XDelay:
+                pEff = new XDelay(mchan->mc_main, ar);
+                break;
+            case EffType_Reverb:
+                pEff = new CReverb(mchan->mc_main, ar);
+                break;
+            case EffType_Tremolo:
+                pEff = new CTremolo(mchan->mc_main, ar);
+                break;
+            case EffType_Send:
+                pEff = new Send(mchan->mc_main, ar);
+                break;
+            case EffType_Compressor:
+                pEff = new Compressor(mchan->mc_main, ar);
+                break;
+            case EffType_Chorus:
+                pEff = new CChorus(mchan->mc_main, ar);
+                break;
+            case EffType_Flanger:
+                pEff = new CFlanger(mchan->mc_main, ar);
+                break;
+            case EffType_Phaser:
+                pEff = new CPhaser(mchan->mc_main, ar);
+                break;
+            case EffType_WahWah:
+                pEff = new CWahWah(mchan->mc_main, ar);
+                break;
+            case EffType_Distortion:
+                pEff = new CDistort(mchan->mc_main, ar);
+                break;
+            case EffType_BitCrusher:
+                pEff = new CBitCrusher(mchan->mc_main, ar);
+                break;
+            case EffType_Stereo:
+                pEff = new CStereo(mchan->mc_main, ar);
+                break;
+            case EffType_Default:
+                pEff = new BlankEffect(mchan->mc_main, ar);
+                break;
+            default:
+                break;
         }
-        else /* it is internal FX */
+
+        if(pEff != NULL)
         {
-            AliasRecord* ar = NULL;
-            Eff* pEff = NULL;
-            pAlias += strlen("internal://");
-            ar = GetAliasRecordFromString(pAlias);
+            WaitForSingleObject(hMixMutex, INFINITE);
+            AddEff(pEff);
+            mchan->AddEffect(pEff);
+            SetCurrentEffect(pEff);
+            ReleaseMutex(hMixMutex);
 
-            switch(ar->type)
-            {
-                case EffType_Gain:
-                    pEff = new Gain(mchan->mc_main, ar);
-                    break;
-                case EffType_Filter:
-                    pEff = new Filter(mchan->mc_main, ar);
-                    break;
-                case EffType_CFilter:
-                    pEff = new CFilter(mchan->mc_main, ar);
-                    break;
-                case EffType_CFilter3:
-                    pEff = new CFilter3(mchan->mc_main, ar);
-                    break;
-                case EffType_Equalizer1:
-                    pEff = new EQ1(mchan->mc_main, ar);
-                    break;
-                case EffType_Equalizer3:
-                    pEff = new EQ3(mchan->mc_main, ar);
-                    break;
-                case EffType_GraphicEQ:
-                    pEff = new GraphicEQ(mchan->mc_main, ar);
-                    break;
-                case EffType_XDelay:
-                    pEff = new XDelay(mchan->mc_main, ar);
-                    break;
-                case EffType_Reverb:
-                    pEff = new CReverb(mchan->mc_main, ar);
-                    break;
-                case EffType_Tremolo:
-                    pEff = new CTremolo(mchan->mc_main, ar);
-                    break;
-                case EffType_Send:
-                    pEff = new Send(mchan->mc_main, ar);
-                    break;
-                case EffType_Compressor:
-                    pEff = new Compressor(mchan->mc_main, ar);
-                    break;
-                case EffType_Chorus:
-                    pEff = new CChorus(mchan->mc_main, ar);
-                    break;
-                case EffType_Flanger:
-                    pEff = new CFlanger(mchan->mc_main, ar);
-                    break;
-                case EffType_Phaser:
-                    pEff = new CPhaser(mchan->mc_main, ar);
-                    break;
-                case EffType_WahWah:
-                    pEff = new CWahWah(mchan->mc_main, ar);
-                    break;
-                case EffType_Distortion:
-                    pEff = new CDistort(mchan->mc_main, ar);
-                    break;
-                case EffType_BitCrusher:
-                    pEff = new CBitCrusher(mchan->mc_main, ar);
-                    break;
-                case EffType_Stereo:
-                    pEff = new CStereo(mchan->mc_main, ar);
-                    break;
-                case EffType_Default:
-                    pEff = new BlankEffect(mchan->mc_main, ar);
-                    break;
-                default:
-                    break;
-            }
-
-            if(pEff != NULL)
-            {
-                WaitForSingleObject(hMixMutex, INFINITE);
-                AddEff(pEff);
-                mchan->AddEffect(pEff);
-                SetCurrentEffect(pEff);
-                ReleaseMutex(hMixMutex);
-
-                mchan->drawarea->Change();
-                R(Refresh_Aux);
-                R(Refresh_AuxHighlights);
-            }
-
-            return pEff;
+            mchan->drawarea->Change();
+            R(Refresh_Aux);
+            R(Refresh_AuxHighlights);
         }
+
+        return pEff;
     }
 }
 
@@ -7515,7 +7476,7 @@ void Numba::HandleButtUp(Butt* bt)
         {
             R(Refresh_AuxScale);
             R(Refresh_AuxGrid);
-            R(Refresh_Auxaux);
+            R(Refresh_SubAux);
         }
     }
     else if(ntype == Numba_BPB)
@@ -7541,7 +7502,7 @@ void Numba::HandleButtUp(Butt* bt)
         {
             R(Refresh_AuxScale);
             R(Refresh_AuxGrid);
-            R(Refresh_Auxaux);
+            R(Refresh_SubAux);
         }
     }
     else if(ntype == Numba_Octave)

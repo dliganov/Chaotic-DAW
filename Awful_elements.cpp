@@ -840,7 +840,7 @@ Txt::Txt()
 
 Txt* Txt::Clone(bool add)
 {
-    Txt* clone = CreateTextString();
+    Txt* clone = CreateElement_TextString();
     clone->AddString(buff);
     clone->curPos = curPos;
     clone->bookmark = bookmark;
@@ -876,7 +876,7 @@ void Txt::ParseString()
         {
             DeleteElement(this, false, false);
 
-            Muter* m = CreateMuter();
+            Muter* m = CreateElement_Muter();
             
             C.mode = CMode_ElemEdit;
             C.curElem = m;
@@ -885,7 +885,7 @@ void Txt::ParseString()
         {
             DeleteElement(this, false, false);
 
-            Break* bk = CreateBreak();
+            Break* bk = CreateElement_Break();
             C.mode = CMode_ElemEdit;
             C.curElem = bk;
         }
@@ -893,7 +893,7 @@ void Txt::ParseString()
         {
             DeleteElement(this, false, false);
 
-            Slide* sl = CreateSlide(+1);
+            Slide* sl = CreateElement_Slide(+1);
             C.mode = CMode_ElemEdit;
             C.curElem = sl;
         }
@@ -901,7 +901,7 @@ void Txt::ParseString()
         {
             DeleteElement(this, false, false);
 
-            Reverse* r = CreateReverse();
+            Reverse* r = CreateElement_Reverse();
             C.mode = CMode_ElemEdit;
             C.curElem = r;
         }
@@ -919,7 +919,7 @@ void Txt::ParseString()
         {
             DeleteElement(this, false, false);
 
-            Vibrate* vb = CreateVibrate();
+            Vibrate* vb = CreateElement_Vibrate();
 
             C.mode = CMode_ElemEdit;
             C.curElem = vb;
@@ -931,7 +931,7 @@ void Txt::ParseString()
             Scope scp;
             memset(&scp, 0, sizeof(Scope));
             scp.for_track = true;
-            Transpose* c = CreateTranspose(1);
+            Transpose* c = CreateElement_Transpose(1);
 
             C.mode = CMode_ElemEdit;
             C.curElem = c;
@@ -1014,7 +1014,7 @@ void Txt::ParseString()
 
                 DeleteElement(this, false, false);
 
-				C.curElem = CreateNote(instr, true);
+				C.curElem = CreateElement_Note(instr, true);
                 C.curElem->Activate();
             }
             else if(patt == field)
@@ -1028,7 +1028,7 @@ void Txt::ParseString()
                     //// Reset some stuff to initial
                     //ptn->muted = false;
                     //ptn->SetEndTick(ptn->StartTick() + ticks_per_beat);
-                    Pattern* ptn = CreateDerivedPattern(p->OrigPt, CTick, CTick + p->tick_length, CLine, CLine);
+                    Pattern* ptn = CreateElement_DerivedPattern(p->OrigPt, CTick, CTick + p->tick_length, CLine, CLine);
                     if(MakePatternsFat && CLine > 0)
                         ptn->is_fat = true;
                     else
@@ -1803,7 +1803,7 @@ Gennote::~Gennote()
 Gennote* Gennote::Clone(bool add)
 {
     Gennote* clone;
-    clone = (Gennote*)CreateNote(instr, false);
+    clone = (Gennote*)CreateElement_Note(instr, false);
 	clone->ed_note->SetRelative(ed_note->relative);
     clone->ed_note->SetValue(ed_note->value);
     clone->ed_note->visible = ed_note->visible;
@@ -1898,7 +1898,7 @@ Samplent::~Samplent()
 Samplent* Samplent::Clone(bool add)
 {
     Samplent* clone ;
-    clone = (Samplent*)CreateNote(sample, false);
+    clone = (Samplent*)CreateElement_Note(sample, false);
 	clone->ed_note->SetRelative(ed_note->relative);
     clone->ed_note->SetValue(ed_note->value);
     clone->ed_note->visible = ed_note->visible;
@@ -2398,7 +2398,7 @@ SlideNote::SlideNote(int note_num, Instance* par) : Slide(0)
 
 SlideNote* SlideNote::Clone(bool add)
 {
-    SlideNote* clone = CreateSlideNote(false);
+    SlideNote* clone = CreateElement_SlideNote(false);
 
     clone->ed_note->SetValue(ed_note->value);
     clone->ed_note->visible = ed_note->visible;
@@ -2682,7 +2682,7 @@ Command::Command(Scope* sc, CmdType ct, Parameter* prm)
 
 Command* Command::Clone(bool add)
 {
-    Command* clone = CreateCommand(scope, false);
+    Command* clone = CreateElement_Command(scope, false);
 
     clone->com_num = com_num;
     clone->cmdtype = cmdtype;
@@ -3556,7 +3556,7 @@ Muter::Muter()
 
 Muter* Muter::Clone(bool add)
 {
-    Muter* clone = CreateMuter();
+    Muter* clone = CreateElement_Muter();
     clone->mute_param = mute_param;
 
     clone->start_tick = start_tick;
@@ -3630,7 +3630,7 @@ Transpose::Transpose(int semitones)
 
 Transpose* Transpose::Clone(bool add)
 {
-    Transpose* clone = CreateTranspose(smt->value);
+    Transpose* clone = CreateElement_Transpose(smt->value);
 
     clone->start_tick = start_tick;
     clone->end_tick = end_tick;
@@ -3717,7 +3717,7 @@ Break::Break()
 
 Break* Break::Clone(bool add)
 {
-    Break* clone = CreateBreak();
+    Break* clone = CreateElement_Break();
     clone->break_param = break_param;
 
     clone->start_tick = start_tick;
@@ -3785,7 +3785,7 @@ Slide::Slide(int semitones)
 
 Slide* Slide::Clone(bool add)
 {
-    Slide* clone = CreateSlide(smt->value);
+    Slide* clone = CreateElement_Slide(smt->value);
 
     clone->start_tick = start_tick;
     clone->end_tick = end_tick;
@@ -3907,7 +3907,7 @@ Vibrate::Vibrate(float freq, float range)
 
 Vibrate* Vibrate::Clone(bool add)
 {
-    Vibrate* clone = CreateVibrate();
+    Vibrate* clone = CreateElement_Vibrate();
     clone->freq = freq;
     clone->range = range;
 
@@ -3994,7 +3994,7 @@ Reverse::Reverse()
 
 Reverse* Reverse::Clone(bool add)
 {
-    Reverse* clone = CreateReverse();
+    Reverse* clone = CreateElement_Reverse();
     clone->value = value;
 
     clone->start_tick = start_tick;
@@ -4063,7 +4063,7 @@ Repeat::Repeat()
 
 Repeat* Repeat::Clone(bool add)
 {
-    Repeat* clone = CreateRepeat();
+    Repeat* clone = CreateElement_Repeater();
     clone->value = value;
 
     clone->start_tick = start_tick;
@@ -6015,7 +6015,7 @@ Element* ReassignInstrument(Instance* ii, Instrument* instr)
     C.SetPattern(ii->patt, C.loc);
     if(instr->type == Instr_Sample)
     {
-        Samplent* smp = (Samplent*)CreateNote(instr, true);
+        Samplent* smp = (Samplent*)CreateElement_Note(instr, true);
         smp->ed_note->value = ii->ed_note->value;
         smp->ed_note->visible = ii->ed_note->visible;
         smp->ed_vol->value = ii->ed_vol->value;
@@ -6029,7 +6029,7 @@ Element* ReassignInstrument(Instance* ii, Instrument* instr)
     }
     else if(instr->type == Instr_Generator || instr->type == Instr_VSTPlugin)
     {
-        Gennote* gn = (Gennote*)CreateNote(instr, true);
+        Gennote* gn = (Gennote*)CreateElement_Note(instr, true);
         gn->ed_note->value = ii->ed_note->value;
         gn->ed_vol->value = ii->ed_vol->value;
         gn->ed_pan->value = ii->ed_pan->value;

@@ -570,7 +570,7 @@ void MidiToHost_AddNoteOn(Instrument* instr, int note, int vol)
             else if(C.patt == field)
             {
                 C.SetPos(Frame2Tick(pbMain->currFrame), CLine);
-                pt = CreatePattern(CTick, CTick + (float)ticks_per_beat, CLine, CLine, Patt_Pianoroll);
+                pt = CreateElement_Pattern(CTick, CTick + (float)ticks_per_beat, CLine, CLine, Patt_Pianoroll);
                 C.SetPattern(pt, Loc_MainGrid);
 
                 // Remove it from field

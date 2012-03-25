@@ -1867,7 +1867,7 @@ void Toggle::PerClick()
         param->UpdateBindings();
     }
 
-    ChangesHappened();
+    ChangesIndicate();
 }
 
 void Toggle::MouseClick(int mouse_x, int mouse_y)

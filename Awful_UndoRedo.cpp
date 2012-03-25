@@ -106,7 +106,7 @@ void UndoManaga::DoNewAction(ActionType atype, void* adata1, void* adata2, void*
         Perform(current_action);
 
 		if(atype != Action_Empty)
-			ChangesHappened();
+			ChangesIndicate();
     }
 }
 
@@ -134,7 +134,7 @@ void UndoManaga::DoNewAction(ActionType atype, void* adata1, float f1, float f2,
 
         Perform(current_action);
 
-        ChangesHappened();
+        ChangesIndicate();
 	}
 }
 
@@ -149,7 +149,7 @@ void UndoManaga::RedoAction()
             Perform(current_action);
         }
 
-        ChangesHappened();
+        ChangesIndicate();
     }
 }
 
@@ -164,7 +164,7 @@ void UndoManaga::UndoAction()
             current_action = current_action->prev;
         }
 
-        ChangesHappened();
+        ChangesIndicate();
     }
 }
 
@@ -188,7 +188,7 @@ void UndoManaga::Unperform(Action* act)
             else
             {
                 R(Refresh_AuxContent);
-                R(Refresh_Auxaux);
+                R(Refresh_SubAux);
             }
         }break;
         case Action_Add:
@@ -207,7 +207,7 @@ void UndoManaga::Unperform(Action* act)
             else
             {
                 R(Refresh_AuxContent);
-                R(Refresh_Auxaux);
+                R(Refresh_SubAux);
             }
         }break;
         case Action_Bind:
@@ -246,7 +246,7 @@ void UndoManaga::Unperform(Action* act)
             else
             {
                 R(Refresh_AuxContent);
-                R(Refresh_Auxaux);
+                R(Refresh_SubAux);
             }
         }break;
         case Action_ParamChange:
@@ -265,7 +265,7 @@ void UndoManaga::Unperform(Action* act)
             else
             {
                 R(Refresh_AuxContent);
-                R(Refresh_Auxaux);
+                R(Refresh_SubAux);
             }
         }break;
         case Action_Resize:
@@ -298,7 +298,7 @@ void UndoManaga::Unperform(Action* act)
             else
             {
                 R(Refresh_AuxContent);
-                R(Refresh_Auxaux);
+                R(Refresh_SubAux);
             }
         }break;
     }
@@ -325,7 +325,7 @@ void UndoManaga::Perform(Action* act)
             else
             {
                 R(Refresh_AuxContent);
-                R(Refresh_Auxaux);
+                R(Refresh_SubAux);
             }
         }break;
         case Action_Add:
@@ -345,7 +345,7 @@ void UndoManaga::Perform(Action* act)
             else
             {
                 R(Refresh_AuxContent);
-                R(Refresh_Auxaux);
+                R(Refresh_SubAux);
             }
         }break;
         case Action_Bind:
@@ -385,7 +385,7 @@ void UndoManaga::Perform(Action* act)
             else
             {
                 R(Refresh_AuxContent);
-                R(Refresh_Auxaux);
+                R(Refresh_SubAux);
             }
         }break;
         case Action_ParamChange:
@@ -403,7 +403,7 @@ void UndoManaga::Perform(Action* act)
             else
             {
                 R(Refresh_AuxContent);
-                R(Refresh_Auxaux);
+                R(Refresh_SubAux);
             }
         }break;
         case Action_Resize:
@@ -438,7 +438,7 @@ void UndoManaga::Perform(Action* act)
             else
             {
                 R(Refresh_AuxContent);
-                R(Refresh_Auxaux);
+                R(Refresh_SubAux);
             }
         }break;
     }

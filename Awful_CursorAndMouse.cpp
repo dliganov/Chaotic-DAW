@@ -529,7 +529,7 @@ void Cursor::ExitToSlidingMode(Element* parent, int note_num)
 SlideNote* Cursor::PlaceSlideNote(char character, unsigned flags)
 {
     SlideNote* sl = NULL;
-    sl = CreateSlideNote(true);
+    sl = CreateElement_SlideNote(true);
 /*    if(flags & kbd_ctrl && C.curElem != NULL)
     {
         if(C.curElem->IsInstance())
@@ -1782,7 +1782,7 @@ void Mouse::ClickActiveElement(int mx, int my, bool dbclick, unsigned flags)
 		if(loc == Loc_MainGrid && gAux->isVolsPansMode())
 			R(Refresh_Aux);
 		else if(loc == Loc_SmallGrid)
-			R(Refresh_Auxaux);
+			R(Refresh_SubAux);
     }
 
     if(el->type == El_Pattern && dbclick == false)

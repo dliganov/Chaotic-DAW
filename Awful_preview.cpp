@@ -117,7 +117,7 @@ extern int Preview_Add(Instance* ii, Instrument* i, int key, int note, Pattern* 
             }
             else
             {
-                pslot->ii = CreateNote(i, false);
+                pslot->ii = CreateElement_Note(i, false);
 				if(setrelative)
 				{
 					pslot->ii->ed_note->SetRelative(true);
@@ -309,7 +309,7 @@ void Preview_ReleaseData(unsigned int ic)
         PrevSlot[ic].ii = NULL;
         PrevSlot[ic].state = PState_Free;
         PrevSlot[ic].trig.patt = NULL;
-		PrevSlot[ic].key = -1;
+        PrevSlot[ic].key = -1;
     }
 }
 

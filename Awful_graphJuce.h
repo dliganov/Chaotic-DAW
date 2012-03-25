@@ -59,7 +59,7 @@ extern Image*  img_btwnd_s;
 extern Image*  img_btwnd_g;
 
 extern void	J_DrawAll(Graphics& g);
-extern void J_InitFonts();
+extern void Init_Fonts();
 extern void J_MainScale(Graphics& g);
 extern void J_Pos(Graphics& g, int pos, int gx, int gy);
 extern void J_PosAux(Graphics& g, int pos, int gx, int gy);
@@ -112,7 +112,7 @@ extern void J_VLine(Graphics& g, int x, int y1, int y2);
 extern void J_Line2(Graphics& g, int x1, int y1, int x2, int y2);
 extern void J_RefreshGridImage();
 extern void J_RefreshAuxGridImage();
-extern void InitImages();
-extern void AssignImages();
+extern void Init_Images();
+extern void AssignLoadedImages();
 
 #endif

@@ -899,8 +899,8 @@ void Trigger::Initialize()
     freq_incr_sgn = 1;
 
     vol_val = pan_val =  0;
-	frame_phase = 0;
-	freq_incr_base = freq_incr_active = 0;
+    frame_phase = 0;
+    freq_incr_base = freq_incr_active = 0;
     wt_pos = 0;
     signal = 1;
 

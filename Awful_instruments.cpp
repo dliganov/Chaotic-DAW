@@ -535,7 +535,7 @@ void Instrument::CreateAutoPattern()
     }
 
     C.SetPos(0, 0);
-    prevInst = CreateNote(this, false);
+    prevInst = CreateElement_Note(this, false);
     prevInst->patt = autoPatt;
     prevInst->Update();
     MakeTriggersForElement(prevInst, autoPatt);

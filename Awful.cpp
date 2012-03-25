@@ -40,7 +40,7 @@
 #include "rosic/filters/rosic_LowpassHighpass.h"
 #include "rosic/filters/rosic_WhiteToPinkFilter.h"
 
-#include "MetroWavs.h"
+#include "Data sources/metronome_waves.h"
 
 //#include "awful_sf2.h"
 
@@ -53,24 +53,23 @@
 
 ////
 //// Creation group
-extern void                 CreateEnvelopeCommon(Parameter* param);
-extern Command*             CreateCommand(Scope* scope, CmdType type);
-extern Command*             CreateCommand(Scope* scope, bool preventundo);
-extern Vibrate*				CreateVibrate();
-extern Instance*            CreateInstanceByChar(char character);
-extern SlideNote*           CreateSlideNote(bool add);
-extern Muter*               CreateMuter();
-extern Break*               CreateBreak();
-extern Slide*				CreateSlide(int semitones);
-extern Reverse*             CreateReverse();
-extern Repeat*              CreateRepeat();
-extern Pattern*				CreatePattern(int x1, int x2, int y1, int y2);
-extern Pattern*             CreatePattern(char* pname, float tk1, float tk2, int tr1, int tr2);
-extern Transpose*           CreateTranspose(int semitones);
-extern Txt*			        CreateTextString();
-extern Instance*            CreateNote(Instrument* instr, bool add, bool preventundo);
-extern Pattern*             GetPatternByIndex(int index);
-extern Element*             CreateSymbolCommon(ElType eltype, bool add, bool preventundo);
+extern void                 CreateElement_EnvelopeCommon(Parameter* param);
+extern Command*             CreateElement_Command(Scope* scope, CmdType type);
+extern Command*             CreateElement_Command(Scope* scope, bool preventundo);
+extern Vibrate*				CreateElement_Vibrate();
+extern Instance*            CreateElement_Instance_byChar(char character);
+extern SlideNote*           CreateElement_SlideNote(bool add);
+extern Muter*               CreateElement_Muter();
+extern Break*               CreateElement_Break();
+extern Slide*				CreateElement_Slide(int semitones);
+extern Reverse*             CreateElement_Reverse();
+extern Repeat*              CreateElement_Repeater();
+extern Pattern*				CreateElement_Pattern(int x1, int x2, int y1, int y2);
+extern Pattern*             CreateElement_Pattern(char* pname, float tk1, float tk2, int tr1, int tr2);
+extern Transpose*           CreateElement_Transpose(int semitones);
+extern Txt*			        CreateElement_TextString();
+extern Instance*            CreateElement_Note(Instrument* instr, bool add, bool preventundo);
+extern Element*             CreateElement_CommonSymbol(ElType eltype, bool add, bool preventundo);
 
 
 ////
@@ -115,6 +114,7 @@ void                        DoLoadPreset(Eff* eff);
 
 ////
 //// Elements and params manipulations group
+extern Pattern*             GetPatternByIndex(int index);
 extern bool                 ResetHighlights(bool* redrawmain, bool* redrawaux);
 extern void                 UpdateElementsVisibility();
 void                        MovePickedElements(int mx, int my, bool shift);
@@ -178,18 +178,18 @@ Element*					CheckCursorVisibility();
 
 ////
 //// Scaling functions group
-void                DecreaseScale(bool mouse);
-void                IncreaseScale(bool mouse);
-void                SetScale(float scale);
-void                UpdatePerScale();
+void                        DecreaseScale(bool mouse);
+void                        IncreaseScale(bool mouse);
+void                        SetScale(float scale);
+void                        UpdatePerScale();
 
 ////
 //// Instruments initialisation group
-void				Debug_Init_Samples();
-void                ScanDirForVST(char *path, char mode, FILE* fhandle, ScanThread* thread);
-static void         Init_Aliases();
-static void         Init_ScanForVST(ScanThread* thread);
-void                ClearVSTListFile();
+void                        Load_Default_Instruments();
+void                        ScanDirForVST(char *path, char mode, FILE* fhandle, ScanThread* thread);
+static void                 Init_Aliases();
+static void                 Init_ScanForVST(ScanThread* thread);
+void                        ClearVSTListFile();
 
 ////
 //// System group
@@ -691,9 +691,8 @@ bool            RescanPluginsAutomatically;
 
 bool            ProjectLoadingInProgress;
 
-bool            ChangesAreHappened;
+bool            ChangesHappened;
 
-bool            RegisteredVersion;
 int             rVer = 101;
 int             rDay = 7, rMonth = 7, rYear = 2010;
 String          userName;
@@ -706,65 +705,23 @@ int             numLastSessions;
 Sample*         barsample = NULL;
 Sample*         beatsample = NULL;
 
-void ChangesHappened()
+void ChangesIndicate()
 {
-    if(!ChangesAreHappened)
+    if(!ChangesHappened)
     {
         R(Refresh_All);
     }
 
-    ChangesAreHappened = true;
-	if(!ProjectLoadingInProgress)
-		MainWnd->UpdateTitle();
+    ChangesHappened = true;
+    if(!ProjectLoadingInProgress)
+        MainWnd->UpdateTitle();
 }
 
-void ResetChangesHappened()
+void ResetChangesIndicate()
 {
-    ChangesAreHappened = false;
+    ChangesHappened = false;
 }
 
-
-#define PUB_KEY "5,8f6be22219d9b7074186ecd10375457ed6268a222ce74c2ec38602c2632869e1"
-
-void CheckRegistrationKey()
-{
-    RegisteredVersion = false;
-    File licfile(T("CMMSingleUserLicenseKey.license"));
-    if(licfile.exists())
-    {
-        String hexData = licfile.loadFileAsString();
-        if (hexData.isEmpty())
-            return;
-
-        BitArray val;
-        val.parseString(hexData, 16);
-
-        RSAKey key(PUB_KEY);
-        key.applyToValue (val);
-
-        const MemoryBlock mb (val.toMemoryBlock());
-        XmlDocument doc (mb.toString());
-
-        XmlElement* const xml = doc.getDocumentElement();
-
-        if(xml != 0)
-        {
-            userName = xml->getStringAttribute(T("UserName"), T("None"));
-            String useremail = xml->getStringAttribute(T("UserEmail"), T("None"));
-			int cmmver = xml->getIntAttribute(T("CMMVersion"), 0);
-			//int day = xml->getIntAttribute(T("Day"), 0);
-			//int month = xml->getIntAttribute(T("Month"), 0);
-			//int year = xml->getIntAttribute(T("Year"), 0);
-            if(userName.length() > 0 && useremail.length() > 0 && cmmver != 0)
-            {
-                //if(rYear <= year + 1 && rMonth <= month && rDay <= day)
-                {
-                    RegisteredVersion = true;
-                }
-            }
-        }
-    }
-}
 
 void ProjectData::Init()
 {
@@ -930,7 +887,7 @@ void CleanProject()
 
     PrjData.projpath = "";
     PrjData.SetName("Untitled");
-    ResetChangesHappened();
+    ResetChangesIndicate();
     MainWnd->UpdateTitle();
 
     ReleaseMutex(hProcessMutex);
@@ -981,7 +938,7 @@ void LoadElementsFromNode(XmlElement* xmlMainNode, Pattern* pttarget)
             {
                 case El_TextString:
                 {
-                    el = CreateTextString();
+                    el = CreateElement_TextString();
                 }break;
                 case El_Gennote:
                 case El_Samplent:
@@ -990,12 +947,12 @@ void LoadElementsFromNode(XmlElement* xmlMainNode, Pattern* pttarget)
                     Instrument* instr = GetInstrumentByIndex(index);
                     if(instr != NULL)
                     {
-                        el = CreateNote(instr, true, true);
+                        el = CreateElement_Note(instr, true, true);
                     }
                 }break;
                 case El_Command:
                 {
-                    el = CreateCommand(NULL, true);
+                    el = CreateElement_Command(NULL, true);
                 }break;
                 case El_Mute:
                 case El_Break:
@@ -1005,7 +962,7 @@ void LoadElementsFromNode(XmlElement* xmlMainNode, Pattern* pttarget)
                 case El_Vibrate:
                 case El_Transpose:
                 {
-                    el = CreateSymbolCommon(type, true, true);
+                    el = CreateElement_CommonSymbol(type, true, true);
                 }break;
             }
 
@@ -1454,7 +1411,7 @@ void SaveProjectData(File chosenFile)
     xmlProjectMain.writeToFile(chosenFile.withFileExtension(ProjExt), String::empty);
 
     PrjData.SetName(chosenFile.getFileNameWithoutExtension());
-    ResetChangesHappened();
+    ResetChangesIndicate();
     MainWnd->UpdateTitle();
 }
 
@@ -1491,10 +1448,10 @@ bool SaveProject(bool as)
 
             return false;
         }
-		else
-		{
-			return true;
-		}
+        else
+        {
+            return true;
+        }
     }
     else
     {
@@ -1515,7 +1472,7 @@ bool SaveProject(bool as)
 // returns true if need to skip saving
 bool CheckSave()
 {
-    if(ChangesAreHappened)
+    if(ChangesHappened)
     {
         AlertWindow w (T("Question"),
                        T("Save changes to the current project?"),
@@ -1578,7 +1535,7 @@ void LoadProject(File* f)
             SortLastSessions(f);
         }
 
-        ResetChangesHappened();
+        ResetChangesIndicate();
         MainWnd->UpdateTitle();
 
         R(Refresh_All);
@@ -1637,7 +1594,7 @@ void SaveSettings()
     xmlSettings.writeToFile(sFile, String::empty);
 }
 
-void ExitOut()
+void ExitFromApp()
 {
     SaveSettings();
     JUCEApplication::quit();
@@ -1691,7 +1648,7 @@ void R(int r)
     MC->refresh |= r;
 }
 
-Instance* CreateNote(Instrument* instr, bool add, bool preventundo)
+Instance* CreateElement_Note(Instrument* instr, bool add, bool preventundo)
 {
     Instance* ii = NULL;
     if(instr->type == Instr_VSTPlugin || instr->type == Instr_Generator)
@@ -1715,11 +1672,11 @@ Instance* CreateNote(Instrument* instr, bool add, bool preventundo)
     return ii;
 }
 
-Instance* CreateInstanceByChar(char character)
+Instance* CreateElement_Instance_byChar(char character)
 {
     Instrument* instr = C.patt->ibound != NULL ? C.patt->ibound : current_instr;
     C.last_char = character;
-	Instance* ii = CreateNote(instr, true);
+	Instance* ii = CreateElement_Note(instr, true);
 
 	ii->ed_note->visible = true;
     ii->Switch2Param(ii->ed_note);
@@ -1729,7 +1686,7 @@ Instance* CreateInstanceByChar(char character)
 	return ii;
 }
 
-Instance* CreateInstance(bool preview)
+Instance* CreateElement_Instance(bool preview)
 {
     Instance* ii = NULL;
     Instrument* instr = C.patt->ibound != NULL ? C.patt->ibound : current_instr;
@@ -1750,7 +1707,7 @@ Instance* CreateInstance(bool preview)
     }
     else
     {
-        ii = CreateNote(instr, true);
+        ii = CreateElement_Note(instr, true);
         ii->loc_vol->SetNormalValue(instr->last_vol);
         ii->loc_pan->SetNormalValue(instr->last_pan);
 
@@ -1762,7 +1719,7 @@ Instance* CreateInstance(bool preview)
     return ii;
 }
 
-Instance* CreateInstanceSpecific(Pattern* patt, Instrument *instr, int note, float vol, float starttick, float endtick, int line)
+Instance* CreateElement_InstanceSpecific(Pattern* patt, Instrument *instr, int note, float vol, float starttick, float endtick, int line)
 {
     Pattern* currPatt = C.patt;
     float currTick = CTick;
@@ -1772,7 +1729,7 @@ Instance* CreateInstanceSpecific(Pattern* patt, Instrument *instr, int note, flo
     CLine = line;
     C.patt = patt;
 
-    Instance* ii = CreateNote(instr, false);
+    Instance* ii = CreateElement_Note(instr, false);
 
     ii->end_tick = endtick;
     ii->ed_note->SetValue(note);
@@ -1786,7 +1743,7 @@ Instance* CreateInstanceSpecific(Pattern* patt, Instrument *instr, int note, flo
     return ii;
 }
 
-extern SlideNote* CreateSlideNote(bool add)
+extern SlideNote* CreateElement_SlideNote(bool add)
 {
     bool rel = false;
     if(C.patt == gAux->workPt && gAux->workPt->autopatt == true && gAux->relative_oct)
@@ -1815,14 +1772,14 @@ extern SlideNote* CreateSlideNote(bool add)
     return sl;
 }
 
-Txt* CreateTextString()
+Txt* CreateElement_TextString()
 {
     Txt* t = new Txt;
     AddNewElement(t, false);
     return t;
 }
 
-Pattern* CreatePianorollPattern(int x1, int x2, int y1, int y2)
+Pattern* CreateElement_PianorollPattern(int x1, int x2, int y1, int y2)
 {
     char* pname = GetOriginalPatternName();
     Pattern* pt = new Pattern(pname, (int)x1 + GridX1, (int)x2 + GridX1, (int)y1 + GridY1, (int)y2 + GridY1 - 1, true);
@@ -1836,7 +1793,7 @@ Pattern* CreatePianorollPattern(int x1, int x2, int y1, int y2)
     return pt;
 }
 
-Pattern* CreatePianorollPattern(float x1, float x2, int tr1, int tr2)
+Pattern* CreateElement_PianorollPattern(float x1, float x2, int tr1, int tr2)
 {
     char* pname = GetOriginalPatternName();
     Pattern* pt = new Pattern(pname, x1, x2, tr1, tr2, true);
@@ -1850,7 +1807,7 @@ Pattern* CreatePianorollPattern(float x1, float x2, int tr1, int tr2)
     return pt;
 }
 
-Pattern* CreatePattern(int x1, int x2, int y1, int y2)
+Pattern* CreateElement_Pattern(int x1, int x2, int y1, int y2)
 {
     char* pname = GetOriginalPatternName();
     Pattern* ptmain = new Pattern(pname, (int)x1 + GridX1, (int)x2 + GridX1, (int)y1 + GridY1, (int)y2 + GridY1 - 1, true);
@@ -1864,7 +1821,7 @@ Pattern* CreatePattern(int x1, int x2, int y1, int y2)
     return pt;
 }
 
-Pattern* CreatePattern(char* pname, float tk1, float tk2, int tr1, int tr2)
+Pattern* CreateElement_Pattern(char* pname, float tk1, float tk2, int tr1, int tr2)
 {
     Pattern* ptmain = new Pattern(pname, tk1, tk2, tr1, tr2, true);
     AddOriginalPattern(ptmain);
@@ -1875,7 +1832,7 @@ Pattern* CreatePattern(char* pname, float tk1, float tk2, int tr1, int tr2)
     return pt;
 }
 
-Pattern* CreateDerivedPattern(Pattern* ptmain, float tk1, float tk2, int tr1, int tr2)
+Pattern* CreateElement_DerivedPattern(Pattern* ptmain, float tk1, float tk2, int tr1, int tr2)
 {
     Pattern* pt = new Pattern(ptmain->name->string, tk1, tk2, tr1, tr2, false);
     pt->ptype = ptmain->ptype;
@@ -1892,7 +1849,7 @@ Pattern* CreateDerivedPattern(Pattern* ptmain, float tk1, float tk2, int tr1, in
     return pt;
 }
 
-extern Pattern* CreatePattern(float tk1, float tk2, int tr1, int tr2, PattType pattype = Patt_Grid)
+extern Pattern* CreateElement_Pattern(float tk1, float tk2, int tr1, int tr2, PattType pattype = Patt_Grid)
 {
     char* pname = GetOriginalPatternName();
     Pattern* ptmain = new Pattern(pname, tk1, tk2, tr1, tr2, true);
@@ -1917,7 +1874,7 @@ extern Pattern* CreatePattern(float tk1, float tk2, int tr1, int tr2, PattType p
     return pt;
 }
 
-Slide* CreateSlide(int semitones)
+Slide* CreateElement_Slide(int semitones)
 {
     Slide* sl = new Slide(semitones);
     AddNewElement(sl, false);
@@ -1925,49 +1882,49 @@ Slide* CreateSlide(int semitones)
     return sl;
 }
 
-Transpose* CreateTranspose(int semitones)
+Transpose* CreateElement_Transpose(int semitones)
 {
     Transpose* tr = new Transpose(semitones);
     AddNewElement(tr, false);
     return tr;
 }
 
-Muter* CreateMuter()
+Muter* CreateElement_Muter()
 {
     Muter* m = new Muter;
     AddNewElement(m, false);
     return m;
 }
 
-Break* CreateBreak()
+Break* CreateElement_Break()
 {
     Break* b = new Break;
     AddNewElement(b, false);
     return b;
 }
 
-Repeat* CreateRepeat()
+Repeat* CreateElement_Repeater()
 {
     Repeat* r = new Repeat();
     AddNewElement(r, false);
     return r;
 }
 
-Reverse* CreateReverse()
+Reverse* CreateElement_Reverse()
 {
     Reverse* r = new Reverse();
     AddNewElement(r, false);
     return r;
 }
 
-Vibrate* CreateVibrate()
+Vibrate* CreateElement_Vibrate()
 {
     Vibrate* v = new Vibrate;
     AddNewElement(v, false);
     return v;
 }
 
-Element* CreateSymbolCommon(ElType eltype, bool add, bool preventundo)
+Element* CreateElement_CommonSymbol(ElType eltype, bool add, bool preventundo)
 {
     Element* el = NULL;
     switch(eltype)
@@ -2010,14 +1967,14 @@ Element* CreateSymbolCommon(ElType eltype, bool add, bool preventundo)
 	return el;
 }
 
-Command* CreateCommand(Scope* scope, bool preventundo)
+Command* CreateElement_Command(Scope* scope, bool preventundo)
 {
     Command* c = new Command(scope);
     AddNewElement(c, preventundo);
     return c;
 }
 
-Command* CreateCommand(Scope* scope, CmdType type)
+Command* CreateElement_Command(Scope* scope, CmdType type)
 {
     Command* c = new Command(scope, type);
     AddNewElement(c, false);
@@ -2550,7 +2507,7 @@ void AddEff(Eff* eff)
     //eff->gindex = effIndex;
     //effIndex++;
 
-    ChangesHappened();
+    ChangesIndicate();
 }
 
 void RemoveEff(Eff* eff)
@@ -2591,7 +2548,7 @@ void RemoveEff(Eff* eff)
 
     UpdateEffIndices();
 
-    ChangesHappened();
+    ChangesIndicate();
 }
 
 void AddRecordingParam(Parameter* param)
@@ -2871,7 +2828,7 @@ void Add_Instrument(Instrument* i)
         IP->UpdateIndices();
 
 	if(i->temp == false)
-		ChangesHappened();
+		ChangesIndicate();
 }
 
 ////////////////////////////////////////////////////////
@@ -4339,7 +4296,7 @@ void UpdateScrollbarOutput(ScrollBard* sb)
 
         R(Refresh_AuxGrid);
         R(Refresh_AuxScale);
-        R(Refresh_Auxaux);
+        R(Refresh_SubAux);
     }
     else if(sb == gAux->v_sbar)
     {
@@ -4444,7 +4401,7 @@ bool PickUpElements(int mx, int my, unsigned flags)
 		//	Selection_Reset();
 
 		if(M.loc == Loc_SmallGrid)
-			R(Refresh_Auxaux);
+			R(Refresh_SubAux);
 		else if(gAux->isVolsPansMode())
 			R(Refresh_Aux);
 	}
@@ -5818,7 +5775,7 @@ void CutSelectedElements()
         else if(M.selloc == Loc_SmallGrid)
         {
             R(Refresh_AuxContent);
-            R(Refresh_Auxaux);
+            R(Refresh_SubAux);
         }
     }
 }
@@ -5851,7 +5808,7 @@ void SelectAll()
     if(gAux->auxmode == AuxMode_Pattern)
     {
         R(Refresh_AuxContent);
-        R(Refresh_Auxaux);
+        R(Refresh_SubAux);
     }
 }
 
@@ -5974,7 +5931,7 @@ void SetMenuItemEffect(MItemType itype, MixChannel* mchan)
     }
 }
 
-void CreateEnvelopeCommon(Parameter* param)
+void CreateElement_EnvelopeCommon(Parameter* param)
 {
     Command* cmdenv = CreateCommandFromParam(param);
     AddNewElement(cmdenv, false);
@@ -6149,11 +6106,11 @@ void ActivateMenuItem(MenuItem* mitem, MItemType itype, Menu* menu)
             menu->trk->defined_instr = NULL;
             break;
         case MItem_CreateUsualPattern:
-            pt = CreatePattern(menu->tick, menu->tick + 10, menu->line + 1, menu->line + 10);
+            pt = CreateElement_Pattern(menu->tick, menu->tick + 10, menu->line + 1, menu->line + 10);
             pt->Switch2Param(pt->name);
             break;
         case MItem_CreatePianorollPattern:
-            pt = CreatePianorollPattern(menu->tick, menu->tick + 10, menu->line + 1, menu->line + 10);
+            pt = CreateElement_PianorollPattern(menu->tick, menu->tick + 10, menu->line + 1, menu->line + 10);
             pt->Switch2Param(pt->name);
             break;
         case MItem_DeleteInstrument:
@@ -6176,7 +6133,7 @@ void ActivateMenuItem(MenuItem* mitem, MItemType itype, Menu* menu)
             R(Refresh_InstrPanel);
             break;
         case MItem_CreatePianorollPatternForInstrument:
-            pt = CreatePattern(CTick, CTick + ticks_per_beat*beats_per_bar, CLine, CLine, Patt_Pianoroll);
+            pt = CreateElement_Pattern(CTick, CTick + ticks_per_beat*beats_per_bar, CLine, CLine, Patt_Pianoroll);
             if(CLine == 0)
                 pt->is_fat = false;
             BindPatternToInstrument(pt, menu->instr);
@@ -6324,7 +6281,7 @@ void ActivateMenuItem(MenuItem* mitem, MItemType itype, Menu* menu)
                     gAux->CreateNew();
                 }
 
-                CreateEnvelopeCommon(menu->activectrl->param);
+                CreateElement_EnvelopeCommon(menu->activectrl->param);
 
                 if(C.loc == Loc_SmallGrid)
                 {
@@ -6502,7 +6459,7 @@ void ActivateMenuItem(MenuItem* mitem, MItemType itype, Menu* menu)
                 CP->AboutWnd->Hide();
         }break;
         case MItem_Exit:
-            ExitOut();
+            ExitFromApp();
             break;
         case MItem_CleanSong:
             M.DeleteContextMenu();
@@ -7341,7 +7298,7 @@ void DragNDrop_Drop(int mouse_x, int mouse_y, unsigned int flags)
                 {
                    ((Sample*)al->instr)->touchresized = false;
                 }
-                C.curElem = CreateNote(al->instr, true);
+                C.curElem = CreateElement_Note(al->instr, true);
                 C.curElem->Switch2Param(NULL);
 
                 R(Refresh_GridContent);
@@ -7367,7 +7324,7 @@ void DragNDrop_Drop(int mouse_x, int mouse_y, unsigned int flags)
                 {
                    ((Sample*)al->instr)->touchresized = false;
                 }
-                C.curElem = CreateNote(al->instr, true);
+                C.curElem = CreateElement_Note(al->instr, true);
                 C.curElem->Switch2Param(NULL);
 
                 gAux->RescanPatternBounds();
@@ -7948,11 +7905,11 @@ void Grid_ProcessBrush()
                     CLine = M.lpy;
                     if(CP->NoteMode->pressed == true)
                     {
-                        el = CreateInstanceByChar(C.last_char);
+                        el = CreateElement_Instance_byChar(C.last_char);
                     }
                     else
                     {
-                        el = CreateInstance(false);
+                        el = CreateElement_Instance(false);
                     }
 
                     C.ExitToCurrentMode();
@@ -8045,7 +8002,7 @@ void Grid_PutInstance(int mouse_x, int mouse_y, unsigned flags, bool slide)
         }
         else
         {
-            Instance* ii = CreateInstance(true);
+            Instance* ii = CreateElement_Instance(true);
 
             if(CP->NoteMode->pressed == true)
             {
@@ -8182,7 +8139,7 @@ void Grid_PutInstanceSpecific(Pattern* patt, Instrument *instr, int note, float 
             line = Random::getSystemRandom().nextInt(8);;
         }
 
-        i = CreateInstanceSpecific(patt, instr, note, vol, starttick, endtick, line);
+        i = CreateElement_InstanceSpecific(patt, instr, note, vol, starttick, endtick, line);
 
         if(i != NULL && patt == gAux->workPt)
         {
@@ -8269,7 +8226,7 @@ void Grid_MouseClickDown(int mouse_x, int mouse_y, unsigned flags)
             else if(M.loc == Loc_SmallGrid)
             {
                 R(Refresh_AuxGrid);
-                R(Refresh_Auxaux);
+                R(Refresh_SubAux);
                 R(Refresh_GridContent);
             }
         }
@@ -8420,7 +8377,7 @@ void Grid_MouseDrag(int mouse_x, int mouse_y, unsigned flags)
                            (flags & kbd_alt) != 0);
 
             R(Refresh_AuxContent);
-            R(Refresh_Auxaux);
+            R(Refresh_SubAux);
         }
     }
     else if(M.mmode & MOUSE_RESIZE && M.RMB == false)
@@ -8455,7 +8412,7 @@ void Grid_MouseDrag(int mouse_x, int mouse_y, unsigned flags)
             else
             {
                 R(Refresh_AuxContent);
-                R(Refresh_Auxaux);
+                R(Refresh_SubAux);
             }
         }
     }
@@ -8463,7 +8420,7 @@ void Grid_MouseDrag(int mouse_x, int mouse_y, unsigned flags)
     {
         M.active_env->Drag(mouse_x, mouse_y, flags);
 
-        ChangesHappened();
+        ChangesIndicate();
 
         if(M.loc == Loc_MainGrid)
         {
@@ -8495,7 +8452,7 @@ void Grid_MouseDrag(int mouse_x, int mouse_y, unsigned flags)
                 gAux->RescanPatternBounds();
 
                 R(Refresh_AuxContent);
-                R(Refresh_Auxaux);
+                R(Refresh_SubAux);
             }
 
             M.prev_x = mouse_x;
@@ -9040,7 +8997,7 @@ bool Selection_ToggleElements()
         else if(M.selloc == Loc_SmallGrid)
         {
             R(Refresh_AuxContent);
-            R(Refresh_Auxaux);
+            R(Refresh_SubAux);
         }
     }
 
@@ -9703,7 +9660,7 @@ void Process_Resize(int mouse_x, int mouse_y, unsigned flags, Loc loc)
                     float dt = pt->is_fat ? 1.f : 0.f;
                     ResizeSelectedElems(dt, el, M.loc, flags);
 
-                    ChangesHappened();
+                    ChangesIndicate();
 
 					//pt->OrigPt->UpdateScaledImage();
                     R(Refresh_GridContent);
@@ -9764,7 +9721,7 @@ void Process_Resize(int mouse_x, int mouse_y, unsigned flags, Loc loc)
             }
         }
 
-        ChangesHappened();
+        ChangesIndicate();
     }
     else if(M.resize_object == Resize_Waveform)
     {
@@ -10903,7 +10860,7 @@ void Process_LeftButtDown(int mouse_x, int mouse_y, bool dbclick, unsigned flags
                     {
                         M.active_env->Click(mouse_x, mouse_y, flags);
 
-                        ChangesHappened();
+                        ChangesIndicate();
 
     					if(M.loc == Loc_MainGrid)
     						R(Refresh_GridContent);
@@ -10957,7 +10914,7 @@ void Process_LeftButtDown(int mouse_x, int mouse_y, bool dbclick, unsigned flags
                         }break;
                     }
 
-                    R(Refresh_Auxaux);
+                    R(Refresh_SubAux);
                 }
 
                 UpdateElementsVisibility();
@@ -11223,7 +11180,7 @@ void Process_RightButtDown(int mouse_x, int mouse_y, unsigned flags)
                         else if(M.loc == Loc_SmallGrid)
                         {
                             R(Refresh_AuxContent);
-                            R(Refresh_Auxaux);
+                            R(Refresh_SubAux);
                         }
                     }
                 }
@@ -11274,7 +11231,7 @@ void Process_RightButtDown(int mouse_x, int mouse_y, unsigned flags)
                 }
                 else if(M.mmode & MOUSE_AUXAUXING)
                 {
-                    R(Refresh_Auxaux);
+                    R(Refresh_SubAux);
                 }
             }
 
@@ -11539,7 +11496,7 @@ void Process_MouseMove(int mouse_x, int mouse_y, unsigned flags, bool left, bool
                     numcell = NUM_MIXCHANNELS;
                 ParamNum2String(numcell, dstr->digits);
                 dstr->SetString(dstr->digits);
-                ChangesHappened();
+                ChangesIndicate();
             }
             else if(M.mmode & MOUSE_LINING && !M.RMB)
             {
@@ -11593,7 +11550,7 @@ void Process_MouseMove(int mouse_x, int mouse_y, unsigned flags, bool left, bool
                             }break;
                         }
 
-                        R(Refresh_Auxaux);
+                        R(Refresh_SubAux);
                     }
                 }
             }
@@ -11625,7 +11582,7 @@ void Process_MouseMove(int mouse_x, int mouse_y, unsigned flags, bool left, bool
                 else if(M.pickloc == Loc_SmallGrid)
                 {
                     R(Refresh_AuxContent);
-                    R(Refresh_Auxaux);
+                    R(Refresh_SubAux);
 
                     if(gAux->workPt->ptype != Patt_StepSeq)
                     {
@@ -12181,12 +12138,12 @@ void Process_Char(char character, unsigned flags)
         else if(character == 'd' || character == 'D')
         {
             MuteSelectedPatterns();
-            ChangesHappened();
+            ChangesIndicate();
         }
         else if(character == 'q' || character == 'Q')
         {
             UniqueSelectedPatterns();
-            ChangesHappened();
+            ChangesIndicate();
         }
         else if(character == 'o' || character == 'O')
         {
@@ -12220,7 +12177,7 @@ void Process_Char(char character, unsigned flags)
         if(C.mode == CMode_ElemEdit)
         {
             C.curElem->ProcessChar(character);
-            ChangesHappened();
+            ChangesIndicate();
             if(C.loc == Loc_SmallGrid && gAux->workPt->ptype == Patt_Grid)
             {
                 gAux->RescanPatternBounds();
@@ -12239,7 +12196,7 @@ void Process_Char(char character, unsigned flags)
         {
             jassert(C.curParam != NULL);
             C.curParam->ProcessChar(character);
-            ChangesHappened();
+            ChangesIndicate();
             if(C.curParam != NULL && C.curParam->type == Param_Note && MapKeyToNote(character, false) != -1000)
             {
                 ((Note*)C.curParam)->Kreview(character);
@@ -12295,7 +12252,7 @@ void Process_Char(char character, unsigned flags)
             {
                 if(MapKeyToNote(character, false) != -1000)
                 {
-                    CreateInstanceByChar(character);
+                    CreateElement_Instance_byChar(character);
                 }
 
                 if(C.loc == Loc_SmallGrid)
@@ -12310,7 +12267,7 @@ void Process_Char(char character, unsigned flags)
             }
             else if(C.mode == CMode_TxtDefault || C.mode == CMode_FastBrushMode)
             {
-                Txt* t = CreateTextString();
+                Txt* t = CreateElement_TextString();
                 C.mode = CMode_ElemEdit;
                 C.curElem = t;
                 t->ProcessChar(character);
@@ -12362,7 +12319,7 @@ void Process_WndResize(int wx, int wh)
 
 ////////////////////////////
 // Initialize sample data and add some samples
-void Debug_Init_Samples()
+void Load_Default_Instruments()
 {
     num_instrs = 0;
 
@@ -14198,20 +14155,16 @@ public:
         gHwnd = hWnd;
         MainWnd = awfulWindow;
 
-        J_InitFonts();
+        Init_Fonts();
 
-        InitImages();
+        Init_Images();
 
         Init_Keymap();
         Init_Coords();
         Init_WorkData();
         Init_Tables();
 
-        AssignImages();
-
-        // If we were bought or not yet...
-        // CheckRegistrationKey();
-        RegisteredVersion = true;  // We went free alredy
+        AssignLoadedImages();
 
         // Load settings from file, if it exists
         XmlElement* xmlAudio = NULL;
@@ -14255,13 +14208,6 @@ public:
             }
 
             xmlAudio = xmlSettings->getChildByName(T("DEVICESETUP"));
-            // Additional check in case user manually set ASIO device for unregistered program
-            if(xmlAudio != NULL)
-            {
-                String tstr = xmlAudio->getStringAttribute(T("deviceType"), T("None"));
-                if(tstr == T("ASIO") && RegisteredVersion == false)
-                    xmlAudio = NULL;
-            }
         }
 
         SortLastSessions(NULL);
@@ -14285,9 +14231,9 @@ public:
 
         Init_Aliases();
         
-        Debug_Init_Samples();
+        Load_Default_Instruments();
 
-        ResetChangesHappened();
+        ResetChangesIndicate();
 
         MainWnd->UpdateTitle();
 
@@ -14341,7 +14287,7 @@ public:
 #endif
 
         // Reset changes flag
-        ResetChangesHappened();
+        ResetChangesIndicate();
 
         String arg = getCommandLineParameters();
         if(arg.length() > 0)

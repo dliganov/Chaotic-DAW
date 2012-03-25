@@ -254,7 +254,7 @@ void Parameter::SetValueFromControl(float ctrlval, bool asliderupdate)
     BlockEnvAffect();  // Block this param update from currently working envelopes
     HandleRecordingFromControl(ctrlval);
 
-    ChangesHappened();
+    ChangesIndicate();
 }
 
 // The only difference between the above function and below is that below sets passed value directly, without
@@ -266,7 +266,7 @@ void Parameter::SetDirectValueFromControl(float ctrlval, bool asliderupdate)
     BlockEnvAffect();  // Block this param update from currently working envelopes
     HandleRecordingFromControl(ctrlval);
 
-    ChangesHappened();
+    ChangesIndicate();
 }
 
 void Parameter::SetValueFromEnvelope(float envval, Envelope * env, bool asliderupdate)
