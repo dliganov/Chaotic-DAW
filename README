@@ -1,0 +1,34 @@
+Chaotic is the program for fast music creation and experimenting. Our goal is to create a music tool, that would be just as simple as Windows Notepad whilst allowing to create and manipulate complex musical patterns. So, although it can be classified as another software DAW, this is a composing tool in the first turn.
+
+The basic composing feature, around which the rest of Chaotic functionality was built, is what we call "sequencing freedom". Abstractly speaking, this is the ability to sequence any kind of stuff at any time without redundant limitations. The lack of such freedom often forces composers to search various workarounds in order to implement even trivial and obvious things, and it also makes the overall composition project too heavy and awkward for changing and experimenting with. With Chaotic, we are trying to minimize any kind of composing limitations.
+FEATURES
+
+The basic purpose of Chaotic is to be handy music composing tool, allowing to achieve complex results with minimal interface losses. Currently, the main program features are:
+
+    Universal composition arranger, utilizing keyboard input and allowing to sequence wide variety of elements — from text notes and bookmarks to instruments' notes, automation envelopes and patterns in a single field;
+
+    Three different pattern types: pianoroll, step sequencer and text pattern with ability to convert between types;
+
+    Automation of any available parameter with envelopes, automation recording;
+
+    Various effect symbols support: slide, vibrato, mute, reverse (for samples), transpose and so on;
+
+    Autopatterns feature. Autopattern is the pattern, that you can define for any instrument to be triggered with every note of the instrument. For example, you can place some envelope into some instrument's autopattern and easily implement sidechaining;
+
+    Support for samples as usual instruments — basic sampler functionality integrated (looping, volume envelope, etc);
+
+    Mixer with 32 independent channels + 3 send channels + 1 master channel;
+
+    VST instruments and VST effects support;
+
+    Built-in subtractive FM/RM synthesizer;
+
+    13 built-in DSP effects;
+
+    Rendering into WAV, OGG Vorbis and FLAC formats;
+
+    Primary use of linear sliders instead of knobs, for adjusting various parameters;
+
+    Lightweight and transportable installation. You can even copy the whole program directory to a flash drive and work from this flash drive on any machine you want;
+
+    No loading time.
