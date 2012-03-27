@@ -9,15 +9,12 @@
 						 influence output stream.
 
 ====================================================================================================
-                               Chaotic Systems Confidential Restricted
-                        (c) Copyright Chaotic Systems 2008 All Rights Reserved
-
 
 Revision History:
                          Modification
 Author                       Date          Major Changes
 ----------------------   ------------      -------------
-Alexander Veprik         07/23/2008        Initial version
+Holy Spirit              07/23/2008        Initial version
 
 ==================================================================================================*/
 
@@ -755,7 +752,7 @@ LRESULT CALLBACK CVSTEffWnd::VSTWndProc(HWND hWnd, UINT message, WPARAM wParam, 
     pThis = (CVSTEffWnd*) GetWindowLongPtr(hWnd, GWL_USERDATA);
     ParentHWND = GetParent(hWnd);
 
-    switch (message)        // Тип сообщения
+    switch (message)        // пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     {
         case WM_CREATE:
 //          InvalidateRect(hWnd, NULL, false);
@@ -849,10 +846,10 @@ VSTCollection::VSTCollection(void* MainWindowHandle)
 #ifdef USE_WIN32
     #ifndef USE_JUCE
 
-    // Класс VST-окна, который будет использоваться для отрисовки встроенных в VST плагины едиторов
+    // пїЅпїЅпїЅпїЅпїЅ VST-пїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ VST пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     WNDCLASS        vst_wc;
 
-    //Заполняем поля структуры
+    //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     vst_wc.style                = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
     vst_wc.lpfnWndProc          = (WNDPROC) (CVSTEffWnd::VSTWndProc);
     vst_wc.cbClsExtra           = 0;
@@ -864,7 +861,7 @@ VSTCollection::VSTCollection(void* MainWindowHandle)
     vst_wc.lpszMenuName         = NULL;
     vst_wc.lpszClassName        = "_VSTEditor";
 
-    //регистрируем новый класс.
+    //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ.
     if(!RegisterClass(&vst_wc))
     {
         MessageBox(0,"Failed To Register The Window Class.Damn it! Fuck it all!!!",
