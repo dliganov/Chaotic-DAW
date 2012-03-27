@@ -47,7 +47,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(ProjectDir)\juce&quot;;&quot;$(ProjectDir)\vstsdk3&quot;;&quot;$(ProjectDir)\vstsdk3\public.sdk\source\vst2.x&quot;;&quot;$(ProjectDir)\vstsdk3\pluginterfaces\vst2.x&quot;;&quot;$(ProjectDir)\External&quot;;&quot;$(ProjectDir)\External\common&quot;;&quot;$(ProjectDir)\External\include&quot;;&quot;$(ProjectDir)\ASIOSDK2\common&quot;;&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;C:\Program Files\DirectX SDK\Include&quot;;&quot;C:\Documents and Settings\Администратор.NONAME\Мои документы\Visual Studio 2005\Projects\Awful\ASIOSDK2\common&quot;"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)\juce&quot;;&quot;$(ProjectDir)\vstsdk3&quot;;&quot;$(ProjectDir)\vstsdk3\public.sdk\source\vst2.x&quot;;&quot;$(ProjectDir)\vstsdk3\pluginterfaces\vst2.x&quot;;&quot;$(ProjectDir)\External&quot;;&quot;$(ProjectDir)\External\common&quot;;&quot;$(ProjectDir)\External\include&quot;;&quot;$(ProjectDir)\ASIOSDK2\common&quot;;&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;USE_ASIO;VST_FORCE_DEPRECATED=0;_CRT_SECURE_NO_DEPRECATE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -146,7 +146,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="&quot;$(ProjectDir)\agg-2.4\font_win32_tt&quot;;&quot;$(ProjectDir)\agg-2.4\include&quot;;&quot;$(ProjectDir)\agg-2.4\include\platform&quot;;&quot;$(ProjectDir)\freetype\freetype\config&quot;;&quot;$(ProjectDir)\freetype\freetype&quot;;&quot;$(ProjectDir)\freetype&quot;;&quot;$(ProjectDir)\vstsdk3\public.sdk\source\vst2.x&quot;;&quot;$(ProjectDir)\vstsdk3&quot;;&quot;$(ProjectDir)\vstsdk3\pluginterfaces\vst2.x&quot;;&quot;$(ProjectDir)\External&quot;;&quot;$(ProjectDir)\External\common&quot;;&quot;$(ProjectDir)\External\include&quot;;&quot;$(ProjectDir)\juce&quot;;&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;C:\Program Files\DirectX SDK\Include&quot;;&quot;$(ProjectDir)\ASIOSDK2\common&quot;;$(NOINHERIT)"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)\agg-2.4\font_win32_tt&quot;;&quot;$(ProjectDir)\agg-2.4\include&quot;;&quot;$(ProjectDir)\agg-2.4\include\platform&quot;;&quot;$(ProjectDir)\freetype\freetype\config&quot;;&quot;$(ProjectDir)\freetype\freetype&quot;;&quot;$(ProjectDir)\freetype&quot;;&quot;$(ProjectDir)\vstsdk3\public.sdk\source\vst2.x&quot;;&quot;$(ProjectDir)\vstsdk3&quot;;&quot;$(ProjectDir)\vstsdk3\pluginterfaces\vst2.x&quot;;&quot;$(ProjectDir)\External&quot;;&quot;$(ProjectDir)\External\common&quot;;&quot;$(ProjectDir)\External\include&quot;;&quot;$(ProjectDir)\juce&quot;;&quot;$(ProjectDir)\ASIOSDK2\common&quot;;&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;;$(NOINHERIT)"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;USE_ASIO;VST_FORCE_DEPRECATED=0;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE"
 				StringPooling="true"
 				RuntimeLibrary="0"
