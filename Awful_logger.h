@@ -7,9 +7,6 @@
     General Description: Logging utility functions are declared here.
 
 ====================================================================================================
-                               Chaotic Systems Confidential Restricted
-                        (c) Copyright Chaotic Systems 2008 All Rights Reserved
-
 
 Revision History:
                          Modification
