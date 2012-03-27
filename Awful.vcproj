@@ -2581,7 +2581,7 @@
 			Name="Data"
 			>
 			<File
-				RelativePath=".\aripix.cpp"
+				RelativePath=".\Data sources\aripix.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
@@ -2593,27 +2593,11 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\aripix.h"
+				RelativePath=".\Data sources\aripix.h"
 				>
 			</File>
 			<File
-				RelativePath=".\big.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\big.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Bold.cpp"
+				RelativePath=".\Data sources\big.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
@@ -2625,27 +2609,11 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\Bold.h"
+				RelativePath=".\Data sources\big.h"
 				>
 			</File>
 			<File
-				RelativePath=".\dpix.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\dpix.h"
-				>
-			</File>
-			<File
-				RelativePath=".\fixed.cpp"
+				RelativePath=".\Data sources\Bold.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
@@ -2657,27 +2625,11 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\fixed.h"
+				RelativePath=".\Data sources\Bold.h"
 				>
 			</File>
 			<File
-				RelativePath=".\images.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\images.h"
-				>
-			</File>
-			<File
-				RelativePath=".\instrum.cpp"
+				RelativePath=".\Data sources\dpix.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
@@ -2689,27 +2641,11 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\instrum.h"
+				RelativePath=".\Data sources\dpix.h"
 				>
 			</File>
 			<File
-				RelativePath=".\MetroWavs.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\MetroWavs.h"
-				>
-			</File>
-			<File
-				RelativePath=".\mfont.cpp"
+				RelativePath=".\Data sources\fixed.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
@@ -2721,27 +2657,11 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\mfont.h"
+				RelativePath=".\Data sources\fixed.h"
 				>
 			</File>
 			<File
-				RelativePath=".\projs.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\projs.h"
-				>
-			</File>
-			<File
-				RelativePath=".\roxx.cpp"
+				RelativePath=".\Data sources\images.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
@@ -2753,27 +2673,11 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\roxx.h"
+				RelativePath=".\Data sources\images.h"
 				>
 			</File>
 			<File
-				RelativePath=".\tahoma.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\tahoma.h"
-				>
-			</File>
-			<File
-				RelativePath=".\tiny.cpp"
+				RelativePath=".\Data sources\instrum.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
@@ -2785,27 +2689,11 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\tiny.h"
+				RelativePath=".\Data sources\instrum.h"
 				>
 			</File>
 			<File
-				RelativePath=".\tiny1.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\tiny1.h"
-				>
-			</File>
-			<File
-				RelativePath=".\visitor.cpp"
+				RelativePath=".\Data sources\metronome_waves.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
@@ -2817,7 +2705,119 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\visitor.h"
+				RelativePath=".\Data sources\metronome_waves.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Data sources\mfont.cpp"
+				>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\Data sources\mfont.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Data sources\projs.cpp"
+				>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\Data sources\projs.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Data sources\roxx.cpp"
+				>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\Data sources\roxx.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Data sources\tahoma.cpp"
+				>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\Data sources\tahoma.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Data sources\tiny.cpp"
+				>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\Data sources\tiny.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Data sources\tiny1.cpp"
+				>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\Data sources\tiny1.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Data sources\visitor.cpp"
+				>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\Data sources\visitor.h"
 				>
 			</File>
 		</Filter>

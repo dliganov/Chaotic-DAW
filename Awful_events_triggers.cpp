@@ -1554,7 +1554,7 @@ void Playback::TickFrame(long nc, long dcount, long fpb)
         }
         else
         {
-			// Which cases is this for?
+            // Which cases is this for?
             if(ev_count_down == 0 && queued_ev != NULL && queued_ev->frame == rng_end_frame)
                 ProcessTriggers(queued_ev, playPatt, true);
 
