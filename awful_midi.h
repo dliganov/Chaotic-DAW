@@ -9,14 +9,12 @@
 
 
 ====================================================================================================
-                               Chaotic Confidential Restricted
-                         (c) Copyright Chaotic 2009, All Rights Reserved
 
 Revision History:
 
 Author                  Date            Major Changes description
 ---------------------   -------------   ------------------------------------------------------------
-Alexander Veprik        02/18/2009      Initial creation
+Anonymous               02/18/2009      Initial creation
 
 ====================================================================================================
                               INCLUDE FILES
