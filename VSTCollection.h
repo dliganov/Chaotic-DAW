@@ -12,15 +12,12 @@
 						 influence output stream.
 
 ====================================================================================================
-                               Chaotic Systems Confidential Restricted
-                        (c) Copyright Chaotic Systems 2008 All Rights Reserved
-
 
 Revision History:
                          Modification
 Author                       Date          Major Changes
 ----------------------   ------------      -------------
-Alexander Veprik         07/23/2008        Initial version
+Holy Spirit              07/23/2008        Initial version
 
 ==================================================================================================*/
 
