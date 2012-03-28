@@ -1,0 +1,1313 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Chaotic-DAW" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin\Debug\Chaotic-DAW" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\Debug\" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin\Release\Chaotic-DAW" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\Release\" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+		</Compiler>
+		<Unit filename="..\ASIOSDK2\ASIO SDK 2.2.pdf" />
+		<Unit filename="..\ASIOSDK2\Steinberg ASIO Licensing Agreement.pdf" />
+		<Unit filename="..\ASIOSDK2\asio\asio.dsw" />
+		<Unit filename="..\ASIOSDK2\asio\asio.opt" />
+		<Unit filename="..\ASIOSDK2\changes.txt" />
+		<Unit filename="..\ASIOSDK2\common\asio.cpp" />
+		<Unit filename="..\ASIOSDK2\common\asio.h" />
+		<Unit filename="..\ASIOSDK2\common\asiodrvr.cpp" />
+		<Unit filename="..\ASIOSDK2\common\asiodrvr.h" />
+		<Unit filename="..\ASIOSDK2\common\asiosys.h" />
+		<Unit filename="..\ASIOSDK2\common\combase.cpp" />
+		<Unit filename="..\ASIOSDK2\common\combase.h" />
+		<Unit filename="..\ASIOSDK2\common\debugmessage.cpp" />
+		<Unit filename="..\ASIOSDK2\common\dllentry.cpp" />
+		<Unit filename="..\ASIOSDK2\common\iasiodrv.h" />
+		<Unit filename="..\ASIOSDK2\common\register.cpp" />
+		<Unit filename="..\ASIOSDK2\common\wxdebug.h" />
+		<Unit filename="..\ASIOSDK2\driver\asiosample\asiosample.def" />
+		<Unit filename="..\ASIOSDK2\driver\asiosample\asiosample.txt" />
+		<Unit filename="..\ASIOSDK2\driver\asiosample\asiosample\asiosample.dsp" />
+		<Unit filename="..\ASIOSDK2\driver\asiosample\asiosample\asiosample.vcproj" />
+		<Unit filename="..\ASIOSDK2\driver\asiosample\asiosmpl.cpp" />
+		<Unit filename="..\ASIOSDK2\driver\asiosample\asiosmpl.h" />
+		<Unit filename="..\ASIOSDK2\driver\asiosample\macnanosecs.cpp" />
+		<Unit filename="..\ASIOSDK2\driver\asiosample\mactimer.cpp" />
+		<Unit filename="..\ASIOSDK2\driver\asiosample\makesamp.cpp" />
+		<Unit filename="..\ASIOSDK2\driver\asiosample\wintimer.cpp" />
+		<Unit filename="..\ASIOSDK2\host\ASIOConvertSamples.cpp" />
+		<Unit filename="..\ASIOSDK2\host\ASIOConvertSamples.h" />
+		<Unit filename="..\ASIOSDK2\host\asiodrivers.cpp" />
+		<Unit filename="..\ASIOSDK2\host\asiodrivers.h" />
+		<Unit filename="..\ASIOSDK2\host\ginclude.h" />
+		<Unit filename="..\ASIOSDK2\host\mac\asioshlib.cpp" />
+		<Unit filename="..\ASIOSDK2\host\mac\codefragments.cpp" />
+		<Unit filename="..\ASIOSDK2\host\mac\codefragments.hpp" />
+		<Unit filename="..\ASIOSDK2\host\pc\asiolist.cpp" />
+		<Unit filename="..\ASIOSDK2\host\pc\asiolist.h" />
+		<Unit filename="..\ASIOSDK2\host\sample\hostsample.cpp" />
+		<Unit filename="..\ASIOSDK2\host\sample\hostsample.dsp" />
+		<Unit filename="..\ASIOSDK2\host\sample\hostsample.vcproj" />
+		<Unit filename="..\ASIOSDK2\mac.sea.hqx" />
+		<Unit filename="..\ASIOSDK2\readme.txt" />
+		<Unit filename="..\Awful.cpp" />
+		<Unit filename="..\Awful.dsp" />
+		<Unit filename="..\Awful.dsw" />
+		<Unit filename="..\Awful.h" />
+		<Unit filename="..\Awful.ico" />
+		<Unit filename="..\Awful.rc">
+			<Option compilerVar="WINDRES" />
+		</Unit>
+		<Unit filename="..\Awful.sln" />
+		<Unit filename="..\Awful.vcproj" />
+		<Unit filename="..\Awful_CursorAndMouse.cpp" />
+		<Unit filename="..\Awful_CursorAndMouse.h" />
+		<Unit filename="..\Awful_JuceComponents.cpp" />
+		<Unit filename="..\Awful_JuceComponents.h" />
+		<Unit filename="..\Awful_JuceExt.h" />
+		<Unit filename="..\Awful_JuceWindows.cpp" />
+		<Unit filename="..\Awful_JuceWindows.h" />
+		<Unit filename="..\Awful_UndoRedo.cpp" />
+		<Unit filename="..\Awful_UndoRedo.h" />
+		<Unit filename="..\Awful_audio.cpp" />
+		<Unit filename="..\Awful_audio.h" />
+		<Unit filename="..\Awful_controls.cpp" />
+		<Unit filename="..\Awful_controls.h" />
+		<Unit filename="..\Awful_effects.cpp" />
+		<Unit filename="..\Awful_effects.h" />
+		<Unit filename="..\Awful_elements.cpp" />
+		<Unit filename="..\Awful_elements.h" />
+		<Unit filename="..\Awful_events_triggers.cpp" />
+		<Unit filename="..\Awful_events_triggers.h" />
+		<Unit filename="..\Awful_graphJuce.cpp" />
+		<Unit filename="..\Awful_graphJuce.h" />
+		<Unit filename="..\Awful_instruments.cpp" />
+		<Unit filename="..\Awful_instruments.h" />
+		<Unit filename="..\Awful_logger.cpp" />
+		<Unit filename="..\Awful_logger.h" />
+		<Unit filename="..\Awful_midi_def.h" />
+		<Unit filename="..\Awful_objects.cpp" />
+		<Unit filename="..\Awful_objects.h" />
+		<Unit filename="..\Awful_panels.cpp" />
+		<Unit filename="..\Awful_panels.h" />
+		<Unit filename="..\Awful_paramedit.cpp" />
+		<Unit filename="..\Awful_paramedit.h" />
+		<Unit filename="..\Awful_parammodule.cpp" />
+		<Unit filename="..\Awful_parammodule.h" />
+		<Unit filename="..\Awful_params.cpp" />
+		<Unit filename="..\Awful_params.h" />
+		<Unit filename="..\Awful_preview.cpp" />
+		<Unit filename="..\Awful_preview.h" />
+		<Unit filename="..\Awful_tracks_lanes.cpp" />
+		<Unit filename="..\Awful_tracks_lanes.h" />
+		<Unit filename="..\Awful_utils_common.cpp" />
+		<Unit filename="..\Awful_utils_common.h" />
+		<Unit filename="..\CVSTHost.cpp" />
+		<Unit filename="..\CVSTHost.h" />
+		<Unit filename="..\Data sources\Bold.cpp" />
+		<Unit filename="..\Data sources\Bold.h" />
+		<Unit filename="..\Data sources\aripix.cpp" />
+		<Unit filename="..\Data sources\aripix.h" />
+		<Unit filename="..\Data sources\big.cpp" />
+		<Unit filename="..\Data sources\big.h" />
+		<Unit filename="..\Data sources\dpix.cpp" />
+		<Unit filename="..\Data sources\dpix.h" />
+		<Unit filename="..\Data sources\fixed.cpp" />
+		<Unit filename="..\Data sources\fixed.h" />
+		<Unit filename="..\Data sources\images.cpp" />
+		<Unit filename="..\Data sources\images.h" />
+		<Unit filename="..\Data sources\instrum.cpp" />
+		<Unit filename="..\Data sources\instrum.h" />
+		<Unit filename="..\Data sources\metronome_waves.cpp" />
+		<Unit filename="..\Data sources\metronome_waves.h" />
+		<Unit filename="..\Data sources\mfont.cpp" />
+		<Unit filename="..\Data sources\mfont.h" />
+		<Unit filename="..\Data sources\projs.cpp" />
+		<Unit filename="..\Data sources\projs.h" />
+		<Unit filename="..\Data sources\roxx.cpp" />
+		<Unit filename="..\Data sources\roxx.h" />
+		<Unit filename="..\Data sources\tahoma.cpp" />
+		<Unit filename="..\Data sources\tahoma.h" />
+		<Unit filename="..\Data sources\tiny.cpp" />
+		<Unit filename="..\Data sources\tiny.h" />
+		<Unit filename="..\Data sources\tiny1.cpp" />
+		<Unit filename="..\Data sources\tiny1.h" />
+		<Unit filename="..\Data sources\visitor.cpp" />
+		<Unit filename="..\Data sources\visitor.h" />
+		<Unit filename="..\External\asio\ASIO-README.txt" />
+		<Unit filename="..\External\asio\Callback_adaptation_.pdf" />
+		<Unit filename="..\External\asio\Pa_ASIO.pdf" />
+		<Unit filename="..\External\asio\iasiothiscallresolver.cpp" />
+		<Unit filename="..\External\asio\iasiothiscallresolver.h" />
+		<Unit filename="..\External\asio\pa_asio.cpp" />
+		<Unit filename="..\External\common\pa_allocation.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\common\pa_allocation.h" />
+		<Unit filename="..\External\common\pa_converters.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\common\pa_converters.h" />
+		<Unit filename="..\External\common\pa_cpuload.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\common\pa_cpuload.h" />
+		<Unit filename="..\External\common\pa_debugprint.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\common\pa_debugprint.h" />
+		<Unit filename="..\External\common\pa_dither.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\common\pa_dither.h" />
+		<Unit filename="..\External\common\pa_endianness.h" />
+		<Unit filename="..\External\common\pa_front.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\common\pa_hostapi.h" />
+		<Unit filename="..\External\common\pa_process.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\common\pa_process.h" />
+		<Unit filename="..\External\common\pa_skeleton.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\common\pa_stream.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\common\pa_stream.h" />
+		<Unit filename="..\External\common\pa_trace.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\common\pa_trace.h" />
+		<Unit filename="..\External\common\pa_types.h" />
+		<Unit filename="..\External\common\pa_util.h" />
+		<Unit filename="..\External\dsound\pa_win_ds.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\dsound\pa_win_ds_dynlink.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\dsound\pa_win_ds_dynlink.h" />
+		<Unit filename="..\External\include\pa_asio.h" />
+		<Unit filename="..\External\include\pa_linux_alsa.h" />
+		<Unit filename="..\External\include\pa_mac_core.h" />
+		<Unit filename="..\External\include\pa_win_wmme.h" />
+		<Unit filename="..\External\include\portaudio.h" />
+		<Unit filename="..\External\sndfile.h" />
+		<Unit filename="..\External\sndfile.hh" />
+		<Unit filename="..\External\test\Debug\pa_allocation.obj" />
+		<Unit filename="..\External\test\Debug\pa_allocation.sbr" />
+		<Unit filename="..\External\test\Debug\pa_converters.obj" />
+		<Unit filename="..\External\test\Debug\pa_converters.sbr" />
+		<Unit filename="..\External\test\Debug\pa_cpuload.obj" />
+		<Unit filename="..\External\test\Debug\pa_cpuload.sbr" />
+		<Unit filename="..\External\test\Debug\pa_debugprint.obj" />
+		<Unit filename="..\External\test\Debug\pa_dither.obj" />
+		<Unit filename="..\External\test\Debug\pa_dither.sbr" />
+		<Unit filename="..\External\test\Debug\pa_front.obj" />
+		<Unit filename="..\External\test\Debug\pa_front.sbr" />
+		<Unit filename="..\External\test\Debug\pa_process.obj" />
+		<Unit filename="..\External\test\Debug\pa_process.sbr" />
+		<Unit filename="..\External\test\Debug\pa_skeleton.obj" />
+		<Unit filename="..\External\test\Debug\pa_skeleton.sbr" />
+		<Unit filename="..\External\test\Debug\pa_stream.obj" />
+		<Unit filename="..\External\test\Debug\pa_stream.sbr" />
+		<Unit filename="..\External\test\Debug\pa_trace.obj" />
+		<Unit filename="..\External\test\Debug\pa_trace.sbr" />
+		<Unit filename="..\External\test\Debug\pa_win_ds.obj" />
+		<Unit filename="..\External\test\Debug\pa_win_ds.sbr" />
+		<Unit filename="..\External\test\Debug\pa_win_ds_dynlink.obj" />
+		<Unit filename="..\External\test\Debug\pa_win_ds_dynlink.sbr" />
+		<Unit filename="..\External\test\Debug\pa_win_hostapis.obj" />
+		<Unit filename="..\External\test\Debug\pa_win_hostapis.sbr" />
+		<Unit filename="..\External\test\Debug\pa_win_util.obj" />
+		<Unit filename="..\External\test\Debug\pa_win_util.sbr" />
+		<Unit filename="..\External\test\Debug\pa_win_wmme.obj" />
+		<Unit filename="..\External\test\Debug\pa_win_wmme.sbr" />
+		<Unit filename="..\External\test\Debug\patest_saw.bsc" />
+		<Unit filename="..\External\test\Debug\patest_saw.obj" />
+		<Unit filename="..\External\test\Debug\patest_saw.pch" />
+		<Unit filename="..\External\test\Debug\patest_saw.pdb" />
+		<Unit filename="..\External\test\Debug\patest_saw.sbr" />
+		<Unit filename="..\External\test\Debug\patest_sine.obj" />
+		<Unit filename="..\External\test\Debug\patest_sine.sbr" />
+		<Unit filename="..\External\test\Debug\vc60.idb" />
+		<Unit filename="..\External\test\Debug\vc60.pdb" />
+		<Unit filename="..\External\test\README.txt" />
+		<Unit filename="..\External\test\debug_convert.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\test\debug_dither_calc.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\test\debug_dual.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\test\debug_multi_in.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\test\debug_multi_out.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\test\debug_record.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\test\debug_record_reuse.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\test\debug_sine.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\test\debug_sine_amp.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\test\debug_sine_formats.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\test\debug_srate.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\test\debug_test1.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\test\pa_devs.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\test\pa_fuzz.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\test\pa_minlat.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\test\paqa_devs.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\test\paqa_errs.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\test\patest1.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\test\patest_buffer.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\test\patest_callbackstop.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\test\patest_clip.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\test\patest_dither.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\test\patest_hang.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\test\patest_in_overflow.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\test\patest_latency.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\test\patest_leftright.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\test\patest_longsine.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\test\patest_many.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\test\patest_maxsines.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\test\patest_mono.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\test\patest_mono_asio_channel_select.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\test\patest_multi_sine.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\test\patest_out_underflow.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\test\patest_pink.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\test\patest_prime.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\test\patest_read_record.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\test\patest_read_write_wire.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\test\patest_record.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\test\patest_ringmix.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\test\patest_saw.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\test\patest_saw.dsp" />
+		<Unit filename="..\External\test\patest_saw.dsw" />
+		<Unit filename="..\External\test\patest_saw.ncb" />
+		<Unit filename="..\External\test\patest_saw.opt" />
+		<Unit filename="..\External\test\patest_saw.plg" />
+		<Unit filename="..\External\test\patest_sine.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\test\patest_sine8.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\test\patest_sine_formats.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\test\patest_sine_time.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\test\patest_start_stop.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\test\patest_stop.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\test\patest_stop_playout.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\test\patest_sync.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\test\patest_timing.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\test\patest_toomanysines.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\test\patest_two_rates.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\test\patest_underflow.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\test\patest_wire.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\test\patest_write_sine.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\test\patest_write_stop.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\wasapi\pa_win_wasapi.cpp" />
+		<Unit filename="..\External\wdmks\pa_win_wdmks.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\wdmks\readme.txt" />
+		<Unit filename="..\External\win\pa_win_hostapis.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\win\pa_win_util.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\win\pa_x86_plain_converters.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\External\win\pa_x86_plain_converters.h" />
+		<Unit filename="..\External\wmme\pa_win_wmme.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\Graphic\zzChaotic8.psd" />
+		<Unit filename="..\Plugins\mda DX10.dll" />
+		<Unit filename="..\Plugins\mda Piano.dll" />
+		<Unit filename="..\Presets\Chaotic\Accrd. lead.cxml" />
+		<Unit filename="..\Presets\Chaotic\Another soft.cxml" />
+		<Unit filename="..\Presets\Chaotic\Aural b.cxml" />
+		<Unit filename="..\Presets\Chaotic\Autumn.cxml" />
+		<Unit filename="..\Presets\Chaotic\Balamam.cxml" />
+		<Unit filename="..\Presets\Chaotic\Beauty 8 bit.cxml" />
+		<Unit filename="..\Presets\Chaotic\Bright lead.cxml" />
+		<Unit filename="..\Presets\Chaotic\Chaotix.cxml" />
+		<Unit filename="..\Presets\Chaotic\Deep Mellow.cxml" />
+		<Unit filename="..\Presets\Chaotic\Deviant.cxml" />
+		<Unit filename="..\Presets\Chaotic\Drive.cxml" />
+		<Unit filename="..\Presets\Chaotic\Evening pad.cxml" />
+		<Unit filename="..\Presets\Chaotic\FM Glassy.cxml" />
+		<Unit filename="..\Presets\Chaotic\Jaga bass.cxml" />
+		<Unit filename="..\Presets\Chaotic\Kinda flute.cxml" />
+		<Unit filename="..\Presets\Chaotic\Lamygo Lead.cxml" />
+		<Unit filename="..\Presets\Chaotic\Lavanda.cxml" />
+		<Unit filename="..\Presets\Chaotic\Legenda.cxml" />
+		<Unit filename="..\Presets\Chaotic\Long L2.cxml" />
+		<Unit filename="..\Presets\Chaotic\Lost lead.cxml" />
+		<Unit filename="..\Presets\Chaotic\Lucky SB.cxml" />
+		<Unit filename="..\Presets\Chaotic\Morning bass.cxml" />
+		<Unit filename="..\Presets\Chaotic\Mystic pad.cxml" />
+		<Unit filename="..\Presets\Chaotic\Noisy saw bass.cxml" />
+		<Unit filename="..\Presets\Chaotic\Noon pad.cxml" />
+		<Unit filename="..\Presets\Chaotic\Organic.cxml" />
+		<Unit filename="..\Presets\Chaotic\RM BassNLead.cxml" />
+		<Unit filename="..\Presets\Chaotic\Riff electronic.cxml" />
+		<Unit filename="..\Presets\Chaotic\Samasya.cxml" />
+		<Unit filename="..\Presets\Chaotic\Sandra lead.cxml" />
+		<Unit filename="..\Presets\Chaotic\Short Spow.cxml" />
+		<Unit filename="..\Presets\Chaotic\Sine flute.cxml" />
+		<Unit filename="..\Presets\Chaotic\Soda flute.cxml" />
+		<Unit filename="..\Presets\Chaotic\Soft FM bass.cxml" />
+		<Unit filename="..\Presets\Chaotic\Sonar.cxml" />
+		<Unit filename="..\Presets\Chaotic\Square bass.cxml" />
+		<Unit filename="..\Presets\Chaotic\Square lead.cxml" />
+		<Unit filename="..\Presets\Chaotic\Triangle flute.cxml" />
+		<Unit filename="..\Presets\Chaotic\Vlau.cxml" />
+		<Unit filename="..\Presets\Chaotic\Weird 1.cxml" />
+		<Unit filename="..\Presets\Chaotic\Wolf grain.cxml" />
+		<Unit filename="..\Presets\Chaotic\Zabavny.cxml" />
+		<Unit filename="..\Projects\ChaosynthDemo.cmm" />
+		<Unit filename="..\Projects\DrumsDemo.cmm" />
+		<Unit filename="..\Projects\OneMore.cmm" />
+		<Unit filename="..\Projects\SimpleDemo.cmm" />
+		<Unit filename="..\Projects\Tutorial_1_EditingBasics.cmm" />
+		<Unit filename="..\Projects\Tutorial_2_Patterns.cmm" />
+		<Unit filename="..\Projects\Tutorial_3_Mixing.cmm" />
+		<Unit filename="..\Projects\Tutorial_4_Automation.cmm" />
+		<Unit filename="..\Projects\Tutorial_5_Autopatterns_Sidechaining.cmm" />
+		<Unit filename="..\Projects\Tutorial_6_EffectSymbols.cmm" />
+		<Unit filename="..\README" />
+		<Unit filename="..\Samples\808.wav" />
+		<Unit filename="..\Samples\Block 3.wav" />
+		<Unit filename="..\Samples\Blockhead.wav" />
+		<Unit filename="..\Samples\Brush Hat.wav" />
+		<Unit filename="..\Samples\CircleBrsh 2.wav" />
+		<Unit filename="..\Samples\Clap.wav" />
+		<Unit filename="..\Samples\Clave.wav" />
+		<Unit filename="..\Samples\Closed Hat.wav" />
+		<Unit filename="..\Samples\Crash 2.wav" />
+		<Unit filename="..\Samples\DABA.wav" />
+		<Unit filename="..\Samples\DABACLOS.wav" />
+		<Unit filename="..\Samples\Dark Hat.wav" />
+		<Unit filename="..\Samples\Gtr Hi Chuck.wav" />
+		<Unit filename="..\Samples\Horn Hit.wav" />
+		<Unit filename="..\Samples\Jazzy Hat.wav" />
+		<Unit filename="..\Samples\Kicked.wav" />
+		<Unit filename="..\Samples\Kik 2.wav" />
+		<Unit filename="..\Samples\Little Hat.wav" />
+		<Unit filename="..\Samples\Long OpnClsd Hat.wav" />
+		<Unit filename="..\Samples\Nother Rim.wav" />
+		<Unit filename="..\Samples\Pipa_66.wav" />
+		<Unit filename="..\Samples\Rasta.wav" />
+		<Unit filename="..\Samples\Rim 2.wav" />
+		<Unit filename="..\Samples\SBA4.wav" />
+		<Unit filename="..\Samples\SBACLOS.wav" />
+		<Unit filename="..\Samples\SBAF.wav" />
+		<Unit filename="..\Samples\SBALUN.wav" />
+		<Unit filename="..\Samples\SBAP.wav" />
+		<Unit filename="..\Samples\SarodC5.wav" />
+		<Unit filename="..\Samples\Siren Loop.wav" />
+		<Unit filename="..\Samples\Snare 2.wav" />
+		<Unit filename="..\Samples\Snare Tail.wav" />
+		<Unit filename="..\Samples\Tam Kick.wav" />
+		<Unit filename="..\Samples\Timbale 2.wav" />
+		<Unit filename="..\Samples\Zheng_64.wav" />
+		<Unit filename="..\Samples\Zheng_76.wav" />
+		<Unit filename="..\Samples\rhodes41_L.wav" />
+		<Unit filename="..\Samples\rhodes48_L.wav" />
+		<Unit filename="..\Samples\rhodes55_L.wav" />
+		<Unit filename="..\Samples\rhodes56_L.wav" />
+		<Unit filename="..\Samples\rhodes58_L.wav" />
+		<Unit filename="..\Samples\snar_04m1.wav" />
+		<Unit filename="..\Samples\starpad.wav" />
+		<Unit filename="..\Samples\tada.wav" />
+		<Unit filename="..\Samples\test.wav" />
+		<Unit filename="..\Samples\test1.wav" />
+		<Unit filename="..\Small.ico" />
+		<Unit filename="..\StdAfx.cpp" />
+		<Unit filename="..\StdAfx.h" />
+		<Unit filename="..\VSTCollection.cpp" />
+		<Unit filename="..\VSTCollection.h" />
+		<Unit filename="..\awful_audiohost.cpp" />
+		<Unit filename="..\awful_audiohost.h" />
+		<Unit filename="..\awful_midi.cpp" />
+		<Unit filename="..\awful_midi.h" />
+		<Unit filename="..\awful_renderer.cpp" />
+		<Unit filename="..\awful_renderer.h" />
+		<Unit filename="..\cursor1.cur" />
+		<Unit filename="..\juce\juce_amalgamated.cpp" />
+		<Unit filename="..\juce\juce_amalgamated.h" />
+		<Unit filename="..\libFLAC-0.dll" />
+		<Unit filename="..\libFLAC-8.dll" />
+		<Unit filename="..\libltdl-7.dll" />
+		<Unit filename="..\libogg-0.dll" />
+		<Unit filename="..\libsndfile-1.dll" />
+		<Unit filename="..\libsndfile-1.lib" />
+		<Unit filename="..\libsndfile.def" />
+		<Unit filename="..\libsndfile.exp" />
+		<Unit filename="..\libvorbis-0.dll" />
+		<Unit filename="..\libvorbisenc-2.dll" />
+		<Unit filename="..\libvorbisfile-3.dll" />
+		<Unit filename="..\ogg.dll" />
+		<Unit filename="..\resource.h" />
+		<Unit filename="..\rosic\EffectsIntegration.txt" />
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\TweaksAndNotes.txt" />
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\acosh.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\airy.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\arcdot.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\asin.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\asinh.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\atan.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\atanh.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\bc45.mak" />
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\bdtr.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\bernum.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\beta.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\btdtr.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\cbrt.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\chbevl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\chdtr.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\cheby.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\clog.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\cmplx.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\coil.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\const.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\cosh.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\cpmul.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\dawsn.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\dcalc.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\dcalc.h" />
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\deinit.asm" />
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\dflib.bat" />
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\dflib.rsp" />
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\doubldoc.html" />
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\drand.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\dtestvec.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\ei.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\eigens.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\ellie.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\ellik.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\ellpe.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\ellpj.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\ellpk.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\eltst.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\eltst.mak" />
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\euclid.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\exp.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\exp10.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\exp2.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\expn.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\expx2.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\fabs.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\fac.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\fdtr.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\fftr.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\floor.387" />
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\floor.asm" />
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\floor.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\floorelf.387" />
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\fltest.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\fltest2.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\fltest3.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\fresnl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\ftiasm.bat" />
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\ftiasm.rsp" />
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\ftilib.mak" />
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\ftilib.rsp" />
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\ftllib.dec" />
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\gamma.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\gdtr.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\gels.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\hyp2f1.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\hyperg.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\i0.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\i1.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\igam.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\igami.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\incbet.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\incbi.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\isnan.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\iv.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\j0.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\j1.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\jn.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\jv.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\k0.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\k1.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\kn.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\kolmogorov.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\levnsn.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\lmdif.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\log.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\log10.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\log2.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\lrand.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\lsqrt.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\ltstd.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\makefile" />
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\mconf.h" />
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\minv.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\mod2pi.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\monot.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\msvc.mak" />
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\msvc.rsp" />
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\msvcdll.mak" />
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\mtherr.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\mtransp.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\mtst.asm" />
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\mtst.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\mtst.mak" />
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\nbdtr.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\ndtr.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\ndtri.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\paranoia.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\pdtr.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\planck.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\polevl.asm" />
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\polevl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\polmisc.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\polrt.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\polylog.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\polyn.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\polyr.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\pow.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\powi.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\psi.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\revers.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\rgamma.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\round.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\setpmsvc.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\setprec.387" />
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\setprec.688" />
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\setprec.87" />
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\setprec.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\setprelf.387" />
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\shichi.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\sici.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\simpsn.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\simq.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\sin.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\sincos.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\sindg.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\sinh.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\spence.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\sqrt.387" />
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\sqrt.688" />
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\sqrt.87" />
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\sqrt.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\sqrt.spa" />
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\sqrtelf.387" />
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\stdtr.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\struve.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\tan.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\tandg.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\tanh.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\time-it.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\unity.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\unix.mak" />
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\yn.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\zeta.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\cephes_tweaked\double\zetac.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\_third_party\ooura_fft\fft4g.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\rosic\analysis\rosic_InstantaneousEnvelopeDetector.cpp" />
+		<Unit filename="..\rosic\analysis\rosic_InstantaneousEnvelopeDetector.h" />
+		<Unit filename="..\rosic\analysis\rosic_LevelDetector.cpp" />
+		<Unit filename="..\rosic\analysis\rosic_LevelDetector.h" />
+		<Unit filename="..\rosic\basics\GlobalDefinitions.cpp" />
+		<Unit filename="..\rosic\basics\GlobalDefinitions.h" />
+		<Unit filename="..\rosic\basics\GlobalFunctions.cpp" />
+		<Unit filename="..\rosic\basics\GlobalFunctions.h" />
+		<Unit filename="..\rosic\basics\rosic_ChannelMatrix2x2.cpp" />
+		<Unit filename="..\rosic\basics\rosic_ChannelMatrix2x2.h" />
+		<Unit filename="..\rosic\basics\rosic_Constants.cpp" />
+		<Unit filename="..\rosic\basics\rosic_Constants.h" />
+		<Unit filename="..\rosic\basics\rosic_FunctionTemplates.cpp" />
+		<Unit filename="..\rosic\basics\rosic_FunctionTemplates.h" />
+		<Unit filename="..\rosic\basics\rosic_HelperFunctions.cpp" />
+		<Unit filename="..\rosic\basics\rosic_HelperFunctions.h" />
+		<Unit filename="..\rosic\basics\rosic_Interpolator.cpp" />
+		<Unit filename="..\rosic\basics\rosic_Interpolator.h" />
+		<Unit filename="..\rosic\basics\rosic_NumberManipulations.cpp" />
+		<Unit filename="..\rosic\basics\rosic_NumberManipulations.h" />
+		<Unit filename="..\rosic\datastructures\rosic_String.cpp" />
+		<Unit filename="..\rosic\datastructures\rosic_String.h" />
+		<Unit filename="..\rosic\delaylines\rosic_BasicIntegerDelayLine.cpp" />
+		<Unit filename="..\rosic\delaylines\rosic_BasicIntegerDelayLine.h" />
+		<Unit filename="..\rosic\delaylines\rosic_DelayLineStereo.cpp" />
+		<Unit filename="..\rosic\delaylines\rosic_DelayLineStereo.h" />
+		<Unit filename="..\rosic\delaylines\rosic_IntegerDelayLine.cpp" />
+		<Unit filename="..\rosic\delaylines\rosic_IntegerDelayLine.h" />
+		<Unit filename="..\rosic\delaylines\rosic_PingPongEcho.cpp" />
+		<Unit filename="..\rosic\delaylines\rosic_PingPongEcho.h" />
+		<Unit filename="..\rosic\delaylines\rosic_PingPongEcho1.cpp" />
+		<Unit filename="..\rosic\delaylines\rosic_PingPongEcho1.h" />
+		<Unit filename="..\rosic\dynamics\rosic_BesselFilterForGainSignal.cpp" />
+		<Unit filename="..\rosic\dynamics\rosic_BesselFilterForGainSignal.h" />
+		<Unit filename="..\rosic\dynamics\rosic_Compressor.cpp" />
+		<Unit filename="..\rosic\dynamics\rosic_Compressor.h" />
+		<Unit filename="..\rosic\dynamics\rosic_Dynamics.h" />
+		<Unit filename="..\rosic\dynamics\rosic_DynamicsProcessorBase.cpp" />
+		<Unit filename="..\rosic\dynamics\rosic_DynamicsProcessorBase.h" />
+		<Unit filename="..\rosic\dynamics\rosic_SoftKneeCompressor.cpp" />
+		<Unit filename="..\rosic\dynamics\rosic_SoftKneeCompressor.h" />
+		<Unit filename="..\rosic\effects\rosic_BitCrusher.cpp" />
+		<Unit filename="..\rosic\effects\rosic_BitCrusher.h" />
+		<Unit filename="..\rosic\effects\rosic_Chorus.cpp" />
+		<Unit filename="..\rosic\effects\rosic_Chorus.h" />
+		<Unit filename="..\rosic\effects\rosic_CombResonatorStereo.cpp" />
+		<Unit filename="..\rosic\effects\rosic_CombResonatorStereo.h" />
+		<Unit filename="..\rosic\effects\rosic_CombStereoizer.cpp" />
+		<Unit filename="..\rosic\effects\rosic_CombStereoizer.h" />
+		<Unit filename="..\rosic\effects\rosic_Flanger.cpp" />
+		<Unit filename="..\rosic\effects\rosic_Flanger.h" />
+		<Unit filename="..\rosic\effects\rosic_FrequencyShifter.cpp" />
+		<Unit filename="..\rosic\effects\rosic_FrequencyShifter.h" />
+		<Unit filename="..\rosic\effects\rosic_ModulationEffect.cpp" />
+		<Unit filename="..\rosic\effects\rosic_ModulationEffect.h" />
+		<Unit filename="..\rosic\effects\rosic_Phaser.cpp" />
+		<Unit filename="..\rosic\effects\rosic_Phaser.h" />
+		<Unit filename="..\rosic\effects\rosic_Reverb.cpp" />
+		<Unit filename="..\rosic\effects\rosic_Reverb.h" />
+		<Unit filename="..\rosic\effects\rosic_StereoPan.cpp" />
+		<Unit filename="..\rosic\effects\rosic_StereoPan.h" />
+		<Unit filename="..\rosic\effects\rosic_StereoWidth.cpp" />
+		<Unit filename="..\rosic\effects\rosic_StereoWidth.h" />
+		<Unit filename="..\rosic\effects\rosic_Tremolo.cpp" />
+		<Unit filename="..\rosic\effects\rosic_Tremolo.h" />
+		<Unit filename="..\rosic\effects\rosic_Vibrato.cpp" />
+		<Unit filename="..\rosic\effects\rosic_Vibrato.h" />
+		<Unit filename="..\rosic\effects\rosic_WahWah.cpp" />
+		<Unit filename="..\rosic\effects\rosic_WahWah.h" />
+		<Unit filename="..\rosic\effects\rosic_WaveShaper.cpp" />
+		<Unit filename="..\rosic\effects\rosic_WaveShaper.h" />
+		<Unit filename="..\rosic\filters\rosic_AllpassChain.cpp" />
+		<Unit filename="..\rosic\filters\rosic_AllpassChain.h" />
+		<Unit filename="..\rosic\filters\rosic_BiquadBase.cpp" />
+		<Unit filename="..\rosic\filters\rosic_BiquadBase.h" />
+		<Unit filename="..\rosic\filters\rosic_BiquadCascade.cpp" />
+		<Unit filename="..\rosic\filters\rosic_BiquadCascade.h" />
+		<Unit filename="..\rosic\filters\rosic_BiquadDesigner.cpp" />
+		<Unit filename="..\rosic\filters\rosic_BiquadDesigner.h" />
+		<Unit filename="..\rosic\filters\rosic_BiquadMonoDF1.cpp" />
+		<Unit filename="..\rosic\filters\rosic_BiquadMonoDF1.h" />
+		<Unit filename="..\rosic\filters\rosic_BiquadStereoDF1.cpp" />
+		<Unit filename="..\rosic\filters\rosic_BiquadStereoDF1.h" />
+		<Unit filename="..\rosic\filters\rosic_BiquadStereoDF2.cpp" />
+		<Unit filename="..\rosic\filters\rosic_BiquadStereoDF2.h" />
+		<Unit filename="..\rosic\filters\rosic_CombFilter.cpp" />
+		<Unit filename="..\rosic\filters\rosic_CombFilter.h" />
+		<Unit filename="..\rosic\filters\rosic_CombResonator.cpp" />
+		<Unit filename="..\rosic\filters\rosic_CombResonator.h" />
+		<Unit filename="..\rosic\filters\rosic_ConvolverBruteForce.cpp" />
+		<Unit filename="..\rosic\filters\rosic_ConvolverBruteForce.h" />
+		<Unit filename="..\rosic\filters\rosic_ConvolverFFT.cpp" />
+		<Unit filename="..\rosic\filters\rosic_ConvolverFFT.h" />
+		<Unit filename="..\rosic\filters\rosic_ConvolverPartitioned.cpp" />
+		<Unit filename="..\rosic\filters\rosic_ConvolverPartitioned.h" />
+		<Unit filename="..\rosic\filters\rosic_CookbookFilter.cpp" />
+		<Unit filename="..\rosic\filters\rosic_CookbookFilter.h" />
+		<Unit filename="..\rosic\filters\rosic_CrossOver.cpp" />
+		<Unit filename="..\rosic\filters\rosic_CrossOver.h" />
+		<Unit filename="..\rosic\filters\rosic_DampingFilter.cpp" />
+		<Unit filename="..\rosic\filters\rosic_DampingFilter.h" />
+		<Unit filename="..\rosic\filters\rosic_DirectFormFilter.cpp" />
+		<Unit filename="..\rosic\filters\rosic_DirectFormFilter.h" />
+		<Unit filename="..\rosic\filters\rosic_DualTwoPoleFilter.cpp" />
+		<Unit filename="..\rosic\filters\rosic_DualTwoPoleFilter.h" />
+		<Unit filename="..\rosic\filters\rosic_EllipticQuarterBandFilter.cpp" />
+		<Unit filename="..\rosic\filters\rosic_EllipticQuarterBandFilter.h" />
+		<Unit filename="..\rosic\filters\rosic_EllipticSubBandFilter.cpp" />
+		<Unit filename="..\rosic\filters\rosic_EllipticSubBandFilter.h" />
+		<Unit filename="..\rosic\filters\rosic_EllipticSubBandFilterDirectForm.cpp" />
+		<Unit filename="..\rosic\filters\rosic_EllipticSubBandFilterDirectForm.h" />
+		<Unit filename="..\rosic\filters\rosic_EngineersFilter.cpp" />
+		<Unit filename="..\rosic\filters\rosic_EngineersFilter.h" />
+		<Unit filename="..\rosic\filters\rosic_Equalizer.cpp" />
+		<Unit filename="..\rosic\filters\rosic_Equalizer.h" />
+		<Unit filename="..\rosic\filters\rosic_FilterCoefficientConversions.cpp" />
+		<Unit filename="..\rosic\filters\rosic_FilterCoefficientConversions.h" />
+		<Unit filename="..\rosic\filters\rosic_Filters.h" />
+		<Unit filename="..\rosic\filters\rosic_FourPoleFilter.cpp" />
+		<Unit filename="..\rosic\filters\rosic_FourPoleFilter.h" />
+		<Unit filename="..\rosic\filters\rosic_HighOrderEqualizerDesigner.cpp" />
+		<Unit filename="..\rosic\filters\rosic_HighOrderEqualizerDesigner.h" />
+		<Unit filename="..\rosic\filters\rosic_LadderFilter.cpp" />
+		<Unit filename="..\rosic\filters\rosic_LadderFilter.h" />
+		<Unit filename="..\rosic\filters\rosic_LeakyIntegrator.cpp" />
+		<Unit filename="..\rosic\filters\rosic_LeakyIntegrator.h" />
+		<Unit filename="..\rosic\filters\rosic_LowpassHighpass.cpp" />
+		<Unit filename="..\rosic\filters\rosic_LowpassHighpass.h" />
+		<Unit filename="..\rosic\filters\rosic_LowpassHighpassStereo.cpp" />
+		<Unit filename="..\rosic\filters\rosic_LowpassHighpassStereo.h" />
+		<Unit filename="..\rosic\filters\rosic_LpfHpfApf.cpp" />
+		<Unit filename="..\rosic\filters\rosic_LpfHpfApf.h" />
+		<Unit filename="..\rosic\filters\rosic_MultiModeFilter.cpp" />
+		<Unit filename="..\rosic\filters\rosic_MultiModeFilter.h" />
+		<Unit filename="..\rosic\filters\rosic_NyquistBlocker.cpp" />
+		<Unit filename="..\rosic\filters\rosic_NyquistBlocker.h" />
+		<Unit filename="..\rosic\filters\rosic_OnePoleFilter.cpp" />
+		<Unit filename="..\rosic\filters\rosic_OnePoleFilter.h" />
+		<Unit filename="..\rosic\filters\rosic_OnePoleFilterStereo.cpp" />
+		<Unit filename="..\rosic\filters\rosic_OnePoleFilterStereo.h" />
+		<Unit filename="..\rosic\filters\rosic_PoleZeroTransformations.cpp" />
+		<Unit filename="..\rosic\filters\rosic_PoleZeroTransformations.h" />
+		<Unit filename="..\rosic\filters\rosic_PrototypeDesigner.cpp" />
+		<Unit filename="..\rosic\filters\rosic_PrototypeDesigner.h" />
+		<Unit filename="..\rosic\filters\rosic_QuadratureNetwork.cpp" />
+		<Unit filename="..\rosic\filters\rosic_QuadratureNetwork.h" />
+		<Unit filename="..\rosic\filters\rosic_TeeBeeFilter.cpp" />
+		<Unit filename="..\rosic\filters\rosic_TeeBeeFilter.h" />
+		<Unit filename="..\rosic\filters\rosic_ToneControl.cpp" />
+		<Unit filename="..\rosic\filters\rosic_ToneControl.h" />
+		<Unit filename="..\rosic\filters\rosic_TwoPoleBandpass.cpp" />
+		<Unit filename="..\rosic\filters\rosic_TwoPoleBandpass.h" />
+		<Unit filename="..\rosic\filters\rosic_TwoPoleFilter.cpp" />
+		<Unit filename="..\rosic\filters\rosic_TwoPoleFilter.h" />
+		<Unit filename="..\rosic\filters\rosic_VowelFilterStereo.cpp" />
+		<Unit filename="..\rosic\filters\rosic_VowelFilterStereo.h" />
+		<Unit filename="..\rosic\filters\rosic_WhiteToPinkFilter.cpp" />
+		<Unit filename="..\rosic\filters\rosic_WhiteToPinkFilter.h" />
+		<Unit filename="..\rosic\generators\rosic_SineOscillator.cpp" />
+		<Unit filename="..\rosic\generators\rosic_SineOscillator.h" />
+		<Unit filename="..\rosic\generators\rosic_WaveTable.cpp" />
+		<Unit filename="..\rosic\generators\rosic_WaveTable.h" />
+		<Unit filename="..\rosic\infrastructure\ToDo.txt" />
+		<Unit filename="..\rosic\infrastructure\rosic_MutexLock.cpp" />
+		<Unit filename="..\rosic\infrastructure\rosic_MutexLock.h" />
+		<Unit filename="..\rosic\math\rosic_CephesDeclarations.h" />
+		<Unit filename="..\rosic\math\rosic_Complex.cpp" />
+		<Unit filename="..\rosic\math\rosic_Complex.h" />
+		<Unit filename="..\rosic\math\rosic_ComplexFunctions.cpp" />
+		<Unit filename="..\rosic\math\rosic_ComplexFunctions.h" />
+		<Unit filename="..\rosic\math\rosic_IntegerFunctions.cpp" />
+		<Unit filename="..\rosic\math\rosic_IntegerFunctions.h" />
+		<Unit filename="..\rosic\math\rosic_PrimeArray.h" />
+		<Unit filename="..\rosic\math\rosic_PrimeNumbers.cpp" />
+		<Unit filename="..\rosic\math\rosic_PrimeNumbers.h" />
+		<Unit filename="..\rosic\math\rosic_RealFunctionEvaluationAlgorithms.cpp" />
+		<Unit filename="..\rosic\math\rosic_RealFunctionEvaluationAlgorithms.h" />
+		<Unit filename="..\rosic\math\rosic_RealFunctions.cpp" />
+		<Unit filename="..\rosic\math\rosic_RealFunctions.h" />
+		<Unit filename="..\rosic\modulators\rosic_BreakpointModulator.cpp" />
+		<Unit filename="..\rosic\modulators\rosic_BreakpointModulator.h" />
+		<Unit filename="..\rosic\modulators\rosic_EnvelopeGenerator.cpp" />
+		<Unit filename="..\rosic\modulators\rosic_EnvelopeGenerator.h" />
+		<Unit filename="..\rosic\modulators\rosic_LowFrequencyOscillator.cpp" />
+		<Unit filename="..\rosic\modulators\rosic_LowFrequencyOscillator.h" />
+		<Unit filename="..\rosic\others\rosic_SlewRateLimiter.cpp" />
+		<Unit filename="..\rosic\others\rosic_SlewRateLimiter.h" />
+		<Unit filename="..\rosic\rendering\rosic_AlgorithmicWaveformRenderer.cpp" />
+		<Unit filename="..\rosic\rendering\rosic_AlgorithmicWaveformRenderer.h" />
+		<Unit filename="..\rosic\rendering\rosic_MultiSegmentWaveformRenderer.cpp" />
+		<Unit filename="..\rosic\rendering\rosic_MultiSegmentWaveformRenderer.h" />
+		<Unit filename="..\rosic\rendering\rosic_StandardWaveformRenderer.cpp" />
+		<Unit filename="..\rosic\rendering\rosic_StandardWaveformRenderer.h" />
+		<Unit filename="..\rosic\rendering\rosic_WaveformBuffer.cpp" />
+		<Unit filename="..\rosic\rendering\rosic_WaveformBuffer.h" />
+		<Unit filename="..\rosic\rendering\rosic_WaveformRenderer.cpp" />
+		<Unit filename="..\rosic\rendering\rosic_WaveformRenderer.h" />
+		<Unit filename="..\rosic\rosic.h" />
+		<Unit filename="..\rosic\transforms\rosic_FourierTransformerRadix2.cpp" />
+		<Unit filename="..\rosic\transforms\rosic_FourierTransformerRadix2.h" />
+		<Unit filename="..\sndfile.h" />
+		<Unit filename="..\vorbis.dll" />
+		<Unit filename="..\vorbisenc.dll" />
+		<Unit filename="..\vorbisfile.dll" />
+		<Unit filename="..\vstsdk3\pluginterfaces\base\falignpop.h" />
+		<Unit filename="..\vstsdk3\pluginterfaces\base\falignpush.h" />
+		<Unit filename="..\vstsdk3\pluginterfaces\base\fplatform.h" />
+		<Unit filename="..\vstsdk3\pluginterfaces\base\ftypes.h" />
+		<Unit filename="..\vstsdk3\pluginterfaces\base\funknown.cpp" />
+		<Unit filename="..\vstsdk3\pluginterfaces\base\funknown.h" />
+		<Unit filename="..\vstsdk3\pluginterfaces\base\ibstream.h" />
+		<Unit filename="..\vstsdk3\pluginterfaces\base\ipluginbase.h" />
+		<Unit filename="..\vstsdk3\pluginterfaces\base\keycodes.h" />
+		<Unit filename="..\vstsdk3\pluginterfaces\base\ustring.cpp" />
+		<Unit filename="..\vstsdk3\pluginterfaces\base\ustring.h" />
+		<Unit filename="..\vstsdk3\pluginterfaces\gui\iplugview.h" />
+		<Unit filename="..\vstsdk3\pluginterfaces\test\itest.h" />
+		<Unit filename="..\vstsdk3\pluginterfaces\vst2.x\aeffect.h" />
+		<Unit filename="..\vstsdk3\pluginterfaces\vst2.x\aeffectx.h" />
+		<Unit filename="..\vstsdk3\pluginterfaces\vst2.x\vstfxstore.h" />
+		<Unit filename="..\vstsdk3\pluginterfaces\vst\ivstattributes.h" />
+		<Unit filename="..\vstsdk3\pluginterfaces\vst\ivstaudioprocessor.h" />
+		<Unit filename="..\vstsdk3\pluginterfaces\vst\ivstcomponent.h" />
+		<Unit filename="..\vstsdk3\pluginterfaces\vst\ivsteditcontroller.h" />
+		<Unit filename="..\vstsdk3\pluginterfaces\vst\ivstevents.h" />
+		<Unit filename="..\vstsdk3\pluginterfaces\vst\ivsthostapplication.h" />
+		<Unit filename="..\vstsdk3\pluginterfaces\vst\ivstmessage.h" />
+		<Unit filename="..\vstsdk3\pluginterfaces\vst\ivstmidicontrollers.h" />
+		<Unit filename="..\vstsdk3\pluginterfaces\vst\ivstparameterchanges.h" />
+		<Unit filename="..\vstsdk3\pluginterfaces\vst\ivstprocesscontext.h" />
+		<Unit filename="..\vstsdk3\pluginterfaces\vst\ivstunits.h" />
+		<Unit filename="..\vstsdk3\pluginterfaces\vst\vstpresetkeys.h" />
+		<Unit filename="..\vstsdk3\pluginterfaces\vst\vsttypes.h" />
+		<Unit filename="..\vstsdk3\public.sdk\source\common\array.cpp" />
+		<Unit filename="..\vstsdk3\public.sdk\source\common\array.h" />
+		<Unit filename="..\vstsdk3\public.sdk\source\common\linkedlist.cpp" />
+		<Unit filename="..\vstsdk3\public.sdk\source\common\linkedlist.h" />
+		<Unit filename="..\vstsdk3\public.sdk\source\common\pluginview.cpp" />
+		<Unit filename="..\vstsdk3\public.sdk\source\common\pluginview.cpp.bak" />
+		<Unit filename="..\vstsdk3\public.sdk\source\common\pluginview.h" />
+		<Unit filename="..\vstsdk3\public.sdk\source\common\timer.cpp" />
+		<Unit filename="..\vstsdk3\public.sdk\source\common\timer.h" />
+		<Unit filename="..\vstsdk3\public.sdk\source\main\dllmain.cpp" />
+		<Unit filename="..\vstsdk3\public.sdk\source\main\macexport.exp" />
+		<Unit filename="..\vstsdk3\public.sdk\source\main\macmain.cpp" />
+		<Unit filename="..\vstsdk3\public.sdk\source\main\pluginfactory.cpp" />
+		<Unit filename="..\vstsdk3\public.sdk\source\main\pluginfactory.h" />
+		<Unit filename="..\vstsdk3\public.sdk\source\vst2.x\aeffeditor.h" />
+		<Unit filename="..\vstsdk3\public.sdk\source\vst2.x\audioeffect.cpp" />
+		<Unit filename="..\vstsdk3\public.sdk\source\vst2.x\audioeffect.h" />
+		<Unit filename="..\vstsdk3\public.sdk\source\vst2.x\audioeffectx.cpp" />
+		<Unit filename="..\vstsdk3\public.sdk\source\vst2.x\audioeffectx.h" />
+		<Unit filename="..\vstsdk3\public.sdk\source\vst2.x\vstplugmain.cpp" />
+		<Unit filename="..\vstsdk3\public.sdk\source\vst\testsuite\vsttestsuite.cpp" />
+		<Unit filename="..\vstsdk3\public.sdk\source\vst\testsuite\vsttestsuite.h" />
+		<Unit filename="..\vstsdk3\public.sdk\source\vst\vstaudioeffect.cpp" />
+		<Unit filename="..\vstsdk3\public.sdk\source\vst\vstaudioeffect.h" />
+		<Unit filename="..\vstsdk3\public.sdk\source\vst\vstbus.cpp" />
+		<Unit filename="..\vstsdk3\public.sdk\source\vst\vstbus.h" />
+		<Unit filename="..\vstsdk3\public.sdk\source\vst\vstcomponent.cpp" />
+		<Unit filename="..\vstsdk3\public.sdk\source\vst\vstcomponent.h" />
+		<Unit filename="..\vstsdk3\public.sdk\source\vst\vstcomponentbase.cpp" />
+		<Unit filename="..\vstsdk3\public.sdk\source\vst\vstcomponentbase.h" />
+		<Unit filename="..\vstsdk3\public.sdk\source\vst\vsteditcontroller.cpp" />
+		<Unit filename="..\vstsdk3\public.sdk\source\vst\vsteditcontroller.h" />
+		<Unit filename="..\vstsdk3\public.sdk\source\vst\vstguieditor.cpp" />
+		<Unit filename="..\vstsdk3\public.sdk\source\vst\vstguieditor.h" />
+		<Unit filename="..\vstsdk3\public.sdk\source\vst\vsthostutils.cpp" />
+		<Unit filename="..\vstsdk3\public.sdk\source\vst\vsthostutils.h" />
+		<Unit filename="..\vstsdk3\public.sdk\source\vst\vstparameters.cpp" />
+		<Unit filename="..\vstsdk3\public.sdk\source\vst\vstparameters.h" />
+		<Unit filename="..\vstsdk3\public.sdk\source\vst\vstpresetfile.cpp" />
+		<Unit filename="..\vstsdk3\public.sdk\source\vst\vstpresetfile.h" />
+		<Unit filename="..\vstsdk3\public.sdk\source\vst\vstsinglecomponenteffect.cpp" />
+		<Unit filename="..\vstsdk3\public.sdk\source\vst\vstsinglecomponenteffect.h" />
+		<Unit filename="..\vstsdk3\source\ADelayEditGUI\ADEditor.cpp" />
+		<Unit filename="..\vstsdk3\source\ADelayEditGUI\ADEditor.hpp" />
+		<Unit filename="..\vstsdk3\source\ADelayEditGUI\ADelayEdit.cpp" />
+		<Unit filename="..\vstsdk3\source\ADelayEditGUI\ADelayEdit.hpp" />
+		<Unit filename="..\vstsdk3\source\ADelayEditGUI\ADelayEditMain.cpp" />
+		<Unit filename="..\vstsdk3\source\ADelay\ADelay.cpp" />
+		<Unit filename="..\vstsdk3\source\ADelay\ADelay.hpp" />
+		<Unit filename="..\vstsdk3\source\ADelay\ADelayMain.cpp" />
+		<Unit filename="..\vstsdk3\source\AGain\AGain.cpp" />
+		<Unit filename="..\vstsdk3\source\AGain\AGain.hpp" />
+		<Unit filename="..\vstsdk3\source\AGain\AGainMain.cpp" />
+		<Unit filename="..\vstsdk3\source\common\AEffEditor.hpp" />
+		<Unit filename="..\vstsdk3\source\common\AEffect.h" />
+		<Unit filename="..\vstsdk3\source\common\AudioEffect.cpp" />
+		<Unit filename="..\vstsdk3\source\common\AudioEffect.hpp" />
+		<Unit filename="..\vstsdk3\source\common\aeffectx.h" />
+		<Unit filename="..\vstsdk3\source\common\aeffguieditor.cpp" />
+		<Unit filename="..\vstsdk3\source\common\aeffguieditor.h" />
+		<Unit filename="..\vstsdk3\source\common\audioeffectx.cpp" />
+		<Unit filename="..\vstsdk3\source\common\audioeffectx.h" />
+		<Unit filename="..\vstsdk3\source\common\vstcontrols.cpp" />
+		<Unit filename="..\vstsdk3\source\common\vstcontrols.h" />
+		<Unit filename="..\vstsdk3\source\common\vstfxstore.h" />
+		<Unit filename="..\vstsdk3\source\common\vstgui.cpp" />
+		<Unit filename="..\vstsdk3\source\common\vstgui.h" />
+		<Unit filename="..\vstsdk3\source\common\vstplugscarbon.h" />
+		<Unit filename="..\vstsdk3\source\common\vstplugsmac.h" />
+		<Unit filename="..\vstsdk3\source\common\vstplugsmacho.h" />
+		<Unit filename="..\vstsdk3\source\controlsgui\controlsgui.cpp" />
+		<Unit filename="..\vstsdk3\source\controlsgui\controlsgui.h" />
+		<Unit filename="..\vstsdk3\source\controlsgui\controlsguieditor.cpp" />
+		<Unit filename="..\vstsdk3\source\controlsgui\controlsguieditor.h" />
+		<Unit filename="..\vstsdk3\source\controlsgui\controlsguimain.cpp" />
+		<Unit filename="..\vstsdk3\source\offline\OfflineEditor.hpp" />
+		<Unit filename="..\vstsdk3\source\offline\OfflineEditorWin.cpp" />
+		<Unit filename="..\vstsdk3\source\offline\OfflineEffect.cpp" />
+		<Unit filename="..\vstsdk3\source\offline\OfflineEffect.hpp" />
+		<Unit filename="..\vstsdk3\source\offline\OfflineMain.cpp" />
+		<Unit filename="..\vstsdk3\source\surrounddelay\surrounddelay.cpp" />
+		<Unit filename="..\vstsdk3\source\surrounddelay\surrounddelay.hpp" />
+		<Unit filename="..\vstsdk3\source\surrounddelay\surrounddelaymain.cpp" />
+		<Unit filename="..\vstsdk3\source\vstxsynth\gmnames.h" />
+		<Unit filename="..\vstsdk3\source\vstxsynth\vstxsynth.cpp" />
+		<Unit filename="..\vstsdk3\source\vstxsynth\vstxsynth.h" />
+		<Unit filename="..\vstsdk3\source\vstxsynth\vstxsynthmain.cpp" />
+		<Unit filename="..\vstsdk3\source\vstxsynth\vstxsynthproc.cpp" />
+		<Unit filename="..\zdll.lib" />
+		<Unit filename="..\zlib1.dll" />
+		<Extensions>
+			<code_completion />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
