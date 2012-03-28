@@ -218,7 +218,7 @@ void  Preview_Release(Instrument* i, int note)
                     //	jassertfalse;
 
                     tframe frame1 = PrevSlot[ic].start_frame - C.patt->StartFrame();
-                    tframe frame2 = pbMain->currFrame - C.patt->StartFrame();
+                    tframe frame2 = pbkMain->currFrame - C.patt->StartFrame();
 
                     if(frame2 <= frame1)
                         frame2 = frame1 + 44;
@@ -384,61 +384,61 @@ void Preview_CheckStates(long num_frames)
     if(Finish)
         doF = true;
 
-	if(NumPrevs > 0)
-	{
-		for (int ic = 0; ic < MAX_PREVIEW_ELEMENTS; ic++)
-		{
-			if(PrevSlot[ic].state == PState_Playing)
-			{
-				if(PrevSlot[ic].keybound_pianokey == false)
-				{
-					if(Release && doR)
-						PrevSlot[ic].trig.Release();
-					else if(Finish && doF)
-						PrevSlot[ic].trig.SoftFinish();
-				}
-			}
-			else if(PrevSlot[ic].state == PState_Ready)
-			{
-				Trigger* tg = &PrevSlot[ic].trig;
-				Instrument* instr = ((Instance*)tg->el)->instr;
+    if(NumPrevs > 0)
+    {
+        for (int ic = 0; ic < MAX_PREVIEW_ELEMENTS; ic++)
+        {
+            if(PrevSlot[ic].state == PState_Playing)
+            {
+                if(PrevSlot[ic].keybound_pianokey == false)
+                {
+                    if(Release && doR)
+                        PrevSlot[ic].trig.Release();
+                    else if(Finish && doF)
+                        PrevSlot[ic].trig.SoftFinish();
+                }
+            }
+            else if(PrevSlot[ic].state == PState_Ready)
+            {
+                Trigger* tg = &PrevSlot[ic].trig;
+                Instrument* instr = ((Instance*)tg->el)->instr;
 
-				if(tg->tworking == true)
-				{
+                if(tg->tworking == true)
+                {
                     tg->Deactivate();
-				}
+                }
 
                 tg->Activate();
-				if(PrevSlot[ic].sustainable == false || 
-				   (Release && doR && PrevSlot[ic].ii->type != El_Samplent))
-				{
-					tg->Release();
-				}
-				if(tg->ai != NULL)
-				{
-					if(tg->ai->pbk->dworking == true)
-					{
-						DeactivatePlayback(tg->ai->pbk);
-					}
-					ActivatePlayback(tg->ai->pbk);
-				}
+                if(PrevSlot[ic].sustainable == false || 
+                   (Release && doR && PrevSlot[ic].ii->type != El_Samplent))
+                {
+                    tg->Release();
+                }
+                if(tg->ai != NULL)
+                {
+                    if(tg->ai->pbk->dworking == true)
+                    {
+                        DeactivatePlayback(tg->ai->pbk);
+                    }
+                    ActivatePlayback(tg->ai->pbk);
+                }
 
-				tg->pslot->state = PState_Playing;
-			}
-			else if(PrevSlot[ic].state == PState_Stopped)
-			{
-				Trigger* tg = &PrevSlot[ic].trig;
-				if(tg->tworking)
+                tg->pslot->state = PState_Playing;
+            }
+            else if(PrevSlot[ic].state == PState_Stopped)
+            {
+                Trigger* tg = &PrevSlot[ic].trig;
+                if(tg->tworking)
                     tg->Deactivate();
-				if(tg->ai == NULL || !tg->ai->IsPlaybackActive())
-				{
-					Instrument* instr = ((Instance*)tg->el)->instr;
-					PrevSlot[ic].state = PState_Inactive;
-					NumPrevs--;
-				}
-			}
-		}
-	}
+                if(tg->ai == NULL || !tg->ai->IsPlaybackActive())
+                {
+                    Instrument* instr = ((Instance*)tg->el)->instr;
+                    PrevSlot[ic].state = PState_Inactive;
+                    NumPrevs--;
+                }
+            }
+        }
+    }
 
     if(Release && doR)
         Release = false;

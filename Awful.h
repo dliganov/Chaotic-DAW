@@ -284,7 +284,7 @@ class SynthComponent;
 class Cursor;
 class Mouse;
 
-class UndoManaga;
+class UndoManagerC;
 class MixChannel;
 class ProjectData;
 class ParamModule;
@@ -482,12 +482,12 @@ typedef enum InstrType
     Instr_VSTPlugin
 }InstrType;
 
-typedef enum ElType
+typedef enum ElemType
 {
     El_Pattern,
     El_TextString,
     El_Samplent,
-    El_Gennote,
+    El_GenNote,
     El_Command,
     El_Mute,
     El_Break,
@@ -498,7 +498,7 @@ typedef enum ElType
     El_Vibrate,
     El_Transpose,
     EL_UNKNOWN = 0xFFFF
-}ElType;
+}ElemType;
 
 typedef enum Symbol
 {
@@ -1388,8 +1388,8 @@ extern Panel*           lastPanel;
 
 extern Aux*             gAux;
 
-extern Playback*        pbMain;
-extern Playback*        pbAux;
+extern Playback*        pbkMain;
+extern Playback*        pbkAux;
 
 
 //Pointer to list of all found plugins of any kind (including internal FXes or generators)
@@ -1414,8 +1414,6 @@ extern int              GridYS1;
 extern int              GridYS2;
 
 extern float            quantsize;
-extern float            voltable[200];
-extern int              vtmax;
 extern StaticArea*      st;
 
 extern int              StX1;
@@ -1443,10 +1441,10 @@ extern Trigger*         last_active_effect_trigger;
 extern Trigger*         first_global_active_trigger;
 extern Trigger*         last_global_active_trigger;
 
-extern Instrument*      InstrSolo;
-extern Trk*             TrkSolo;
-extern Mixcell*         MixcellSolo;
-extern MixChannel*      MixChannelSolo;
+extern Instrument*      Solo_Instr;
+extern Trk*             Solo_Trk;
+extern Mixcell*         Solo_Mixcell;
+extern MixChannel*      Solo_MixChannel;
 
 extern bool             scrolling;
 extern Butt*            scrollbt;
@@ -1492,7 +1490,7 @@ extern unsigned int     WorkingInterpolationMethod;
 extern char *           szWorkingDirectory;
 
 extern bool             Sel_Active;
-extern bool             Loo_Active;
+extern bool             Looping_Active;
 
 extern int              Num_Selected;
 
@@ -1513,7 +1511,7 @@ extern int              numFieldLines;
 extern Event*           ev0;
 extern bool             skip_input;
 extern bool             post_menu_update;
-extern UndoManaga*      uM;
+extern UndoManagerC*    undoMan;
 
 extern int              PattX1;
 extern int              PattX2;
@@ -1546,7 +1544,7 @@ extern bool             firsttime_plugs_scanned;
 
 extern bool             out_from_dialog;
 
-extern HANDLE           hProcessMutex;
+extern HANDLE           hAudioProcessMutex;
 
 extern bool             MakePatternsFat;
 
@@ -1577,7 +1575,7 @@ extern int             numLastSessions;
 extern Sample*         barsample;
 extern Sample*         beatsample;
 
-extern bool            metronome;
+extern bool            Metronome_ON;
 
 
 //*************************************************************************************************
@@ -1644,7 +1642,7 @@ extern void                 Remove_PEdit(PEdit* pe);
 extern void                 Enqueue_MixCell(Mixcell* mc);
 extern void                 Dequeue_MixCell(Mixcell* mc);
 extern AliasRecord*         GetAliasRecordFromString(char* str);
-extern void                 LowerCase(char* data);
+extern void                 ToLowerCase(char* data);
 extern void                 Add_Panel(Panel* p);
 extern void                 Add_VU(VU* vu);
 extern void                 Remove_VU(VU* vu);

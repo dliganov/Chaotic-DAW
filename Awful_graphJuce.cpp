@@ -3233,7 +3233,7 @@ int J_Layout(Graphics& g, Instance* ii, Loc loc)
             {
                 J_SmpNoteLen(g, cx, cy, initial_end_x - cx, initial_end_x - cx, loc);
             }
-            else if(ii->type == El_Gennote)
+            else if(ii->type == El_GenNote)
             {
                 J_GenNoteLen(g, cx, cy, initial_end_x - cx, loc);
             }
@@ -3295,7 +3295,7 @@ int J_Layout(Graphics& g, Instance* ii, Loc loc)
             {
                 J_SmpNoteLen(g, scx, scy, initial_end_x - scx, initial_end_x - scx, loc);
             }
-            else if(ii->type == El_Gennote)
+            else if(ii->type == El_GenNote)
             {
                 J_GenNoteLen(g, scx, scy, initial_end_x - scx, loc);
             }
@@ -5108,7 +5108,7 @@ void J_Selection(Graphics& g)
         }
     }
 
-    if(Loo_Active == true)
+    if(Looping_Active == true)
     {
         if(M.looloc == Loc_MainGrid)
         {
@@ -7436,7 +7436,7 @@ int J_MenuItem(Graphics& g, int xc, int yc, int adv, int width, MenuItem* mitem)
                 w = J_TextInstr_xy(g, xc + txtadv, yc, "Load projects");
                 break;
             case MItem_Undo:
-                if(uM->current_action->prev == NULL)
+                if(undoMan->current_action->prev == NULL)
                 {
                     mitem->doable = false;
                     g.setColour(Colour(117, 117, 117));
@@ -7470,7 +7470,7 @@ int J_MenuItem(Graphics& g, int xc, int yc, int adv, int width, MenuItem* mitem)
                 */
                 break;
             case MItem_Redo:
-                if(uM->current_action->next == NULL)
+                if(undoMan->current_action->next == NULL)
                 {
                     mitem->doable = false;
                     g.setColour(Colour(117, 117, 117));
@@ -8147,7 +8147,7 @@ void J_VolLane(Graphics& g, Loc loc, Trk* trk, Pattern* pt, int lx1, int ly1, in
                         val = ((Samplent*)el)->loc_vol->val;
                         //outval = ((Samplent*)el)->loc_vol->outval;
                         break;
-                    case El_Gennote:
+                    case El_GenNote:
                         val = ((Gennote*)el)->loc_vol->val;
                         //outval = ((Gennote*)el)->loc_vol->outval;
                         break;
@@ -8175,7 +8175,7 @@ void J_VolLane(Graphics& g, Loc loc, Trk* trk, Pattern* pt, int lx1, int ly1, in
                         J_HLine(g, ly2 - vol_height, cx, cx + 3);
                         //J_FilledRect(g, cx, ly2 - vol_height1, cx + 3, ly2 - vol_height1);
                         break;
-                    case El_Gennote:
+                    case El_GenNote:
                         g.setColour(Colour(0xff3F3FFF));
                         J_VLine(g, cx, ly2 - vol_height, ly2 + 1);
 
@@ -8267,7 +8267,7 @@ void J_VolLane(Graphics& g, Loc loc, Trk* trk, Pattern* pt, int lx1, int ly1, in
                         val = ((Samplent*)el)->loc_vol->val;
                         //outval = ((Samplent*)el)->loc_vol->outval;
                         break;
-                    case El_Gennote:
+                    case El_GenNote:
                         val = ((Gennote*)el)->loc_vol->val;
                         //outval = ((Gennote*)el)->loc_vol->outval;
                         break;
@@ -8293,7 +8293,7 @@ void J_VolLane(Graphics& g, Loc loc, Trk* trk, Pattern* pt, int lx1, int ly1, in
                         J_HLine(g, ly2 - vol_height, cx, cx + 3);
                         //J_FilledRect(g, cx, ly2 - vol_height1, cx + 3, ly2 - vol_height1);
                         break;
-                    case El_Gennote:
+                    case El_GenNote:
                         g.setColour(Colour(0xffFF0000));
                         J_VLine(g, cx, ly2 - vol_height, ly2 + 1);
 
@@ -8417,7 +8417,7 @@ void J_PanLane(Graphics& g, Loc loc, Trk* trk, Pattern* pt, int lx1, int ly1, in
                         val = ((((Samplent*)el)->loc_pan->val)*50 + 50);
 
                         break;
-                    case El_Gennote:
+                    case El_GenNote:
                         val = ((((Gennote*)el)->loc_pan->val)*50 + 50);
                         break;
                     case El_SlideNote:
@@ -8445,7 +8445,7 @@ void J_PanLane(Graphics& g, Loc loc, Trk* trk, Pattern* pt, int lx1, int ly1, in
                         g.setColour(Colour(0xffFFFFFF));
                         J_HLine(g, ly2 - pan_height, cx, cx + 3);
                         break;
-                    case El_Gennote:
+                    case El_GenNote:
                         g.setColour(Colour(0xff3F3FFF));
                         if(halfaux >= pan_height)
                         {
@@ -8557,7 +8557,7 @@ void J_PanLane(Graphics& g, Loc loc, Trk* trk, Pattern* pt, int lx1, int ly1, in
                         val = ((((Samplent*)el)->loc_pan->val)*50 + 50);
 
                         break;
-                    case El_Gennote:
+                    case El_GenNote:
                         val = ((((Gennote*)el)->loc_pan->val)*50 + 50);
                         break;
                     case El_SlideNote:
@@ -8585,7 +8585,7 @@ void J_PanLane(Graphics& g, Loc loc, Trk* trk, Pattern* pt, int lx1, int ly1, in
                         g.setColour(Colour(0xffFFFFFF));
                         J_HLine(g, ly2 - pan_height, cx, cx + 3);
                         break;
-                    case El_Gennote:
+                    case El_GenNote:
                         g.setColour(Colour(0xffFF0000));
                         if(halfaux >= pan_height)
                         {
@@ -8818,7 +8818,7 @@ void J_Content_Main(Graphics& g)
                         J_HighlightElement(g, el);
                         exclude = true;
                     }break;
-                    case El_Gennote:
+                    case El_GenNote:
                     {
                         J_Gennote(g, (Gennote*)el, Loc_MainGrid);
                         J_HighlightElement(g, el);
@@ -9043,7 +9043,7 @@ void J_Content_Aux(Graphics& g)
                                 J_HighlightSelectedElement(g, tg->el);
                             }
                             break;
-                        case El_Gennote:
+                        case El_GenNote:
                             if(pt->ptype != Patt_StepSeq)
                             {
                                 J_Gennote(g, (Gennote*)tg->el, Loc_SmallGrid);
@@ -10825,6 +10825,7 @@ void J_MixChannel(Graphics& g, int x, int y, int h, MixChannel* mchan, int x1r, 
     mchan->cheight = J_DrawMixChannelContent(g, x, mchan->ry1 - mchan->voffs, mchan);
     g.restoreState();
 
+    // Up/down scrolling buttons for MixChannel (postponed)
     /*
     if(mchan->voffs > 0)
     {

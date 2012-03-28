@@ -69,7 +69,7 @@ extern Pattern*             CreateElement_Pattern(char* pname, float tk1, float 
 extern Transpose*           CreateElement_Transpose(int semitones);
 extern Txt*			        CreateElement_TextString();
 extern Instance*            CreateElement_Note(Instrument* instr, bool add, bool preventundo);
-extern Element*             CreateElement_CommonSymbol(ElType eltype, bool add, bool preventundo);
+extern Element*             CreateElement_CommonSymbol(ElemType eltype, bool add, bool preventundo);
 
 
 ////
@@ -257,7 +257,7 @@ float       LooTick2;
 bool        Sel_Active;
 
 // Looping is active
-bool        Loo_Active;
+bool        Looping_Active;
 
 // Number of selected items
 int         Num_Selected;
@@ -493,15 +493,17 @@ int             num_instrs;
 Instrument*     current_instr;
 Instrument*     overriding_instr;
 
-// Timing vars
+// Timing related global vars
 float           beats_per_minute;
 float           beats_per_minute_temp;
 int             beats_per_bar;
 int             ticks_per_beat;
 float           frames_per_tick;
-// seconds per one tick
+
+// Seconds per one tick
 float           seconds_in_tick;
-// auxilliary
+
+// Some auxiliary stuff
 float           one_divided_per_frames_per_tick;      // 1 divided on seconds_in_tick (== ticks per second)
 float           one_divided_per_sample_rate;
 
@@ -515,7 +517,7 @@ int             refresh_rate;
 int             refresh_counter;
 
 // Metronome flag
-bool            metronome;
+bool            Metronome_ON;
 
 // Main playback
 bool            Playing;
@@ -627,10 +629,7 @@ HWND            hWnd;
 unsigned int    HintTimer;
 Control*        MouseControl;
 
-// Different precalculated tables
-float           voltable[200];
-int             vtmax;
-
+// Different precalculated wavetables
 float           wt_sine[WT_SIZE];
 float           wt_cosine[WT_SIZE];
 float           wt_saw[WT_SIZE];
@@ -641,10 +640,10 @@ float           wt_coeff;
 float           wt_angletoindex;
 
 // Solo data
-Instrument*     InstrSolo;
-Trk*            TrkSolo;
-Mixcell*        MixcellSolo;
-MixChannel*     MixChannelSolo;
+Instrument*     Solo_Instr;
+Trk*            Solo_Trk;
+Mixcell*        Solo_Mixcell;
+MixChannel*     Solo_MixChannel;
 
 // Various flags
 bool            skip_input = false;
@@ -654,12 +653,12 @@ bool            post_menu_update;
 bool            firsttime_plugs_scanned;
 
 // Playback data for both grids
-Playback*       pbMain;
-Playback*       pbAux;
+Playback*       pbkMain;
+Playback*       pbkAux;
 
 // Zero event for preview purposes
 Event*          ev0;
-UndoManaga*     uM;
+UndoManagerC*   undoMan;
 
 long            paramIndex;
 long            pattIndex;
@@ -672,15 +671,17 @@ tframe          lastFrame;
 
 char lastchar[2] = {0, 0};
 
+// Basic project info data
 ProjectData PrjData;
 
+// Various mouse cursor shapes
 MouseCursor*     cursCopy;
 MouseCursor*     cursClone;
 MouseCursor*     cursSlide;
 MouseCursor*     cursBrush;
 MouseCursor*     cursSelect;
 
-HANDLE          hProcessMutex;
+HANDLE          hAudioProcessMutex;
 
 bool            MakePatternsFat;
 bool            JustClickedPattern;
@@ -785,7 +786,7 @@ void CleanElements()
 
 void CleanProject()
 {
-    WaitForSingleObject(hProcessMutex, INFINITE);
+    WaitForSingleObject(hAudioProcessMutex, INFINITE);
 
     Selection_Reset();
     Looping_Reset();
@@ -802,7 +803,7 @@ void CleanProject()
     }
 
     gAux->AuxReset();
-    pbAux->SetPlayPatt(auxPatternSet); // force setting to blank pattern
+    pbkAux->SetPlayPatt(auxPatternSet); // force setting to blank pattern
 
     if(C.mode == CMode_NotePlacing)
     {
@@ -851,10 +852,10 @@ void CleanProject()
         gAux->mchan[mc].amount3->Reset();
     }
 
-    InstrSolo = NULL;
-    TrkSolo = NULL;
-    MixcellSolo = NULL;
-    MixChannelSolo = NULL;
+    Solo_Instr = NULL;
+    Solo_Trk = NULL;
+    Solo_Mixcell = NULL;
+    Solo_MixChannel = NULL;
 
     //UpdateParamIndex();
     //UpdatePatternIndex();
@@ -890,7 +891,7 @@ void CleanProject()
     ResetChangesIndicate();
     MainWnd->UpdateTitle();
 
-    ReleaseMutex(hProcessMutex);
+    ReleaseMutex(hAudioProcessMutex);
 }
 
 void ActualizeStepSeqPositions()
@@ -912,7 +913,7 @@ void LoadElementsFromNode(XmlElement* xmlMainNode, Pattern* pttarget)
     XmlElement* xmlChild = NULL;
     forEachXmlChildElementWithTagName(*xmlMainNode, xmlChild, T("Element"))
     {
-        ElType type = (ElType)xmlChild->getIntAttribute(T("Type"));
+        ElemType type = (ElemType)xmlChild->getIntAttribute(T("Type"));
         float stick = (float)xmlChild->getDoubleAttribute(T("StartTick"));
         float etick = (float)xmlChild->getDoubleAttribute(T("EndTick"));
         float ticklength = (float)xmlChild->getDoubleAttribute(T("TickLength"));
@@ -940,7 +941,7 @@ void LoadElementsFromNode(XmlElement* xmlMainNode, Pattern* pttarget)
                 {
                     el = CreateElement_TextString();
                 }break;
-                case El_Gennote:
+                case El_GenNote:
                 case El_Samplent:
                 {
                     int index = (int)xmlChild->getIntAttribute(T("InstrIndex"));
@@ -1105,6 +1106,7 @@ bool LoadProjectData(File chosenFile, LoadThread* thread)
             UpdatePerBPM();
             UpdateQuants();
 
+            // Load and set master volume
             XmlElement* xmlChild = NULL;
             forEachXmlChildElementWithTagName(*xmlMainNode, xmlChild, T("Parameter"))
             {
@@ -1115,6 +1117,7 @@ bool LoadProjectData(File chosenFile, LoadThread* thread)
                 }
             }
 
+            // Load all instruments
             forEachXmlChildElementWithTagName(*xmlMainNode, xmlChild, T("Instrument"))
             {
                 InstrType itype = (InstrType)xmlChild->getIntAttribute(T("InstrType"));
@@ -1146,11 +1149,13 @@ bool LoadProjectData(File chosenFile, LoadThread* thread)
                 }
             }
 
+            // Populate step-sequencer if it's turned on
             if(gAux->workPt->OrigPt->ptype == Patt_StepSeq)
             {
                 gAux->PopulatePatternWithInstruments(gAux->workPt->OrigPt);
             }
 
+            // Load all effects into mixchannels
             forEachXmlChildElementWithTagName(*xmlMainNode, xmlChild, T("MixChannel"))
             {
                 char indexstr[15];
@@ -1198,6 +1203,7 @@ bool LoadProjectData(File chosenFile, LoadThread* thread)
                 }
             }
 
+            // Load all patterns
             if(thread != NULL)
                 thread->setStatusMessage(T("Loading patterns..."));
             forEachXmlChildElementWithTagName(*xmlMainNode, xmlChild, T("Pattern"))
@@ -1262,6 +1268,7 @@ bool LoadProjectData(File chosenFile, LoadThread* thread)
             //UpdateEffIndex();
             //UpdatePatternIndex();
 
+            // And load all elements, of course
             if(thread != NULL)
                 thread->setStatusMessage(T("Loading elements..."));
 
@@ -1291,7 +1298,7 @@ bool LoadProjectData(File chosenFile, LoadThread* thread)
     if(gAux->isPatternMode())
         gAux->HandleButtDown(gAux->Vols);
 
-    uM->WipeEntireHistory();
+    undoMan->WipeEntireHistory();
 
     ProjectLoadingInProgress = false;
 
@@ -1924,7 +1931,7 @@ Vibrate* CreateElement_Vibrate()
     return v;
 }
 
-Element* CreateElement_CommonSymbol(ElType eltype, bool add, bool preventundo)
+Element* CreateElement_CommonSymbol(ElemType eltype, bool add, bool preventundo)
 {
     Element* el = NULL;
     switch(eltype)
@@ -2158,7 +2165,7 @@ void AddNewElement(Element* el, bool preventundo)
 
     if((el->type == El_TextString)||
        (el->type == El_Samplent)||
-       (el->type == El_Gennote)||
+       (el->type == El_GenNote)||
        (el->type == El_SlideNote)||
        (el->type == El_Pattern)||
        (el->type == El_Slider)||
@@ -2176,19 +2183,19 @@ void AddNewElement(Element* el, bool preventundo)
     UpdateNavBarsData();
 
     if(!preventundo)
-        uM->DoNewAction(Action_Add, (void*)el, NULL, NULL);
+        undoMan->DoNewAction(Action_Add, (void*)el, NULL, NULL);
 
     if(Playing)
     {
-        WaitForSingleObject(hProcessMutex, INFINITE);
-        pbMain->UpdateQueuedEv();
-        ReleaseMutex(hProcessMutex);
+        WaitForSingleObject(hAudioProcessMutex, INFINITE);
+        pbkMain->UpdateQueuedEv();
+        ReleaseMutex(hAudioProcessMutex);
     }
     else if(gAux->isPlaying())
     {
-        WaitForSingleObject(hProcessMutex, INFINITE);
-        pbAux->UpdateQueuedEv();
-        ReleaseMutex(hProcessMutex);
+        WaitForSingleObject(hAudioProcessMutex, INFINITE);
+        pbkAux->UpdateQueuedEv();
+        ReleaseMutex(hAudioProcessMutex);
     }
 }
 
@@ -3220,7 +3227,7 @@ void SoftDelete(Element *el, bool preventundo)
 
     el->Delete();
 
-    if(el->type == El_Samplent || el->type == El_Gennote)
+    if(el->type == El_Samplent || el->type == El_GenNote)
     {
         if(CP->CurrentMode == CP->SlideMode && el == C.slideparent)
         {
@@ -3281,7 +3288,7 @@ void CutElement(Element* el)
     if(IsElementDeletable(el) == true)
     {
         el->MarkAsCopied();
-        uM->DoNewAction(Action_Delete, (void*)el, NULL, NULL);
+        undoMan->DoNewAction(Action_Delete, (void*)el, NULL, NULL);
     }
 }
 
@@ -3307,7 +3314,7 @@ bool DeleteElement(Element* el, bool hard, bool preventundo)
         }
         else if(!preventundo)
         {
-            uM->DoNewAction(Action_Delete, (void*)el, NULL, NULL);
+            undoMan->DoNewAction(Action_Delete, (void*)el, NULL, NULL);
         }
         else
         {
@@ -3597,7 +3604,7 @@ void SwitchInputMode(CursMode mode)
     				{
     					C.mode = CMode_TxtDefault;
     				}
-    				else if(C.curElem->type == El_Samplent || C.curElem->type == El_Gennote)
+    				else if(C.curElem->type == El_Samplent || C.curElem->type == El_GenNote)
     				{
     					Instance* ii = (Instance*)C.curElem;
                         if(ii->active_param != NULL)
@@ -3629,7 +3636,7 @@ void SwitchInputMode(CursMode mode)
                 CP->CurrentMode = CP->NoteMode;
 
                 if(C.mode == CMode_ElemEdit && 
-                  (C.curElem->type == El_Samplent || C.curElem->type == El_Gennote))
+                  (C.curElem->type == El_Samplent || C.curElem->type == El_GenNote))
                 {
                     Instance* ii = (Instance*)C.curElem;
                     ii->ProcessKey(key_escape, 0);
@@ -3878,7 +3885,7 @@ void ProcessColLane(int mouse_x, int mouse_y, ParamType paramtype, Loc loc, Trk*
 						smpdata = (Samplent*)el;
 						locvol = smpdata->loc_vol;
 					}
-					if(el->type == El_Gennote)
+					if(el->type == El_GenNote)
 					{
 						gndata = (Gennote*)el;
 						locvol = gndata->loc_vol;
@@ -3895,7 +3902,7 @@ void ProcessColLane(int mouse_x, int mouse_y, ParamType paramtype, Loc loc, Trk*
 					}
 
                     //locvol->SetNormalValue(nv*VolRange);
-                    uM->DoNewAction(Action_ParamChange, (void*)locvol, locvol->val, nv*VolRange, 0, 0);
+                    undoMan->DoNewAction(Action_ParamChange, (void*)locvol, locvol->val, nv*VolRange, 0, 0);
                     if(el->IsInstance())
                     {
                         Instance* ii = (Instance*)el;
@@ -3915,7 +3922,7 @@ void ProcessColLane(int mouse_x, int mouse_y, ParamType paramtype, Loc loc, Trk*
 						smpdata = (Samplent*)el;
 						locpan = smpdata->loc_pan;
 					}
-					if(el->type == El_Gennote)
+					if(el->type == El_GenNote)
 					{
 						gndata = (Gennote*)el;
 						locpan = gndata->loc_pan;
@@ -3932,7 +3939,7 @@ void ProcessColLane(int mouse_x, int mouse_y, ParamType paramtype, Loc loc, Trk*
 					}
 
 					//locpan->SetNormalValue(1 - nv*2);
-                    uM->DoNewAction(Action_ParamChange, (void*)locpan, locpan->val, nv*2 - 1, 0, 0);
+                    undoMan->DoNewAction(Action_ParamChange, (void*)locpan, locpan->val, nv*2 - 1, 0, 0);
                     if(el->IsInstance())
                     {
                         Instance* ii = (Instance*)el;
@@ -4243,8 +4250,8 @@ void UpdateScrollbarOutput(ScrollBard* sb)
         Looping_UpdateCoords();
 
         if(followPos && (Playing || gAux->playing) && 
-            (pbMain->currTick > sb->actual_offset + sb->visible_len ||
-             pbMain->currTick < sb->actual_offset))
+            (pbkMain->currTick > sb->actual_offset + sb->visible_len ||
+             pbkMain->currTick < sb->actual_offset))
         {
             // Cancel follow
             CP->HandleButtDown(CP->BtFollowPlayback);
@@ -4474,7 +4481,7 @@ void ClonePickedToNew(float dtick, int dtrack, float tW, int tH, bool ptcopy)
                     nel = el->Clone(true);
                 }
 
-                if(el->type == El_Samplent || el->type == El_Gennote)
+                if(el->type == El_Samplent || el->type == El_GenNote)
                 {
                     CloneSlideNotes((Instance*)el, (Instance*)nel, true);
                 }
@@ -4490,7 +4497,7 @@ void ClonePickedToNew(float dtick, int dtrack, float tW, int tH, bool ptcopy)
                     ((SlideNote*)el)->parent->AddSlideNote((SlideNote*)nel);
                 }
 
-                uM->DoNewAction(Action_Move, (void*)nel, dtick, 0, dtrack, 0);
+                undoMan->DoNewAction(Action_Move, (void*)nel, dtick, 0, dtrack, 0);
                 //nel->Move(dtick, dtrack);
                 nel->xs += int(dtick*tW);
                 nel->ys += dtrack*tH;
@@ -4672,7 +4679,7 @@ void MovePickedElements(int mx, int my, unsigned flags)
                         ((SlideNote*)el)->parent != NULL &&
                         ((SlideNote*)el)->parent->picked == true))
                     {
-                        uM->DoNewAction(Action_Move, (void*)el, dtick, 0, dtrack, 0);
+                        undoMan->DoNewAction(Action_Move, (void*)el, dtick, 0, dtrack, 0);
                         //el->Move(dtick, dtrack);
                         el->xs += int(dtick*tW);
                         el->ys += dtrack*tH;
@@ -4740,11 +4747,11 @@ void MovePickedElements(int mx, int my, unsigned flags)
 
     if(M.loc == Loc_MainGrid)
     {
-        pbMain->UpdateQueuedEv();
+        pbkMain->UpdateQueuedEv();
     }
     else if(M.loc == Loc_SmallGrid)
     {
-        pbAux->UpdateQueuedEv();
+        pbkAux->UpdateQueuedEv();
     }
 
     // In case we move edited pattern with looping set
@@ -5309,8 +5316,8 @@ void MainPos2AuxPos()
 {
     if(gAux->workPt->autopatt == false)
     {
-        pbMain->SetCurrFrame(pbAux->currFrame);
-        currPlayX_f = (double)pbMain->currFrame/framesPerPixel;
+        pbkMain->SetCurrFrame(pbkAux->currFrame);
+        currPlayX_f = (double)pbkMain->currFrame/framesPerPixel;
         currPlayX = RoundDouble(currPlayX_f);
     }
 }
@@ -5319,10 +5326,10 @@ void AuxPos2MainPos()
 {
     if(gAux->workPt->autopatt == false)
     {
-        pbAux->SetCurrFrame(pbMain->currFrame);
+        pbkAux->SetCurrFrame(pbkMain->currFrame);
         if(gAux->workPt != gAux->blankPt)
         {
-            gAux->curr_play_x_f = (double)(pbAux->currFrame - gAux->workPt->frame)/gAux->frames_per_pixel;
+            gAux->curr_play_x_f = (double)(pbkAux->currFrame - gAux->workPt->frame)/gAux->frames_per_pixel;
             gAux->curr_play_x = RoundDouble(gAux->curr_play_x_f);
         }
     }
@@ -5483,7 +5490,7 @@ bool IsPasteAllowed(Element* el)
     // Not allowed pasting patterns to patterns and only samples, gennotes and slidenotes are
     // allowed to paste to pianoroll
     if(!(el->type == El_Pattern && C.patt != field) &&
-        !(el->type != El_Samplent && el->type != El_Gennote && el->type != El_SlideNote &&
+        !(el->type != El_Samplent && el->type != El_GenNote && el->type != El_SlideNote &&
          C.patt->ptype == Patt_Pianoroll))
     {
         return true;
@@ -5614,7 +5621,7 @@ void PasteElements(bool mousepos)
     if(M.patt == gAux->workPt && gAux->workPt != gAux->blankPt)
     {
         gAux->RescanPatternBounds();
-        pbAux->RangesToPattern();
+        pbkAux->AlignRangeToPattern();
     }
 
     C.RestoreState();
@@ -6065,7 +6072,7 @@ void RescanPlugins(bool full, bool brwupdate)
 
 void DeleteEffect(Eff* eff)
 {
-    WaitForSingleObject(hProcessMutex, INFINITE);
+    WaitForSingleObject(hAudioProcessMutex, INFINITE);
     if(gAux->current_eff == eff && 
         (mixBrw->brwmode == Browse_Params || mixBrw->brwmode == Browse_Presets))
     {
@@ -6080,7 +6087,7 @@ void DeleteEffect(Eff* eff)
 
     RemoveEff(eff);
 
-    ReleaseMutex(hProcessMutex);
+    ReleaseMutex(hAudioProcessMutex);
 
     R(Refresh_GridContent);
 }
@@ -6378,10 +6385,10 @@ void ActivateMenuItem(MenuItem* mitem, MItemType itype, Menu* menu)
                 R(Refresh_Aux);
         }break;
         case MItem_Undo:
-            uM->UndoAction();
+            undoMan->UndoAction();
             break;
         case MItem_Redo:
-            uM->RedoAction();
+            undoMan->RedoAction();
             break;
         case MItem_Delete:
             break;
@@ -6530,13 +6537,13 @@ extern void UpdateTime(Loc loc)
     double tick;
     if(loc == Loc_SmallGrid)
     {
-        frame = pbAux->currFrame;
-        tick = pbAux->currTick;
+        frame = pbkAux->currFrame;
+        tick = pbkAux->currTick;
     }
     else
     {
-        frame = pbMain->currFrame;
-        tick = pbMain->currTick;
+        frame = pbkMain->currFrame;
+        tick = pbkMain->currTick;
     }
 
     float fsec = (float)frame/fSampleRate;
@@ -6559,7 +6566,7 @@ extern void UpdateTime(Loc loc)
 
 void PixelToFrame()
 {
-    currPlayX_f = pbMain->currFrame/framesPerPixel;
+    currPlayX_f = pbkMain->currFrame/framesPerPixel;
     currPlayX = (int)currPlayX_f;
 }
 
@@ -6570,7 +6577,7 @@ void UpdatePerScale()
     C.PosUpdate();
 
     framesPerPixel = seconds_in_tick*fSampleRate/tickWidth;
-    currPlayX_f = pbMain->currFrame/framesPerPixel;
+    currPlayX_f = pbkMain->currFrame/framesPerPixel;
 	currPlayX = (int)currPlayX_f;
 
     UpdateScaledImages();
@@ -6592,8 +6599,8 @@ void UpdateFrames()
 
 void UpdatePerBPM()
 {
-    float tickoldMain = (float)pbMain->currTick;
-    float tickoldAux = (float)pbAux->currTick;
+    float tickoldMain = (float)pbkMain->currTick;
+    float tickoldAux = (float)pbkAux->currTick;
 
     if(beats_per_minute < 10)
         beats_per_minute = 10;
@@ -6619,9 +6626,9 @@ void UpdatePerBPM()
     J_RefreshGridImage();
     J_RefreshAuxGridImage();
 
-    pbMain->SetCurrTick(tickoldMain);
-    pbAux->RangesToPattern();
-    pbAux->SetCurrTick(tickoldAux);
+    pbkMain->SetCurrTick(tickoldMain);
+    pbkAux->AlignRangeToPattern();
+    pbkAux->SetCurrTick(tickoldAux);
 
     Selection_UpdateCoords();
     Looping_UpdateCoords();
@@ -8296,7 +8303,7 @@ void Grid_MouseClickDown(int mouse_x, int mouse_y, unsigned flags)
     {
         if(M.active_elem != NULL)
         {
-            if(M.active_elem->type == El_Samplent || M.active_elem->type == El_Gennote)
+            if(M.active_elem->type == El_Samplent || M.active_elem->type == El_GenNote)
             {
                 Instance* ii = (Instance*)M.active_elem;
                 ii->ed_note->Kreview(-1);
@@ -8511,8 +8518,8 @@ void Selection_UpdateTicks()
 
         if(M.mmode & MOUSE_LINING)
         {
-			pbMain->SetRanges(Tick2Frame(SelTick1), Tick2Frame(SelTick2));
-            pbMain->SetLooped(true);
+			pbkMain->SetRanges(Tick2Frame(SelTick1), Tick2Frame(SelTick2));
+            pbkMain->SetLooped(true);
         }
     }
     else if(M.selloc == Loc_SmallGrid)
@@ -8523,8 +8530,8 @@ void Selection_UpdateTicks()
 
         if(M.mmode & MOUSE_LINING)
         {
-            pbAux->SetRanges(Tick2Frame(SelTick1) + gAux->workPt->frame, Tick2Frame(SelTick2) + gAux->workPt->frame);
-            pbAux->SetLooped(true);
+            pbkAux->SetRanges(Tick2Frame(SelTick1) + gAux->workPt->frame, Tick2Frame(SelTick2) + gAux->workPt->frame);
+            pbkAux->SetLooped(true);
         }
     }
 }
@@ -8540,7 +8547,7 @@ void Selection_UpdateCoords()
 
 			if(M.selmode == Sel_Fragment)
 			{
-				pbMain->SetRanges(Tick2Frame(SelTick1), Tick2Frame(SelTick2));
+				pbkMain->SetRanges(Tick2Frame(SelTick1), Tick2Frame(SelTick2));
 			}
 		}
 		else if(M.selloc == Loc_SmallGrid)
@@ -8550,7 +8557,7 @@ void Selection_UpdateCoords()
 
 			if(M.selmode == Sel_Fragment)
 			{
-				pbAux->SetRanges(Tick2Frame(SelTick1) + gAux->workPt->frame, Tick2Frame(SelTick2) + gAux->workPt->frame);
+				pbkAux->SetRanges(Tick2Frame(SelTick1) + gAux->workPt->frame, Tick2Frame(SelTick2) + gAux->workPt->frame);
 			}
 		}
 		else if(M.selloc == Loc_StaticGrid)
@@ -8910,15 +8917,15 @@ void Selection_Reset()
 		{
 			if(M.selloc == Loc_MainGrid)
 			{
-				if(pbMain->kooped == true)
+				if(pbkMain->looped == true)
 				{
-					pbMain->ResetLooped();
+					pbkMain->ResetLooped();
 				}
-				pbMain->RangesToPattern();
+				pbkMain->AlignRangeToPattern();
 			}
 			else if(M.selloc == Loc_SmallGrid)
 			{
-				pbAux->RangesToPattern();
+				pbkAux->AlignRangeToPattern();
 			}
 		}
 
@@ -9049,21 +9056,21 @@ void Selection_Check(int mouse_x, int mouse_y, unsigned flags)
 
 void Looping_UpdateCoords()
 {
-	if(Loo_Active == true)
+	if(Looping_Active == true)
 	{
 		if(M.looloc == Loc_MainGrid || M.looloc == Loc_Other)
 		{
 			LooX1 = Tick2X(LooTick1, Loc_MainGrid) - GridX1;
 			LooX2 = Tick2X(LooTick2, Loc_MainGrid) - GridX1 - 1;
 
-			pbMain->SetRanges(Tick2Frame(LooTick1), Tick2Frame(LooTick2));
+			pbkMain->SetRanges(Tick2Frame(LooTick1), Tick2Frame(LooTick2));
 		}
 		else if(M.looloc == Loc_SmallGrid)
 		{
 			LooX1 = Tick2X(LooTick1, Loc_SmallGrid) - GridXS1;
 			LooX2 = Tick2X(LooTick2, Loc_SmallGrid) - GridXS1 - 1;
 
-			pbAux->SetRanges(Tick2Frame(LooTick1) + gAux->workPt->frame, Tick2Frame(LooTick2) + gAux->workPt->frame);
+			pbkAux->SetRanges(Tick2Frame(LooTick1) + gAux->workPt->frame, Tick2Frame(LooTick2) + gAux->workPt->frame);
 		}
 		else if(M.looloc == Loc_StaticGrid)
 		{
@@ -9083,12 +9090,12 @@ void Looping_UpdateTicks()
 
         if(LooTick1 != LooTick2 && M.mmode & MOUSE_LINING)
         {
-            pbMain->SetRanges(Tick2Frame(LooTick1), Tick2Frame(LooTick2));
-            pbMain->SetLooped(true);
+            pbkMain->SetRanges(Tick2Frame(LooTick1), Tick2Frame(LooTick2));
+            pbkMain->SetLooped(true);
         }
         else
         {
-            pbMain->SetLooped(false);
+            pbkMain->SetLooped(false);
         }
     }
     else if(M.looloc == Loc_SmallGrid)
@@ -9099,12 +9106,12 @@ void Looping_UpdateTicks()
 
         if(LooTick1 != LooTick2 && M.mmode & MOUSE_LINING)
         {
-            pbAux->SetRanges(gAux->workPt->frame + Tick2Frame(LooTick1), gAux->workPt->frame + Tick2Frame(LooTick2));
-            pbAux->SetLooped(true);
+            pbkAux->SetRanges(gAux->workPt->frame + Tick2Frame(LooTick1), gAux->workPt->frame + Tick2Frame(LooTick2));
+            pbkAux->SetLooped(true);
         }
         else
         {
-            pbAux->SetLooped(false);
+            pbkAux->SetLooped(false);
         }
     }
 }
@@ -9201,21 +9208,21 @@ void Looping_Drag(int mouse_x, int mouse_y, unsigned flags)
 
 void Looping_Reset()
 {
-	if(Loo_Active == true)
+	if(Looping_Active == true)
 	{
-		Loo_Active = false;
+		Looping_Active = false;
 		LooX1 = LooX2 = -1;
 		if(M.looloc == Loc_MainGrid)
 		{
-			if(pbMain->kooped == true)
+			if(pbkMain->looped == true)
 			{
-				pbMain->ResetLooped();
+				pbkMain->ResetLooped();
 			}
-			pbMain->RangesToPattern();
+			pbkMain->AlignRangeToPattern();
 		}
 		else if(M.looloc == Loc_SmallGrid)
 		{
-			pbAux->RangesToPattern();
+			pbkAux->AlignRangeToPattern();
 		}
 
         // Use direct selection refresh since M.selloc can be changed before common R(Refresh_Selection);
@@ -9240,7 +9247,7 @@ void Looping_Check(int mouse_x, int mouse_y, unsigned flags)
             skip_input = false;
             M.PosUpdate(mouse_x, mouse_y, flags);
 
-            Loo_Active = true;
+            Looping_Active = true;
             M.loostarted = true;
             if(M.lineloc == Loc_MainGrid)
             {
@@ -9398,7 +9405,7 @@ void ResizeSelectedElems(float dtick, Element* excludeel, Loc loc, unsigned flag
                 }
     			if(el->end_tick - el->start_tick != el->tick_length)
     			{
-    				uM->DoNewAction(Action_Resize, (void*)el, el->tick_length, el->end_tick - el->start_tick, t1, t2);
+    				undoMan->DoNewAction(Action_Resize, (void*)el, el->tick_length, el->end_tick - el->start_tick, t1, t2);
     			}
 
                 if(el->type == El_Pattern)
@@ -9603,7 +9610,7 @@ void Process_Resize(int mouse_x, int mouse_y, unsigned flags, Loc loc)
 
             if(el->tick_length != newlen)
             {
-                uM->DoNewAction(Action_Resize, (void*)el, el->tick_length, newlen, t1, t2);
+                undoMan->DoNewAction(Action_Resize, (void*)el, el->tick_length, newlen, t1, t2);
 
     			if(el->IsInstance())
     			{
@@ -9687,7 +9694,7 @@ void Process_Resize(int mouse_x, int mouse_y, unsigned flags, Loc loc)
             newtick = gAux->h_sbar->visible_len + gAux->h_sbar->offset;
         }
 
-        uM->DoNewAction(Action_Resize, (void*)pt, oldtick, newtick, 0, 0);
+        undoMan->DoNewAction(Action_Resize, (void*)pt, oldtick, newtick, 0, 0);
 
         pt->touchresized = true;
         pt->Update();
@@ -9745,7 +9752,7 @@ void Lining_ProcessWheel(Loc loc, int delta)
         }
 
         currPlayX = RoundDouble(currPlayX_f);
-        pbMain->SetCurrFrame((long)(currPlayX_f*framesPerPixel));
+        pbkMain->SetCurrFrame((long)(currPlayX_f*framesPerPixel));
         UpdateTime(Loc_MainGrid);
         AuxPos2MainPos();
     }
@@ -9758,7 +9765,7 @@ void Lining_ProcessWheel(Loc loc, int delta)
         }
 
         gAux->curr_play_x = RoundDouble(gAux->curr_play_x_f);
-        pbAux->SetCurrFrame((long)(gAux->curr_play_x_f*gAux->frames_per_pixel) + gAux->workPt->frame);
+        pbkAux->SetCurrFrame((long)(gAux->curr_play_x_f*gAux->frames_per_pixel) + gAux->workPt->frame);
         UpdateTime(Loc_SmallGrid);
         MainPos2AuxPos();
     }
@@ -9770,18 +9777,18 @@ void SetPosX(double newX, Loc loc)
     {
         currPlayX_f = (double)newX + (float)(OffsTick*tickWidth);
         currPlayX = int(currPlayX_f);
-        pbMain->SetCurrFrame((long)(currPlayX_f*framesPerPixel));
+        pbkMain->SetCurrFrame((long)(currPlayX_f*framesPerPixel));
         UpdateTime(Loc_MainGrid);
         AuxPos2MainPos();
 
-        PreInitEnvelopes(pbMain->currFrame, field, field->first_ev, Playing);
+        PreInitEnvelopes(pbkMain->currFrame, field, field->first_ev, Playing);
 
         if(Playing)
-            PreInitSamples(pbMain->currFrame, field, field->first_ev);
+            PreInitSamples(pbkMain->currFrame, field, field->first_ev);
 
         // Switch to main playback if set pos outside the playing pattern
         if(gAux->playing && 
-            (pbMain->currFrame < pbAux->rng_start_frame || pbMain->currFrame > pbAux->rng_end_frame))
+            (pbkMain->currFrame < pbkAux->rng_start_frame || pbkMain->currFrame > pbkAux->rng_end_frame))
         {
             CP->HandleButtDown(CP->play_butt);
         }
@@ -9790,28 +9797,28 @@ void SetPosX(double newX, Loc loc)
     {
         gAux->curr_play_x_f = (float)newX + (float)(gAux->OffsTick*gAux->tickWidth);
         gAux->curr_play_x = int(gAux->curr_play_x_f);
-        pbAux->SetCurrFrame((long)((gAux->curr_play_x*gAux->frames_per_pixel) + gAux->workPt->frame));
+        pbkAux->SetCurrFrame((long)((gAux->curr_play_x*gAux->frames_per_pixel) + gAux->workPt->frame));
         UpdateTime(Loc_SmallGrid);
         MainPos2AuxPos();
 
-        if(pbAux->playPatt->autopatt == false)
+        if(pbkAux->playPatt->autopatt == false)
         {
             if(Playing)
-                PreInitEnvelopes(pbMain->currFrame, field, field->first_ev, Playing, false);
+                PreInitEnvelopes(pbkMain->currFrame, field, field->first_ev, Playing, false);
             else
-                PreInitEnvelopes(pbMain->currFrame, pbAux->playPatt, field->first_ev, gAux->playing, false);
+                PreInitEnvelopes(pbkMain->currFrame, pbkAux->playPatt, field->first_ev, gAux->playing, false);
 
             if(Playing)
-                PreInitSamples(pbMain->currFrame, field, field->first_ev);
+                PreInitSamples(pbkMain->currFrame, field, field->first_ev);
             else if(gAux->playing)
-                PreInitSamples(pbMain->currFrame, pbAux->playPatt, field->first_ev);
+                PreInitSamples(pbkMain->currFrame, pbkAux->playPatt, field->first_ev);
         }
         else
         {
-            PreInitEnvelopes(pbAux->currFrame, pbAux->playPatt, pbAux->playPatt->first_ev, gAux->playing, false);
+            PreInitEnvelopes(pbkAux->currFrame, pbkAux->playPatt, pbkAux->playPatt->first_ev, gAux->playing, false);
 
             if(gAux->playing)
-                PreInitSamples(pbAux->currFrame, pbAux->playPatt, pbAux->playPatt->first_ev);
+                PreInitSamples(pbkAux->currFrame, pbkAux->playPatt, pbkAux->playPatt->first_ev);
         }
     }
 }
@@ -11119,9 +11126,9 @@ void Process_LeftButtUp(int mouse_x, int mouse_y, bool dbclick, unsigned int fla
         M.PosUpdate(mouse_x, mouse_y, flags);
     }
 
-    if(uM->started == true)
+    if(undoMan->started == true)
     {
-        uM->StartNewGroup();
+        undoMan->StartNewGroup();
     }
 
 	if(skip_input == true)
@@ -11213,7 +11220,7 @@ void Process_RightButtDown(int mouse_x, int mouse_y, unsigned flags)
                 Selection_Reset();
             }
 
-            if(M.mmode & MOUSE_LINING && Loo_Active == true)
+            if(M.mmode & MOUSE_LINING && Looping_Active == true)
             {
                 Looping_Reset();
             }
@@ -11334,9 +11341,9 @@ void Process_RightButtUp(int mouse_x, int mouse_y, unsigned int flags)
         M.PosUpdate(mouse_x, mouse_y, flags);
     }
 
-    if(uM->started == true)
+    if(undoMan->started == true)
     {
-        uM->StartNewGroup();
+        undoMan->StartNewGroup();
     }
 
     if(M.pickedup == false && M.skip_menu == false && skip_input == false)
@@ -11765,9 +11772,9 @@ void Process_KeyDown(unsigned key, unsigned flags)
 
     CheckStepSeqPos();
 
-    if(uM->started == true)
+    if(undoMan->started == true)
     {
-        uM->StartNewGroup();
+        undoMan->StartNewGroup();
     }
 
     M.PosUpdate(M.mouse_x, M.mouse_y, flags);
@@ -12121,7 +12128,7 @@ void Process_Char(char character, unsigned flags)
         }
         else if(character == 'z' || character == 'Z')
         {
-            uM->UndoAction();
+            undoMan->UndoAction();
             UpdateNavBarsData(); // For elements adding/deleting cases
 
             UpdateScaledImages();
@@ -12129,7 +12136,7 @@ void Process_Char(char character, unsigned flags)
         }
         else if(character == 'y' || character == 'Y')
         {
-            uM->RedoAction();
+            undoMan->RedoAction();
             UpdateNavBarsData(); // For elements adding/deleting cases
 
             UpdateScaledImages();
@@ -12291,9 +12298,9 @@ void Process_Char(char character, unsigned flags)
 
     //Preview_ReleaseAll();
 
-    if(uM->started == true)
+    if(undoMan->started == true)
     {
-        uM->StartNewGroup();
+        undoMan->StartNewGroup();
     }
 }
 
@@ -12385,25 +12392,6 @@ void Load_Default_Instruments()
 
 void Init_Tables()
 {
-    // Volume transition table
-    /*
-    float val;
-    vtmax = (int)(VolRange*100);
-    for(int ic = 0; ic <= vtmax; ic++)
-    {
-        //voltable[ic] = pow(10, 2*log10((float)ic/100));
-        if(ic <= 100)
-        {
-            val = 1 - pow((1 - (float)ic/100), 1.0f/2.0f);     //pow(10, 2*log10(1 - val));
-        }
-        else
-        {
-            val = pow((float)ic/100, 2.6f);
-        }
-        voltable[ic] = val;
-    }
-    */
-
     // Wavetables for basic oscillators
     wt_coeff = WT_SIZE/fSampleRate;
 
@@ -12720,10 +12708,10 @@ void Init_WorkData()
     current_instr = NULL;
     overriding_instr = NULL;
 
-    InstrSolo = NULL;
-    TrkSolo = NULL;
-    MixcellSolo = NULL;
-    MixChannelSolo = NULL;
+    Solo_Instr = NULL;
+    Solo_Trk = NULL;
+    Solo_Mixcell = NULL;
+    Solo_MixChannel = NULL;
 
     paramIndex = 0;
     pattIndex = 1;
@@ -12741,7 +12729,7 @@ void Init_WorkData()
     Octave = 5;
     lastFrame = 0;
 
-    hProcessMutex = CreateMutex(NULL, FALSE, NULL);
+    hAudioProcessMutex = CreateMutex(NULL, FALSE, NULL);
 
     ev0 = new Event;
     ev0->frame = 0;
@@ -12802,7 +12790,7 @@ void Init_WorkData()
     //pbMain->SetPlayPatt(field);
     //field->pbk = pbMain;
     field->AddPlayback();
-    pbMain = field->pbk;
+    pbkMain = field->pbk;
 
     /* -- Postponed     */
     st = new StaticArea();
@@ -12912,8 +12900,8 @@ void Init_WorkData()
     // Aux
     gAux = new Aux();
     auxPatternSet = NULL;
-    pbAux = new Playback();
-    pbAux->SetLooped(true);
+    pbkAux = new Playback();
+    pbkAux->SetLooped(true);
     AuxPos2MainPos();
 
     MainY2 = WindHeight - AuxHeight;
@@ -12953,7 +12941,7 @@ void Init_WorkData()
     currPlayX = 0;
     currPlayX_f = 0;
 
-    metronome = false;
+    Metronome_ON = false;
     Playing = false;
     Rendering = false;
     Recording = false;
@@ -12970,7 +12958,7 @@ void Init_WorkData()
 
     numLastSessions = 0;
 
-    uM = new UndoManaga();
+    undoMan = new UndoManagerC();
 
     M.PosUpdate(0, 0, 0);
 

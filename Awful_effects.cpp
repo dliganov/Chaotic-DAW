@@ -68,7 +68,7 @@ Eff::~Eff()
 {
     DereferenceElements();
 
-    uM->WipeEffectFromHistory(this);
+    undoMan->WipeEffectFromHistory(this);
 }
 
 ////////////////////////////////////////////////////////

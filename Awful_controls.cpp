@@ -1763,32 +1763,32 @@ void Toggle::PerClick()
     {
         if(instr != NULL)
         {
-            if(instr == InstrSolo)
+            if(instr == Solo_Instr)
             {
-                InstrSolo = NULL;
+                Solo_Instr = NULL;
             }
             else
             {
-                if(InstrSolo != NULL)
+                if(Solo_Instr != NULL)
                 {
-                    InstrSolo->solo->MouseClick();
+                    Solo_Instr->solo->MouseClick();
                 }
-                InstrSolo = instr;
+                Solo_Instr = instr;
             }
         }
         else if(trk != NULL)
         {
-            if(trk == TrkSolo)
+            if(trk == Solo_Trk)
             {
-                TrkSolo = NULL;
+                Solo_Trk = NULL;
             }
             else
             {
-                if(TrkSolo != NULL)
+                if(Solo_Trk != NULL)
                 {
-                    TrkSolo->solo->MouseClick();
+                    Solo_Trk->solo->MouseClick();
                 }
-                TrkSolo = trk;
+                Solo_Trk = trk;
             }
         }
         else if(mixcell != NULL)
@@ -1796,32 +1796,32 @@ void Toggle::PerClick()
             if(mixcell->auxcell)
             {
                 MixChannel* mchan = mixcell->mchan;
-                if(mchan == MixChannelSolo)
+                if(mchan == Solo_MixChannel)
                 {
-                    MixChannelSolo = NULL;
+                    Solo_MixChannel = NULL;
                 }
                 else
                 {
-                    if(MixChannelSolo != NULL)
+                    if(Solo_MixChannel != NULL)
                     {
-                        MixChannelSolo->mc_main->solo_toggle->MouseClick();
+                        Solo_MixChannel->mc_main->solo_toggle->MouseClick();
                     }
-                    MixChannelSolo = mchan;
+                    Solo_MixChannel = mchan;
                 }
             }
             else
             {
-                if(mixcell == MixcellSolo)
+                if(mixcell == Solo_Mixcell)
                 {
-                    MixcellSolo = NULL;
+                    Solo_Mixcell = NULL;
                 }
                 else
                 {
-                    if(MixcellSolo != NULL)
+                    if(Solo_Mixcell != NULL)
                     {
-                        MixcellSolo->solo_toggle->MouseClick();
+                        Solo_Mixcell->solo_toggle->MouseClick();
                     }
-                    MixcellSolo = mixcell;
+                    Solo_Mixcell = mixcell;
                 }
             }
         }

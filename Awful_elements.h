@@ -17,7 +17,7 @@ extern void     UpdateStepSequencers();
 class Element : public Object
 {
 public:
-    ElType          type;
+    ElemType          type;
 
     float           start_tick;
     float           end_tick;
@@ -616,7 +616,7 @@ public:
     bool IsPresent();
     bool IsAnyDerivedPresent();
     void UpdateScaledImage();
-    bool IsElementTypeDisplayable(ElType eltype);
+    bool IsElementTypeDisplayable(ElemType eltype);
     void MarkAsCopied();
     bool isTheOnlyPresentChild();
 };

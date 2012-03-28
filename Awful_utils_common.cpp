@@ -27,8 +27,8 @@ extern int      Line2Y(int line, Loc loc);
 extern int      Y2Line(int y, Loc loc);
 extern int      Gx(int xc, Loc loc);
 extern int      Gy(int yc, Loc loc);
-extern void     LowerCase(char* data);
-extern void     UpperCase(char* data);
+extern void     ToLowerCase(char* data);
+extern void     ToUpperCase(char* data);
 extern void     Get_FileName(char* source, char* dest);
 extern char*    GetOriginalPatternName();
 extern void     Num2String(long num, char* string);
@@ -73,7 +73,7 @@ int MapKeyToNote(char character, bool relative)
         oct = relOctave;
     }
 
-    LowerCase(&character);
+    ToLowerCase(&character);
     int note = -1000;
     int base0 = oct * 12 - 12;
     int base1 = oct * 12;
@@ -471,8 +471,8 @@ int Gy(int yc, Loc loc)
 ////
 ///////////
 ////////////////////////// / / /
-// Function LowerCase(char* data) - transforms all big letters into small ones
-void LowerCase(char* data)
+// Function ToLowerCase(char* data) - transforms all big letters into small ones
+void ToLowerCase(char* data)
 {
     int ic, len, code;
     len = strlen(data);
@@ -492,8 +492,8 @@ void LowerCase(char* data)
 ////
 ///////////
 ////////////////////////// / / /
-// Function LowerCase(char* data) - transforms all big letters into small ones
-void UpperCase(char* data)
+// Function ToUpperCase(char* data) - transforms all small letters into big ones
+void ToUpperCase(char* data)
 {
     int ic, len, code;
     len = strlen(data);
@@ -913,7 +913,7 @@ Symbol GetSymbolFromString(char* data)
     memcpy(buffer, data, len);
     buffer[len] = 0;
 
-    LowerCase(buffer);
+    ToLowerCase(buffer);
 
     if(strcmp(buffer, "#") == 0)
     {
@@ -985,7 +985,7 @@ AliasRecord* GetAliasRecordFromString(char* str)
     buffer = (char*)malloc(len + 1);
     memcpy(buffer, str, len);
     buffer[len] = 0;
-    LowerCase(buffer);
+    ToLowerCase(buffer);
 
     AliasRecord* ar = first_alias_record;
     while(ar != NULL)
@@ -1043,7 +1043,7 @@ void AuxCheck()
         {
             tick = el->start_tick + el->patt->start_tick;
             if(el->patt == field && (el->type == El_Samplent || 
-                                     el->type == El_Gennote ||
+                                     el->type == El_GenNote ||
                                      el->type == El_Pattern ||
                                     (el->type == El_SlideNote && el->patt->ptype != Patt_StepSeq)))
             {
@@ -1081,7 +1081,7 @@ void AuxCheck()
                 elx = el->s_StartTickX();
                 if((el->type == El_Samplent || 
                     el->type == El_SlideNote || 
-                    el->type == El_Gennote ||
+                    el->type == El_GenNote ||
                     el->type == El_Pattern)&&
                    (elx >= GridXS1 && elx <= GridXS2))
                 {
@@ -1239,7 +1239,7 @@ void GetOriginalInstrumentAlias(const char* name, char* alias)
 
     n[0] = name[0];
 
-	LowerCase(n);
+	ToLowerCase(n);
 
     int index = 0;
 

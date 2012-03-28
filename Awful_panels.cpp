@@ -564,14 +564,14 @@ void CtrlPanel::HandleButtDown(Butt* bt)
     }
     else if(bt == FFwd)
     {
-        double newtick = pbMain->currTick + ticks_per_beat*beats_per_bar;
-        pbMain->SetCurrTick(newtick);
+        double newtick = pbkMain->currTick + ticks_per_beat*beats_per_bar;
+        pbkMain->SetCurrTick(newtick);
 
-        UpdatePerBaseFrame(pbMain);
+        UpdatePerBaseFrame(pbkMain);
         UpdateTime(Loc_MainGrid);
 
         float delta = 0;
-        while(pbMain->currTick > main_bar->offset + main_bar->visible_len + delta)
+        while(pbkMain->currTick > main_bar->offset + main_bar->visible_len + delta)
         {
             delta += ticks_per_beat*beats_per_bar;
         }
@@ -583,17 +583,17 @@ void CtrlPanel::HandleButtDown(Butt* bt)
     }
     else if(bt == Rewind)
     {
-        double newtick = pbMain->currTick - ticks_per_beat*beats_per_bar;
+        double newtick = pbkMain->currTick - ticks_per_beat*beats_per_bar;
         if(newtick < 0)
         {
             newtick = 0;
         }
-        pbMain->SetCurrTick(newtick);
-        UpdatePerBaseFrame(pbMain);
+        pbkMain->SetCurrTick(newtick);
+        UpdatePerBaseFrame(pbkMain);
         UpdateTime(Loc_MainGrid);
 
         float delta = 0;
-        while(pbMain->currTick < main_bar->offset + delta)
+        while(pbkMain->currTick < main_bar->offset + delta)
         {
             delta -= ticks_per_beat*beats_per_bar;
         }
@@ -700,12 +700,12 @@ void CtrlPanel::HandleButtDown(Butt* bt)
         if(bt->pressed == false)
         {
             bt->Press();
-            metronome = true;
+            Metronome_ON = true;
         }
         else
         {
             bt->Release();
-            metronome = false;
+            Metronome_ON = false;
             barsample->ForceDeactivate();
             beatsample->ForceDeactivate();
         }
@@ -736,7 +736,7 @@ void CtrlPanel::HandleButtDown(Butt* bt)
 
             if(!(Playing || gAux->playing))
             {
-                float currtick = Frame2Tick(pbMain->currFrame_tsync);
+                float currtick = Frame2Tick(pbkMain->currFrame_tsync);
                 if((currtick < main_bar->offset) ||
                     ((currtick > main_bar->offset + (main_bar->visible_len - main_bar->visible_len/9)) && (main_bar->barpixoffs + main_bar->barpixlen < main_bar->pixlen - 2)))
                 {
@@ -908,9 +908,9 @@ void CtrlPanel::HandleTweak(Control* ct, int mouse_x, int mouse_y)
 
 void CtrlPanel::PosToHome()
 {
-    pbMain->SetCurrFrame(0);
+    pbkMain->SetCurrFrame(0);
     UpdateTime(Loc_MainGrid);
-    UpdatePerBaseFrame(pbMain);
+    UpdatePerBaseFrame(pbkMain);
     main_bar->SetDelta(-main_bar->offset);
 }
 
@@ -919,9 +919,9 @@ void CtrlPanel::PosToEnd()
     tframe lastframe;
     GetLastElementEndFrame(&lastframe);
     float tick = Frame2Tick(lastframe);
-    pbMain->SetCurrFrame(lastframe);
+    pbkMain->SetCurrFrame(lastframe);
     UpdateTime(Loc_MainGrid);
-    UpdatePerBaseFrame(pbMain);
+    UpdatePerBaseFrame(pbkMain);
     float newoffs = tick - main_bar->visible_len/2;
     if(newoffs < 0)
         newoffs = 0;
@@ -1125,7 +1125,7 @@ void Browser::Update()
     }
 
     strcpy(sortlow, sortstr->string);
-    LowerCase(sortlow);
+    ToLowerCase(sortlow);
 }
 
 void Browser::AddEntry(BrwEntry* be)
@@ -1220,7 +1220,7 @@ void Browser::ScanDirForSamples(char *path)
                 {
                     filedata->dirtype = Dir_Nodir;
                     strcpy(exttmp, ext);
-                    LowerCase(exttmp);
+                    ToLowerCase(exttmp);
                     if(strcmp(exttmp, WavExt) == 0)
                     {
                         filedata->ftype = FType_Wave;
@@ -1379,7 +1379,7 @@ void Browser::UpdateFileData()
                         {
                             filedata->dirtype = Dir_Nodir;
                             strcpy(exttmp, ext);
-                            LowerCase(exttmp);
+                            ToLowerCase(exttmp);
                             if(strcmp(exttmp, WavExt) == 0)
                             {
                                 filedata->ftype = FType_Wave;
@@ -1456,7 +1456,7 @@ void Browser::UpdateFileData()
                     {
                         filedata->dirtype = Dir_Nodir;
                         strcpy(exttmp, ext);
-                        LowerCase(exttmp);
+                        ToLowerCase(exttmp);
                         if(strcmp(exttmp, ProjExt) == 0)
                         {
                             filedata->ftype = FType_Projects;
@@ -2122,7 +2122,7 @@ void Browser::PreviewSample(FileData* fdi)
         char alias[MAX_ALIAS_STRING];
         char name[MAX_NAME_STRING];
         strcpy(name, fdi->name);
-        LowerCase(name);
+        ToLowerCase(name);
         GetOriginalInstrumentAlias(name, alias);
         prevInstr = (Instrument*)Add_Sample(fullpath, fdi->name, alias, true);
 		if(prevInstr != NULL)
@@ -2198,7 +2198,7 @@ bool Browser::ItemIsVisibleWithSorting(char * itemname)
 {
     char itemlow[MAX_NAME_STRING];
     strcpy(itemlow, itemname);
-    LowerCase(itemlow);
+    ToLowerCase(itemlow);
     if(strstr(itemlow, sortlow) == itemlow)
     {
         return true;
@@ -2378,7 +2378,7 @@ void Mixcell::RenderIn2Out(int num_frames)
     bool off = false;
     if(grouper == true)
     {
-        if(params->muted == true || (MixcellSolo != NULL && MixcellSolo != this))
+        if(params->muted == true || (Solo_Mixcell != NULL && Solo_Mixcell != this))
         {
             off = true;
         }
@@ -4092,7 +4092,7 @@ void InstrPanel::UpdateIndices()
 // This method completely removes an instrument including all possible references
 void InstrPanel::RemoveInstrument(Instrument* i)
 {
-    WaitForSingleObject(hProcessMutex, INFINITE);
+    WaitForSingleObject(hAudioProcessMutex, INFINITE);
     if(current_instr == i)
     {
         current_instr = i->next;
@@ -4169,7 +4169,7 @@ void InstrPanel::RemoveInstrument(Instrument* i)
 
     CheckGoUp();
 
-    ReleaseMutex(hProcessMutex);
+    ReleaseMutex(hAudioProcessMutex);
 }
 
 Instrument* InstrPanel::AddInstrumentFromBrowser(FileData * fdi, bool bottom)
@@ -4182,7 +4182,7 @@ Instrument* InstrPanel::AddInstrumentFromBrowser(FileData * fdi, bool bottom)
         char alias[MAX_ALIAS_STRING];
         char name[MAX_NAME_STRING];
         strcpy(name, fdi->name);
-        LowerCase(name);
+        ToLowerCase(name);
         GetOriginalInstrumentAlias(name, alias);
         ni = (Instrument*)Add_Sample(fullpath, fdi->name, alias);
 
@@ -4199,7 +4199,7 @@ Instrument* InstrPanel::AddInstrumentFromBrowser(FileData * fdi, bool bottom)
         strcpy(fullpath, fdi->path);
 
         strcpy(name, fdi->name);
-        LowerCase(name);
+        ToLowerCase(name);
         GetOriginalInstrumentAlias(name, alias);
         VSTGenerator* vstgen = Add_VSTGenerator(fullpath, fdi->name, alias);
         ni = (Instrument*)vstgen;
@@ -4620,7 +4620,7 @@ void MixChannel::Process(int num_frames, float* outbuff)
         float panv, volv, volL, volR;
         bool off = false;
         {
-            if(mc_main->params->muted == true || (MixChannelSolo != NULL && MixChannelSolo != this))
+            if(mc_main->params->muted == true || (Solo_MixChannel != NULL && Solo_MixChannel != this))
             {
                 off = true;
             }
@@ -4839,7 +4839,7 @@ void MixChannel::Load(XmlElement * xmlNode)
     params->solo = bval;
     if(params->solo)
     {
-        MixChannelSolo = this;
+        Solo_MixChannel = this;
     }
 
     String mchan = xmlNode->getStringAttribute(T("OutMixChannel"));
@@ -5076,7 +5076,7 @@ void Aux::InitMixer()
     this->hMixMutex = CreateMutex(NULL, FALSE, NULL);
 }
 
-void Aux::InitBuffers(int num_frames)
+void Aux::CleanBuffers(int num_frames)
 {
     for(int mc = 0; mc < NUM_MIXCHANNELS; mc++)
     {
@@ -5230,33 +5230,33 @@ MixChannel* Aux::CheckFXString(DigitStr * mixstr)
 
 void Aux::Play()
 {
-    if(!isBlank() && Playing == false && pbAux->playPatt == workPt)
+    if(!isBlank() && Playing == false && pbkAux->playPatt == workPt)
     {
         if(playing == false)
         {
             //Adjust playback
-            if(pbAux->currFrame < pbAux->rng_start_frame || pbAux->currFrame > pbAux->rng_end_frame)
+            if(pbkAux->currFrame < pbkAux->rng_start_frame || pbkAux->currFrame > pbkAux->rng_end_frame)
             {
-                pbAux->SetCurrFrame(pbAux->rng_start_frame);
-                UpdatePerBaseFrame(pbAux);
+                pbkAux->SetCurrFrame(pbkAux->rng_start_frame);
+                UpdatePerBaseFrame(pbkAux);
             }
-            pbAux->UpdateQueuedEv();
-            pbAux->SetActive();
+            pbkAux->UpdateQueuedEv();
+            pbkAux->SetActive();
 			if(workPt->OrigPt->autopatt == false)
 			{
-				pbMain->SetInactive();
+				pbkMain->SetInactive();
 			}
 
             // Soft preinit envelopes (without param initialization)
-            if(pbAux->playPatt->autopatt == false)
+            if(pbkAux->playPatt->autopatt == false)
             {
-                PreInitEnvelopes(pbMain->currFrame, pbAux->playPatt, field->first_ev, true, false);
-                PreInitSamples(pbMain->currFrame, pbAux->playPatt, field->first_ev);
+                PreInitEnvelopes(pbkMain->currFrame, pbkAux->playPatt, field->first_ev, true, false);
+                PreInitSamples(pbkMain->currFrame, pbkAux->playPatt, field->first_ev);
             }
             else
             {
-                PreInitEnvelopes(pbAux->currFrame, pbAux->playPatt, pbAux->playPatt->first_ev, true, false);
-                PreInitSamples(pbAux->currFrame, pbAux->playPatt, pbAux->playPatt->first_ev);
+                PreInitEnvelopes(pbkAux->currFrame, pbkAux->playPatt, pbkAux->playPatt->first_ev, true, false);
+                PreInitSamples(pbkAux->currFrame, pbkAux->playPatt, pbkAux->playPatt->first_ev);
             }
 
             /*
@@ -5276,15 +5276,15 @@ void Aux::Play()
             }
 
             MC->poso->stopTimer();
-            pbAux->SetInactive();
-            pbAux->SetCurrFrame((long)pbAux->currFrame_tsync);
+            pbkAux->SetInactive();
+            pbkAux->SetCurrFrame((long)pbkAux->currFrame_tsync);
 			if(workPt->OrigPt->autopatt == false)
 			{
 				//pbMain->pactive = false;
-                pbMain->SetCurrFrame((long)pbMain->currFrame_tsync);
+                pbkMain->SetCurrFrame((long)pbkMain->currFrame_tsync);
 			}
 
-            ResetAllPlayback(false);
+            ResetProcessing(false);
             ResetUnstableElements();
             CleanupAll();
         }
@@ -5306,10 +5306,10 @@ void Aux::Stop()
 
     MC->poso->stopTimer();
 
-    pbAux->SetInactive();
+    pbkAux->SetInactive();
     if(workPt->OrigPt->autopatt == false)
     {
-        pbMain->SetInactive();
+        pbkMain->SetInactive();
     }
 
     if(Recording == true)
@@ -5318,17 +5318,17 @@ void Aux::Stop()
     }
 
     Preview_StopAll();
-    ResetAllPlayback(resetmix);
+    ResetProcessing(resetmix);
     CleanupAll();
     if(workPt != blankPt)
     {
-        pbAux->SetCurrFrame(pbAux->rng_start_frame);
-        UpdatePerBaseFrame(pbAux);
-        pbAux->UpdateQueuedEv();
+        pbkAux->SetCurrFrame(pbkAux->rng_start_frame);
+        UpdatePerBaseFrame(pbkAux);
+        pbkAux->UpdateQueuedEv();
     }
     UpdateTime(Loc_MainGrid);
 
-	if(pbAux->playPatt != NULL)
+	if(pbkAux->playPatt != NULL)
 	{
 	    /* Let's comment it out and see which way is better
 		// Hard preinit envelopes as the global position can be bigger than zero
@@ -6284,7 +6284,7 @@ bool Aux::RescanPatternBounds()
 
     if(ticklength != workPt->tick_length)
     {
-        uM->DoNewAction(Action_Resize, (void*)workPt, ticklength, workPt->tick_length, 0, 0);
+        undoMan->DoNewAction(Action_Resize, (void*)workPt, ticklength, workPt->tick_length, 0, 0);
         workPt->touchresized = false;
         workPt->Update();
         Pattern* pt = workPt->OrigPt->der_first;
@@ -6295,13 +6295,13 @@ bool Aux::RescanPatternBounds()
                 ticklength = pt->tick_length;
                 pt->SetEndTick(pt->StartTick() + workPt->tick_length);
 
-                uM->DoNewAction(Action_Resize, (void*)pt, ticklength, pt->tick_length, 0, 0);
+                undoMan->DoNewAction(Action_Resize, (void*)pt, ticklength, pt->tick_length, 0, 0);
             }
             pt = pt->der_next;
         }
 
         //pbAux->SetRanges(workPt->actual_start_frame, workPt->actual_end_frame);
-        pbAux->RangesToPattern();
+        pbkAux->AlignRangeToPattern();
 
         UpdateNavBarsData();
 
@@ -6327,11 +6327,11 @@ void Aux::UpdatePerScale()
     {
         if(Playing == true)
         {
-            curr_play_x_f = (pbMain->currFrame - workPt->frame)/frames_per_pixel;
+            curr_play_x_f = (pbkMain->currFrame - workPt->frame)/frames_per_pixel;
         }
         else
         {
-            curr_play_x_f = (pbAux->currFrame - workPt->frame)/frames_per_pixel;
+            curr_play_x_f = (pbkAux->currFrame - workPt->frame)/frames_per_pixel;
         }
         curr_play_x = RoundDouble(curr_play_x_f);
     }
@@ -6516,7 +6516,7 @@ void Aux::CreateNew()
     workPt->last_edited_param = workPt->name;
     workPt->Update();
     auxPatternSet = workPt;
-    pbAux->RangesToPattern();
+    pbkAux->AlignRangeToPattern();
 
     InitBlank(workPt->ptype);
     AuxPos2MainPos();

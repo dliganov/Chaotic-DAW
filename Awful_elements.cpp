@@ -92,7 +92,7 @@ Element::Element()
 
 Element::~Element()
 {
-    uM->WipeElementFromHistory(this);
+    undoMan->WipeElementFromHistory(this);
 }
 
 Element* Element::Clone(bool add)
@@ -710,7 +710,7 @@ void Element::GetRealCoordinates(Loc loc)
 
 bool Element::IsInstance()
 {
-    if(type == El_Samplent || type == El_Gennote)
+    if(type == El_Samplent || type == El_GenNote)
     {
         return true;
     }
@@ -749,14 +749,14 @@ bool Element::IsDisplayableOnPatternType(PattType ptype)
     }
     else if(ptype == Patt_Pianoroll)
     {
-        if(type == El_Samplent || type == El_Gennote || type == El_SlideNote)
+        if(type == El_Samplent || type == El_GenNote || type == El_SlideNote)
         {
             return true;
         }
     }
     else if(ptype == Patt_StepSeq)
     {
-        if(type == El_Samplent || type == El_Gennote)
+        if(type == El_Samplent || type == El_GenNote)
         {
             return true;
         }
@@ -1776,7 +1776,7 @@ void Instance::Load(XmlElement * xmlNode)
 
 Gennote::Gennote(Instrument* instr)
 {
-    type = El_Gennote;
+    type = El_GenNote;
     this->instr = instr;
 
     if(RememberLengths)
@@ -4264,7 +4264,7 @@ Pattern::~Pattern()
 	}
 
 	// if this playback is not external
-    if(pbk != NULL && pbk != pbAux && pbk != pbMain)
+    if(pbk != NULL && pbk != pbkAux && pbk != pbkMain)
         delete pbk;
 }
 
@@ -4664,8 +4664,8 @@ void Pattern::Move(float dtick, int dtrack)
     {
         AuxPos2MainPos();
 
-        pbAux->RangesToPattern();
-        pbAux->SetCurrFrame(pbAux->currFrame += Tick2Frame(dtick));
+        pbkAux->AlignRangeToPattern();
+        pbkAux->SetCurrFrame(pbkAux->currFrame += Tick2Frame(dtick));
         if(gAux->playing)
         {
             MainPos2AuxPos();
@@ -5621,7 +5621,7 @@ void Pattern::UpdateScaledImage()
                         {
                             col = col1;
                         }
-                        else if(el->type == El_Gennote)
+                        else if(el->type == El_GenNote)
                         {
                             col = col2;
                         }
@@ -5653,7 +5653,7 @@ void Pattern::UpdateScaledImage()
                         {
                             col = col1;
                         }
-                        else if(el->type == El_Gennote)
+                        else if(el->type == El_GenNote)
                         {
                             col = col2;
                         }
@@ -5869,7 +5869,7 @@ void Pattern::UpdateScaledImage()
                         {
                             col = col1;
                         }
-                        else if(el->type == El_Gennote)
+                        else if(el->type == El_GenNote)
                         {
                             col = col2;
                         }
@@ -5901,7 +5901,7 @@ void Pattern::UpdateScaledImage()
                         {
                             col = col1;
                         }
-                        else if(el->type == El_Gennote)
+                        else if(el->type == El_GenNote)
                         {
                             col = col2;
                         }
@@ -5968,14 +5968,17 @@ void Pattern::UpdateScaledImage()
     }
 }
 
-bool Pattern::IsElementTypeDisplayable(ElType eltype)
+bool Pattern::IsElementTypeDisplayable(ElemType eltype)
 {
     switch(ptype)
     {
         case Patt_Pianoroll:
-            return(eltype == El_Gennote || eltype == El_Samplent || eltype == El_SlideNote);
+            return(eltype == El_GenNote || 
+                   eltype == El_Samplent || 
+                   eltype == El_SlideNote);
         case Patt_StepSeq:
-            return(eltype == El_Gennote || eltype == El_Samplent);
+            return(eltype == El_GenNote || 
+                   eltype == El_Samplent);
         default:
             return true;
     }
@@ -6033,11 +6036,11 @@ Element* ReassignInstrument(Instance* ii, Instrument* instr)
         gn->ed_note->value = ii->ed_note->value;
         gn->ed_vol->value = ii->ed_vol->value;
         gn->ed_pan->value = ii->ed_pan->value;
-        if(ii->type == El_Gennote)
+        if(ii->type == El_GenNote)
             gn->ed_len->value = ii->ed_len->value;
         gn->loc_vol->SetNormalValue(ii->loc_vol->val);
         gn->loc_pan->SetNormalValue(ii->loc_pan->val);
-        if(ii->type == El_Gennote)
+        if(ii->type == El_GenNote)
             gn->loc_len->SetNormalValue(ii->loc_len->val);
         gn->start_tick = ii->start_tick;
         gn->end_tick = gn->start_tick + ii->tick_length;
@@ -6053,7 +6056,7 @@ Element* ReassignInstrument(Instance* ii, Instrument* instr)
 
 void BindPatternToInstrument(Pattern* pt, Instrument* instr)
 {
-    uM->DoNewAction(Action_Bind, (void*)pt, (void*)pt->ibound, (void*)instr);
+    undoMan->DoNewAction(Action_Bind, (void*)pt, (void*)pt->ibound, (void*)instr);
 
     pt->OrigPt->ibound = instr;
     Pattern* ptc = pt->OrigPt->der_first;
@@ -6069,7 +6072,7 @@ void BindPatternToInstrument(Pattern* pt, Instrument* instr)
     Element* el = pt->OrigPt->first_elem;
     while(el != NULL)
     {
-        if(el->IsPresent() && (el->type == El_Samplent || el->type == El_Gennote))
+        if(el->IsPresent() && (el->type == El_Samplent || el->type == El_GenNote))
         {
             ii = (Instance*)el;
             if(ii->instr != instr)

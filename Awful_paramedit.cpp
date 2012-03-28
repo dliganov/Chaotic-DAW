@@ -321,7 +321,7 @@ void DigitStr::ProcessChar(char character)
                          (character >= 0x61 && character <= 0x60 + NUM_MIXER_ROWS - 10)||
                          (character == 0x2D))))
     {
-        UpperCase(&character);
+        ToUpperCase(&character);
         digits[curPos] = character;
 
         if(curPos == 0)
@@ -781,7 +781,7 @@ void Note::Kreview(int key)
 {
     Instance* ii = NULL;
     if(element->type == El_Samplent || 
-       element->type == El_Gennote)
+       element->type == El_GenNote)
     {
         ii = (Instance*)element;
     }

@@ -634,11 +634,11 @@ bool ParamModule::KillPreset(Preset* pPreset)
 
 bool ParamModule::SetPreset(Preset* pPreset)
 {
-    bool               ret_val   = false;
+    bool ret_val   = false;
 
-	ForceDeactivate();
+    ForceDeactivate();
 
-	String  sFilePath(pPreset->path);
+    String  sFilePath(pPreset->path);
 
     File myFile(sFilePath);
     XmlDocument myPreset(myFile);

@@ -2,7 +2,7 @@
 #include "awful_undoredo.h"
 #include "awful_cursorandmouse.h"
 
-UndoManaga::UndoManaga()
+UndoManagerC::UndoManagerC()
 {
     first_action = last_action = NULL;
     current_action = NULL;
@@ -13,13 +13,13 @@ UndoManaga::UndoManaga()
     StartNewGroup();
 }
 
-void UndoManaga::StartNewGroup()
+void UndoManagerC::StartNewGroup()
 {
     started = false;
     current_group++;
 }
 
-Action* UndoManaga::FlushSkipped(Action* fnext, Element* eltodel)
+Action* UndoManagerC::FlushSkipped(Action* fnext, Element* eltodel)
 {
     Action* fnxt;
     Action* fact = fnext;
@@ -44,7 +44,7 @@ Action* UndoManaga::FlushSkipped(Action* fnext, Element* eltodel)
     return fact;
 }
 
-void UndoManaga::FlushFurtherActions()
+void UndoManagerC::FlushFurtherActions()
 {
     Action* fnext;
     Action* fact = current_action->next;
@@ -65,7 +65,7 @@ void UndoManaga::FlushFurtherActions()
 	current_action->next = NULL;
 }
 
-bool UndoManaga::IsOK(ActionType atype, void* adata)
+bool UndoManagerC::IsOK(ActionType atype, void* adata)
 {
     switch(atype)
     {
@@ -82,7 +82,7 @@ bool UndoManaga::IsOK(ActionType atype, void* adata)
     return true;
 }
 
-void UndoManaga::DoNewAction(ActionType atype, void* adata1, void* adata2, void* adata3)
+void UndoManagerC::DoNewAction(ActionType atype, void* adata1, void* adata2, void* adata3)
 {
     if(IsOK(atype, adata1))
     {
@@ -110,7 +110,7 @@ void UndoManaga::DoNewAction(ActionType atype, void* adata1, void* adata2, void*
     }
 }
 
-void UndoManaga::DoNewAction(ActionType atype, void* adata1, float f1, float f2, int i1, int i2)
+void UndoManagerC::DoNewAction(ActionType atype, void* adata1, float f1, float f2, int i1, int i2)
 {
     if(IsOK(atype, adata1))
     {
@@ -138,7 +138,7 @@ void UndoManaga::DoNewAction(ActionType atype, void* adata1, float f1, float f2,
 	}
 }
 
-void UndoManaga::RedoAction()
+void UndoManagerC::RedoAction()
 {
     if(current_action->next != NULL)
     {
@@ -153,7 +153,7 @@ void UndoManaga::RedoAction()
     }
 }
 
-void UndoManaga::UndoAction()
+void UndoManagerC::UndoAction()
 {
     if(current_action != NULL)
     {
@@ -168,7 +168,7 @@ void UndoManaga::UndoAction()
     }
 }
 
-void UndoManaga::Unperform(Action* act)
+void UndoManagerC::Unperform(Action* act)
 {
     switch(act->atype)
     {
@@ -288,7 +288,7 @@ void UndoManaga::Unperform(Action* act)
                 R(Refresh_GridContent);
                 if(gAux->workPt == el)
                 {
-                    pbAux->RangesToPattern();
+                    pbkAux->AlignRangeToPattern();
                 }
                 if(gAux->auxmode != AuxMode_Pattern || gAux->workPt == el)
                 {
@@ -304,7 +304,7 @@ void UndoManaga::Unperform(Action* act)
     }
 }
 
-void UndoManaga::Perform(Action* act)
+void UndoManagerC::Perform(Action* act)
 {
     switch(act->atype)
     {
@@ -426,8 +426,8 @@ void UndoManaga::Perform(Action* act)
                 R(Refresh_GridContent);
                 if(gAux->workPt == el)
                 {
-					if(!(Loo_Active == true && M.looloc == Loc_SmallGrid))
-						pbAux->RangesToPattern();
+					if(!(Looping_Active == true && M.looloc == Loc_SmallGrid))
+						pbkAux->AlignRangeToPattern();
                     R(Refresh_AuxGrid);
 				}
                 if(gAux->isVolsPansMode() && el->type == El_SlideNote)
@@ -445,7 +445,7 @@ void UndoManaga::Perform(Action* act)
 }
 
 // Deletes all history entries, regarding the passed element and queues its hard deletion
-void UndoManaga::WipeElementFromHistory(Element* el)
+void UndoManagerC::WipeElementFromHistory(Element* el)
 {
     Action* actnext;
     Action* act = first_action;
@@ -471,7 +471,7 @@ void UndoManaga::WipeElementFromHistory(Element* el)
     }
 }
 
-void UndoManaga::WipeInstrumentFromHistory(Instrument* instr)
+void UndoManagerC::WipeInstrumentFromHistory(Instrument* instr)
 {
     Action* actnext;
     Action* act = first_action;
@@ -494,7 +494,7 @@ void UndoManaga::WipeInstrumentFromHistory(Instrument* instr)
     }
 }
 
-void UndoManaga::WipeEntireHistory()
+void UndoManagerC::WipeEntireHistory()
 {
     Action* actnext;
     Action* act = first_action;
@@ -515,7 +515,7 @@ void UndoManaga::WipeEntireHistory()
     StartNewGroup();
 }
 
-void UndoManaga::WipeParameterFromHistory(Parameter* param)
+void UndoManagerC::WipeParameterFromHistory(Parameter* param)
 {
     Action* actnext;
     Action* act = first_action;
@@ -537,11 +537,11 @@ void UndoManaga::WipeParameterFromHistory(Parameter* param)
     }
 }
 
-void UndoManaga::WipeEffectFromHistory(Eff* eff)
+void UndoManagerC::WipeEffectFromHistory(Eff* eff)
 {
 }
 
-void UndoManaga::AddAction(Action* a)
+void UndoManagerC::AddAction(Action* a)
 {
     if(first_action == NULL && last_action == NULL)
     {
@@ -558,7 +558,7 @@ void UndoManaga::AddAction(Action* a)
     last_action = a;
 }
 
-void UndoManaga::RemoveAction(Action* a)
+void UndoManagerC::RemoveAction(Action* a)
 {
     if(a == current_action)
     {

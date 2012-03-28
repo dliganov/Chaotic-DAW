@@ -163,7 +163,7 @@ long GetGlobalFrame4Trigger(Trigger* tg)
            (tg->el->type == El_Vibrate)||
            (tg->el->type == El_Transpose)||
            (tg->el->type == El_Command)||
-		   (tg->el->type == El_Gennote))
+		   (tg->el->type == El_GenNote))
         {
             return Tick2Frame(tg->patt->start_tick + tg->el->end_tick);
         }
@@ -394,7 +394,7 @@ void CreateElementTriggersPerPattern(Pattern* pt, Element* el, bool skipaddtoele
         pt->AddInternalTrigger(tg_start);
 
         Locate_Trigger(tg_start);
-        if(((el->type == El_Gennote) && ((Instance*)el)->instr->type == Instr_VSTPlugin)||
+        if(((el->type == El_GenNote) && ((Instance*)el)->instr->type == Instr_VSTPlugin)||
              (el->type == El_Mute)||
              (el->type == El_SlideNote)||
              (el->type == El_Slider)||
@@ -920,7 +920,7 @@ void Trigger::Activate()
         switch(el->type)
         {
             case El_Samplent:
-            case El_Gennote:
+            case El_GenNote:
                ((Instance*)el)->instr->ActivateTrigger(this);
                 break;
             case El_Command:
@@ -994,7 +994,7 @@ void Trigger::Deactivate()
         switch(el->type)
         {
             case El_Samplent:
-            case El_Gennote:
+            case El_GenNote:
                 if(((Instance*)el)->preview == true)
                 {
                     pslot->state = PState_Stopped;
@@ -1170,7 +1170,7 @@ void PreInitSamples(tframe frame, Pattern* pt, Event* firstev)
                 tg->activator)
             {
                 Samplent* sm = (Samplent*)tg->el;
-                tframe smend = tframe(tg->ev->frame + sm->frame_length);
+                tframe smend = (tframe)(tg->ev->frame + sm->frame_length);
                 if(tg->ev->frame < frame && smend > frame)
                 {
                     tg->Activate();
@@ -1323,22 +1323,7 @@ void ProcessTriggers(Event* queued_ev, Pattern* pt, bool deactonly = false)
                 }
                 else if(tg->el->type == El_Pattern)
                 {
-                    /*
-                    if(tg->activator == true)
-                    {
-                        if(tg->tworking == true)
-                        {
-                            DeactivateTriggerCommon(tg);
-                        }
-                        ActivateTriggerCommon(tg);
-                    }
-                    else
-                    {
-                        if(tg->tgact->tworking == true)
-                        {
-                            DeactivateTriggerCommon(tg->tgact);
-                        }
-                    }*/
+                    // Do nothing here
                 }
                 else if(tg->el->type == El_Mute ||
                         tg->el->type == El_Break ||
@@ -1375,7 +1360,7 @@ void ProcessTriggers(Event* queued_ev, Pattern* pt, bool deactonly = false)
 
 Playback::Playback()
 {
-    kooped = false;
+    looped = false;
     currFrame = 0;
     currTick = 0;
     rng_start_frame = rng_end_frame = 0;
@@ -1392,7 +1377,7 @@ Playback::Playback()
 
 Playback::Playback(Pattern* ppt)
 {
-    kooped = false;
+    looped = false;
     currFrame = 0;
     currTick = 0;
     rng_start_frame = rng_end_frame = 0;
@@ -1410,7 +1395,7 @@ Playback::Playback(Pattern* ppt)
 void Playback::SetPlayPatt(Pattern*    pPt)
 {
     playPatt = pPt;
-    RangesToPattern();
+    AlignRangeToPattern();
     UpdateQueuedEv();
 }
 
@@ -1475,7 +1460,7 @@ void Playback::UpdateQueuedEv()
         if(ev == NULL)
         {
             queued_ev = NULL;
-            if(kooped == false)
+            if(looped == false)
             {
                 ev_count_down = -1;
             }
@@ -1545,7 +1530,7 @@ void Playback::TickFrame(long nc, long dcount, long fpb)
     // Wrap if needed
     if(rng_end_frame > 0 && currFrame >= rng_end_frame)
     {
-        if(kooped == false)
+        if(looped == false)
         {
             queued_ev = NULL;
             ev_count_down = -1;
@@ -1575,14 +1560,14 @@ long Playback::Requeue(bool change)
     
     if(qev != NULL)
     {
-        if(kooped == true && (rng_end_frame - currFrame) < evcnt)
+        if(looped == true && (rng_end_frame - currFrame) < evcnt)
         {
             evcnt = rng_end_frame - currFrame;
         }
     }
     else
     {
-        if(kooped == true)
+        if(looped == true)
         {
             evcnt = rng_end_frame - currFrame;
         }
@@ -1650,7 +1635,7 @@ void Playback::SetRanges(long start, long end)
 
 void Playback::SetLooped(bool loop)
 {
-    kooped = loop;
+    looped = loop;
 }
 
 void Playback::SetCurrFrame(long frame)
@@ -1688,7 +1673,7 @@ void Playback::SetFrameToTick()
     UpdateQueuedEv();
 }
 
-void Playback::RangesToPattern()
+void Playback::AlignRangeToPattern()
 {
     if(playPatt != NULL)
     {
@@ -1702,7 +1687,7 @@ void Playback::RangesToPattern()
 
 void Playback::ResetLooped()
 {
-    kooped = false;
+    looped = false;
 }
 
 void Playback::SetActive()

@@ -632,7 +632,7 @@ public:
     void ConvertPatternType(Pattern* patt, PattType ptype);
 	void HandleTweak(Control* ct, int mouse_x, int mouse_y);
 	void InitMixer();
-    void InitBuffers(int num_frames);
+    void CleanBuffers(int num_frames);
     void Mix(int num_frames);
     Eff* AddVSTEffectByPath(const char* fullpath, MixChannel* mchan);
     Eff* AddEffectFromBrowser(FileData * fdi, MixChannel* mchan);

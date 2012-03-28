@@ -19,7 +19,7 @@
 #include "awful_cursorandmouse.h"
 
 extern void         OutsyncTriggers();
-extern void         ResetAllPlayback(bool resetmix);
+extern void         ResetProcessing(bool resetmix);
 extern void         Place_Note(Instrument *instr, int note, float vol, unsigned long start_frame, unsigned long end_frame);
 extern void         UpdatePerBaseFrame(Playback* pb);
 extern void         ProcessSymbols4Gennote(Trigger* tg, long curr_frame, float* freq_active, bool* skip_and_continue, bool* skip);
@@ -316,7 +316,7 @@ bool Render_Start()
 		}
 		else
 		{
-			pbMain->UpdateQueuedEv();
+			pbkMain->UpdateQueuedEv();
 			pRenderer->SetAudioLength(ullLastFrame);
 			pRenderer->Resume();
 		}
@@ -369,31 +369,31 @@ void StopRecording()
 
 void PlayMain()
 {
-    if(Playing == false)
+    if(Playing == false)  // Go playing
     {
         // "Playing selected"
-        if(pbMain->kooped == true)
+        if(pbkMain->looped == true)
         {
-            if(pbMain->currFrame < pbMain->rng_start_frame || pbMain->currFrame > pbMain->rng_end_frame)
+            if(pbkMain->currFrame < pbkMain->rng_start_frame || pbkMain->currFrame > pbkMain->rng_end_frame)
             {
-                pbMain->SetCurrFrame(pbMain->rng_start_frame);
-                UpdatePerBaseFrame(pbMain);
+                pbkMain->SetCurrFrame(pbkMain->rng_start_frame);
+                UpdatePerBaseFrame(pbkMain);
             }
         }
-        pbMain->UpdateQueuedEv();
-        pbMain->SetActive();
+        pbkMain->UpdateQueuedEv();
+        pbkMain->SetActive();
 		if(gAux->workPt->OrigPt->autopatt == false)
 		{
-            pbAux->SetInactive();
+            pbkAux->SetInactive();
         }
 
         // Seamless envelopes support
-        PreInitEnvelopes(pbMain->currFrame, field, field->first_ev, true);
-        PreInitSamples(pbMain->currFrame, field, field->first_ev);
+        PreInitEnvelopes(pbkMain->currFrame, field, field->first_ev, true);
+        PreInitSamples(pbkMain->currFrame, field, field->first_ev);
 
         Playing = true;
     }
-    else
+    else  // Pause playing
     {
         Playing = false;
         if(Recording == true)
@@ -402,16 +402,17 @@ void PlayMain()
         }
 
         MC->poso->stopTimer();
-        pbMain->SetInactive();
-        pbAux->SetInactive();
+        pbkMain->SetInactive();
+        pbkAux->SetInactive();
+
         // Align current frame to the last *seen* pos, not the last played.
-        pbMain->SetCurrFrame((long)pbMain->currFrame_tsync);
+        pbkMain->SetCurrFrame((long)pbkMain->currFrame_tsync);
 		if(gAux->workPt->OrigPt->autopatt == false)
 		{
-            pbAux->SetCurrFrame((long)pbAux->currFrame_tsync);
+            pbkAux->SetCurrFrame((long)pbkAux->currFrame_tsync);
         }
 
-        ResetAllPlayback(false);
+        ResetProcessing(false);
         ResetUnstableElements();
         CleanupAll();
     }
@@ -429,8 +430,8 @@ void StopMain(bool forceresetmix)
     {
         Playing = false;
         MC->poso->stopTimer();
-        pbMain->pactive = false;
-        pbMain->SetCurrFrame(0);
+        pbkMain->pactive = false;
+        pbkMain->SetCurrFrame(0);
         currPlayX = 0;
         currPlayX_f = 0;
 
@@ -440,7 +441,7 @@ void StopMain(bool forceresetmix)
         }
 
         Preview_StopAll();
-        ResetAllPlayback(resetmix);
+        ResetProcessing(resetmix);
         CleanupAll();
         UpdateTime(Loc_MainGrid);
         AuxPos2MainPos();
@@ -451,7 +452,7 @@ void StopMain(bool forceresetmix)
     }
 
     // Seamless envelopes support
-    PreInitEnvelopes(pbMain->currFrame, field, field->first_ev, true);
+    PreInitEnvelopes(pbkMain->currFrame, field, field->first_ev, true);
 }
 
 void ResetPlacedEnvelopes()
@@ -478,7 +479,7 @@ void ResetUnstableElements()
     while(tg != NULL)
     {
         tgnext = tg->act_next;
-        if(((tg->el->type == El_Gennote) && ((Instance*)tg->el)->instr->type == Instr_VSTPlugin)||
+        if(((tg->el->type == El_GenNote) && ((Instance*)tg->el)->instr->type == Instr_VSTPlugin)||
               tg->el->type == El_Mute ||
               tg->el->type == El_Vibrate ||
               tg->el->type == El_Slider ||
@@ -510,7 +511,7 @@ void OutsyncTriggers()
     }
 }
 
-void ResetAllPlayback(bool resetmix)
+void ResetProcessing(bool resetmix)
 {
     GlobalMute = true;
     if(resetmix)
@@ -569,7 +570,7 @@ void MidiToHost_AddNoteOn(Instrument* instr, int note, int vol)
             }
             else if(C.patt == field)
             {
-                C.SetPos(Frame2Tick(pbMain->currFrame), CLine);
+                C.SetPos(Frame2Tick(pbkMain->currFrame), CLine);
                 pt = CreateElement_Pattern(CTick, CTick + (float)ticks_per_beat, CLine, CLine, Patt_Pianoroll);
                 C.SetPattern(pt, Loc_MainGrid);
 
@@ -588,7 +589,7 @@ void MidiToHost_AddNoteOn(Instrument* instr, int note, int vol)
             {
                 // If this is a sample, then record it immediately, since it's released by itself, without
                 // waiting for user to release the key on MIDI keyboard
-                tframe frame1 = pbMain->currFrame - C.patt->StartFrame();
+                tframe frame1 = pbkMain->currFrame - C.patt->StartFrame();
                 Grid_PutInstanceSpecific(C.patt, 
                                          instr, 
                                          note + 1, 
@@ -622,7 +623,7 @@ void MidiToHost_AddNoteOn(Instrument* instr, int note, int vol)
     if(num != 0xFFFF)
     {
         PrevSlot[num].ii->loc_vol->SetNormalValue(notevol);
-        PrevSlot[num].start_frame = pbMain->currFrame;
+        PrevSlot[num].start_frame = pbkMain->currFrame;
     }
 
     //if(Recording)
@@ -701,15 +702,15 @@ void StopPlacedEnvelopes()
 
 void UpdatePerBaseFrame(Playback* pb)
 {
-    if(pb == pbMain)
+    if(pb == pbkMain)
     {
-        currPlayX_f = pbMain->currFrame/framesPerPixel;
+        currPlayX_f = pbkMain->currFrame/framesPerPixel;
         currPlayX = (int)currPlayX_f;
         AuxPos2MainPos();
     }
-    else if(pb == pbAux)
+    else if(pb == pbkAux)
     {
-        gAux->curr_play_x_f = (pbAux->currFrame - gAux->workPt->frame)/gAux->frames_per_pixel;
+        gAux->curr_play_x_f = (pbkAux->currFrame - gAux->workPt->frame)/gAux->frames_per_pixel;
         gAux->curr_play_x = (int)gAux->curr_play_x_f;
         MainPos2AuxPos();
     }
@@ -1347,7 +1348,7 @@ RNDR_StreamCode Render_Callback(void *sample_buff, unsigned long frameCount)
 
 void CommonAudioCallback(const void* inputBuffer, void* outputBuffer, unsigned long framesPerBuffer)
 {
-    WaitForSingleObject(hProcessMutex, INFINITE);
+    WaitForSingleObject(hAudioProcessMutex, INFINITE);
 
     // Cast data passed through stream to our structure.
     float          *out = (float*)outputBuffer;
@@ -1358,9 +1359,10 @@ void CommonAudioCallback(const void* inputBuffer, void* outputBuffer, unsigned l
 
     long baroffs = 0;
     long beatoffs = 0;
-    if(metronome && (Playing == true || gAux->playing == true))
+    // If metronome is enabled, check if we need to activate beat- or bar-sample
+    if(Metronome_ON && (Playing == true || gAux->playing == true))
     {
-        tframe frame = Playing == true ? pbMain->currFrame : pbAux->currFrame - pbAux->playPatt->StartFrame();
+        tframe frame = Playing == true ? pbkMain->currFrame : pbkAux->currFrame - pbkAux->playPatt->StartFrame();
         long fpbeat = long(frames_per_tick*ticks_per_beat);
         long fpbar = fpbeat*beats_per_bar;
         if(frame == 0 ||(frame/fpbar != (frame + fpb)/fpbar))
@@ -1375,8 +1377,8 @@ void CommonAudioCallback(const void* inputBuffer, void* outputBuffer, unsigned l
         }
     }
 
-    gAux->InitBuffers(fpb);
-    //mix->PreInitialize();
+    // Cleanup mixer buffers here
+    gAux->CleanBuffers(fpb);
 
     jassert(NumPrevs >= 0);
     //if(NumPrevs > 0)
@@ -1384,25 +1386,25 @@ void CommonAudioCallback(const void* inputBuffer, void* outputBuffer, unsigned l
         Preview_CheckStates(fpb);
     }
 
-    if(auxPatternSet != pbAux->playPatt)
+    if(auxPatternSet != pbkAux->playPatt)
     {
-        pbAux->SetPlayPatt(auxPatternSet);
+        pbkAux->SetPlayPatt(auxPatternSet);
         if(gAux->playing == true)
         {
-            pbAux->ResetPos();
-            UpdatePerBaseFrame(pbAux);
+            pbkAux->ResetPos();
+            UpdatePerBaseFrame(pbkAux);
         }
     }
 
     if(Playing == true)
     {
-        if(pbMain->tsync_block == false)
+        if(pbkMain->tsync_block == false)
             MC->poso->initTimer();
         UpdateTime(Loc_MainGrid);
     }
     else if(gAux->playing == true)
     {
-        if(pbAux->tsync_block == false)
+        if(pbkAux->tsync_block == false)
             MC->poso->initTimer();
         UpdateTime(Loc_SmallGrid);
     }
@@ -1414,11 +1416,11 @@ void CommonAudioCallback(const void* inputBuffer, void* outputBuffer, unsigned l
     framestotick = fpb;
     if(Playing == true)
     {
-        pbMain->GetSmallestCountDown(&framestotick);
+        pbkMain->GetSmallestCountDown(&framestotick);
     }
     else if(gAux->playing == true)
     {
-        pbAux->GetSmallestCountDown(&framestotick);
+        pbkAux->GetSmallestCountDown(&framestotick);
     }
     
     Playback* pb = first_active_playback;
@@ -1433,16 +1435,20 @@ void CommonAudioCallback(const void* inputBuffer, void* outputBuffer, unsigned l
     {
         curr_frame = framestotick;
         nextframestotick = fpb - nc - framestotick;
-        if(Playing == true)
+
+        // Playback can go either on Main field or on Aux field, but not on both
+        if(Playing == true)     // Main field is playing
         {
-            pbMain->TickFrame(nc, framestotick, fpb);
-            pbMain->GetSmallestCountDown(&nextframestotick);
-            if(!gAux->workPt->autopatt)
+            pbkMain->TickFrame(nc, framestotick, fpb);
+            pbkMain->GetSmallestCountDown(&nextframestotick);
+
+            // Synchronize current frame in Aux, if not editing autopattern
+            if(gAux->workPt->autopatt == false)
             {
-                pbAux->currFrame = pbMain->currFrame;
+                pbkAux->currFrame = pbkMain->currFrame;
             }
 
-            // Stop on last frame
+            // Stop on the last frame (disabled currently)
             //if(pbMain->currFrame >= lastFrame)
             //{
             //    const MessageManagerLock mmLock;
@@ -1450,20 +1456,21 @@ void CommonAudioCallback(const void* inputBuffer, void* outputBuffer, unsigned l
             //    MC->listen->CommonInputActions();
             //}
         }
-        else if(gAux->playing == true)
+        else if(gAux->playing == true)  // Aux field is playing
         {
-            pbAux->TickFrame(nc, framestotick, fpb);
-            pbAux->GetSmallestCountDown(&nextframestotick);
-            if(!gAux->workPt->autopatt)
+            pbkAux->TickFrame(nc, framestotick, fpb);
+            pbkAux->GetSmallestCountDown(&nextframestotick);
+
+            // Synchronize current frame in Main, if not editing autopattern
+            if(gAux->workPt->autopatt == false)
             {
-                pbMain->currFrame = pbAux->currFrame;
+                pbkMain->currFrame = pbkAux->currFrame;
             }
         }
 
         pb = first_active_playback;
         while(pb != NULL)
         {
-            //pbnext = pb->next;
             pb->TickFrame(nc, framestotick, fpb);
             if(pb->dworking == false)
                 DeactivatePlayback(pb);
@@ -1486,7 +1493,7 @@ void CommonAudioCallback(const void* inputBuffer, void* outputBuffer, unsigned l
         framestotick = nextframestotick;
     }
 
-    if(metronome && (Playing == true || gAux->playing == true))
+    if(Metronome_ON && (Playing == true || gAux->playing == true))
     {
         barsample->GenerateData(fpb - baroffs, baroffs);
         beatsample->GenerateData(fpb - beatoffs, beatoffs);
@@ -1532,26 +1539,20 @@ void CommonAudioCallback(const void* inputBuffer, void* outputBuffer, unsigned l
             tg = tg->act_next;
         }
 
-        // Force active playbacks also if full muting
-		if(MixMute)
-		{
-			pb = first_active_playback;
-			while(pb != NULL)
-			{
-				DeactivatePlayback(pb);
-				pb = pb->next;
-			}
-		}
-        GlobalMute = false;
-        if(!MixMute)
+        // Force deactivating active playbacks as well, if total muting
+        if(MixMute)
         {
-            //mix->FadeOutCells(fadenum, fpb);
+            pb = first_active_playback;
+            while(pb != NULL)
+            {
+                DeactivatePlayback(pb);
+                pb = pb->next;
+            }
         }
+        GlobalMute = false;
     }
 
     gAux->Mix(fpb);
-    //mix->MixCellsToMaster(fpb);
-    //mix->ProcessMasterCells(fpb);
 
     bool mutemixing = false;
     if(MixMute)
@@ -1622,9 +1623,6 @@ void CommonAudioCallback(const void* inputBuffer, void* outputBuffer, unsigned l
                     mAster.params->vol->SetLastVal(mAster.params->vol->outval);
                 }
             }
-            
-            //*out++ = mix->m_cell.in_buff[bc++]*vol*aaV;
-            //*out++ = mix->m_cell.in_buff[bc++]*vol*aaV;
 
             if(mAster.rampCounterV > 0)
             {
@@ -1652,31 +1650,12 @@ void CommonAudioCallback(const void* inputBuffer, void* outputBuffer, unsigned l
         {
             gAux->masterchan.p_vu->SetLR(lMax, rMax);
         }
-
-        //mix->m_cell.vol_slider->vu->SetLR(*(out - 2), *(out - 1));
-    }
-    else
-    {
-        /*
-        for(nc = 0; nc < fpb; nc++)
-        {
-            if(mvenv != NULL)
-            {
-                mix->m_cell.in_buff[bc] *= mvenv->buffov[nc];
-                mix->m_cell.in_buff[bc + 1] *= mvenv->buffov[nc];
-            }
-           *out++ = mix->m_cell.in_buff[bc++]*mAster.params->vol->outval + *in++;
-           *out++ = mix->m_cell.in_buff[bc++]*mAster.params->vol->outval + *in++;
-            CP->MVol->vu->SetLR(*(out - 2), *(out - 1));
-            mix->m_cell.vol_slider->vu->SetLR(*(out - 2), *(out - 1));
-        }
-        */
     }
 
     if(mutemixing)
         MixMute = false;
 
-    ReleaseMutex(hProcessMutex);
+    ReleaseMutex(hAudioProcessMutex);
 }
 
 /* This routine will be called by the PortAudio engine when audio is needed.

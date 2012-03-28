@@ -140,8 +140,8 @@ Instrument::~Instrument()
 
     MC->RemoveDrawArea(instr_drawarea);
 
-    if(this == InstrSolo)
-        InstrSolo = NULL;
+    if(this == Solo_Instr)
+        Solo_Instr = NULL;
 
     delete params;
     delete vu;
@@ -173,7 +173,7 @@ Instrument::~Instrument()
     //    MainWnd->DeleteChild(paramWin);
     }
 
-    uM->WipeInstrumentFromHistory(this);
+    undoMan->WipeInstrumentFromHistory(this);
 }
 
 void Instrument::QueueDeletion()
@@ -196,7 +196,7 @@ Instrument* Instrument::Clone()
     Instrument* instr = NULL;
     char nalias[MAX_ALIAS_STRING];
     GetOriginalInstrumentAlias(name, nalias);
-    LowerCase(nalias);
+    ToLowerCase(nalias);
     switch(type)
     {
         case Instr_Sample:
@@ -520,7 +520,7 @@ void Instrument::CreateAutoPattern()
     autoPatt->trkdata = autoPatt->field_trkdata = ptrk;
     autoPatt->der_first = autoPatt->der_last = autoPatt;
     autoPatt->folded = true;
-    autoPatt->pbk = pbAux;
+    autoPatt->pbk = pbkAux;
     autoPatt->Update();
 
     AddOriginalPattern(autoPatt);
@@ -647,7 +647,7 @@ void Instrument::PreProcessTrigger(Trigger* tg, bool* skip, bool* fill, long num
     // Check conditions for muting
     if(ii->instr->params->muted == true || 
        /* tg->trkdata->params->muted == true || !(TrkSolo == NULL || TrkSolo == tg->trkdata)|| */
-      !(InstrSolo == NULL || InstrSolo == ii->instr)||
+      !(Solo_Instr == NULL || Solo_Instr == ii->instr)||
        (fx1->t_mutecount > 0 || (fx2 != NULL && fx2->t_mutecount)))
     {
         // If note just begun then there's nothing to declick. Set aaFilledCount to full for immediate muting
@@ -1536,7 +1536,7 @@ void Instrument::Load(XmlElement * instrNode)
     params->solo = solo;
     if(solo)
     {
-        InstrSolo = this;
+        Solo_Instr = this;
     }
 
     /*
@@ -1581,10 +1581,7 @@ Sample::Sample(float* data, char* pth, char* nm, SF_INFO sfinfo)
     SetLoopPoints(0, long(info.frames - 1));
     UpdateNormFactor();
 
-    //solo->SetImages(NULL, img_solo1off_s);
-    //mute->SetImages(NULL, img_mute1off_s);
-    //pEditButton->SetImages(NULL, img_btwnd_s);
-
+    // Built-in delay for the sample
     //delay = new XDelay(NULL, NULL);
     //delay->scope.instr = this;
     //delayOn = new BoolParam(false);
@@ -1594,6 +1591,7 @@ Sample::Sample(float* data, char* pth, char* nm, SF_INFO sfinfo)
     VEnv->len = jmax(timelen, 2.f);
     VEnv->timebased = true;
 
+    // Add some default breakpoints to sample envelope
     VEnv->SetSustainPoint(VEnv->AddPoint(0.0f, 1.0f));
     //VEnv->AddPoint(0.3f, 0.5f);
     //VEnv->AddPoint(0.6f, 0.0f);
@@ -3231,66 +3229,6 @@ void Synth::ApplyDSP(Trigger* tg, long buffframe, long num_frames)
         tcf0++;
         tcf0++;
     }
-
-/*
-    if(f1work || f2work)
-    {
-        double inOutL;
-        double inOutR;
-        double f1freqnormval = filt1[0]->cutoff->val;
-        double f2freqnormval = filt2[0]->cutoff->val;
-        long ic = 0;
-        int fqc = 0;
-        for(int fc = 0; fc < num_frames; fc ++)
-        {
-            if(f1work)
-            {
-                if(fqc == 0)
-                    filt1[tg->voicenum]->dspCoreCFilter3.setCutoff((20.0*pow(1000.0, (double)f1freqnormval*flt1eV[buffframe + fc]*fltlfo1[buffframe + fc])));
-                inOutL = (double)fltbuff1[ic];
-                inOutR = (double)fltbuff1[ic + 1];
-                filt1[tg->voicenum]->dspCoreCFilter3.getSampleFrameStereo(&inOutL, &inOutR);
-                fltbuff1_out[ic] = (float)inOutL;
-                fltbuff1_out[ic + 1] = (float)inOutR;
-            }
-
-            if(f2work)
-            {
-                if(fqc == 0)
-                    filt2[tg->voicenum]->dspCoreCFilter3.setCutoff((20.0*pow(1000.0, (double)f2freqnormval*flt2eV[buffframe + fc]*fltlfo2[buffframe + fc])));
-                inOutL = (double)fltbuff2[ic];
-                inOutR = (double)fltbuff2[ic + 1];
-                filt2[tg->voicenum]->dspCoreCFilter3.getSampleFrameStereo(&inOutL, &inOutR);
-                fltbuff2_out[ic] = (float)inOutL;
-                fltbuff2_out[ic + 1] = (float)inOutR;
-            }
-            ic += 2;
-
-            fqc++;
-            if(fqc == 44)
-                fqc = 0;
-        }
-    }
-
-    tcf0 = 0;
-    tc0 = buffframe*2;
-    for(long cc = 0; cc < num_frames; cc++)
-    {
-        in_buff[tc0] = fltbuff1_out[tcf0];
-        in_buff[tc0 + 1] = fltbuff1_out[tcf0 + 1];
-
-        in_buff[tc0] += fltbuff2_out[tcf0];
-        in_buff[tc0 + 1] += fltbuff2_out[tcf0 + 1];
-
-        tc0++;
-        tc0++;
-
-        tcf0++;
-        tcf0++;
-    }
-*/
-
-    //memcpy(in_buff, out_buff, num_frames*(sizeof(float))*2);
 }
 
 void Synth::UpdateOsc1Mul()
@@ -3960,7 +3898,7 @@ void VSTGenerator::VSTProcess(long num_frames, long buffframe)
 void VSTGenerator::GenerateData(long num_frames, long mixbuffframe)
 {
     bool off;
-    if(params->muted == false && (InstrSolo == NULL || InstrSolo == this))
+    if(params->muted == false && (Solo_Instr == NULL || Solo_Instr == this))
     {
         off = false;
     }
@@ -3984,6 +3922,7 @@ void VSTGenerator::GenerateData(long num_frames, long mixbuffframe)
 
     memset(out_buff, 0, num_frames*sizeof(float)*2);
     memset(data_buff, 0, num_frames*sizeof(float)*2);
+
     if(envelopes == NULL)
     {
         VSTProcess(num_frames, 0);

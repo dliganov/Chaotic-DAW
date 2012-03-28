@@ -1895,18 +1895,18 @@ Posiator::Posiator(MainComponent* mc)
 
 void Posiator::initTimer(int interval)
 {
-    pbMain->currFrame_tsync = (long)pbMain->currFrame;
-    pbAux->currFrame_tsync = (long)pbAux->currFrame;
+    pbkMain->currFrame_tsync = (long)pbkMain->currFrame;
+    pbkAux->currFrame_tsync = (long)pbkAux->currFrame;
     add = int((double)interval/1000*fSampleRate);
     startTimer(interval);
 
     // Update playback cursor coordinate
-    currPlayX_f = pbMain->currFrame_tsync/framesPerPixel;
+    currPlayX_f = pbkMain->currFrame_tsync/framesPerPixel;
     //currPlayX_f = pbMain->currFrame/framesPerPixel;
     currPlayX = int(currPlayX_f);
     if(gAux->workPt != gAux->blankPt)
     {
-        gAux->curr_play_x_f = (pbAux->currFrame_tsync - gAux->workPt->frame)/gAux->frames_per_pixel;
+        gAux->curr_play_x_f = (pbkAux->currFrame_tsync - gAux->workPt->frame)/gAux->frames_per_pixel;
         //gAux->curr_play_x_f = (pbAux->currFrame - gAux->workPt->frame)/gAux->frames_per_pixel;
         gAux->curr_play_x = int(gAux->curr_play_x_f);
     }
@@ -1923,46 +1923,46 @@ void Posiator::timerCallback()
     {
         if(Playing)
         {
-            pbMain->currFrame_tsync += add;
-            if(pbMain->tsync_block && pbMain->currFrame_tsync > pbMain->rng_end_frame)
+            pbkMain->currFrame_tsync += add;
+            if(pbkMain->tsync_block && pbkMain->currFrame_tsync > pbkMain->rng_end_frame)
             {
-                pbMain->tsync_block = false;
-                pbMain->currFrame_tsync = pbMain->rng_start_frame;
+                pbkMain->tsync_block = false;
+                pbkMain->currFrame_tsync = pbkMain->rng_start_frame;
             }
 
             if(gAux->workPt != gAux->blankPt && gAux->workPt->autopatt == false)
             {
-                pbAux->currFrame_tsync = pbMain->currFrame_tsync;
+                pbkAux->currFrame_tsync = pbkMain->currFrame_tsync;
             }
         }
 
         if(gAux->playing)
         {
-            pbAux->currFrame_tsync += add;
-            if(pbAux->tsync_block && pbAux->currFrame_tsync > pbAux->rng_end_frame)
+            pbkAux->currFrame_tsync += add;
+            if(pbkAux->tsync_block && pbkAux->currFrame_tsync > pbkAux->rng_end_frame)
             {
-                pbAux->tsync_block = false;
-                pbAux->currFrame_tsync = pbAux->rng_start_frame;
+                pbkAux->tsync_block = false;
+                pbkAux->currFrame_tsync = pbkAux->rng_start_frame;
             }
 
             if(gAux->workPt->autopatt == false)
             {
-                pbMain->currFrame_tsync = pbAux->currFrame_tsync;
+                pbkMain->currFrame_tsync = pbkAux->currFrame_tsync;
             }
         }
 
         // Update playback cursor coordinate
-        currPlayX_f = pbMain->currFrame_tsync/framesPerPixel;
+        currPlayX_f = pbkMain->currFrame_tsync/framesPerPixel;
         //currPlayX_f = pbMain->currFrame/framesPerPixel;
         currPlayX = int(currPlayX_f);
         if(gAux->workPt != gAux->blankPt)
         {
-            gAux->curr_play_x_f = (pbAux->currFrame_tsync - gAux->workPt->frame)/gAux->frames_per_pixel;
+            gAux->curr_play_x_f = (pbkAux->currFrame_tsync - gAux->workPt->frame)/gAux->frames_per_pixel;
             //gAux->curr_play_x_f = (pbAux->currFrame - gAux->workPt->frame)/gAux->frames_per_pixel;
             gAux->curr_play_x = int(gAux->curr_play_x_f);
         }
 
-        float currtick = Frame2Tick(pbMain->currFrame_tsync);
+        float currtick = Frame2Tick(pbkMain->currFrame_tsync);
         if(followPos && !(M.mmode & MOUSE_CONTROLLING && M.LMB && M.active_ctrl == main_bar))
         {
             if((currtick < main_bar->offset) ||

@@ -176,7 +176,7 @@ extern ParamSet*            New_CustomTrackParams(int track_num);
 extern ParamSet*            Get_InstrPatternParams(Instrument* instr, Pattern* patt);
 extern ParamSet*            Get_InstrTrackParams(Instrument* instr, int track_num);
 extern inline float         MixPans(float src_pan, float dst_pan);
-extern void                 ResetAllPlayback(bool resetmix);
+extern void                 ResetProcessing(bool resetmix);
 extern void                 ProcessSymbols4Gennote(Trigger* tg, long curr_frame, float* freq_active, bool* skip_and_continue, bool* skip);
 extern void                 ProcessSymbols4Samplent(Trigger* tg, long curr_frame, float* freq_incr_active, bool* skip_and_continue, bool* skip);
 extern inline void          GetMonoSampleData(Sample* sample, double cursor_pos, float* dataLR);

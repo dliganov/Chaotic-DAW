@@ -509,7 +509,7 @@ void Cursor::ExitToSlidingMode(Element* parent, int note_num)
         curParam = NULL;
 
         if(parent != NULL && 
-           (parent->type == El_Gennote || parent->type == El_Samplent))
+           (parent->type == El_GenNote || parent->type == El_Samplent))
         {
             slideparent = (Instance*)parent;
         }
@@ -1526,7 +1526,7 @@ void Mouse::CheckGridElements(int mx, int my)
                     }
                     else*/ 
                     if(el->type == El_Pattern ||
-                       el->type == El_Gennote ||
+                       el->type == El_GenNote ||
                        el->type == El_Samplent ||
                        el->type == El_SlideNote ||
                        el->type == El_Mute ||
@@ -1792,11 +1792,11 @@ void Mouse::ClickActiveElement(int mx, int my, bool dbclick, unsigned flags)
 
         if(gAux->playing)
         {
-            ResetAllPlayback(false);
+            ResetProcessing(false);
             ResetUnstableElements();
         }
 
-		if(Loo_Active == true && M.looloc == Loc_SmallGrid)
+		if(Looping_Active == true && M.looloc == Loc_SmallGrid)
         {
             Looping_Reset();
         }

@@ -147,7 +147,7 @@ Parameter::~Parameter()
         FinishRecording();
     }
 
-    uM->WipeParameterFromHistory(this);
+    undoMan->WipeParameterFromHistory(this);
 }
 
 void Parameter::ResetToInitial()
@@ -222,7 +222,7 @@ void Parameter::HandleRecordingFromControl(float ctrlval)
             otherparam = otherparam->rec_next;
         }*/
         C.SetPattern(field, Loc_MainGrid);
-        C.SetPos(float(Frame2Tick(pbMain->currFrame_tsync)), cline);
+        C.SetPos(float(Frame2Tick(pbkMain->currFrame_tsync)), cline);
 
         cmdenv = CreateCommandFromParam(this);
 
@@ -232,7 +232,7 @@ void Parameter::HandleRecordingFromControl(float ctrlval)
         autoenv->folded = true;
         AddNewElement(cmdenv, true);
 
-        autoenv->SetLength(Frame2Tick(pbMain->currFrame_tsync) - cmdenv->start_tick);
+        autoenv->SetLength(Frame2Tick(pbkMain->currFrame_tsync) - cmdenv->start_tick);
 
         lastrecpnt = autoenv->p_last;
         C.RestoreState();

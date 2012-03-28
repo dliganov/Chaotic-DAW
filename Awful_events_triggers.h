@@ -137,7 +137,7 @@ public:
     Event*      queued_ev;
     Event*      first_ev;
     long        ev_count_down;
-    bool        kooped;
+    bool        looped;
     long        rng_start_frame;
     long        rng_end_frame;
     Pattern*    playPatt;
@@ -167,7 +167,7 @@ public:
     void SetCurrTick(double tick);
     void SetCurrFrameNOR(long frame);
     void SetFrameToTick();
-    void RangesToPattern();
+    void AlignRangeToPattern();
     bool IsAtStart();
     void ResetLooped();
     void ResetPos();

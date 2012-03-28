@@ -35,7 +35,8 @@ typedef struct Action
     Action*     next;
 }Action;
 
-class UndoManaga
+// We have our own native undo manager
+class UndoManagerC
 {
 public:
     Action* first_action;
@@ -45,7 +46,7 @@ public:
 
     bool    started;
 
-    UndoManaga();
+    UndoManagerC();
 
     void StartNewGroup();
     void Perform(Action* act);
