@@ -20,7 +20,7 @@ extern void     UpdateStepSequencers();
 
 Element::Element()
 {
-    if(C.patt == NULL || C.patt == field)
+    if(C.patt == NULL || C.patt == field_pattern)
     {
         patt = C.patt;
     }
@@ -38,7 +38,7 @@ Element::Element()
 
     if(C.patt != NULL)
     {
-        base = field;
+        base = field_pattern;
     }
     else
     {
@@ -283,7 +283,7 @@ bool Element::IsPointed(int mx, int my)
 {
     if(IsPresent() == true)
     {
-        if(M.loc == Loc_SmallGrid && auxvisible && patt == gAux->workPt->OrigPt)
+        if(M.loc == Loc_SmallGrid && auxvisible && patt == aux_panel->workPt->OrigPt)
         {
             if((mx >= abs_area.x1)&&(mx <= abs_area.x2)&&(my >= abs_area.y1)&&(my <= abs_area.y2))
             {
@@ -294,8 +294,8 @@ bool Element::IsPointed(int mx, int my)
                 return false;
             }
         }
-        else if(M.loc == Loc_MainGrid && visible && !(patt == gAux->workPt->OrigPt && gAux->auxmode == AuxMode_Pattern)
-                && base == field && patt->folded == false)
+        else if(M.loc == Loc_MainGrid && visible && !(patt == aux_panel->workPt->OrigPt && aux_panel->auxmode == AuxMode_Pattern)
+                && base == field_pattern && patt->folded == false)
         {
             if((mx >= abs_area.x1)&&(mx <= abs_area.x2)&&(my >= abs_area.y1)&&(my <= abs_area.y2))
             {
@@ -320,7 +320,7 @@ bool Element::CheckSelected()
     {
         if(M.selloc == Loc_MainGrid)
         {
-            if(patt == field) // && base == field)
+            if(patt == field_pattern) // && base == field)
             {
                 if(CheckPlaneCrossing(abs_area.x1 - GridX1, abs_area.y1 - GridY1, abs_area.x2 - GridX1, abs_area.y2 - GridY1, SelX1, SelY1, SelX2, SelY2))
                 {
@@ -342,7 +342,7 @@ bool Element::CheckSelected()
                 }
             }
         }
-    	else if(M.selloc == Loc_SmallGrid && patt == gAux->workPt->OrigPt)
+    	else if(M.selloc == Loc_SmallGrid && patt == aux_panel->workPt->OrigPt)
         {
             if(CheckPlaneCrossing(abs_area.x1 - GridXS1, abs_area.y1 - GridYS1, abs_area.x2 - GridXS1, abs_area.y2 - GridYS1, SelX1, SelY1, SelX2, SelY2))
             {
@@ -361,7 +361,7 @@ void Element::CheckVisibility()
 	visible = auxvisible = false;
 	if(trkdata != NULL && displayable == true)
 	{
-		if(patt == field)
+		if(patt == field_pattern)
 		{
     		if(patt->folded == false)
     		{
@@ -377,7 +377,7 @@ void Element::CheckVisibility()
 				}
     		}
 		}
-		else if(patt == gAux->workPt->OrigPt && gAux->auxmode == AuxMode_Pattern)
+		else if(patt == aux_panel->workPt->OrigPt && aux_panel->auxmode == AuxMode_Pattern)
 		{
 		    int x1, x2, y1, y2;
 		    if(patt->ptype == Patt_StepSeq)
@@ -410,35 +410,9 @@ void Element::Move(float dtick, int dtrack)
     float adtick = dtick;
     int adtrack = dtrack;
 
-	start_tick += dtick;
-	end_tick = start_tick + tick_length;
+    start_tick += dtick;
+    end_tick = start_tick + tick_length;
     track_line += dtrack;
-    //track_line = (GetTrkDataForLine(track_line, patt))->start_line;
-
-    // Adding/removing from/to pattern
-    /*
-    if(patt != Aux->workPt->OrigPt)
-    {
-        float abstick = patt->start_tick + start_tick;
-        int absline = patt->track_line + track_line;
-        Pattern* newpatt = CheckPosForPatterns(abstick, absline, base);
-        if(patt != newpatt)
-        {
-            if(patt != base)
-            {
-            	patt->RemoveElement(this);
-            }
-            if(newpatt != base)
-            {
-            	newpatt->AddElement(this);
-            }
-            patt = newpatt;
-            start_tick = abstick - newpatt->start_tick;
-            end_tick = start_tick + tick_length;
-            track_line = absline - newpatt->track_line;
-        }
-    }
-    */
 
     Update();
 }
@@ -454,19 +428,6 @@ int Element::Track()
         return trknum;
     }
 }
-
-/*
-int Element::EndTrack()
-{
-    if((patt != NULL)&&(patt != field))
-    {
-        return patt->StartTrack();
-    }
-    else
-    {
-        return end_track;
-    }
-}*/
 
 float Element::StartTick()
 {
@@ -539,7 +500,7 @@ long Element::StartFrame()
 
 long Element::EndFrame()
 {
-	if(patt == field)
+	if(patt == field_pattern)
 	{
 		return end_frame;
 	}
@@ -612,12 +573,12 @@ void Element::ForceResetTriggers()
         tg->wt_pos = 0;
         tg->signal = 1;
         tg->frame_phase = 0;
-        tg->tworking = false;
+        tg->tgworking = false;
         tg->globallisted = false;
         tg->tgsactive = false;
-        if(tg->ai != NULL && tg->ai->pbk != NULL)
+        if(tg->apatt_instance != NULL && tg->apatt_instance->pbk != NULL)
         {
-            tg->ai->pbk->dworking = false;
+            tg->apatt_instance->pbk->dworking = false;
         }
 
         tg = tg->el_next;
@@ -631,7 +592,7 @@ bool Element::IsPlaying()
     while(tg != NULL)
     {
         // Check per pattern triggers
-        if(tg->tworking == true || tg->globallisted == true)
+        if(tg->tgworking == true || tg->globallisted == true)
         {
             return true;
         }
@@ -641,7 +602,7 @@ bool Element::IsPlaying()
             tgs = tg->first_tgslide;
             while(tgs != NULL)
             {
-                if(tgs->tworking == true || tg->globallisted == true)
+                if(tgs->tgworking == true || tg->globallisted == true)
                 {
                     return true;
                 }
@@ -649,7 +610,7 @@ bool Element::IsPlaying()
             }
 
             // Check autoinstance if exists
-            if(tg->ai != NULL && tg->ai->IsPlaying() == true)
+            if(tg->apatt_instance != NULL && tg->apatt_instance->IsPlaying() == true)
             {
                 return true;
             }
@@ -699,7 +660,7 @@ void Element::GetRealCoordinates(Loc loc)
     else if(loc == Loc_SmallGrid)
     {
         x = s_StartTickX();
-        y = s_TrackLine2Y() - gAux->bottomincr;
+        y = s_TrackLine2Y() - aux_panel->bottomincr;
     }
     else if(loc == Loc_StaticGrid)
     {
@@ -733,7 +694,7 @@ void Element::DeactivateAllTriggers()
     Trigger* tg = tg_first;
     while(tg != NULL)
     {
-        if(tg->tworking)
+        if(tg->tgworking)
         {
             tg->Deactivate();
         }
@@ -822,9 +783,9 @@ void Element::MarkAsCopied()
 
 Loc Element::GetElemLoc()
 {
-    if(patt == field)
+    if(patt == field_pattern)
         return Loc_MainGrid;
-    else if(patt == gAux->workPt->OrigPt)
+    else if(patt == aux_panel->workPt->OrigPt)
         return Loc_SmallGrid;
     else
         return Loc_Other;
@@ -996,7 +957,7 @@ void Txt::ParseString()
             C.curElem = c;
         }
 */
-        else if(sym == Symbol_Bookmark && patt == field)
+        else if(sym == Symbol_Bookmark && patt == field_pattern)
         {
             bookmark = true;
         }
@@ -1007,7 +968,7 @@ void Txt::ParseString()
 
             if(instr != NULL)
             {
-                if(!(gAux->auxmode == AuxMode_Pattern && gAux->workPt->OrigPt->autopatt))
+                if(!(aux_panel->auxmode == AuxMode_Pattern && aux_panel->workPt->OrigPt->autopatt))
                 {
                     ChangeCurrentInstrument(instr);
                 }
@@ -1017,7 +978,7 @@ void Txt::ParseString()
 				C.curElem = CreateElement_Note(instr, true);
                 C.curElem->Activate();
             }
-            else if(patt == field)
+            else if(patt == field_pattern)
             {
                 Pattern* p = CheckStringForPatternName(buff);
                 if(p != NULL)
@@ -1780,7 +1741,7 @@ Gennote::Gennote(Instrument* instr)
     this->instr = instr;
 
     if(RememberLengths)
-        loc_len = new Len(instr->last_length, Len_Ticks);
+        loc_len = new Len(instr->last_note_length, Len_Ticks);
     else
         loc_len = new Len(ticks_per_beat, Len_Ticks);
 
@@ -1864,7 +1825,7 @@ Samplent::Samplent(Sample* smp)
     type = El_Samplent;
     instr = smp;
     sample = smp;
-    sample_frame_len = (long)sample->info.frames;
+    sample_frame_len = (long)sample->sample_info.frames;
     wave_visible = false;
     wave_height_pix = 60;
     revB = false;
@@ -1879,7 +1840,7 @@ Samplent::Samplent(Sample* smp)
     if(RememberLengths)
     {
         touchresized = sample->touchresized;
-        tick_length = sample->last_length;
+        tick_length = sample->last_note_length;
     }
     else
     {
@@ -1955,7 +1916,7 @@ void Samplent::Reset()
 
 void Samplent::ProcessChar(char character)
 {
-    if(patt == gAux->workPt && gAux->workPt->ptype == Patt_StepSeq)
+    if(patt == aux_panel->workPt && aux_panel->workPt->ptype == Patt_StepSeq)
     {
         ed_note->ProcessChar(character);
     }
@@ -2166,7 +2127,7 @@ bool Samplent::InitCursor(double* cursor)
        *cursor = smp_right_frame;
     }
 
-    if(patt->ranged && (patt != field)&&((frame + *cursor) >= patt->end_frame))
+    if(patt->ranged && (patt != field_pattern)&&((frame + *cursor) >= patt->end_frame))
     {
         return false;
     }
@@ -2275,7 +2236,7 @@ void Samplent::UpdateSampleBounds()
         {
     		long p_offs = 0;
     		long p_cut = 0;
-    		if((patt != NULL)&&(patt != field))
+    		if((patt != NULL)&&(patt != field_pattern))
     		{
     			if(frame < 0)
     			{
@@ -3345,7 +3306,7 @@ void Command::CheckVisibility()
         if(IsEnvelope())
         {
             Envelope* env = (Envelope*)paramedit;
-            if(base == field)
+            if(base == field_pattern)
             {
                 if(patt->folded == false)
                 {
@@ -3382,7 +3343,7 @@ void Command::CheckVisibility()
                 }
             }
 
-            if(patt == gAux->workPt->OrigPt && gAux->auxmode == AuxMode_Pattern)
+            if(patt == aux_panel->workPt->OrigPt && aux_panel->auxmode == AuxMode_Pattern)
             {
                 int x1 = s_StartTickX();
                 int x2 = s_EndTickX();
@@ -3525,7 +3486,7 @@ void Command::Load(XmlElement * xmlNode)
 				{
 					char indexstr[15];
 					xmlNode->getStringAttribute(T("CellIndex")).copyToBuffer(indexstr, 15);
-					MixChannel* mchan = gAux->GetMixChannelByIndexStr(indexstr);
+					MixChannel* mchan = aux_panel->GetMixChannelByIndexStr(indexstr);
 					if(mchan != NULL)
 					{
 						scope = &mchan->mc_main->scope;
@@ -4333,7 +4294,7 @@ Pattern* Pattern::Copy(bool add)
     copy->loc_vol->SetNormalValue(loc_vol->val);
     copy->loc_pan->SetNormalValue(loc_pan->val);
 
-    copy->patt = field;
+    copy->patt = field_pattern;
     copy->ptype = ptmain->ptype = ptype;
     copy->last_edited_param = copy->name;
     copy->ibound = ibound;
@@ -4660,13 +4621,13 @@ void Pattern::Move(float dtick, int dtrack)
 
     Update();
 
-    if(this == gAux->workPt)
+    if(this == aux_panel->workPt)
     {
         AuxPos2MainPos();
 
         pbkAux->AlignRangeToPattern();
         pbkAux->SetCurrFrame(pbkAux->currFrame += Tick2Frame(dtick));
-        if(gAux->playing)
+        if(aux_panel->playing)
         {
             MainPos2AuxPos();
         }
@@ -5101,9 +5062,9 @@ bool Pattern::IsPlaying()
     Trigger* tg = tg_internal_first;
     while(tg != NULL)
     {
-        if(tg->tworking == true || 
+        if(tg->tgworking == true || 
            tg->globallisted == true || 
-           (tg->ai != NULL && tg->ai->IsPlaying() == true))
+           (tg->apatt_instance != NULL && tg->apatt_instance->IsPlaying() == true))
         {
             return true;
         }
@@ -6094,7 +6055,7 @@ void UpdateStepSeqPatt(Pattern* pt)
     if(pt->ptype == Patt_StepSeq)
     {
         // Define instrument for tracks
-        gAux->PopulatePatternWithInstruments(pt->OrigPt);
+        aux_panel->PopulatePatternWithInstruments(pt->OrigPt);
 
         // Update instances
         Instance* ii;
@@ -6173,7 +6134,7 @@ void UpdateStepSequencers()
         el = el->next;
     }
 
-    UpdateStepSeqPatt(gAux->blankPt);
+    UpdateStepSeqPatt(aux_panel->blankPt);
 }
 
 void CloneSlideNotes(Instance* src, Instance* dst, bool select)

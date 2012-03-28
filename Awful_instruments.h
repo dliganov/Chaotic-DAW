@@ -27,40 +27,46 @@ class Instrument: public ParamModule
 public:
     InstrType   type;
 
-    int         x;
-    int         y;
-    int         width;
-    int         height;
+    // Basic parameters set (volume, panning, etc)
+    ParamSet*   params;
 
-    Image*      alimg;
-    TString*    alias;
-    int         awidth;
-    Toggle*     fold;
+    // Graphic controls and other GUI stuff for instrument
     bool        folded;
-    Toggle*     layout;
-    bool        layout_visible;
-    Toggle*     window;
-    bool        window_visible;
+    Toggle*     fold_toggle;
+
+    // GUI button
+    ButtFix*    pEditorButton;
+
+    // Basic parameters controls
     SliderHVol* mvol;
     SliderHPan* mpan;
     Toggle*     mute;
     Toggle*     solo;
-    Butt*       autopt;
-    DigitStr*   dfxstr;
-    ButtFix*    pEditButton;
 
-    ParamSet*   params;
-    int         num;
-    int         index;
-    Mixcell*    fxcell;
-    MixChannel* fxchan;
-    Trk*        ptrk;
-    Pattern*    autoPatt;
-    Instance*   prevInst;
-    bool        zisible;
+    // FX two-digit string
+    DigitStr*   dfxstr;
+
+    // Text alias
+    TString*    alias;
+    Image*      alias_image;
+
+    // VU-meters
     VU*         vu;
     VU*         stepvu;
+
+    // Target mix-channel
+    MixChannel* fx_channel;
+    Trk*        ptrk;
+
+    // Auto-pattern
+    Pattern*    autoPatt;
+
+    // Note instance for instrument preview (pre-listen)
+    Instance*   prevInst;
+
     DrawArea*   instr_drawarea;
+
+
     float       data_buff[MAX_BUFF_SIZE*2];     // Initial data
     float       data_buff2[MAX_BUFF_SIZE*2];
     float       data_buff3[MAX_BUFF_SIZE*2];
@@ -69,21 +75,30 @@ public:
     float       aux_buff[MAX_BUFF_SIZE*2];      // Additional mix stuff
     bool        buff2;
     bool        buff3;
-    Command*    VLocEnv;
-    Command*    PLocEnv;
-    Envelope*   VEnv;
-    Envelope*   PEnv;
-    float       last_length;
+
+    // Volume and panning envelopes (common for the whole instrument)
+    Envelope*   envVol;
+    Envelope*   envPan;
+
+    // Remember last parameters for the notes of this instrument
+    float       last_note_length;
     float       last_vol;
     float       last_pan;
-    Instrument* prev;
-    Instrument* next;
-    Instrument* del_prev;
-    Instrument* del_next;
+
+    // Queues
+    // Note triggers queue
     Trigger*    tg_first;
     Trigger*    tg_last;
+
+    // List of all instruments
+    Instrument* prev;
+    Instrument* next;
+
+    // List of all instruments queued to be deleted
+    Instrument* del_prev;
+    Instrument* del_next;
+
     bool        dereferenced;
-    bool        env_update;
 
     int         rampCount;
 
@@ -138,7 +153,6 @@ public:
     virtual void Disable();
     virtual void Enable();
     virtual void CreateAutoPattern();
-    void SpreadAutoPatterns();
     void DereferencePattern(Pattern* pt);
     bool DereferenceElements();
     void EnqueueParamEnvelopeTrigger(Trigger* tg);
@@ -157,18 +171,26 @@ class Sample : public Instrument
 {
 public:
 
-    SF_INFO     info;
+    // Basic sample data
+    SF_INFO     sample_info;
+    float*      sample_data;
+    float       timelen;
+
     float       rateUp;
     float       rateDown;
-    float*      sample_data;
+
+    // Normalizing related
     bool        normalized;
+    float       norm_factor;
+
+    // Looping related
     LoopType    looptype;
     long        lp_start;
     long        lp_end;
-    float       norm_factor;
-    float       timelen;
+
     bool        touchresized;
 
+    // Additional effects and parameters
     BoolParam*  delayOn;
     XDelay*     delay;
 
@@ -179,7 +201,7 @@ public:
     void ShowWindow();
     void CloseWindow();
     virtual bool CheckBounds(Samplent* samplent, Trigger* tg, long num_frames);
-    void UpdateNormFactor();
+    void UpdateNormalizeFactor();
     void ToggleNormalize();
     void ApplyDSP(Trigger* tg, long buffframe, long num_frames);
     void SetLoopEnd(long end);

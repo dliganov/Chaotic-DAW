@@ -382,14 +382,14 @@ void PlayMain()
         }
         pbkMain->UpdateQueuedEv();
         pbkMain->SetActive();
-		if(gAux->workPt->OrigPt->autopatt == false)
+		if(aux_panel->workPt->OrigPt->autopatt == false)
 		{
             pbkAux->SetInactive();
         }
 
         // Seamless envelopes support
-        PreInitEnvelopes(pbkMain->currFrame, field, field->first_ev, true);
-        PreInitSamples(pbkMain->currFrame, field, field->first_ev);
+        PreInitEnvelopes(pbkMain->currFrame, field_pattern, field_pattern->first_ev, true);
+        PreInitSamples(pbkMain->currFrame, field_pattern, field_pattern->first_ev);
 
         Playing = true;
     }
@@ -407,7 +407,7 @@ void PlayMain()
 
         // Align current frame to the last *seen* pos, not the last played.
         pbkMain->SetCurrFrame((long)pbkMain->currFrame_tsync);
-		if(gAux->workPt->OrigPt->autopatt == false)
+		if(aux_panel->workPt->OrigPt->autopatt == false)
 		{
             pbkAux->SetCurrFrame((long)pbkAux->currFrame_tsync);
         }
@@ -421,12 +421,12 @@ void PlayMain()
 void StopMain(bool forceresetmix)
 {
     bool resetmix = forceresetmix;
-    if(resetmix == false && Playing == false && gAux->playing == false)
+    if(resetmix == false && Playing == false && aux_panel->playing == false)
     {
         resetmix = true;
     }
 
-    if(Playing == true || !gAux->isPlaying())
+    if(Playing == true || !aux_panel->isPlaying())
     {
         Playing = false;
         MC->poso->stopTimer();
@@ -446,13 +446,13 @@ void StopMain(bool forceresetmix)
         UpdateTime(Loc_MainGrid);
         AuxPos2MainPos();
     }
-    else if(gAux->playing == true)
+    else if(aux_panel->playing == true)
     {
-        gAux->Stop();
+        aux_panel->Stop();
     }
 
     // Seamless envelopes support
-    PreInitEnvelopes(pbkMain->currFrame, field, field->first_ev, true);
+    PreInitEnvelopes(pbkMain->currFrame, field_pattern, field_pattern->first_ev, true);
 }
 
 void ResetPlacedEnvelopes()
@@ -517,7 +517,7 @@ void ResetProcessing(bool resetmix)
     if(resetmix)
     {
         MixMute = true;
-		field->Reset();
+		field_pattern->Reset();
 		Trk* trk = first_trkdata;
 		while(trk != NULL)
 		{
@@ -545,7 +545,7 @@ void ResetProcessing(bool resetmix)
 
 void Place_Note(Instrument *instr, int note, float vol, unsigned long start_frame, unsigned long end_frame)
 {
-    gAux->PlaceNote(instr, note, vol, start_frame, end_frame);
+    aux_panel->PlaceNote(instr, note, vol, start_frame, end_frame);
 }
 
 void MidiToHost_AddNoteOn(Instrument* instr, int note, int vol)
@@ -562,13 +562,13 @@ void MidiToHost_AddNoteOn(Instrument* instr, int note, int vol)
     {
         if(Playing)
         {
-            pt = field;
-            if(!gAux->isBlank())
+            pt = field_pattern;
+            if(!aux_panel->isBlank())
             {
-                pt = gAux->workPt;
+                pt = aux_panel->workPt;
                 C.SetPattern(pt, Loc_MainGrid);
             }
-            else if(C.patt == field)
+            else if(C.patt == field_pattern)
             {
                 C.SetPos(Frame2Tick(pbkMain->currFrame), CLine);
                 pt = CreateElement_Pattern(CTick, CTick + (float)ticks_per_beat, CLine, CLine, Patt_Pianoroll);
@@ -606,13 +606,13 @@ void MidiToHost_AddNoteOn(Instrument* instr, int note, int vol)
                 //MC->listen->CommonInputActions();
             }
         }
-        else if(gAux->playing)
+        else if(aux_panel->playing)
         {
-            if(gAux->isBlank())
+            if(aux_panel->isBlank())
             {
-                gAux->CreateNew();
+                aux_panel->CreateNew();
             }
-            pt = gAux->workPt;
+            pt = aux_panel->workPt;
         }
     }
 
@@ -710,8 +710,8 @@ void UpdatePerBaseFrame(Playback* pb)
     }
     else if(pb == pbkAux)
     {
-        gAux->curr_play_x_f = (pbkAux->currFrame - gAux->workPt->frame)/gAux->frames_per_pixel;
-        gAux->curr_play_x = (int)gAux->curr_play_x_f;
+        aux_panel->curr_play_x_f = (pbkAux->currFrame - aux_panel->workPt->frame)/aux_panel->frames_per_pixel;
+        aux_panel->curr_play_x = (int)aux_panel->curr_play_x_f;
         MainPos2AuxPos();
     }
 }
@@ -795,7 +795,7 @@ INLINE void GetMonoSampleData(Sample* sample, double cursor_pos, float* dataLR)
     float y2;
     float  Y[6];
 
-    if((int)x2 == sample->info.frames)
+    if((int)x2 == sample->sample_info.frames)
     {
         y2 = 0;
     }
@@ -829,8 +829,8 @@ INLINE void GetMonoSampleData(Sample* sample, double cursor_pos, float* dataLR)
                 float dX = (float)cursor_pos - x1;
                 float xm1 = x1 > 0 ? sample->sample_data[(int)(x1-1)] : 0;
                 float _x0  = sample->sample_data[(int)x1];
-                float _x1  = (x1+1) <= (sample->info.frames -1) ? sample->sample_data[(int)(x1 + 1)] : sample->sample_data[(int)x1];
-                float _x2  = (x1+2) <= (sample->info.frames -1) ? sample->sample_data[(int)(x1 + 2)] : sample->sample_data[(int)x1];
+                float _x1  = (x1+1) <= (sample->sample_info.frames -1) ? sample->sample_data[(int)(x1 + 1)] : sample->sample_data[(int)x1];
+                float _x2  = (x1+2) <= (sample->sample_info.frames -1) ? sample->sample_data[(int)(x1 + 2)] : sample->sample_data[(int)x1];
 //                float a = (3 * (_x0-_x1) - xm1 + _x2) / 2;
 //                float b = 2*_x1 + xm1 - (5*_x0 + _x2) / 2;
 //                float c = (_x1 - xm1) / 2;
@@ -847,7 +847,7 @@ INLINE void GetMonoSampleData(Sample* sample, double cursor_pos, float* dataLR)
 
                 for (i = 0; i<6;++i)
                 {
-                    if ((pX + i)< (sample->info.frames -1))
+                    if ((pX + i)< (sample->sample_info.frames -1))
                     {
                         Y[i] = sample->sample_data[(int)pX+i];
                     }
@@ -881,7 +881,7 @@ INLINE void GetMonoSampleData(Sample* sample, double cursor_pos, float* dataLR)
 
                 for (unsigned int i = 0; i < num; ++i)
                 {
-                    if (((uiLBorder + i) >= 0) && ((uiLBorder + i) < sample->info.frames))
+                    if (((uiLBorder + i) >= 0) && ((uiLBorder + i) < sample->sample_info.frames))
                     {
                         Yi[i] = sample->sample_data[(int)(uiLBorder + i)];
                     }
@@ -924,7 +924,7 @@ INLINE void GeStereoSampleData(Sample* sample, double cursor_pos, float* dataL, 
 
     y1 = sample->sample_data[(int)x1*2];
 
-    if((int)x2 >= sample->info.frames)
+    if((int)x2 >= sample->sample_info.frames)
     {
         y2 = 0;
     }
@@ -957,8 +957,8 @@ INLINE void GeStereoSampleData(Sample* sample, double cursor_pos, float* dataL, 
                 float dX = (float)(cursor_pos - x1);
                 float xm1 = x1 > 0 ? sample->sample_data[(int)(x1-1)*2] : 0;
                 float _x0  = sample->sample_data[(int)x1*2];
-                float _x1  = (x1+1) <= (sample->info.frames -1) ? sample->sample_data[(int)(x1 + 1)*2] : sample->sample_data[(int)x1*2];
-                float _x2  = (x1+2) <= (sample->info.frames -1) ? sample->sample_data[(int)(x1 + 2)*2] : sample->sample_data[(int)x1*2];
+                float _x1  = (x1+1) <= (sample->sample_info.frames -1) ? sample->sample_data[(int)(x1 + 1)*2] : sample->sample_data[(int)x1*2];
+                float _x2  = (x1+2) <= (sample->sample_info.frames -1) ? sample->sample_data[(int)(x1 + 2)*2] : sample->sample_data[(int)x1*2];
 //                float a = (3 * (_x0-_x1) - xm1 + _x2) / 2;
 //                float b = 2*_x1 + xm1 - (5*_x0 + _x2) / 2;
 //                float c = (_x1 - xm1) / 2;
@@ -976,7 +976,7 @@ INLINE void GeStereoSampleData(Sample* sample, double cursor_pos, float* dataL, 
 
                 for (i = 0; i<6;++i)
                 {
-                    if ((pX + i) < (sample->info.frames -1))
+                    if ((pX + i) < (sample->sample_info.frames -1))
                     {
                         Y[i] = sample->sample_data[(int)(pX+i)*2];
                     }
@@ -1010,7 +1010,7 @@ INLINE void GeStereoSampleData(Sample* sample, double cursor_pos, float* dataL, 
 
                 for (unsigned int i = 0; i<num; ++i)
                 {
-                    if (((uiLBorder + i) >= 0) && ((uiLBorder + i) < sample->info.frames))
+                    if (((uiLBorder + i) >= 0) && ((uiLBorder + i) < sample->sample_info.frames))
                     {
                         Yi[i] = sample->sample_data[(int)(uiLBorder + i)*2];
                     }
@@ -1033,7 +1033,7 @@ INLINE void GeStereoSampleData(Sample* sample, double cursor_pos, float* dataL, 
     // process right
     y1 = sample->sample_data[(int)x1*2 + 1];
 
-    if(((int)x2 + 1) >= sample->info.frames)
+    if(((int)x2 + 1) >= sample->sample_info.frames)
     {
         y2 = 0;
     }
@@ -1066,8 +1066,8 @@ INLINE void GeStereoSampleData(Sample* sample, double cursor_pos, float* dataL, 
                 float dX = (float)(cursor_pos - x1);
                 float xm1 = x1 > 0 ? sample->sample_data[(int)(x1-1)*2 + 1] : 0;
                 float _x0  = sample->sample_data[(int)x1*2 + 1];
-                float _x1  = (x1+1) <= (sample->info.frames -1) ? sample->sample_data[(int)(x1 + 1)*2 + 1] : sample->sample_data[(int)x1*2 + 1];
-                float _x2  = (x1+2) <= (sample->info.frames -1) ? sample->sample_data[(int)(x1 + 2)*2 + 1] : sample->sample_data[(int)x1*2 + 1];
+                float _x1  = (x1+1) <= (sample->sample_info.frames -1) ? sample->sample_data[(int)(x1 + 1)*2 + 1] : sample->sample_data[(int)x1*2 + 1];
+                float _x2  = (x1+2) <= (sample->sample_info.frames -1) ? sample->sample_data[(int)(x1 + 2)*2 + 1] : sample->sample_data[(int)x1*2 + 1];
 //                float a = (3 * (_x0-_x1) - xm1 + _x2) / 2;
 //                float b = 2*_x1 + xm1 - (5*_x0 + _x2) / 2;
 //                float c = (_x1 - xm1) / 2;
@@ -1085,7 +1085,7 @@ INLINE void GeStereoSampleData(Sample* sample, double cursor_pos, float* dataL, 
 
                 for (i = 0; i<6;++i)
                 {
-                    if ((pX + i) < (sample->info.frames -1))
+                    if ((pX + i) < (sample->sample_info.frames -1))
                     {
                         Y[i] = sample->sample_data[(int)(pX+i)*2 + 1];
                     }
@@ -1119,7 +1119,7 @@ INLINE void GeStereoSampleData(Sample* sample, double cursor_pos, float* dataL, 
 
                 for (unsigned int i = 0; i<num; ++i)
                 {
-                    if (((uiLBorder + i) >= 0) && ((uiLBorder + i) < sample->info.frames))
+                    if (((uiLBorder + i) >= 0) && ((uiLBorder + i) < sample->sample_info.frames))
                     {
                         Yi[i] = sample->sample_data[(int)(uiLBorder + i)*2 + 1];
                     }
@@ -1360,7 +1360,7 @@ void CommonAudioCallback(const void* inputBuffer, void* outputBuffer, unsigned l
     long baroffs = 0;
     long beatoffs = 0;
     // If metronome is enabled, check if we need to activate beat- or bar-sample
-    if(Metronome_ON && (Playing == true || gAux->playing == true))
+    if(Metronome_ON && (Playing == true || aux_panel->playing == true))
     {
         tframe frame = Playing == true ? pbkMain->currFrame : pbkAux->currFrame - pbkAux->playPatt->StartFrame();
         long fpbeat = long(frames_per_tick*ticks_per_beat);
@@ -1378,7 +1378,7 @@ void CommonAudioCallback(const void* inputBuffer, void* outputBuffer, unsigned l
     }
 
     // Cleanup mixer buffers here
-    gAux->CleanBuffers(fpb);
+    aux_panel->CleanBuffers(fpb);
 
     jassert(NumPrevs >= 0);
     //if(NumPrevs > 0)
@@ -1386,10 +1386,10 @@ void CommonAudioCallback(const void* inputBuffer, void* outputBuffer, unsigned l
         Preview_CheckStates(fpb);
     }
 
-    if(auxPatternSet != pbkAux->playPatt)
+    if(aux_Pattern != pbkAux->playPatt)
     {
-        pbkAux->SetPlayPatt(auxPatternSet);
-        if(gAux->playing == true)
+        pbkAux->SetPlayPatt(aux_Pattern);
+        if(aux_panel->playing == true)
         {
             pbkAux->ResetPos();
             UpdatePerBaseFrame(pbkAux);
@@ -1402,7 +1402,7 @@ void CommonAudioCallback(const void* inputBuffer, void* outputBuffer, unsigned l
             MC->poso->initTimer();
         UpdateTime(Loc_MainGrid);
     }
-    else if(gAux->playing == true)
+    else if(aux_panel->playing == true)
     {
         if(pbkAux->tsync_block == false)
             MC->poso->initTimer();
@@ -1418,7 +1418,7 @@ void CommonAudioCallback(const void* inputBuffer, void* outputBuffer, unsigned l
     {
         pbkMain->GetSmallestCountDown(&framestotick);
     }
-    else if(gAux->playing == true)
+    else if(aux_panel->playing == true)
     {
         pbkAux->GetSmallestCountDown(&framestotick);
     }
@@ -1443,7 +1443,7 @@ void CommonAudioCallback(const void* inputBuffer, void* outputBuffer, unsigned l
             pbkMain->GetSmallestCountDown(&nextframestotick);
 
             // Synchronize current frame in Aux, if not editing autopattern
-            if(gAux->workPt->autopatt == false)
+            if(aux_panel->workPt->autopatt == false)
             {
                 pbkAux->currFrame = pbkMain->currFrame;
             }
@@ -1456,13 +1456,13 @@ void CommonAudioCallback(const void* inputBuffer, void* outputBuffer, unsigned l
             //    MC->listen->CommonInputActions();
             //}
         }
-        else if(gAux->playing == true)  // Aux field is playing
+        else if(aux_panel->playing == true)  // Aux field is playing
         {
             pbkAux->TickFrame(nc, framestotick, fpb);
             pbkAux->GetSmallestCountDown(&nextframestotick);
 
             // Synchronize current frame in Main, if not editing autopattern
-            if(gAux->workPt->autopatt == false)
+            if(aux_panel->workPt->autopatt == false)
             {
                 pbkMain->currFrame = pbkAux->currFrame;
             }
@@ -1493,7 +1493,7 @@ void CommonAudioCallback(const void* inputBuffer, void* outputBuffer, unsigned l
         framestotick = nextframestotick;
     }
 
-    if(Metronome_ON && (Playing == true || gAux->playing == true))
+    if(Metronome_ON && (Playing == true || aux_panel->playing == true))
     {
         barsample->GenerateData(fpb - baroffs, baroffs);
         beatsample->GenerateData(fpb - beatoffs, beatoffs);
@@ -1552,7 +1552,7 @@ void CommonAudioCallback(const void* inputBuffer, void* outputBuffer, unsigned l
         GlobalMute = false;
     }
 
-    gAux->Mix(fpb);
+    aux_panel->Mix(fpb);
 
     bool mutemixing = false;
     if(MixMute)
@@ -1633,8 +1633,8 @@ void CommonAudioCallback(const void* inputBuffer, void* outputBuffer, unsigned l
                     mAster.params->vol->SetLastVal(mAster.params->vol->outval);
                 }
             }
-            outL = gAux->masterchan.in_buff[bc++]*vol;
-            outR = gAux->masterchan.in_buff[bc++]*vol;
+            outL = aux_panel->masterchan.in_buff[bc++]*vol;
+            outR = aux_panel->masterchan.in_buff[bc++]*vol;
 
             if(outL > lMax)
                 lMax = outL;
@@ -1646,9 +1646,9 @@ void CommonAudioCallback(const void* inputBuffer, void* outputBuffer, unsigned l
         }
 
         CP->MVol->vu->SetLR(lMax, rMax);
-        if(gAux->masterchan.p_vu->drawarea->isEnabled())
+        if(aux_panel->masterchan.p_vu->drawarea->isEnabled())
         {
-            gAux->masterchan.p_vu->SetLR(lMax, rMax);
+            aux_panel->masterchan.p_vu->SetLR(lMax, rMax);
         }
     }
 

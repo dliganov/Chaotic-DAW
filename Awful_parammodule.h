@@ -38,6 +38,15 @@ public:
 
     Scope       scope;
 
+    int         x;
+    int         y;
+    int         width;
+    int         height;
+
+    bool        visible;
+
+    int         index;
+
     PluginCommonWindow* wnd; // Internal reference to the window, to delete it first
 
     ParamWindow* paramWnd;

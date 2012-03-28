@@ -217,25 +217,25 @@ bool AwfulWindow::keyStateChanged(bool isKeyDown)
         {
             if(KeyPress::isKeyCurrentlyDown(PrevSlot[ic].key) == false)
             {
-                if((PrevSlot[ic].state == PState_Playing && PrevSlot[ic].trig.tgstate == TgState_Sustain))
+                if((PrevSlot[ic].state == PState_Playing && PrevSlot[ic].trigger.tgstate == TgState_Sustain))
                 {
-                    PrevSlot[ic].trig.Release();
-    			}
+                    PrevSlot[ic].trigger.Release();
+                }
                 else if(PrevSlot[ic].state == PState_Ready)
                 {
                     PrevSlot[ic].state = PState_Stopped;
                 }
 
-				if(PrevSlot[ic].keybound_pianokey == true)
-				{
-					PrevSlot[ic].keybound_pianokey = false;
-				}
+                if(PrevSlot[ic].keybound_pianokey == true)
+                {
+                    PrevSlot[ic].keybound_pianokey = false;
+                }
                 PrevSlot[ic].key = -1;
             }
         }
     }
 
-    if(gAux->auxmode == AuxMode_Pattern && gAux->workPt->ptype == Patt_Pianoroll)
+    if(aux_panel->auxmode == AuxMode_Pattern && aux_panel->workPt->ptype == Patt_Pianoroll)
     {
 	    R(Refresh_PianoKeys);
 	    MC->listen->CheckAndRedraw();
@@ -286,7 +286,7 @@ void AwfulWindow::ToFront()
     }
 
 	// Refresh mixer highlights as they will gone after focus regain
-	if(gAux != NULL && gAux->auxmode == AuxMode_Mixer)
+	if(aux_panel != NULL && aux_panel->auxmode == AuxMode_Mixer)
 	{
 		R(Refresh_AuxHighlights);
 		MC->listen->CommonInputActions();
@@ -536,7 +536,7 @@ void PluginCommonWindow::closeButtonPressed()
 {
     if(scope->instr != NULL)
     {
-        scope->instr->pEditButton->Release();
+        scope->instr->pEditorButton->Release();
         scope->instr->instr_drawarea->Change();
     }
     ChildWindow::closeButtonPressed();
@@ -742,7 +742,7 @@ HotKeysComponent::HotKeysComponent()
     PlaceBigLabel("'{' = Place bookmark", 
                     x1, y1 + 12 + 12 + 12 + 12 + 12 + 12 + 12 + 12 + 12 + 12 + 12 + 12 + 12 + 12 + 12 + 12 + 12 + 12 + 12 + 12 + 12 + 12 + 12 + 12, clr);
 
-    PlaceBigLabel("Space = Start/stop playback on the main field", 
+    PlaceBigLabel("Space = Start/stop playback on the main field_pattern", 
                     x1, y1 + 12 + 12 + 12 + 12 + 12 + 12 + 12 + 12 + 12 + 12 + 12 + 12 + 12 + 12 + 12 + 12 + 12 + 12 + 12 + 12 + 12 + 12 + 12 + 12 + 12 + 12, clr);
     PlaceBigLabel("Esc = Switch note mode ON/OFF", 
                     x1, y1 + 12 + 12 + 12 + 12 + 12 + 12 + 12 + 12 + 12 + 12 + 12 + 12 + 12 + 12 + 12 + 12 + 12 + 12 + 12 + 12 + 12 + 12 + 12 + 12 + 12 + 12 + 12, clr);
@@ -3098,7 +3098,7 @@ void SampleWindow::closeButtonPressed()
 {
     if(sample != NULL)
     {
-        sample->pEditButton->Release();
+        sample->pEditorButton->Release();
         sample->instr_drawarea->Change();
     }
     ChildWindow::closeButtonPressed();
@@ -3305,8 +3305,8 @@ void SampleComponent::SetSample(Sample* smp)
             tgSustain->setVisible(true);
         }
 
-        env->setEnvelope(smp->VEnv);
-        tgSustain->setToggleState(smp->VEnv->sustainable, false);
+        env->setEnvelope(smp->envVol);
+        tgSustain->setToggleState(smp->envVol->sustainable, false);
 
         float max = 10;
         if(smp->timelen > max)
@@ -3317,7 +3317,7 @@ void SampleComponent::SetSample(Sample* smp)
         //    min = sample->timelen;
 
         slTime->setRange(min, max);
-		slTime->setValue(smp->VEnv->len);
+		slTime->setValue(smp->envVol->len);
         //if(sample->timelen > 2)
         //    slTime->setValue(sample->timelen);
         //else
@@ -3423,8 +3423,8 @@ void SampleWave::SetSample(Sample* smp)
     sample = smp;
 	if(sample != NULL)
 	{
-		wratio = double(sample->info.frames)/getWidth();
-		wratio1 = double(sample->info.frames - 1)/getWidth();
+		wratio = double(sample->sample_info.frames)/getWidth();
+		wratio1 = double(sample->sample_info.frames - 1)/getWidth();
 		SetLoopPoints(sample->lp_start, sample->lp_end);
         Loopers();
     }
@@ -3514,14 +3514,14 @@ void SampleWave::paint(Graphics & g)
 
     if(sample != NULL)
     {
-        if(sample != NULL && sample->info.frames > 0)
+        if(sample != NULL && sample->sample_info.frames > 0)
         {
             int w = getWidth() - 1;
-            wratio = double(sample->info.frames)/w;
-            long nframes = long(sample->info.frames);
+            wratio = double(sample->sample_info.frames)/w;
+            long nframes = long(sample->sample_info.frames);
             float h2 = float(getHeight() - 1)/2;
             float* sdata = sample->sample_data;
-            int step = sample->info.channels;
+            int step = sample->sample_info.channels;
             g.setColour(Colour(125, 125, 255));
             g.drawHorizontalLine((int)h2, 1, (float)w - 1);
             g.setColour(Colour(165, 185, 200));

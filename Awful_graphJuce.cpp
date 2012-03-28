@@ -756,14 +756,14 @@ void AssignLoadedImages()
     {
         if(mc < 4)
         {
-            gAux->sendchan[mc].kup->SetImages(img_btinsup1, img_btinsup2);
-            gAux->sendchan[mc].down->SetImages(img_btinsdown1, img_btinsdown2);
+            aux_panel->sendchan[mc].kup->SetImages(img_btinsup1, img_btinsup2);
+            aux_panel->sendchan[mc].down->SetImages(img_btinsdown1, img_btinsdown2);
         }
-        gAux->mchan[mc].kup->SetImages(img_btinsup1, img_btinsup2);
-        gAux->mchan[mc].down->SetImages(img_btinsdown1, img_btinsdown2);
+        aux_panel->mchan[mc].kup->SetImages(img_btinsup1, img_btinsup2);
+        aux_panel->mchan[mc].down->SetImages(img_btinsdown1, img_btinsdown2);
     }
-    gAux->masterchan.kup->SetImages(img_btinsup1, img_btinsup2);
-    gAux->masterchan.down->SetImages(img_btinsdown1, img_btinsdown2);
+    aux_panel->masterchan.kup->SetImages(img_btinsup1, img_btinsup2);
+    aux_panel->masterchan.down->SetImages(img_btinsdown1, img_btinsdown2);
 
     CP->minimize->SetImages(img_minimize1, img_minimize2);
     CP->maximize->SetImages(img_maximize1, img_maximize2);
@@ -779,23 +779,23 @@ void AssignLoadedImages()
     CP->NoteMode->SetImages(img_notebt1, img_notebt2);
     CP->MetroMode->SetImages(img_metrobt1, img_metrobt2);
     CP->IncrScale->SetImages(img_zoomin1, img_zoomin2);
-    gAux->IncrScale->SetImages(img_zoomin1, img_zoomin2);
+    aux_panel->IncrScale->SetImages(img_zoomin1, img_zoomin2);
     CP->DecrScale->SetImages(img_zoomout1, img_zoomout2);
-    gAux->DecrScale->SetImages(img_zoomout1, img_zoomout2);
+    aux_panel->DecrScale->SetImages(img_zoomout1, img_zoomout2);
     CP->AccGenBrowsa->SetImages(img_accgb1, img_accgb2);
     CP->AccInstrPanel->SetImages(img_accinstr1, img_accinstr2);
-    gAux->PattExpand->SetImages(img_pattexp1, img_pattexp2);
-    gAux->Vols->SetImages(img_vols1, img_vols2);
-    gAux->Vols1->SetImages(img_vols1, img_vols2);
-    gAux->Pans->SetImages(img_pans1, img_pans2);
-    gAux->Pans1->SetImages(img_pans1, img_pans2);
-    gAux->PtUsual->SetImages(img_grid1, img_grid2);
-    gAux->PtPianorol->SetImages(img_piano1, img_piano2);
-    gAux->PR8->SetImages(img_pr8_1, img_pr8_2);
-    gAux->PR10->SetImages(img_pr10_1, img_pr10_2);
-    gAux->PR12->SetImages(img_pr12_1, img_pr12_2);
-    gAux->PtStepseq->SetImages(img_step1, img_step2);
-    gAux->PtAuto->SetImages(img_auto1, img_auto2);
+    aux_panel->PattExpand->SetImages(img_pattexp1, img_pattexp2);
+    aux_panel->Vols->SetImages(img_vols1, img_vols2);
+    aux_panel->Vols1->SetImages(img_vols1, img_vols2);
+    aux_panel->Pans->SetImages(img_pans1, img_pans2);
+    aux_panel->Pans1->SetImages(img_pans1, img_pans2);
+    aux_panel->PtUsual->SetImages(img_grid1, img_grid2);
+    aux_panel->PtPianorol->SetImages(img_piano1, img_piano2);
+    aux_panel->PR8->SetImages(img_pr8_1, img_pr8_2);
+    aux_panel->PR10->SetImages(img_pr10_1, img_pr10_2);
+    aux_panel->PR12->SetImages(img_pr12_1, img_pr12_2);
+    aux_panel->PtStepseq->SetImages(img_step1, img_step2);
+    aux_panel->PtAuto->SetImages(img_auto1, img_auto2);
     IP->edit_autopattern->SetImages(img_autopt1, img_autopt2);
     CP->view_mixer->SetImages(img_mix1, img_mix2);
     genBrw->ShowFiles->SetImages(img_files1, img_files2);
@@ -812,25 +812,25 @@ void AssignLoadedImages()
     mixBrw->ShowPresets->SetImages(img_presets1, img_presets2);
     CP->ShowTrackControls->SetImages(img_tracks1, img_tracks2);
     mixBrw->HideTrackControls->SetImages(img_notracks1, img_notracks2);
-    gAux->playbt->SetImages(img_play2bt1, img_play2bt2);
-    gAux->stopbt->SetImages(img_stop2bt1, img_stop2bt2);
+    aux_panel->playbt->SetImages(img_play2bt1, img_play2bt2);
+    aux_panel->stopbt->SetImages(img_stop2bt1, img_stop2bt2);
     CP->bpmer->btup->SetImages(img_btup1, img_btup2);
     CP->tpber->btup->SetImages(img_btup1, img_btup2);
     CP->bpber->btup->SetImages(img_btup1, img_btup2);
     CP->bpmer->btup->SetImages(img_btup1, img_btup2);
     CP->octaver->btup->SetImages(img_btup1, img_btup2);
-    gAux->reloctaver->btup->SetImages(img_btup1, img_btup2);
+    aux_panel->reloctaver->btup->SetImages(img_btup1, img_btup2);
     CP->bpmer->btdn->SetImages(img_btdn1, img_btdn2);
     CP->tpber->btdn->SetImages(img_btdn1, img_btdn2);
     CP->bpber->btdn->SetImages(img_btdn1, img_btdn2);
     CP->octaver->btdn->SetImages(img_btdn1, img_btdn2);
-    gAux->reloctaver->btdn->SetImages(img_btdn1, img_btdn2);
+    aux_panel->reloctaver->btdn->SetImages(img_btdn1, img_btdn2);
     CP->Forth->SetImages(img_btforth1, img_btforth2);
     CP->Back->SetImages(img_btback1, img_btback2);
-    gAux->Forth->SetImages(img_btforth21, img_btforth22);
-    gAux->Back->SetImages(img_btback21, img_btback22);
-    gAux->Up->SetImages(img_btup21, img_btup22);
-    gAux->Down->SetImages(img_btdn21, img_btdn22);
+    aux_panel->Forth->SetImages(img_btforth21, img_btforth22);
+    aux_panel->Back->SetImages(img_btback21, img_btback22);
+    aux_panel->Up->SetImages(img_btup21, img_btup22);
+    aux_panel->Down->SetImages(img_btdn21, img_btdn22);
     CP->BtFollowPlayback->SetImages(img_btstat1, img_btstat2);
     CP->up->SetImages(img_btup21, img_btup22);
     CP->down->SetImages(img_btdn21, img_btdn22);
@@ -1473,7 +1473,7 @@ int J_DigitStr_xy(Graphics& g, int x, int y, DigitStr* dg, bool bright, Colour c
         {
             g.setColour(Colour(135, 135, 135));
         }
-        else if(dg->mchanout == &gAux->masterchan || dg->mchanout == NULL)
+        else if(dg->mchanout == &aux_panel->masterchan || dg->mchanout == NULL)
         {
             g.setColour(Colour(195, 65, 65));
         }
@@ -1930,9 +1930,9 @@ void J_Scope_type(Graphics& g, Scope* scope)
     }
     else if(scope->instr != NULL)
     {
-        if(scope->instr->alimg != NULL)
+        if(scope->instr->alias_image != NULL)
         {
-            g.drawImageAt(scope->instr->alimg, CursX, CursY - (int)ins->getHeight(), false);
+            g.drawImageAt(scope->instr->alias_image, CursX, CursY - (int)ins->getHeight(), false);
             CursX += ins->getStringWidth(scope->instr->alias->string);
         }
 
@@ -2574,7 +2574,7 @@ void J_Muter(Graphics& g, Muter* mt, Loc loc)
     }
     else if(loc == Loc_SmallGrid)
     {
-        length = (int)((mt->end_tick - mt->start_tick)*gAux->tickWidth);
+        length = (int)((mt->end_tick - mt->start_tick)*aux_panel->tickWidth);
     }
 
     g.setColour(Colour(0xff6F0000));
@@ -2672,7 +2672,7 @@ void J_Slide(Graphics& g, Slide* sl, Loc loc)
     }
     else if(loc == Loc_SmallGrid)
     {
-        length = (int)((sl->end_tick - sl->start_tick)*gAux->tickWidth);
+        length = (int)((sl->end_tick - sl->start_tick)*aux_panel->tickWidth);
     }
 
     g.setColour(Colour(0xff005454));
@@ -2708,7 +2708,7 @@ void J_Transpose(Graphics& g, Transpose* tr, Loc loc)
     }
     else if(loc == Loc_SmallGrid)
     {
-        length = (int)((tr->end_tick - tr->start_tick)*gAux->tickWidth);
+        length = (int)((tr->end_tick - tr->start_tick)*aux_panel->tickWidth);
     }
 
     g.setColour(Colour(0xff00009A));
@@ -2811,7 +2811,7 @@ void J_Vibrate(Graphics& g, Vibrate* v, Loc loc)
     }
     else if(loc == Loc_SmallGrid)
     {
-        length = (int)((v->end_tick - v->start_tick)*gAux->tickWidth);
+        length = (int)((v->end_tick - v->start_tick)*aux_panel->tickWidth);
     }
 
     g.setColour(Colour(0xff105410));
@@ -2840,7 +2840,7 @@ void J_Vibrate(Graphics& g, Vibrate* v, Loc loc)
         pe = v->x + (int)(v->tick_length * 8);
     }
 
-    int npix = int(v->tick_length * (loc == Loc_MainGrid ? tickWidth : gAux->tickWidth));
+    int npix = int(v->tick_length * (loc == Loc_MainGrid ? tickWidth : aux_panel->tickWidth));
     int kx = v->x; 
     int ky = v->y - 4;
     int pp = 2;
@@ -2873,7 +2873,7 @@ void J_Vibrate(Graphics& g, Vibrate* v, Loc loc)
 
 void J_SlideNoteLen(Graphics& g, int x_pix, int y, int length, Loc loc, bool connected)
 {
-    int tH = (loc == Loc_MainGrid || loc == Loc_StaticGrid) ? lineHeight : gAux->lineHeight;
+    int tH = (loc == Loc_MainGrid || loc == Loc_StaticGrid) ? lineHeight : aux_panel->lineHeight;
     if(tH > 12)
     {
         tH = 12;
@@ -2895,7 +2895,7 @@ void J_SlideNoteLen(Graphics& g, int x_pix, int y, int length, Loc loc, bool con
 
 void J_SmpNoteLen(Graphics& g, int x, int y, int pixlen1, int pixlen2, Loc loc)
 {
-    int tH = (loc == Loc_MainGrid || loc == Loc_StaticGrid) ? lineHeight : gAux->lineHeight;
+    int tH = (loc == Loc_MainGrid || loc == Loc_StaticGrid) ? lineHeight : aux_panel->lineHeight;
     if(tH > 12)
     {
         tH = 12;
@@ -2922,7 +2922,7 @@ void J_SmpNoteLen(Graphics& g, int x, int y, int pixlen1, int pixlen2, Loc loc)
 
 void J_GenNoteLen(Graphics& g, int x, int y, int pixlen, Loc loc)
 {
-    int tH = (loc == Loc_MainGrid || loc == Loc_StaticGrid) ? lineHeight : gAux->lineHeight;
+    int tH = (loc == Loc_MainGrid || loc == Loc_StaticGrid) ? lineHeight : aux_panel->lineHeight;
     if(tH > 12)
     {
         tH = 12;
@@ -3169,7 +3169,7 @@ void J_PattLen(Graphics& g, int x, int y, int pixlen, Loc loc, PattType ptype, b
 
 void J_SlideNote(Graphics& g, SlideNote* sl, Loc loc, bool connected)
 {
-    int tH = (loc == Loc_MainGrid || loc == Loc_StaticGrid) ? lineHeight : gAux->lineHeight;
+    int tH = (loc == Loc_MainGrid || loc == Loc_StaticGrid) ? lineHeight : aux_panel->lineHeight;
 
     sl->GetRealCoordinates(loc);
 
@@ -3183,7 +3183,7 @@ void J_SlideNote(Graphics& g, SlideNote* sl, Loc loc, bool connected)
     }
     else if(loc == Loc_SmallGrid)
     {
-        length = (int)((sl->end_tick - sl->start_tick)*gAux->tickWidth);
+        length = (int)((sl->end_tick - sl->start_tick)*aux_panel->tickWidth);
     }
     sl->cx = x + length;
 
@@ -3208,104 +3208,86 @@ int J_Layout(Graphics& g, Instance* ii, Loc loc)
     scx = cx;
     int cx1, cx0, mx, cy1;
     int initial_end_x;
-    float tW = (loc == Loc_MainGrid) ? tickWidth : (loc == Loc_StaticGrid) ? st_tickWidth : gAux->tickWidth;
-    int tH = (loc == Loc_MainGrid || loc == Loc_StaticGrid) ? lineHeight : gAux->lineHeight;
+    float tW = (loc == Loc_MainGrid) ? tickWidth : (loc == Loc_StaticGrid) ? st_tickWidth : aux_panel->tickWidth;
+    int tH = (loc == Loc_MainGrid || loc == Loc_StaticGrid) ? lineHeight : aux_panel->lineHeight;
 
-/*
-    Samplent* s = NULL;
-    if(ii->type == El_Samplent)
+    initial_end_x = cx + (int)(ii->tick_length*tW);
+
+    SlideNote* slnote = ii->first_slide;
+    if(slnote == NULL)
     {
-        s = (Samplent*)ii;
-        initial_end_x = ApproxFloat(cx + Calc_PixLength(s->sample_frame_len, (int)(s->sample->info.samplerate), tW)*s->freq_ratio);
-        //initial_end_x1 = ApproxFloat(cx + Calc_PixLength(s->sample_frame_len, (int)(s->sample->info.samplerate), tW)*s->freq_ratio*s->size);
-    }
-    else if(ii->type == El_Gennote) */
-    {
-        initial_end_x = cx + (int)(ii->tick_length*tW);
-    }
-        
-    if(ii->instr->layout_visible == true)
-    {
-        SlideNote* slnote = ii->first_slide;
-        if(slnote == NULL)
+        if(ii->type == El_Samplent)
         {
-            if(ii->type == El_Samplent)
-            {
-                J_SmpNoteLen(g, cx, cy, initial_end_x - cx, initial_end_x - cx, loc);
-            }
-            else if(ii->type == El_GenNote)
-            {
-                J_GenNoteLen(g, cx, cy, initial_end_x - cx, loc);
-            }
-
-            return initial_end_x - cx;
+            J_SmpNoteLen(g, cx, cy, initial_end_x - cx, initial_end_x - cx, loc);
         }
-        else
+        else if(ii->type == El_GenNote)
         {
-            while(slnote != NULL)
-            {
-                if(slnote->IsPresent())
-                {
-                    if(loc == Loc_MainGrid)
-                    {
-                        cx1 = slnote->EndTickX();
-                    }
-                    else if(loc == Loc_SmallGrid)
-                    {
-                        cx1 = slnote->s_EndTickX();
-                    }
-                    //J_NoteLen(cx, cy, (cx1 - cx) - 1, main);
-
-                    if(loc == Loc_MainGrid)
-                    {
-                        cx0 = slnote->StartTickX();
-                        cy1 = slnote->TrackLine2Y();
-                    }
-                    else
-                    {
-                        cx0 = slnote->s_StartTickX();
-                        cy1 = slnote->s_TrackLine2Y();
-                    }
-
-                    mx = abs(cx1 - cx0)/2;
-                    g.setColour(Colour(0x5000A0A0));
-                    if(cy1 < scy)
-                    {
-                        J_FillRect(g, cx0, cy1 - tH + SlideHeight + 2, cx1 - 1, scy - tH + 1);
-                    }
-                    else if(cy1 > scy)
-                    {
-                        J_FillRect(g, cx0, scy - tH + SmpHeight + 2, cx1 - 1, cy1 - tH + 1);
-                    }
-                    cx = cx1;
-                    cy = cy1;
-
-                    if(cx1 - 1 > initial_end_x)
-                    {
-                        initial_end_x = cx1 - 1;
-                    }
-                    J_SlideNote(g, slnote, loc, true);
-                    J_HighlightElement(g, slnote);
-                }
-
-                slnote = slnote->s_next;
-            }
-
-			if(ii->type == El_Samplent)
-            {
-                J_SmpNoteLen(g, scx, scy, initial_end_x - scx, initial_end_x - scx, loc);
-            }
-            else if(ii->type == El_GenNote)
-            {
-                J_GenNoteLen(g, scx, scy, initial_end_x - scx, loc);
-            }
-
-            return initial_end_x - scx;
+            J_GenNoteLen(g, cx, cy, initial_end_x - cx, loc);
         }
+
+        return initial_end_x - cx;
     }
     else
     {
-        return 0;
+        while(slnote != NULL)
+        {
+            if(slnote->IsPresent())
+            {
+                if(loc == Loc_MainGrid)
+                {
+                    cx1 = slnote->EndTickX();
+                }
+                else if(loc == Loc_SmallGrid)
+                {
+                    cx1 = slnote->s_EndTickX();
+                }
+                //J_NoteLen(cx, cy, (cx1 - cx) - 1, main);
+
+                if(loc == Loc_MainGrid)
+                {
+                    cx0 = slnote->StartTickX();
+                    cy1 = slnote->TrackLine2Y();
+                }
+                else
+                {
+                    cx0 = slnote->s_StartTickX();
+                    cy1 = slnote->s_TrackLine2Y();
+                }
+
+                mx = abs(cx1 - cx0)/2;
+                g.setColour(Colour(0x5000A0A0));
+                if(cy1 < scy)
+                {
+                    J_FillRect(g, cx0, cy1 - tH + SlideHeight + 2, cx1 - 1, scy - tH + 1);
+                }
+                else if(cy1 > scy)
+                {
+                    J_FillRect(g, cx0, scy - tH + SmpHeight + 2, cx1 - 1, cy1 - tH + 1);
+                }
+                cx = cx1;
+                cy = cy1;
+
+                if(cx1 - 1 > initial_end_x)
+                {
+                    initial_end_x = cx1 - 1;
+                }
+                J_SlideNote(g, slnote, loc, true);
+                J_HighlightElement(g, slnote);
+            }
+
+            slnote = slnote->s_next;
+        }
+
+		if(ii->type == El_Samplent)
+        {
+            J_SmpNoteLen(g, scx, scy, initial_end_x - scx, initial_end_x - scx, loc);
+        }
+        else if(ii->type == El_GenNote)
+        {
+            J_GenNoteLen(g, scx, scy, initial_end_x - scx, loc);
+        }
+
+        return initial_end_x - scx;
     }
 }
 
@@ -3626,7 +3608,7 @@ void J_Command(Graphics& g, Command* c, Loc loc)
 
 void J_Wave(Graphics& g, Samplent* s, Loc loc)
 {
-    float tW = (loc == Loc_MainGrid) ? tickWidth : (loc == Loc_StaticGrid) ? st_tickWidth : gAux->tickWidth;
+    float tW = (loc == Loc_MainGrid) ? tickWidth : (loc == Loc_StaticGrid) ? st_tickWidth : aux_panel->tickWidth;
 
     int hh = s->wave_height_pix/2;
     g.setColour(Colour(0x645050C8));
@@ -3641,12 +3623,12 @@ void J_Wave(Graphics& g, Samplent* s, Loc loc)
     float hhf = (float)hh;
 
     int frm_incr = 60;
-    int data_incr = s->sample->info.channels*frm_incr;
-    float incr = s->pix_length/(float)s->sample->info.frames/data_incr;
+    int data_incr = s->sample->sample_info.channels*frm_incr;
+    float incr = s->pix_length/(float)s->sample->sample_info.frames/data_incr;
 
     Path wave;
     bool started = false;
-    while(fc < s->sample->info.frames)
+    while(fc < s->sample->sample_info.frames)
     {
         dt = s->sample->sample_data[(int)sc];
         yw = (int)(hhf*dt);
@@ -3704,7 +3686,7 @@ void J_Txt(Graphics& g, Txt* t, Loc loc)
     if(loc == Loc_MainGrid)
         t->SetAbsArea(CursX0, CursY - (lineHeight - 1), CursX, CursY - 1);
     else if(loc == Loc_SmallGrid)
-        t->SetAbsArea(CursX0, CursY - (gAux->lineHeight - 1), CursX, CursY - 1);
+        t->SetAbsArea(CursX0, CursY - (aux_panel->lineHeight - 1), CursX, CursY - 1);
     t->end_tick = X2Tick(CursX, loc);
     t->tick_length = t->end_tick - t->start_tick;
 
@@ -3758,8 +3740,8 @@ void J_Samplent(Graphics& g, Samplent* s, Loc loc)
     CursX = x;
     CursY = y;
 
-    float tW = (loc == Loc_MainGrid) ? tickWidth : (loc == Loc_StaticGrid) ? st_tickWidth : gAux->tickWidth;
-    s->pix_length = (int)(Calc_PixLength((long)(s->sample->info.frames), s->sample->info.samplerate, tW)*s->freq_ratio);
+    float tW = (loc == Loc_MainGrid) ? tickWidth : (loc == Loc_StaticGrid) ? st_tickWidth : aux_panel->tickWidth;
+    s->pix_length = (int)(Calc_PixLength((long)(s->sample->sample_info.frames), s->sample->sample_info.samplerate, tW)*s->freq_ratio);
 
     if(s->wave_visible == true)
     {
@@ -3772,9 +3754,9 @@ void J_Samplent(Graphics& g, Samplent* s, Loc loc)
     {
         //g.setColour(Colour(0xff6496FF));
         //J_TextInstr_type(g, s->sample->alias->string);
-        if(s->sample->alimg != NULL)
+        if(s->sample->alias_image != NULL)
         {
-            g.drawImageAt(s->sample->alimg, CursX, CursY - (int)ins->getHeight(), false);
+            g.drawImageAt(s->sample->alias_image, CursX, CursY - (int)ins->getHeight(), false);
             CursX += ins->getStringWidth(s->sample->alias->string);
         }
     }
@@ -3833,13 +3815,13 @@ void J_Samplent(Graphics& g, Samplent* s, Loc loc)
     }
     else if(loc == Loc_SmallGrid)
     {
-        if(gAux->workPt->ptype == Patt_Pianoroll)
+        if(aux_panel->workPt->ptype == Patt_Pianoroll)
         {
             s->SetAbsArea(x, CursY - PianorollLineHeight + 1, cx, CursY - 1);
         }
         else
         {
-            s->SetAbsArea(x, CursY - (gAux->lineHeight - 1), cx, CursY - 1);
+            s->SetAbsArea(x, CursY - (aux_panel->lineHeight - 1), cx, CursY - 1);
         }
     }
 
@@ -3864,9 +3846,9 @@ void J_Gennote(Graphics& g, Gennote* gn, Loc loc)
     {
         g.setColour(Colour(0xffFFFFFF));
         //J_TextInstr_type(g, gn->instr->alias->string);
-        if(gn->instr->alimg != NULL)
+        if(gn->instr->alias_image != NULL)
         {
-            g.drawImageAt(gn->instr->alimg, CursX, CursY - (int)ins->getHeight(), false);
+            g.drawImageAt(gn->instr->alias_image, CursX, CursY - (int)ins->getHeight(), false);
             CursX += ins->getStringWidth(gn->instr->alias->string);
         }
     }
@@ -3914,13 +3896,13 @@ void J_Gennote(Graphics& g, Gennote* gn, Loc loc)
     }
     else if(loc == Loc_SmallGrid)
     {
-        if(gAux->workPt->ptype == Patt_Pianoroll)
+        if(aux_panel->workPt->ptype == Patt_Pianoroll)
         {
             gn->SetAbsArea(x, CursY - PianorollLineHeight + 1, cx, CursY - 1);
         }
         else
         {
-            gn->SetAbsArea(x, CursY - (gAux->lineHeight - 1), cx, CursY - 1);
+            gn->SetAbsArea(x, CursY - (aux_panel->lineHeight - 1), cx, CursY - 1);
         }
     }
 
@@ -4130,7 +4112,7 @@ void J_Pattern(Graphics& g, Pattern* pt, Loc loc)
         }
 
         // Pattern editing highlight
-        if(pt == gAux->workPt || pt == C.patt || pt->OrigPt == C.patt)
+        if(pt == aux_panel->workPt || pt == C.patt || pt->OrigPt == C.patt)
         {
             g.setColour(Colours::red);
             J_LineRect(g, gx1, gy1 - tH + 1, gx1 + pl - 1, gy1 - 1);
@@ -4422,7 +4404,7 @@ void J_Button(Graphics& g, Butt* bt, int x, int y, int width, int height)
     g.setColour(Colour(0xffFFFFFF));
 
     int adv = 0;
-    if(bt == gAux->PattExpand)
+    if(bt == aux_panel->PattExpand)
     {
         adv = 0;
     }
@@ -4531,7 +4513,7 @@ void J_ScrollBard(Graphics& g, int r1, int r2, int coord, ScrollBard* sb, bool f
         float apvlff = (pixvisiblelen - 40)*fv;
 
         sb->pixlen = pixvisiblelen;
-        if(sb == gAux->v_sbar)
+        if(sb == aux_panel->v_sbar)
         {
             sb->cf = apvlff/sb->full_len;
         }
@@ -4813,7 +4795,7 @@ void J_Grid(Graphics& g)
     int ytt = 0;
     g.setFont(*vis);    // For track indexes
     Colour clrindex = panelcolour.brighter(0.1f);
-    trk = GetTrkDataForLine(OffsLine, field);
+    trk = GetTrkDataForLine(OffsLine, field_pattern);
     trknum = trk->trknum;
     while(1 && trk != bottom_trk)
     {
@@ -4822,7 +4804,7 @@ void J_Grid(Graphics& g)
             break;
         //J_HLine(g, yc, MainX1 + 1 + pra, GridX2);
 
-        trk = GetTrkDataForLine(line, field);
+        trk = GetTrkDataForLine(line, field_pattern);
 
         if(line == trk->start_line)
         {
@@ -5067,7 +5049,7 @@ void J_Selection(Graphics& g)
             else if(M.selmode == Sel_Tracks)
             {
                 g.setColour(Colour(0x28FFFFFF));
-                if(M.patt == field)
+                if(M.patt == field_pattern)
                 {
                     J_FillRect(g, GridX1 + 1, GridY1 + SelY1, GridX2 - 1, SelY2 + GridY1);
                 }
@@ -5085,7 +5067,7 @@ void J_Selection(Graphics& g)
             }
             g.restoreState();
         }
-        else if(gAux->auxmode == AuxMode_Pattern && M.selloc == Loc_SmallGrid)
+        else if(aux_panel->auxmode == AuxMode_Pattern && M.selloc == Loc_SmallGrid)
         {
             g.saveState();
             g.reduceClipRegion(GridXS1, GridYS1 - 12, GridXS2 - GridXS1 + 1, GridYS2 - (GridYS1 - 12) + 1);
@@ -5118,7 +5100,7 @@ void J_Selection(Graphics& g)
             J_FillRect(g, GridX1 + LooX1, MainY1, GridX1 + LooX2 + 1, GridY2);
             g.restoreState();
         }
-        else if(gAux->auxmode == AuxMode_Pattern && M.looloc == Loc_SmallGrid)
+        else if(aux_panel->auxmode == AuxMode_Pattern && M.looloc == Loc_SmallGrid)
         {
             g.saveState();
             g.reduceClipRegion(GridXS1, GridYS1 - 12, GridXS2 - GridXS1 + 1, GridYS2 - (GridYS1 - 12) + 1);
@@ -5300,28 +5282,28 @@ bool J_GetMouseCursorRect(int* x, int* y, int* w, int* h)
 
                 if(instr->type == Instr_Sample)
                 {
-                   *w = Calc_PixLength((long)((Sample*)instr)->info.frames, ((Sample*)instr)->info.samplerate, tickWidth);
+                   *w = Calc_PixLength((long)((Sample*)instr)->sample_info.frames, ((Sample*)instr)->sample_info.samplerate, tickWidth);
                 }
                 else
                 {
-                   *w = int(instr->last_length*tickWidth);
+                   *w = int(instr->last_note_length*tickWidth);
                 }
                 if(*w < alw) *w = alw;
             }
-            else if(M.loc == Loc_SmallGrid && gAux->workPt->ptype != Patt_StepSeq)
+            else if(M.loc == Loc_SmallGrid && aux_panel->workPt->ptype != Patt_StepSeq)
             {
                 TString* al = (TString*)M.drag_data.drag_stuff;
                 int alw = ins->getStringWidth(al->string);
                 Instrument* instr = al->instr;
 
                *x = Tick2X(M.snappedTick, Loc_SmallGrid);
-               *y = Line2Y(M.snappedLine, Loc_SmallGrid) - gAux->bottomincr - *h + 1;
+               *y = Line2Y(M.snappedLine, Loc_SmallGrid) - aux_panel->bottomincr - *h + 1;
 
-                Loc loc = gAux->workPt->ptype == Patt_Pianoroll ? Loc_SmallGrid : Loc_MainGrid;
+                Loc loc = aux_panel->workPt->ptype == Patt_Pianoroll ? Loc_SmallGrid : Loc_MainGrid;
 
                 if(al->instr->type == Instr_Sample)
                 {
-                   *w = (int)Calc_PixLength((long)((Sample*)instr)->info.frames, ((Sample*)instr)->info.samplerate, gAux->tickWidth);
+                   *w = (int)Calc_PixLength((long)((Sample*)instr)->sample_info.frames, ((Sample*)instr)->sample_info.samplerate, aux_panel->tickWidth);
                     if(loc == Patt_Pianoroll)
                     {
                         int note = NUM_PIANOROLL_LINES - M.snappedLine;
@@ -5330,7 +5312,7 @@ bool J_GetMouseCursorRect(int* x, int* y, int* w, int* h)
                 }
                 else
                 {
-                   *w = int(instr->last_length*gAux->tickWidth);
+                   *w = int(instr->last_note_length*aux_panel->tickWidth);
                 }
                 if(*w < alw) *w = alw;
             }
@@ -5381,38 +5363,12 @@ bool J_GetMouseCursorRect(int* x, int* y, int* w, int* h)
                *y = M.mouse_y + 4 - *h + 1;
             }
         }
-        else if(M.drag_data.drag_type == Drag_MixCell_Indeks || M.drag_data.drag_type == Drag_MixChannel_Indeks)
+        else if( M.drag_data.drag_type == Drag_MixChannel_Index)
         {
-            //*Mixcell* mc = (Mixcell*)M.drag_data.drag_stuff;
-            //*w = ari->getStringWidth(String(mc->indexstr)) + 1;
            *w = 21;
            *h = (int)ari->getHeight();
            *x = M.mouse_x - 6;
            *y = M.mouse_y + 4 - *h;
-
-            /*
-            PEdit* pe = firstPE;
-            while(pe != NULL)
-            {
-                M.active_paramfx = NULL;
-                if(M.mouse_x >= pe->x && M.mouse_x <= pe->x + pe->edx &&
-                   M.mouse_y <= pe->y && M.mouse_y >= pe->y - pe->edy)
-                {
-                    if(pe->type == Param_FX)
-                    {
-                        M.active_paramfx = (DigitStr*)pe;
-                        break;
-                    }
-                }
-                pe = pe->next;
-            }
-            if(M.active_paramfx != NULL)
-            {
-                g.setColour(Colour(0x58FFFFFF));
-                J_FilledRect(g, M.active_paramfx->x, M.active_paramfx->y, 
-                                M.active_paramfx->x + M.active_paramfx->edx, 
-                                M.active_paramfx->y - M.active_paramfx->edy);
-            }*/
         }
         else if(M.drag_data.drag_type == Drag_Command)
         {
@@ -5424,11 +5380,11 @@ bool J_GetMouseCursorRect(int* x, int* y, int* w, int* h)
                 J_CommandSize(cmd, Loc_MainGrid, w, h);
                *y = Line2Y((M.mouse_y - GridY1)/lineHeight + OffsLine, Loc_MainGrid) - hs;
             }
-            else if(M.loc == Loc_SmallGrid && gAux->workPt->ptype == Patt_Grid)
+            else if(M.loc == Loc_SmallGrid && aux_panel->workPt->ptype == Patt_Grid)
             {
                *x = Tick2X(M.snappedTick, Loc_SmallGrid) - 3;
                 J_CommandSize(cmd, Loc_SmallGrid, w, h);
-               *y = Line2Y((M.mouse_y - GridYS1)/gAux->lineHeight + gAux->OffsLine, Loc_SmallGrid) - hs;
+               *y = Line2Y((M.mouse_y - GridYS1)/aux_panel->lineHeight + aux_panel->OffsLine, Loc_SmallGrid) - hs;
             }
             else if(M.loc == Loc_StaticGrid)
             {
@@ -5495,32 +5451,32 @@ void J_MouseCursor(Graphics& g)
                 int y = Line2Y((M.mouse_y - GridY1)/lineHeight + OffsLine, Loc_MainGrid);
                 if(instr->type == Instr_Sample)
                 {
-                    int len = Calc_PixLength((long)((Sample*)instr)->info.frames, ((Sample*)instr)->info.samplerate, tickWidth);
+                    int len = Calc_PixLength((long)((Sample*)instr)->sample_info.frames, ((Sample*)instr)->sample_info.samplerate, tickWidth);
                     J_SmpNoteLen(g, x, y, len, len, Loc_MainGrid);
 
                     g.setColour(Colour(smpcolour));
                 }
                 else
                 {
-                    J_GenNoteLen(g, x, y, int(instr->last_length*tickWidth), Loc_MainGrid);
+                    J_GenNoteLen(g, x, y, int(instr->last_note_length*tickWidth), Loc_MainGrid);
 
                     g.setColour(Colour(gencolour));
                 }
                 J_TextInstr_xy(g, x, y, al->string);
                 g.restoreState();
             }
-            else if(M.loc == Loc_SmallGrid && gAux->workPt->ptype != Patt_StepSeq)
+            else if(M.loc == Loc_SmallGrid && aux_panel->workPt->ptype != Patt_StepSeq)
             {
                 g.saveState();
                 g.reduceClipRegion(GridXS1, GridYS1, GridXS2 - GridXS1, GridYS2 - GridYS1);
                 TString* al = (TString*)M.drag_data.drag_stuff;
                 Instrument* instr = al->instr;
                 int x = Tick2X(M.snappedTick, Loc_SmallGrid);
-                int y = Line2Y(M.snappedLine, Loc_SmallGrid) - gAux->bottomincr;
-                Loc loc = gAux->workPt->ptype == Patt_Pianoroll ? Loc_SmallGrid : Loc_MainGrid;
+                int y = Line2Y(M.snappedLine, Loc_SmallGrid) - aux_panel->bottomincr;
+                Loc loc = aux_panel->workPt->ptype == Patt_Pianoroll ? Loc_SmallGrid : Loc_MainGrid;
                 if(al->instr->type == Instr_Sample)
                 {
-                    float len = (float)Calc_PixLength((long)((Sample*)instr)->info.frames, ((Sample*)instr)->info.samplerate, gAux->tickWidth);
+                    float len = (float)Calc_PixLength((long)((Sample*)instr)->sample_info.frames, ((Sample*)instr)->sample_info.samplerate, aux_panel->tickWidth);
                     if(loc == Patt_Pianoroll)
                     {
 						int note = NUM_PIANOROLL_LINES - M.snappedLine;
@@ -5531,7 +5487,7 @@ void J_MouseCursor(Graphics& g)
                 }
                 else
                 {
-                    J_GenNoteLen(g, x, y, int(instr->last_length*gAux->tickWidth), loc);
+                    J_GenNoteLen(g, x, y, int(instr->last_note_length*aux_panel->tickWidth), loc);
                     g.setColour(Colour(gencolour));
                 }
                 J_TextInstr_xy(g, x, y, al->string);
@@ -5618,7 +5574,7 @@ void J_MouseCursor(Graphics& g)
                 J_TextInstr_xy(g, M.mouse_x - ins->getStringWidth(String(mc2->mixstr->string))/2, M.mouse_y + 4, mc2->mixstr->string);
             }
         }
-        else if(M.drag_data.drag_type == Drag_MixCell_Indeks || M.drag_data.drag_type == Drag_MixChannel_Indeks)
+        else if(M.drag_data.drag_type == Drag_MixChannel_Index)
         {
             PEdit* pe = firstPE;
             while(pe != NULL)
@@ -5644,16 +5600,8 @@ void J_MouseCursor(Graphics& g)
             }
 
             char* indexstr;
-            if(M.drag_data.drag_type == Drag_MixCell_Indeks)
-            {
-                Mixcell* mc = (Mixcell*)M.drag_data.drag_stuff;
-                indexstr = mc->indexstr;
-            }
-            else
-            {
-                MixChannel* mchan = (MixChannel*)M.drag_data.drag_stuff;
-                indexstr = mchan->indexstr;
-            }
+            MixChannel* mchan = (MixChannel*)M.drag_data.drag_stuff;
+            indexstr = mchan->indexstr;
 
             g.setColour(Colour(0xffFFFFFF));
             J_TextInstr_xy(g, M.mouse_x - 6, M.mouse_y + 4, indexstr);
@@ -5667,10 +5615,10 @@ void J_MouseCursor(Graphics& g)
                 int y = Line2Y((M.mouse_y - GridY1)/lineHeight + OffsLine, Loc_MainGrid);
                 J_Command_xy(g, x, y, cmd, Loc_MainGrid);
             }
-            else if(M.loc == Loc_SmallGrid && gAux->workPt->ptype == Patt_Grid)
+            else if(M.loc == Loc_SmallGrid && aux_panel->workPt->ptype == Patt_Grid)
             {
                 int x = Tick2X(M.snappedTick, Loc_SmallGrid);
-                int y = Line2Y((M.mouse_y - GridYS1)/gAux->lineHeight + gAux->OffsLine, Loc_SmallGrid);
+                int y = Line2Y((M.mouse_y - GridYS1)/aux_panel->lineHeight + aux_panel->OffsLine, Loc_SmallGrid);
                 J_Command_xy(g, x, y, cmd, Loc_SmallGrid);
             }
             else if(M.loc == Loc_StaticGrid)
@@ -5712,9 +5660,9 @@ void J_MouseCursor(Graphics& g)
     else if(M.loc == Loc_SmallGrid && !(M.mmode & MOUSE_LANEAUXING) && M.pickedup == false && M.LMB == false && M.RMB == false)
     {
         int x = Tick2X(M.snappedTick, Loc_SmallGrid);
-        int y = Line2Y(M.snappedLine, Loc_SmallGrid) - gAux->bottomincr;
+        int y = Line2Y(M.snappedLine, Loc_SmallGrid) - aux_panel->bottomincr;
 
-        if(gAux->workPt->ptype == Patt_StepSeq)
+        if(aux_panel->workPt->ptype == Patt_StepSeq)
         {
             if(!(M.mmode & MOUSE_SELECTING))
             {
@@ -5722,7 +5670,7 @@ void J_MouseCursor(Graphics& g)
             }
         }
         else if(current_instr != NULL && !(M.mmode & MOUSE_LOWAUXEDGE) && 
-               (gAux->workPt->ptype == Patt_Pianoroll || CP->FastMode->pressed == true))
+               (aux_panel->workPt->ptype == Patt_Pianoroll || CP->FastMode->pressed == true))
         {
             //J_InstrCursor_XY(g, x, y, current_instr, 60);
         }
@@ -5756,7 +5704,7 @@ void J_KeyCursor(Graphics& g)
         int ch = 13;
 		if(C.loc == Loc_SmallGrid)
         {
-            if(gAux->workPt->ptype == Patt_Pianoroll)
+            if(aux_panel->workPt->ptype == Patt_Pianoroll)
             {
                 ch = 9;
             }
@@ -7034,7 +6982,7 @@ void J_QuantMenu(Graphics& g, int x, int y, DropMenu* qm)
         if(qm->panel != NULL)
         {
             g.saveState();
-            if(qm == gAux->qMenu)
+            if(qm == aux_panel->qMenu)
             {
                 g.reduceClipRegion(qm->panel->x, 
                                    qm->panel->y, 
@@ -7704,7 +7652,7 @@ void J_Numba(Graphics& g, Numba* dg, int x, int y)
     J_Button(g, dg->btdn, x + w - 25, y + 15, 18, 12);
     if(dg->ntype == Numba_relOctave)
     {
-        panel = gAux;
+        panel = aux_panel;
     }
 
     J_NumbaNum(g, dg, x, y);
@@ -7939,7 +7887,7 @@ void J_CtrlPanel(Graphics& g)
         J_QuantMenu(g, CtrlAdvance + 319 - 41, MainY1 - NavHeight - 27, dmn);
     }*/
 
-    if(gAux->auxmode == AuxMode_Mixer)
+    if(aux_panel->auxmode == AuxMode_Mixer)
     {
         int mixbX = WindWidth - 69;
         //if(mixBrw->CurrButt != mixBrw->HideTrackControls)
@@ -8043,7 +7991,7 @@ void J_MainBar(Graphics& g)
         Element* elem = firstElem;
         while(elem != NULL)
         {
-            if(elem->IsPresent() && elem->type == El_TextString && elem->patt == field)
+            if(elem->IsPresent() && elem->type == El_TextString && elem->patt == field_pattern)
             {
                 txt = (Txt*)elem;
                 if(txt->bookmark == true)
@@ -8099,7 +8047,7 @@ void J_VolLane(Graphics& g, Loc loc, Trk* trk, Pattern* pt, int lx1, int ly1, in
     Element* el;
     if(loc == Loc_SmallGrid)
     {
-        el = gAux->workPt->OrigPt->first_elem;
+        el = aux_panel->workPt->OrigPt->first_elem;
     }
     else
     {
@@ -8219,7 +8167,7 @@ void J_VolLane(Graphics& g, Loc loc, Trk* trk, Pattern* pt, int lx1, int ly1, in
     // Draw selected elements, if any
     if(loc == Loc_SmallGrid)
     {
-        el = gAux->workPt->OrigPt->first_elem;
+        el = aux_panel->workPt->OrigPt->first_elem;
     }
     else
     {
@@ -8369,7 +8317,7 @@ void J_PanLane(Graphics& g, Loc loc, Trk* trk, Pattern* pt, int lx1, int ly1, in
     Element* el;
     if(loc == Loc_SmallGrid)
     {
-        el = gAux->workPt->OrigPt->first_elem;
+        el = aux_panel->workPt->OrigPt->first_elem;
     }
     else
     {
@@ -8509,7 +8457,7 @@ void J_PanLane(Graphics& g, Loc loc, Trk* trk, Pattern* pt, int lx1, int ly1, in
     // Draw selected elements, if any
     if(loc == Loc_SmallGrid)
     {
-        el = gAux->workPt->OrigPt->first_elem;
+        el = aux_panel->workPt->OrigPt->first_elem;
     }
     else
     {
@@ -8647,7 +8595,7 @@ void J_PanLane(Graphics& g, Loc loc, Trk* trk, Pattern* pt, int lx1, int ly1, in
 
 void J_AuxLanes(Graphics& g)
 {
-    Pattern* pt = gAux->workPt;
+    Pattern* pt = aux_panel->workPt;
     Trk* trk;
     int ylane;
     int hgt;
@@ -8661,8 +8609,8 @@ void J_AuxLanes(Graphics& g)
 			{
 				if(trk->vol_lane.visible == true)
 				{
-					ylane = Line2Y(trk->trk_end_line + trk->vol_lane.height, Loc_SmallGrid) - 1 - gAux->bottomincr;
-					hgt = trk->vol_lane.height*gAux->lineHeight - 1;
+					ylane = Line2Y(trk->trk_end_line + trk->vol_lane.height, Loc_SmallGrid) - 1 - aux_panel->bottomincr;
+					hgt = trk->vol_lane.height*aux_panel->lineHeight - 1;
 
 					g.setColour(Colour(0xff000000));
 					J_FillRect(g, GridXS1, ylane - hgt + 1, GridXS2, ylane);
@@ -8671,8 +8619,8 @@ void J_AuxLanes(Graphics& g)
 				}
 				if(trk->pan_lane.visible == true)
 				{
-					ylane = Line2Y(trk->end_line, Loc_SmallGrid) - 1 - gAux->bottomincr;
-					hgt = trk->pan_lane.height*gAux->lineHeight - 1;
+					ylane = Line2Y(trk->end_line, Loc_SmallGrid) - 1 - aux_panel->bottomincr;
+					hgt = trk->pan_lane.height*aux_panel->lineHeight - 1;
 
 					g.setColour(Colour(0xff000000));
 					J_FillRect(g, GridXS1, ylane - hgt + 1, GridXS2, ylane);
@@ -8698,8 +8646,8 @@ void J_GridLanes(Graphics& g)
     while(1)
     {
         g.setColour(Colour(0xff003264));
-        trknum = GetTrkNumForLine(line, field);
-        trk = GetTrkDataForTrkNum(trknum, field);
+        trknum = GetTrkNumForLine(line, field_pattern);
+        trk = GetTrkDataForTrkNum(trknum, field_pattern);
         trk1 = GetTrkDataForTrkNum(trknum, st->patt);
 
         if(trknum == 0xFFFF)
@@ -8754,7 +8702,7 @@ void J_Content_Main(Graphics& g)
     if(!PatternsOverlapping)
     {
         g.saveState();
-        ev = field->last_ev;
+        ev = field_pattern->last_ev;
         while(ev != NULL)
         {
             tg = ev->tg_last;
@@ -8762,7 +8710,7 @@ void J_Content_Main(Graphics& g)
             {
                 el = tg->el;
                 if(el->IsPresent() && el->visible && el->type == El_Pattern && tg->activator && 
-                   el->patt == field && !((Pattern*)el)->OrigPt->autopatt)
+                   el->patt == field_pattern && !((Pattern*)el)->OrigPt->autopatt)
                 {
                     J_Pattern(g, (Pattern*)el, Loc_MainGrid);
                     J_HighlightElement(g, el);
@@ -8779,7 +8727,7 @@ void J_Content_Main(Graphics& g)
     }
     else
     {
-        ev = field->first_ev;
+        ev = field_pattern->first_ev;
         while(ev != NULL)
         {
             tg = ev->tg_first;
@@ -8787,7 +8735,7 @@ void J_Content_Main(Graphics& g)
             {
                 el = tg->el;
                 if(el->IsPresent() && el->visible && el->type == El_Pattern && tg->activator && 
-                   el->patt == field && !((Pattern*)el)->OrigPt->autopatt)
+                   el->patt == field_pattern && !((Pattern*)el)->OrigPt->autopatt)
                 {
                     J_Pattern(g, (Pattern*)el, Loc_MainGrid);
                     J_HighlightElement(g, el);
@@ -8800,14 +8748,14 @@ void J_Content_Main(Graphics& g)
 
     g.saveState();
     bool exclude;
-    ev = field->last_ev;
+    ev = field_pattern->last_ev;
     while(ev != NULL)
     {
         tg = ev->tg_first;
         while(tg != NULL)
         {
             el = tg->el;
-            if(el->IsPresent() && tg->activator && el->patt == field && el->visible)
+            if(el->IsPresent() && tg->activator && el->patt == field_pattern && el->visible)
             {
                 exclude = false;
                 switch(el->type)
@@ -8839,13 +8787,13 @@ void J_Content_Main(Graphics& g)
     }
     g.restoreState();
 
-    ev = field->first_ev;
+    ev = field_pattern->first_ev;
     while(ev != NULL)
     {
         tg = ev->tg_first;
         while(tg != NULL)
         {
-            if(tg->el->IsPresent() && tg->activator == true && tg->patt == field && tg->el->visible == true)
+            if(tg->el->IsPresent() && tg->activator == true && tg->patt == field_pattern && tg->el->visible == true)
             {
                 switch (tg->el->type)
                 {
@@ -8906,7 +8854,7 @@ void J_Content_Main(Graphics& g)
     }
 
     // Marker where a pattern will be created per edit in aux area
-    if(C.loc == Loc_SmallGrid && gAux->isBlank())
+    if(C.loc == Loc_SmallGrid && aux_panel->isBlank())
     {
         int x = Tick2X(C.fieldposx, Loc_MainGrid);
         int y = Line2Y(C.fieldposy, Loc_MainGrid);
@@ -8924,7 +8872,7 @@ void J_Content_Main(Graphics& g)
 
 void J_Auxaux(Graphics& g)
 {
-    if(gAux->eux > 0)
+    if(aux_panel->eux > 0)
     {
         g.saveState();
         g.reduceClipRegion(GridXS1, GridYS2 + 2, GridXS2 - GridXS1, WindHeight - GridYS2 - 5);
@@ -8934,8 +8882,8 @@ void J_Auxaux(Graphics& g)
 
         Colour col1 = Colour(0xbf525265);
         Colour col2 = Colour(0xbf35354A);
-        float xo = (gAux->OffsTick - (int)gAux->OffsTick)*gAux->tickWidth;
-        int xt = (int)gAux->OffsTick;
+        float xo = (aux_panel->OffsTick - (int)aux_panel->OffsTick)*aux_panel->tickWidth;
+        int xt = (int)aux_panel->OffsTick;
         float xtt = 0;
         int xc;
         while(1)
@@ -8968,22 +8916,22 @@ void J_Auxaux(Graphics& g)
             }
 
             xt++;
-            xtt += gAux->tickWidth;
+            xtt += aux_panel->tickWidth;
         }
 
-        if(gAux->ltype == Lane_Vol)
+        if(aux_panel->ltype == Lane_Vol)
         {
             J_VolLane(g, Loc_SmallGrid, NULL, NULL, GridXS1, GridYS2 + 2, GridXS2, WindHeight - 4);
         }
-        else if(gAux->ltype == Lane_Pan)
+        else if(aux_panel->ltype == Lane_Pan)
         {
             J_PanLane(g, Loc_SmallGrid, NULL, NULL, GridXS1, GridYS2 + 2, GridXS2, WindHeight - 4);
         }
-        else if(gAux->ltype == Lane_Pitch)
+        else if(aux_panel->ltype == Lane_Pitch)
         {
-            if(gAux->workPt->OrigPt->pitch != NULL && GridXS2 > GridXS1)
+            if(aux_panel->workPt->OrigPt->pitch != NULL && GridXS2 > GridXS1)
             {
-                Envelope* env = (Envelope*)gAux->workPt->OrigPt->pitch->paramedit;
+                Envelope* env = (Envelope*)aux_panel->workPt->OrigPt->pitch->paramedit;
                 J_EnvLane(g, env, Loc_SmallGrid, NULL, NULL, GridXS1, GridYS2 + 3, GridXS2, WindHeight - 4);
             }
         }
@@ -9000,14 +8948,14 @@ void J_Content_Aux(Graphics& g)
 
         J_AuxLanes(g);
 
-        Pattern* pt = gAux->workPt;
+        Pattern* pt = aux_panel->workPt;
         Trigger* tg;
         Event* ev;
 
         // First draw notes
         if(pt->autopatt == false)
         {
-            ev = field->first_ev;
+            ev = field_pattern->first_ev;
         }
         else
         {
@@ -9076,7 +9024,7 @@ void J_Content_Aux(Graphics& g)
         // Second draw effects
         if(pt->autopatt == false)
         {
-            ev = field->first_ev;
+            ev = field_pattern->first_ev;
         }
         else
         {
@@ -9440,26 +9388,26 @@ void J_Aux_ModeButtons(Graphics& g, int x, int y)
 {
     //J_DarkLine(g, x, y, x + 72, y + 107);
     //J_DarkRect(g, x, y, x + 72, y + 112);
-    J_Button(g, gAux->Vols, x + 2, y + 2, 71, 22);
-    J_Button(g, gAux->Pans, x + 2, y + 5 + 12 + 8, 71, 22);
+    J_Button(g, aux_panel->Vols, x + 2, y + 2, 71, 22);
+    J_Button(g, aux_panel->Pans, x + 2, y + 5 + 12 + 8, 71, 22);
 
     g.setColour(panelcolour);
     J_FillRect(g, x, y + 5 + 12 + 9 + 21, x + 72, y + 5 + 12 + 6 + 24);
 
     J_PanelLine(g, AuxX2, y + 5 + 12 + 9 + 23, 176);
 
-    J_Button(g, gAux->PtUsual, x + 2, y + 9 + 12 + 3 + 20 + 9, 71, 22);
-    J_Button(g, gAux->PtPianorol, x + 2, y + 9 + 12 + 3 + 20 + 11 + 20 + 1, 71, 22);
-    J_Button(g, gAux->PtStepseq, x + 2, y + 9 + 12 + 3 + 20 + 13 + 20 + 1 + 20 + 1, 71, 22);
+    J_Button(g, aux_panel->PtUsual, x + 2, y + 9 + 12 + 3 + 20 + 9, 71, 22);
+    J_Button(g, aux_panel->PtPianorol, x + 2, y + 9 + 12 + 3 + 20 + 11 + 20 + 1, 71, 22);
+    J_Button(g, aux_panel->PtStepseq, x + 2, y + 9 + 12 + 3 + 20 + 13 + 20 + 1 + 20 + 1, 71, 22);
     //J_Button(g, gAux->PtAuto, x + 2, y + 5 + 12 + 3 + 20 + 4 + 20 + 1 + 20 + 1 + 21, 69, 20);
 
-    if(gAux->auxmode == AuxMode_Pattern && gAux->CurrPt == gAux->PtPianorol)
+    if(aux_panel->auxmode == AuxMode_Pattern && aux_panel->CurrPt == aux_panel->PtPianorol)
     {
         //J_DarkLine(g, x + 72, y + 5 + 12 + 3 + 20 + 4 + 19, x + 70 + 67, y + 5 + 12 + 3 + 20 + 4 + 19 + 23);
         //J_DarkRect(g, x + 72, y + 8 + 12 + 3 + 20 + 6 + 19, x + 70 + 67, y + 5 + 12 + 3 + 20 + 6 + 19 + 26);
-        J_Button(g, gAux->PR8, x + 74, y + 9 + 12 + 3 + 20 + 13 + 20, 20, 20);
-        J_Button(g, gAux->PR10, x + 75 + 20, y + 9 + 12 + 3 + 20 + 13 + 20, 20, 20);
-        J_Button(g, gAux->PR12, x + 76 + 20 + 20, y + 9 + 12 + 3 + 20 + 13 + 20, 20, 20);
+        J_Button(g, aux_panel->PR8, x + 74, y + 9 + 12 + 3 + 20 + 13 + 20, 20, 20);
+        J_Button(g, aux_panel->PR10, x + 75 + 20, y + 9 + 12 + 3 + 20 + 13 + 20, 20, 20);
+        J_Button(g, aux_panel->PR12, x + 76 + 20 + 20, y + 9 + 12 + 3 + 20 + 13 + 20, 20, 20);
     }
     else
     {
@@ -9475,32 +9423,32 @@ void J_Aux_PattButtons(Graphics& g, int x, int y, int y1)
 
     g.drawImageAt(img_zoomback, x, y, false);
 
-    J_Button(g, gAux->DecrScale, x + 2, y + 2, 22, 19);
-    J_Button(g, gAux->IncrScale, x + 5 + 22 + 70, y + 2, 22, 19);
+    J_Button(g, aux_panel->DecrScale, x + 2, y + 2, 22, 19);
+    J_Button(g, aux_panel->IncrScale, x + 5 + 22 + 70, y + 2, 22, 19);
 
-    SliderZoom* sl = gAux->slzoom;
+    SliderZoom* sl = aux_panel->slzoom;
     J_SliderZoom(g, sl, x + 25, y + 1);
     sl->Activate();
     sl->drawarea->SetBounds(sl->x, sl->y, sl->width, sl->height);
 
     //J_DarkLine(g, x, y1, x + 72, y1 + 44);
-    J_Button(g, gAux->Vols1, x + 2, y1 + 2, 71, 22);
-    J_Button(g, gAux->Pans1, x + 2, y1 + 25, 71, 22);
+    J_Button(g, aux_panel->Vols1, x + 2, y1 + 2, 71, 22);
+    J_Button(g, aux_panel->Pans1, x + 2, y1 + 25, 71, 22);
     // Pitch postponed
     //J_Button(g, gAux->Pitch1, x + 2, y1 + 44, 69, 20);
 }
 
 void J_Aux_PianoKeys(Graphics& g)
 {
-    if(gAux->workPt->ptype == Patt_Pianoroll)
+    if(aux_panel->workPt->ptype == Patt_Pianoroll)
     {
         g.setColour(Colour(68, 143, 122));
         g.fillRect(keyX + 3, keyY, keyW - 3, keyH);
 
-        Pattern* pt = gAux->workPt;
+        Pattern* pt = aux_panel->workPt;
 
-        int num_lines = (gAux->ptdrawy2 - gAux->ptdrawy1)/gAux->lineHeight;
-        int vo = (gAux->ptdrawy2 - gAux->ptdrawy1)%gAux->lineHeight;
+        int num_lines = (aux_panel->ptdrawy2 - aux_panel->ptdrawy1)/aux_panel->lineHeight;
+        int vo = (aux_panel->ptdrawy2 - aux_panel->ptdrawy1)%aux_panel->lineHeight;
         int line;
         int key;
         int ty = -1;
@@ -9516,19 +9464,19 @@ void J_Aux_PianoKeys(Graphics& g)
         // Horizontal lines
         while(1)
         {
-            yc = ytt + gAux->ptdrawy1;
-            if(yc > gAux->ptdrawy2)
+            yc = ytt + aux_panel->ptdrawy1;
+            if(yc > aux_panel->ptdrawy2)
             {
                 break;
             }
 
             if(pt->ptype == Patt_Pianoroll)
             {
-                line = gAux->note_offset - absline;
+                line = aux_panel->note_offset - absline;
             }
             else
             {
-                line = gAux->OffsLine + absline;
+                line = aux_panel->OffsLine + absline;
             }
             trk = GetTrkDataForLine(line, pt->OrigPt);
 
@@ -9541,21 +9489,21 @@ void J_Aux_PianoKeys(Graphics& g)
             
                 if(absline == 0)
                 {
-                    J_HPianoKey(g, gAux->ptdrawx1 - gAux->keywidth, yc - gAux->lineHeight, gAux->keywidth - 1, proll_key + 1, gAux->lineHeight, true, false, false, false, IsPianoKeyPressed(key + 1));
-                    J_HPianoKey(g, gAux->ptdrawx1 - gAux->keywidth, yc - gAux->lineHeight - gAux->lineHeight, gAux->keywidth - 1, proll_key + 2, gAux->lineHeight, true, false, false, false, IsPianoKeyPressed(key + 2));
+                    J_HPianoKey(g, aux_panel->ptdrawx1 - aux_panel->keywidth, yc - aux_panel->lineHeight, aux_panel->keywidth - 1, proll_key + 1, aux_panel->lineHeight, true, false, false, false, IsPianoKeyPressed(key + 1));
+                    J_HPianoKey(g, aux_panel->ptdrawx1 - aux_panel->keywidth, yc - aux_panel->lineHeight - aux_panel->lineHeight, aux_panel->keywidth - 1, proll_key + 2, aux_panel->lineHeight, true, false, false, false, IsPianoKeyPressed(key + 2));
                 }
             
                 if(absline == num_lines - 1)
                 {
-                    J_HPianoKey(g, gAux->ptdrawx1 - gAux->keywidth, yc + gAux->lineHeight, gAux->keywidth - 1, proll_key - 1, gAux->lineHeight, true, false, false, false, IsPianoKeyPressed(key - 1));
-                    J_HPianoKey(g, gAux->ptdrawx1 - gAux->keywidth, yc + gAux->lineHeight + gAux->lineHeight, gAux->keywidth - 1, proll_key - 2, gAux->lineHeight, true, false, false, false, IsPianoKeyPressed(key - 2));
+                    J_HPianoKey(g, aux_panel->ptdrawx1 - aux_panel->keywidth, yc + aux_panel->lineHeight, aux_panel->keywidth - 1, proll_key - 1, aux_panel->lineHeight, true, false, false, false, IsPianoKeyPressed(key - 1));
+                    J_HPianoKey(g, aux_panel->ptdrawx1 - aux_panel->keywidth, yc + aux_panel->lineHeight + aux_panel->lineHeight, aux_panel->keywidth - 1, proll_key - 2, aux_panel->lineHeight, true, false, false, false, IsPianoKeyPressed(key - 2));
                 }
             
-                J_HPianoKey(g, gAux->ptdrawx1 - gAux->keywidth, yc, gAux->keywidth - 1, proll_key, gAux->lineHeight, true, cutup, cutdown, false, IsPianoKeyPressed(key));
+                J_HPianoKey(g, aux_panel->ptdrawx1 - aux_panel->keywidth, yc, aux_panel->keywidth - 1, proll_key, aux_panel->lineHeight, true, cutup, cutdown, false, IsPianoKeyPressed(key));
                 if(proll_key == 11)
                 {
                     g.setColour(Colour(0xff000000));
-                    J_note_string(g, gAux->ptdrawx1 - 16, yc - 2, key + 1, false);
+                    J_note_string(g, aux_panel->ptdrawx1 - 16, yc - 2, key + 1, false);
                 }
             
                 if(proll_key == 11)    // line divider between octaves in piano-roll
@@ -9570,18 +9518,18 @@ void J_Aux_PianoKeys(Graphics& g)
                 if(proll_key == 0)
                 {
                     g.setColour(Colour(0xff000000));
-                    J_note_string(g, gAux->ptdrawx1 - 16, yc + gAux->lineHeight - 2, key, false);
+                    J_note_string(g, aux_panel->ptdrawx1 - 16, yc + aux_panel->lineHeight - 2, key, false);
                 }
             }
 
             absline++;
-            ytt += gAux->lineHeight;
+            ytt += aux_panel->lineHeight;
         }
     }
-    else if(gAux->workPt->OrigPt->autopatt == false)
+    else if(aux_panel->workPt->OrigPt->autopatt == false)
     {
-        J_PanelRect(g, AuxX1, AuxY1 + 2, AuxX1 + gAux->keywidth + 2, WindHeight);
-        J_LRect(g, AuxX1, AuxY1 + 2, AuxX1 + gAux->keywidth + 2, WindHeight);
+        J_PanelRect(g, AuxX1, AuxY1 + 2, AuxX1 + aux_panel->keywidth + 2, WindHeight);
+        J_LRect(g, AuxX1, AuxY1 + 2, AuxX1 + aux_panel->keywidth + 2, WindHeight);
 
         //J_LRectC(g, AuxX1 + 2, GridYS1, AuxX1 + gAux->keywidth + 2, GridYS2, Colour(0x5f000000));
     }
@@ -9589,10 +9537,10 @@ void J_Aux_PianoKeys(Graphics& g)
 
 void J_RefreshAuxGridImage()
 {
-    Pattern* pt = gAux->workPt;
+    Pattern* pt = aux_panel->workPt;
 
-    int ih = gAux->lineHeight*10;
-    int bw = RoundFloat((beats_per_bar*ticks_per_beat)*gAux->tickWidth);
+    int ih = aux_panel->lineHeight*10;
+    int bw = RoundFloat((beats_per_bar*ticks_per_beat)*aux_panel->tickWidth);
     int iw = bw;
     while(iw < 200)
     {
@@ -9656,7 +9604,7 @@ void J_RefreshAuxGridImage()
         col31 = Colour(0xff15152A);
     }
 
-    if(gAux->tickWidthBack > 1.5f)
+    if(aux_panel->tickWidthBack > 1.5f)
     {
         // Vertical lines
         while(1)
@@ -9685,12 +9633,12 @@ void J_RefreshAuxGridImage()
             J_VLine(imageContext2, xcoord, 0, ih);
 
             xtick++;
-            xpix += gAux->tickWidth;
+            xpix += aux_panel->tickWidth;
         }
     }
     else
     {
-        if(gAux->tickWidthBack < 1.5f)
+        if(aux_panel->tickWidthBack < 1.5f)
         {
             imageContext2.setColour(col31.darker(0.1f));
             imageContext2.fillAll();
@@ -9712,7 +9660,7 @@ void J_RefreshAuxGridImage()
         int g1 = beats_per_bar;
         int g2 = ticks_per_beat;
         float xcoord = 0;
-        float pixstep = float(gAux->tickWidth*ticks_per_beat);
+        float pixstep = float(aux_panel->tickWidth*ticks_per_beat);
         bool beats = float(pixstep - (int)pixstep) == 0; // Don't draw beats with noninteger step to avoid uneven shit
         while(1)
         {
@@ -9794,7 +9742,7 @@ void J_RefreshAuxGridImage()
         }
 
         absline++;
-        ytt += gAux->lineHeight;
+        ytt += aux_panel->lineHeight;
     }
 }
 
@@ -9806,21 +9754,21 @@ void J_Aux_Grid(Graphics& g)
     g.setColour(Colour(0xffFFFFFF));
     //J_FillRect(g, GridXS1, GridYS1, GridXS2, GridYS2);
 
-    Pattern* pt = gAux->workPt;
+    Pattern* pt = aux_panel->workPt;
 
     int cx = CursX;
     int cy = CursY;
 
-    int px1 = gAux->ptdrawx1;
-    int px2 = gAux->ptdrawx2;
-    int py1 = gAux->ptdrawy1;
-    int py2 = gAux->ptdrawy2;
+    int px1 = aux_panel->ptdrawx1;
+    int px2 = aux_panel->ptdrawx2;
+    int py1 = aux_panel->ptdrawy1;
+    int py2 = aux_panel->ptdrawy2;
 
     keyX = MainX1;
     keyY = GridYS1 + 1;
     if(GridXS2 > GridXS1)
     {
-        keyW = gAux->keywidth + 3;
+        keyW = aux_panel->keywidth + 3;
     }
     else
     {
@@ -9828,7 +9776,7 @@ void J_Aux_Grid(Graphics& g)
     }
     keyH = GridYS2 - GridYS1;
 
-    int ptx = (int)(gAux->tickWidth*gAux->workPt->tick_length - gAux->tickWidth*gAux->OffsTick);
+    int ptx = (int)(aux_panel->tickWidth*aux_panel->workPt->tick_length - aux_panel->tickWidth*aux_panel->OffsTick);
     if(ptx < 0)
     {
         ptx = 0;
@@ -9839,32 +9787,32 @@ void J_Aux_Grid(Graphics& g)
     }
 
     // Tile grid with pregenerated image
-    int xrange = RoundFloat((gAux->workPt->tick_length - gAux->OffsTick)*gAux->tickWidth);
+    int xrange = RoundFloat((aux_panel->workPt->tick_length - aux_panel->OffsTick)*aux_panel->tickWidth);
     int len = (beats_per_bar*ticks_per_beat);
-    int xoffs = RoundFloat((gAux->OffsTick/len - (int)gAux->OffsTick/len)*gAux->tickWidth*len);
+    int xoffs = RoundFloat((aux_panel->OffsTick/len - (int)aux_panel->OffsTick/len)*aux_panel->tickWidth*len);
 
     // Active part of the grid
-    if(gAux->workPt->tick_length > gAux->OffsTick)
+    if(aux_panel->workPt->tick_length > aux_panel->OffsTick)
     {
 #ifdef USE_OLD_JUCE
-        ImageBrush* ibrush1 = new ImageBrush(img_auxgrid1, GridXS1 - xoffs, GridYS1 - gAux->bottomincr, 1);
+        ImageBrush* ibrush1 = new ImageBrush(img_auxgrid1, GridXS1 - xoffs, GridYS1 - aux_panel->bottomincr, 1);
         g.setBrush(ibrush1);
 #else
-        g.setTiledImageFill(*img_auxgrid1, GridXS1 - xoffs, GridYS1 - gAux->bottomincr, 1);;
+        g.setTiledImageFill(*img_auxgrid1, GridXS1 - xoffs, GridYS1 - aux_panel->bottomincr, 1);;
 #endif
-        J_FillRect(g, GridXS1, GridYS1, GridXS1 + int((gAux->workPt->tick_length - gAux->OffsTick)*gAux->tickWidth), GridYS2);
+        J_FillRect(g, GridXS1, GridYS1, GridXS1 + int((aux_panel->workPt->tick_length - aux_panel->OffsTick)*aux_panel->tickWidth), GridYS2);
     }
 
     // Inactive part of the grid
-    if((gAux->workPt->tick_length - gAux->OffsTick)*gAux->tickWidth < (GridXS2 - GridXS1))
+    if((aux_panel->workPt->tick_length - aux_panel->OffsTick)*aux_panel->tickWidth < (GridXS2 - GridXS1))
     {
 #ifdef USE_OLD_JUCE
-        ImageBrush* ibrush2 = new ImageBrush(img_auxgrid2, GridXS1 - xoffs, GridYS1 - gAux->bottomincr, 1);
+        ImageBrush* ibrush2 = new ImageBrush(img_auxgrid2, GridXS1 - xoffs, GridYS1 - aux_panel->bottomincr, 1);
         g.setBrush(ibrush2);
 #else
-        g.setTiledImageFill(*img_auxgrid2, GridXS1 - xoffs, GridYS1 - gAux->bottomincr, 1);;
+        g.setTiledImageFill(*img_auxgrid2, GridXS1 - xoffs, GridYS1 - aux_panel->bottomincr, 1);;
 #endif
-        J_FillRect(g, GridXS1 +  int((gAux->workPt->tick_length - gAux->OffsTick)*gAux->tickWidth), GridYS1, GridXS2, GridYS2);
+        J_FillRect(g, GridXS1 +  int((aux_panel->workPt->tick_length - aux_panel->OffsTick)*aux_panel->tickWidth), GridYS1, GridXS2, GridYS2);
     }
 
 /*
@@ -10051,10 +9999,10 @@ void J_Aux_Grid(Graphics& g)
     g.restoreState();
 
     g.saveState();
-    g.reduceClipRegion(px1 - gAux->keywidth - 3, GridYS1 + 1, GridXS2 - (px1 - gAux->keywidth) + 3, GridYS2 - GridYS1 - 1);
+    g.reduceClipRegion(px1 - aux_panel->keywidth - 3, GridYS1 + 1, GridXS2 - (px1 - aux_panel->keywidth) + 3, GridYS2 - GridYS1 - 1);
 
-    int num_lines = (py2 - py1)/gAux->lineHeight;
-    int vo = (py2 - py1)%gAux->lineHeight;
+    int num_lines = (py2 - py1)/aux_panel->lineHeight;
+    int vo = (py2 - py1)%aux_panel->lineHeight;
     int line;
     int key;
     int ty = -1;
@@ -10072,18 +10020,18 @@ void J_Aux_Grid(Graphics& g)
     while(1)
     {
         yc = ytt + py1;
-        if(yc - gAux->lineHeight > py2)
+        if(yc - aux_panel->lineHeight > py2)
         {
             break;
         }
 
         if(pt->ptype == Patt_Pianoroll)
         {
-            line = gAux->note_offset - absline;
+            line = aux_panel->note_offset - absline;
         }
         else
         {
-            line = gAux->OffsLine + absline;
+            line = aux_panel->OffsLine + absline;
         }
 
         trk = GetTrkDataForLine(line, pt->OrigPt);
@@ -10170,11 +10118,11 @@ void J_Aux_Grid(Graphics& g)
                             g.setColour(Colour(0xffFFFFFF));
                             if(trk->defined_instr->type == Instr_Sample)
                             {
-                                g.drawImageAt(img_instrsmall1, px1 - gAux->keywidth - 2, yc + 1, false);
+                                g.drawImageAt(img_instrsmall1, px1 - aux_panel->keywidth - 2, yc + 1, false);
                             }
                             else
                             {
-                                g.drawImageAt(img_instrsmall2, px1 - gAux->keywidth - 2, yc + 1, false);
+                                g.drawImageAt(img_instrsmall2, px1 - aux_panel->keywidth - 2, yc + 1, false);
                             }
                             //g.setColour(Colour(0xff1F2F30));
                             //J_HLine(g, yc + 16, px1 - gAux->keywidth - 2, px1 - 1);
@@ -10182,9 +10130,9 @@ void J_Aux_Grid(Graphics& g)
                             if(trk->defined_instr == current_instr)
                             {
                                 g.setColour(Colour(0xffFF4F20));
-                                J_LineCRect(g, px1 - gAux->keywidth - 1, yc + 1, px1 - 1, yc + gAux->lineHeight - 1);
+                                J_LineCRect(g, px1 - aux_panel->keywidth - 1, yc + 1, px1 - 1, yc + aux_panel->lineHeight - 1);
                                 g.setColour(Colour(0x8fFF4F20));
-                                J_HLine(g, yc + 3, px1 - gAux->keywidth - 1, px1 - 2);
+                                J_HLine(g, yc + 3, px1 - aux_panel->keywidth - 1, px1 - 2);
                             }
 
                             /*
@@ -10209,7 +10157,7 @@ void J_Aux_Grid(Graphics& g)
                             {
                                 g.setColour(Colour(0xff8FBFFF));
                             }
-                            J_String_Small_Ranged(g, px1 - gAux->keywidth + 1, yc + gAux->lineHeight - 5, trk->defined_instr->name, gAux->keywidth - 2);
+                            J_String_Small_Ranged(g, px1 - aux_panel->keywidth + 1, yc + aux_panel->lineHeight - 5, trk->defined_instr->name, aux_panel->keywidth - 2);
                         }
                     }
                     else
@@ -10230,17 +10178,17 @@ void J_Aux_Grid(Graphics& g)
             
                 if(absline == 0)
                 {
-                    J_HPianoKey(g, px1 - gAux->keywidth, yc - gAux->lineHeight, gAux->keywidth - 1, proll_key + 1, gAux->lineHeight, true, false, false, false, IsPianoKeyPressed(key + 1));
-                    J_HPianoKey(g, px1 - gAux->keywidth, yc - gAux->lineHeight - gAux->lineHeight, gAux->keywidth - 1, proll_key + 2, gAux->lineHeight, true, false, false, false, IsPianoKeyPressed(key + 2));
+                    J_HPianoKey(g, px1 - aux_panel->keywidth, yc - aux_panel->lineHeight, aux_panel->keywidth - 1, proll_key + 1, aux_panel->lineHeight, true, false, false, false, IsPianoKeyPressed(key + 1));
+                    J_HPianoKey(g, px1 - aux_panel->keywidth, yc - aux_panel->lineHeight - aux_panel->lineHeight, aux_panel->keywidth - 1, proll_key + 2, aux_panel->lineHeight, true, false, false, false, IsPianoKeyPressed(key + 2));
                 }
             
                 if(absline == num_lines - 1)
                 {
-                    J_HPianoKey(g, px1 - gAux->keywidth, yc + gAux->lineHeight, gAux->keywidth - 1, proll_key - 1, gAux->lineHeight, true, false, false, false, IsPianoKeyPressed(key - 1));
-                    J_HPianoKey(g, px1 - gAux->keywidth, yc + gAux->lineHeight + gAux->lineHeight, gAux->keywidth - 1, proll_key - 2, gAux->lineHeight, true, false, false, false, IsPianoKeyPressed(key - 2));
+                    J_HPianoKey(g, px1 - aux_panel->keywidth, yc + aux_panel->lineHeight, aux_panel->keywidth - 1, proll_key - 1, aux_panel->lineHeight, true, false, false, false, IsPianoKeyPressed(key - 1));
+                    J_HPianoKey(g, px1 - aux_panel->keywidth, yc + aux_panel->lineHeight + aux_panel->lineHeight, aux_panel->keywidth - 1, proll_key - 2, aux_panel->lineHeight, true, false, false, false, IsPianoKeyPressed(key - 2));
                 }
             
-                J_HPianoKey(g, px1 - gAux->keywidth, yc, gAux->keywidth - 1, proll_key, gAux->lineHeight, true, cutup, cutdown, false, IsPianoKeyPressed(key));
+                J_HPianoKey(g, px1 - aux_panel->keywidth, yc, aux_panel->keywidth - 1, proll_key, aux_panel->lineHeight, true, cutup, cutdown, false, IsPianoKeyPressed(key));
                 if(proll_key == 11)
                 {
                     g.setColour(Colour(0xff000000));
@@ -10280,13 +10228,13 @@ void J_Aux_Grid(Graphics& g)
                 if(proll_key == 0)
                 {
                     g.setColour(Colour(0xff000000));
-                    J_note_string(g, px1 - 16, yc + gAux->lineHeight - 2, key, false);
+                    J_note_string(g, px1 - 16, yc + aux_panel->lineHeight - 2, key, false);
                 }
             }
         }
 
         absline++;
-        ytt += gAux->lineHeight;
+        ytt += aux_panel->lineHeight;
     }
 
     g.setColour(Colour(0xff000000));
@@ -10338,15 +10286,15 @@ void J_Aux_Scale(Graphics& g)
     g.setColour(Colour(140, 165, 170));
 
     int ticklen = (beats_per_bar*ticks_per_beat);
-    float pixlen = gAux->tickWidth*ticklen;
+    float pixlen = aux_panel->tickWidth*ticklen;
 
     int step = 1;
     while(pixlen*step < 19)
         step++;
-    int number = int(gAux->OffsTick/ticklen);
+    int number = int(aux_panel->OffsTick/ticklen);
     int stepcnt = (step - number%step)%step;
 
-    float xoffs = ((gAux->OffsTick/ticklen - int(gAux->OffsTick)/ticklen)*pixlen);
+    float xoffs = ((aux_panel->OffsTick/ticklen - int(aux_panel->OffsTick)/ticklen)*pixlen);
     float xcoord = GridXS1 - xoffs;
 	g.setFont(*ti);
     while(1)
@@ -10376,41 +10324,41 @@ void J_Aux_PattMode(Graphics& g)
     g.saveState();
     g.reduceClipRegion(AuxX1, AuxY1, AuxX2 - AuxX1 + 1, AuxY2 - AuxY1 + 1);
 
-    J_PanelRect(g, AuxX1, AuxY1 + 2, AuxX1 + gAux->keywidth + 2, WindHeight);
-    J_LRect(g, AuxX1, AuxY1 + 2, AuxX1 + gAux->keywidth + 2, WindHeight);
-    J_PanelRect(g, AuxX1, GridYS2, AuxX1 + gAux->keywidth + 2, WindHeight);
-    J_LRect(g, AuxX1, GridYS2, AuxX1 + gAux->keywidth + 2, WindHeight);
+    J_PanelRect(g, AuxX1, AuxY1 + 2, AuxX1 + aux_panel->keywidth + 2, WindHeight);
+    J_LRect(g, AuxX1, AuxY1 + 2, AuxX1 + aux_panel->keywidth + 2, WindHeight);
+    J_PanelRect(g, AuxX1, GridYS2, AuxX1 + aux_panel->keywidth + 2, WindHeight);
+    J_LRect(g, AuxX1, GridYS2, AuxX1 + aux_panel->keywidth + 2, WindHeight);
 
     //if(gAux->workPt->ptype != Patt_Pianoroll)
     //    J_LRectC(g, AuxX1 + 2, GridYS1, AuxX1 + gAux->keywidth + 2, GridYS2, Colour(0x5f000000));
 
-    gAux->UpdateDrawInfo();
+    aux_panel->UpdateDrawInfo();
 
     J_Aux_Grid(g);
 
     // Erase controls area
     g.setColour(Colour(4, 40, 35));
-    J_FillRect(g, gAux->pattx1 - 1, gAux->patty1 + 2, gAux->pattx1 + gAux->keywidth - 1, gAux->patty1 + 1 + 32);
+    J_FillRect(g, aux_panel->pattx1 - 1, aux_panel->patty1 + 2, aux_panel->pattx1 + aux_panel->keywidth - 1, aux_panel->patty1 + 1 + 32);
     // Draw play and stop buttons
-    J_Button(g, gAux->playbt, gAux->pattx1 - 2, gAux->patty1 + 1 + 13, 35, 19);
-    J_Button(g, gAux->stopbt, gAux->pattx1 + 34, gAux->patty1 + 1 + 13, 27, 19);
+    J_Button(g, aux_panel->playbt, aux_panel->pattx1 - 2, aux_panel->patty1 + 1 + 13, 35, 19);
+    J_Button(g, aux_panel->stopbt, aux_panel->pattx1 + 34, aux_panel->patty1 + 1 + 13, 27, 19);
     g.setColour(Colour(0xff3250A0));
-    J_HLine(g, gAux->patty1 + 1 + 11, gAux->pattx1 - 1, gAux->pattx1 + gAux->keywidth - 1);
+    J_HLine(g, aux_panel->patty1 + 1 + 11, aux_panel->pattx1 - 1, aux_panel->pattx1 + aux_panel->keywidth - 1);
     g.setColour(Colour(0xff003278));
-    J_HLine(g, gAux->patty1 + 1 + 12, gAux->pattx1 - 1, gAux->pattx1 + gAux->keywidth - 1);
-    if(gAux->workPt != gAux->blankPt)
+    J_HLine(g, aux_panel->patty1 + 1 + 12, aux_panel->pattx1 - 1, aux_panel->pattx1 + aux_panel->keywidth - 1);
+    if(aux_panel->workPt != aux_panel->blankPt)
     {
         //g.setColour(Colour(0xffFF0000));
         //J_LineRect(g, gAux->pattx1 - 1, gAux->patty1 + 2, gAux->pattx1 + gAux->keywidth - 1, gAux->patty1 + 13);
 
-        if(gAux->workPt->OrigPt->autopatt == false)
+        if(aux_panel->workPt->OrigPt->autopatt == false)
         {
             g.setColour(Colour(0xffEFEFEF));
-            J_String_Instr_Ranged(g, gAux->pattx1, gAux->patty1 + 1 + 10, gAux->workPt->name->string, gAux->keywidth + 2);
+            J_String_Instr_Ranged(g, aux_panel->pattx1, aux_panel->patty1 + 1 + 10, aux_panel->workPt->name->string, aux_panel->keywidth + 2);
         }
         else
         {
-            if(gAux->workPt->OrigPt->instr_owner->type == Instr_Sample)
+            if(aux_panel->workPt->OrigPt->instr_owner->type == Instr_Sample)
             {
                 g.setColour(smpcolour);
             }
@@ -10418,17 +10366,17 @@ void J_Aux_PattMode(Graphics& g)
             {
                 g.setColour(gencolour);
             }
-            J_String_Instr_Ranged(g, gAux->pattx1, gAux->patty1 + 1 + 10, gAux->workPt->OrigPt->instr_owner->name, gAux->keywidth + 2);
+            J_String_Instr_Ranged(g, aux_panel->pattx1, aux_panel->patty1 + 1 + 10, aux_panel->workPt->OrigPt->instr_owner->name, aux_panel->keywidth + 2);
         }
     }
     else
     {
         g.setColour(Colour(0xffAFAFAF));
-        J_TextBase_xy(g, gAux->pattx1, gAux->patty1 + 1 + 10, "blank");
+        J_TextBase_xy(g, aux_panel->pattx1, aux_panel->patty1 + 1 + 10, "blank");
     }
 
     int yq;
-    if(gAux->workPt->ptype != Patt_Pianoroll)
+    if(aux_panel->workPt->ptype != Patt_Pianoroll)
     {
         yq = GridYS2 + 2;
     }
@@ -10438,25 +10386,25 @@ void J_Aux_PattMode(Graphics& g)
 
         // Dark line at keys
         g.setColour(Colour(36, 122, 115));
-        J_VLine(g, gAux->pattx1 - 1, GridYS1, GridYS2);
+        J_VLine(g, aux_panel->pattx1 - 1, GridYS1, GridYS2);
 
         g.setColour(panelcolour.darker(0.8f));
-        J_FillRect(g, gAux->pattx1 - 2, GridYS2 + 2, gAux->pattx1 + gAux->keywidth + 3, GridYS2 + 18);
+        J_FillRect(g, aux_panel->pattx1 - 2, GridYS2 + 2, aux_panel->pattx1 + aux_panel->keywidth + 3, GridYS2 + 18);
         g.setColour(panelcolour.darker(0.3f));
-        J_LineRect(g, gAux->pattx1 - 2, GridYS2 + 2, gAux->pattx1 + gAux->keywidth + 2, GridYS2 + 19);
+        J_LineRect(g, aux_panel->pattx1 - 2, GridYS2 + 2, aux_panel->pattx1 + aux_panel->keywidth + 2, GridYS2 + 19);
 
-        gAux->bindX = gAux->pattx1;
-        gAux->bindY = GridYS2 + 2;
-        if(gAux->workPt->ibound == NULL)
+        aux_panel->bindX = aux_panel->pattx1;
+        aux_panel->bindY = GridYS2 + 2;
+        if(aux_panel->workPt->ibound == NULL)
         {
             g.setColour(Colour(125, 125, 125));
-            J_TextBase_xy(g, gAux->bindX, gAux->bindY + 15, "unbound");
+            J_TextBase_xy(g, aux_panel->bindX, aux_panel->bindY + 15, "unbound");
         }
         else
         {
             //g.drawImageAt(gAux->workPt->ibound->alimg, gAux->bindX, gAux->bindY + 5, false);
 
-            if(gAux->workPt->ibound->type == Instr_Sample)
+            if(aux_panel->workPt->ibound->type == Instr_Sample)
             {
                 g.setColour(smpcolour);
             }
@@ -10464,80 +10412,80 @@ void J_Aux_PattMode(Graphics& g)
             {
                 g.setColour(gencolour);
             }
-            J_String_Small_Ranged(g, gAux->bindX, gAux->bindY + 15, gAux->workPt->ibound->name, gAux->keywidth + 2);
+            J_String_Small_Ranged(g, aux_panel->bindX, aux_panel->bindY + 15, aux_panel->workPt->ibound->name, aux_panel->keywidth + 2);
         }
     }
 
     g.setColour(panelcolour.darker(0.45f));
-    J_FillRect(g, gAux->pattx1 - 2, yq, gAux->pattx1 + gAux->keywidth, yq + 25);
+    J_FillRect(g, aux_panel->pattx1 - 2, yq, aux_panel->pattx1 + aux_panel->keywidth, yq + 25);
     g.setColour(panelcolour.darker(0.2f));
-    J_LineRect(g, gAux->pattx1 - 2, yq, gAux->pattx1 + gAux->keywidth - 1, yq + 26);
+    J_LineRect(g, aux_panel->pattx1 - 2, yq, aux_panel->pattx1 + aux_panel->keywidth - 1, yq + 26);
 
-    DropMenu* dmn = gAux->qMenu;
-    J_QuantMenu(g, gAux->pattx1, yq + 3, dmn);
+    DropMenu* dmn = aux_panel->qMenu;
+    J_QuantMenu(g, aux_panel->pattx1, yq + 3, dmn);
 
     g.setColour(panelcolour);
-    J_FillRect(g, gAux->ptdrawx2 - 19, gAux->patty1 + 18, gAux->ptdrawx2 + 1, gAux->patty2);
-    J_LRect(g, gAux->ptdrawx2 - 19, gAux->patty1 + 18, gAux->ptdrawx2 + 1, gAux->patty2);
+    J_FillRect(g, aux_panel->ptdrawx2 - 19, aux_panel->patty1 + 18, aux_panel->ptdrawx2 + 1, aux_panel->patty2);
+    J_LRect(g, aux_panel->ptdrawx2 - 19, aux_panel->patty1 + 18, aux_panel->ptdrawx2 + 1, aux_panel->patty2);
 
     // PattExpand button
     g.setColour(Colour(0xffFFFFFF)); // to restore common alpha value
-    J_Button(g, gAux->PattExpand, gAux->ptdrawx2 - 16, gAux->patty1 + 2, 18, 18);
+    J_Button(g, aux_panel->PattExpand, aux_panel->ptdrawx2 - 16, aux_panel->patty1 + 2, 18, 18);
 
-    int hw = (gAux->ptdrawx2 - 19 - 24) - (gAux->pattx1 + gAux->keywidth + 23);
+    int hw = (aux_panel->ptdrawx2 - 19 - 24) - (aux_panel->pattx1 + aux_panel->keywidth + 23);
 
     if(hw > 0)
     {
-        gAux->h_sbar->Activate();
-        gAux->Back->Activate();
-        gAux->Forth->Activate();
+        aux_panel->h_sbar->Activate();
+        aux_panel->Back->Activate();
+        aux_panel->Forth->Activate();
 
-        J_ScrollBard(g, gAux->pattx1 + gAux->keywidth + 22, gAux->ptdrawx2 - 19 - 24, gAux->patty1 + 1, gAux->h_sbar, true, false);
-        gAux->h_sbar->Activate(gAux->h_sbar->x1, gAux->h_sbar->y, gAux->h_sbar->width, gAux->h_sbar->height);
+        J_ScrollBard(g, aux_panel->pattx1 + aux_panel->keywidth + 22, aux_panel->ptdrawx2 - 19 - 24, aux_panel->patty1 + 1, aux_panel->h_sbar, true, false);
+        aux_panel->h_sbar->Activate(aux_panel->h_sbar->x1, aux_panel->h_sbar->y, aux_panel->h_sbar->width, aux_panel->h_sbar->height);
 
-        J_DarkRect(g, gAux->pattx1 + gAux->keywidth - 1, gAux->patty1 + 1, gAux->pattx1 + gAux->keywidth + 23, gAux->patty1 + 3 + 18);
-        J_Button(g, gAux->Back, gAux->pattx1 + gAux->keywidth, gAux->patty1 + 3, 23, 15);
-        J_DarkRect(g, gAux->ptdrawx2 - 19 - 25, gAux->patty1 + 1, gAux->ptdrawx2 - 19, gAux->patty1 + 19);
-        J_Button(g, gAux->Forth, gAux->ptdrawx2 - 19 - 24, gAux->patty1 + 3, 23, 15);
+        J_DarkRect(g, aux_panel->pattx1 + aux_panel->keywidth - 1, aux_panel->patty1 + 1, aux_panel->pattx1 + aux_panel->keywidth + 23, aux_panel->patty1 + 3 + 18);
+        J_Button(g, aux_panel->Back, aux_panel->pattx1 + aux_panel->keywidth, aux_panel->patty1 + 3, 23, 15);
+        J_DarkRect(g, aux_panel->ptdrawx2 - 19 - 25, aux_panel->patty1 + 1, aux_panel->ptdrawx2 - 19, aux_panel->patty1 + 19);
+        J_Button(g, aux_panel->Forth, aux_panel->ptdrawx2 - 19 - 24, aux_panel->patty1 + 3, 23, 15);
     }
     else
     {
-        gAux->h_sbar->Deactivate();
-        gAux->Back->Deactivate();
-        gAux->Forth->Deactivate();
+        aux_panel->h_sbar->Deactivate();
+        aux_panel->Back->Deactivate();
+        aux_panel->Forth->Deactivate();
     }
 
-    int vh = (gAux->patty2 - 20) - (gAux->patty1 + 1 + 39);
+    int vh = (aux_panel->patty2 - 20) - (aux_panel->patty1 + 1 + 39);
 
     if(vh > 0)
     {
-        gAux->Up->Activate();
-        gAux->Down->Activate();
+        aux_panel->Up->Activate();
+        aux_panel->Down->Activate();
 
-        J_ScrollBard(g, gAux->patty1 + 1 + 37, gAux->patty2 - 18, gAux->ptdrawx2 - 19, gAux->v_sbar, true, false);
-        gAux->v_sbar->Activate(gAux->v_sbar->x, gAux->v_sbar->y1, gAux->v_sbar->width, gAux->v_sbar->height);
+        J_ScrollBard(g, aux_panel->patty1 + 1 + 37, aux_panel->patty2 - 18, aux_panel->ptdrawx2 - 19, aux_panel->v_sbar, true, false);
+        aux_panel->v_sbar->Activate(aux_panel->v_sbar->x, aux_panel->v_sbar->y1, aux_panel->v_sbar->width, aux_panel->v_sbar->height);
 
-        J_DarkRect(g, gAux->ptdrawx2 - 19, gAux->patty1 + 1 + 19, gAux->ptdrawx2 - 1, gAux->patty1 + 1 + 19 + 19 + 1);
-        J_Button(g, gAux->Up, gAux->ptdrawx2 - 17, gAux->patty1 + 1 + 21, 17, 17);
-        J_DarkRect(g, gAux->ptdrawx2 - 19, gAux->patty2 - 2 - 18, gAux->ptdrawx2 - 1, gAux->patty2);
-        J_Button(g, gAux->Down, gAux->ptdrawx2 - 17, gAux->patty2 - 18, 17, 17);
+        J_DarkRect(g, aux_panel->ptdrawx2 - 19, aux_panel->patty1 + 1 + 19, aux_panel->ptdrawx2 - 1, aux_panel->patty1 + 1 + 19 + 19 + 1);
+        J_Button(g, aux_panel->Up, aux_panel->ptdrawx2 - 17, aux_panel->patty1 + 1 + 21, 17, 17);
+        J_DarkRect(g, aux_panel->ptdrawx2 - 19, aux_panel->patty2 - 2 - 18, aux_panel->ptdrawx2 - 1, aux_panel->patty2);
+        J_Button(g, aux_panel->Down, aux_panel->ptdrawx2 - 17, aux_panel->patty2 - 18, 17, 17);
     }
     else
     {
-        gAux->v_sbar->Deactivate();
-        gAux->Up->Deactivate();
-        gAux->Down->Deactivate();
+        aux_panel->v_sbar->Deactivate();
+        aux_panel->Up->Deactivate();
+        aux_panel->Down->Deactivate();
     }
 
     if(GridXS2 > GridXS1)
     {
         // Lines for auxscale
         g.setColour(Colour(0xff386482));
-        J_HLine(g, gAux->patty1 + 1 + gAux->h_sbar->tolschina + 1, gAux->pattx1 + gAux->keywidth, gAux->ptdrawx2 - 19);
+        J_HLine(g, aux_panel->patty1 + 1 + aux_panel->h_sbar->tolschina + 1, aux_panel->pattx1 + aux_panel->keywidth, aux_panel->ptdrawx2 - 19);
         g.setColour(Colour(0xff386482).darker(0.6f));
-        J_HLine(g, gAux->patty1 + 1 + gAux->h_sbar->tolschina + 2, gAux->pattx1 + gAux->keywidth, gAux->ptdrawx2 - 19);
+        J_HLine(g, aux_panel->patty1 + 1 + aux_panel->h_sbar->tolschina + 2, aux_panel->pattx1 + aux_panel->keywidth, aux_panel->ptdrawx2 - 19);
         g.setColour(Colour(0xff385472));
-        J_HLine(g, gAux->patty1 + 1 + gAux->h_sbar->tolschina + 15, gAux->pattx1 + gAux->keywidth, gAux->ptdrawx2 - 19);
+        J_HLine(g, aux_panel->patty1 + 1 + aux_panel->h_sbar->tolschina + 15, aux_panel->pattx1 + aux_panel->keywidth, aux_panel->ptdrawx2 - 19);
 
         //g.setColour(Colour(0x8f144650));
         //J_HLine(g, gAux->patty1 + 2 + 22, gAux->pattx1 + gAux->keywidth - 1, gAux->ptdrawx2 - 19);
@@ -10546,9 +10494,9 @@ void J_Aux_PattMode(Graphics& g)
 
         // Lines for auxaux
         g.setColour(Colour(0xff344660));
-        J_HLine(g, GridYS2, gAux->pattx1 + gAux->keywidth, gAux->ptdrawx2 - 19);
+        J_HLine(g, GridYS2, aux_panel->pattx1 + aux_panel->keywidth, aux_panel->ptdrawx2 - 19);
         g.setColour(Colour(0xff344660).brighter(0.2f));
-        J_HLine(g, GridYS2 + 1, gAux->pattx1 + gAux->keywidth, gAux->ptdrawx2 - 19);
+        J_HLine(g, GridYS2 + 1, aux_panel->pattx1 + aux_panel->keywidth, aux_panel->ptdrawx2 - 19);
 
         // Bottom dark line
         g.setColour(Colour(40, 50, 70));
@@ -10557,7 +10505,7 @@ void J_Aux_PattMode(Graphics& g)
     else
     {
         g.setColour(Colour(0xff144650));
-        J_Line(g, gAux->pattx1, gAux->patty1 + 1 + 34, GridXS2, gAux->patty1 + 1 + 34);
+        J_Line(g, aux_panel->pattx1, aux_panel->patty1 + 1 + 34, GridXS2, aux_panel->patty1 + 1 + 34);
     }
 
     g.restoreState();
@@ -10590,7 +10538,7 @@ void J_2Sends(Graphics& g, int x, int y, MixChannel* mchan, int x1r, int y1r, in
 
 void J_AuxMixerHighlights(Graphics& g, bool hlredraw)
 {
-    if(gAux->auxmode == AuxMode_Mixer)
+    if(aux_panel->auxmode == AuxMode_Mixer)
     {
         if(hlredraw)
         {
@@ -10600,10 +10548,10 @@ void J_AuxMixerHighlights(Graphics& g, bool hlredraw)
             g.reduceClipRegion(mixX, mixY, mixW - MixChanWidth - 11, mixH - 16);
             for(int mc = 0; mc < NUM_MIXCHANNELS; mc++)
             {
-                if(gAux->mchan[mc].visible == true)
+                if(aux_panel->mchan[mc].visible == true)
                 {
-                    mchan1 = &gAux->mchan[mc];
-                    if(mchan != NULL && mchan == &gAux->mchan[mc] && M.auxcellindexing)
+                    mchan1 = &aux_panel->mchan[mc];
+                    if(mchan != NULL && mchan == &aux_panel->mchan[mc] && M.auxcellindexing)
                     {
                         g.setColour(Colour(0xffFF5F2F));
                         J_TextFix_xy(g, mchan->x + 81, mchan->y - 1, mchan->indexstr);
@@ -10611,7 +10559,7 @@ void J_AuxMixerHighlights(Graphics& g, bool hlredraw)
                     else
                     {
                         g.setColour(Colour(61, 135, 148));
-                        J_TextFix_xy(g, gAux->mchan[mc].x + 81, gAux->mchan[mc].y - 1, gAux->mchan[mc].indexstr);
+                        J_TextFix_xy(g, aux_panel->mchan[mc].x + 81, aux_panel->mchan[mc].y - 1, aux_panel->mchan[mc].indexstr);
                     }
                 }
             }
@@ -10620,15 +10568,15 @@ void J_AuxMixerHighlights(Graphics& g, bool hlredraw)
 
         // While hlredraw flag represents occasional redraw stuff, there're also stuff, that we must
         // redraw always to prevent highlight corruption
-        if(gAux->current_eff != NULL)
+        if(aux_panel->current_eff != NULL)
         {
-            MixChannel* mchan = gAux->current_eff->mixcell->mchan;
+            MixChannel* mchan = aux_panel->current_eff->mixcell->mchan;
             if(mchan->visible == true)
             {
                 int y1 = mchan->ry1;
                 int y2 = mchan->ry2;
                 g.saveState();
-                if(mchan == &gAux->masterchan)
+                if(mchan == &aux_panel->masterchan)
                 {
                     g.reduceClipRegion(mixX + mixW - MixChanWidth - 11, y1, MixChanWidth, y2 - y1);
                 }
@@ -10637,14 +10585,14 @@ void J_AuxMixerHighlights(Graphics& g, bool hlredraw)
                     g.reduceClipRegion(mixX, y1, mixW - MixChanWidth - 11, y2 - y1);
                 }
 
-                Eff* eff = gAux->current_eff;
+                Eff* eff = aux_panel->current_eff;
                 g.setColour(Colour(0xffFF6830));
-                J_HLine(g, eff->y, eff->x, eff->x + eff->w + 2);
-                J_HLine(g, eff->y + eff->h - 1, eff->x, eff->x + eff->w + 2);
+                J_HLine(g, eff->y, eff->x, eff->x + eff->width + 2);
+                J_HLine(g, eff->y + eff->height - 1, eff->x, eff->x + eff->width + 2);
 
                 g.setColour(Colour(0x8fFF6830));
-                J_HLine(g, eff->y + 1, eff->x, eff->x + eff->w + 2);
-                J_HLine(g, eff->y + eff->h - 2, eff->x, eff->x + eff->w + 2);
+                J_HLine(g, eff->y + 1, eff->x, eff->x + eff->width + 2);
+                J_HLine(g, eff->y + eff->height - 2, eff->x, eff->x + eff->width + 2);
 
                 g.restoreState();
             }
@@ -10662,7 +10610,7 @@ void J_AuxMixerHighlights(Graphics& g, bool hlredraw)
             else
             {
                 MixChannel* mchan = M.active_dropmixchannel;
-                if(M.active_dropmixchannel == &gAux->masterchan)
+                if(M.active_dropmixchannel == &aux_panel->masterchan)
                 {
                     g.reduceClipRegion(mixX + mixW - MixChanWidth - 11, mchan->ry1, MixChanWidth, mchan->ry2 - mchan->ry1);
                 }
@@ -10679,8 +10627,8 @@ void J_AuxMixerHighlights(Graphics& g, bool hlredraw)
                     {
                         x = M.dropeff1->x;
                         y = M.dropeff1->y;
-                        w = M.dropeff1->w + 2;
-                        h = M.dropeff1->h;
+                        w = M.dropeff1->width + 2;
+                        h = M.dropeff1->height;
                     }
                     else
                     {
@@ -10702,8 +10650,8 @@ void J_AuxMixerHighlights(Graphics& g, bool hlredraw)
                 {
                     x = M.dropeff2->x;
                     y = M.dropeff2->y;
-                    w = M.dropeff2->w + 2;
-                    h = M.dropeff2->h;
+                    w = M.dropeff2->width + 2;
+                    h = M.dropeff2->height;
                     g.setColour(Colour(0xffFFFF30));
                     J_Line(g, x, y, x + w, y);
                     g.setColour(Colour(0x7fFFFF30));
@@ -10853,7 +10801,7 @@ void J_MixChannel(Graphics& g, int x, int y, int h, MixChannel* mchan, int x1r, 
     bt->Activate(bt->x, bt->y, bt->width, bt->height, x1r, y1r, x2r, y2r);
     */
 
-    if(mchan != &gAux->masterchan && mchan->send == false)
+    if(mchan != &aux_panel->masterchan && mchan->send == false)
     {
         J_2Sends(g, x, yb - img_mixpad->getHeight(), mchan, x1r, y1r, x2r, y2r);
     }
@@ -10886,13 +10834,13 @@ void J_Aux_MixMode(Graphics& g)
     J_FillRect(g, mixX, mixY, mixX + mixW, mixY + mixH);
 
     int mixMasterX = mixX + mixW - MixChanWidth - 10;
-    int mcx = mixX - gAux->hoffs;
+    int mcx = mixX - aux_panel->hoffs;
     for(int mc = 0; mc < NUM_MIXCHANNELS; mc++)
     {
         if(mcx + MixChanWidth > mixX && mcx < mixMasterX - 1)
         {
-            gAux->mchan[mc].Enable();
-            J_MixChannel(g, mcx, mixY + mixHeading, mixH - gAux->sbarH - mixHeading + 1, &gAux->mchan[mc], mixX, mixY, mixMasterX - 2, mixY + mixH - gAux->sbarH + 1);
+            aux_panel->mchan[mc].Enable();
+            J_MixChannel(g, mcx, mixY + mixHeading, mixH - aux_panel->sbarH - mixHeading + 1, &aux_panel->mchan[mc], mixX, mixY, mixMasterX - 2, mixY + mixH - aux_panel->sbarH + 1);
 
             g.setColour(Colour(0, 37, 53));
             J_FillRect(g, mcx, mixY, mcx + MixChanWidth - 1, mixY + mixHeading - 1);
@@ -10903,11 +10851,11 @@ void J_Aux_MixMode(Graphics& g)
             //g.setColour(Colour(0x8f000000));
             //J_TextInstr_xy(g, mcx + 83, mixY + mixHeading, gAux->mchan[mc].indexstr);
             g.setColour(Colour(61, 135, 148));
-            J_TextFix_xy(g, mcx + 81, mixY + mixHeading - 1, gAux->mchan[mc].indexstr);
+            J_TextFix_xy(g, mcx + 81, mixY + mixHeading - 1, aux_panel->mchan[mc].indexstr);
         }
         else
         {
-            gAux->mchan[mc].Disable();
+            aux_panel->mchan[mc].Disable();
         }
         mcx += MixChanWidth + 1;
     }
@@ -10915,14 +10863,14 @@ void J_Aux_MixMode(Graphics& g)
     // Send channels
     mcx += 10;
     g.setColour(Colour(31, 49, 63));
-    J_FillRect(g, mcx - 10, mixY + mixHeading, mcx - 2, mixY + mixH - gAux->sbarH + 1);
+    J_FillRect(g, mcx - 10, mixY + mixHeading, mcx - 2, mixY + mixH - aux_panel->sbarH + 1);
 
     for(int sc = 0; sc < 3; sc++)
     {
         if(mcx + MixChanWidth > mixX && mcx < mixMasterX - 1)
         {
-            gAux->sendchan[sc].Enable();
-            J_MixChannel(g, mcx, mixY + mixHeading, mixH - gAux->sbarH - 9, &gAux->sendchan[sc], mixX, mixY, mixMasterX - 2, mixY + mixH - gAux->sbarH + 1);
+            aux_panel->sendchan[sc].Enable();
+            J_MixChannel(g, mcx, mixY + mixHeading, mixH - aux_panel->sbarH - 9, &aux_panel->sendchan[sc], mixX, mixY, mixMasterX - 2, mixY + mixH - aux_panel->sbarH + 1);
 
             g.setColour(Colour(0, 37, 53));
             J_FillRect(g, mcx + 1, mixY, mcx + MixChanWidth - 2, mixY + mixHeading - 1);
@@ -10933,21 +10881,21 @@ void J_Aux_MixMode(Graphics& g)
             //g.setColour(Colour(0xff000000));
             //J_TextInstr_xy(g, mcx + 68, mixY + 8, gAux->sendchan[sc].indexstr);
             g.setColour(Colour(84, 150, 178));
-            J_TextFix_xy(g, mcx + 63, mixY + mixHeading - 1, gAux->sendchan[sc].indexstr);
+            J_TextFix_xy(g, mcx + 63, mixY + mixHeading - 1, aux_panel->sendchan[sc].indexstr);
         }
         else
         {
-            gAux->sendchan[sc].Disable();
+            aux_panel->sendchan[sc].Disable();
         }
         mcx += MixChanWidth + 1;
     }
 
-    gAux->mix_sbar->full_len = float(NUM_MIXCHANNELS*(MixChanWidth + 1) + 14 + 3*(MixChanWidth + 1));
-    gAux->mix_sbar->offset = gAux->mix_sbar->actual_offset = float(gAux->hoffs);
-    gAux->mix_sbar->visible_len = float(mixMasterX - (mixX) - 1);
-    J_ScrollBard(g, mixX - 2, mixMasterX, mixY + mixH - gAux->sbarH, gAux->mix_sbar, false, false);
+    aux_panel->mix_sbar->full_len = float(NUM_MIXCHANNELS*(MixChanWidth + 1) + 14 + 3*(MixChanWidth + 1));
+    aux_panel->mix_sbar->offset = aux_panel->mix_sbar->actual_offset = float(aux_panel->hoffs);
+    aux_panel->mix_sbar->visible_len = float(mixMasterX - (mixX) - 1);
+    J_ScrollBard(g, mixX - 2, mixMasterX, mixY + mixH - aux_panel->sbarH, aux_panel->mix_sbar, false, false);
 
-    J_MixChannel(g, mixMasterX, mixY, mixH, &gAux->masterchan, mixX, mixY, mixX + mixW, mixY + mixH);
+    J_MixChannel(g, mixMasterX, mixY, mixH, &aux_panel->masterchan, mixX, mixY, mixX + mixW, mixY + mixH);
 
     //GradientBrush gb(Colour(0x00000000), float(mixMasterX - 10), float(mixY + (mixH - 15)/2), 
     //                  Colour(0x8f000000), float(mixMasterX - 1), float(mixY + (mixH - 15)/2),
@@ -10970,7 +10918,7 @@ void J_Aux(Graphics& g)
     J_PanelRect(g, AuxX1, AuxY1, MainX2 + MixCenterWidth, AuxY2 + 2);
     J_LRect(g, AuxX1 + 2, AuxY1 + 2, MainX2 + MixCenterWidth - 2, AuxY2);
 
-    if(gAux->isVolsPansMode())
+    if(aux_panel->isVolsPansMode())
     {
         g.setColour(Colour(0xff1F2F3F));
         //g.setColour(panelcolour.darker(1).darker(0.25f));
@@ -11047,13 +10995,13 @@ void J_Aux(Graphics& g)
             xtt += tickWidth;
         }
     }
-    else if(gAux->auxmode == AuxMode_Pattern)
+    else if(aux_panel->auxmode == AuxMode_Pattern)
     {
         g.setColour(Colour(0xff000000));
-        g.fillRect(AuxX1 + gAux->keywidth + 3, AuxY1 + 3, AuxX2 - AuxX1 - gAux->keywidth - 23, AuxY2 - AuxY1 - 4);
+        g.fillRect(AuxX1 + aux_panel->keywidth + 3, AuxY1 + 3, AuxX2 - AuxX1 - aux_panel->keywidth - 23, AuxY2 - AuxY1 - 4);
     }
 
-    if(gAux->isVolsPansMode() || (gAux->auxmode == AuxMode_Pattern && gAux->workPt->ptype != Patt_Pianoroll))
+    if(aux_panel->isVolsPansMode() || (aux_panel->auxmode == AuxMode_Pattern && aux_panel->workPt->ptype != Patt_Pianoroll))
     {
         if(MC->listen->comboCC != NULL && MC->listen->comboCC->isVisible() == true)
         {
@@ -11061,67 +11009,67 @@ void J_Aux(Graphics& g)
         }
     }
 
-    if(!(gAux->auxmode == AuxMode_Pattern && gAux->workPt->OrigPt->autopatt == true))
+    if(!(aux_panel->auxmode == AuxMode_Pattern && aux_panel->workPt->OrigPt->autopatt == true))
     {
-        gAux->relswitch->Deactivate();
-        gAux->reloctaver->btdn->Deactivate();
-        gAux->reloctaver->btup->Deactivate();
+        aux_panel->relswitch->Deactivate();
+        aux_panel->reloctaver->btdn->Deactivate();
+        aux_panel->reloctaver->btup->Deactivate();
     }
 
-    gAux->DisableStepVUs();
+    aux_panel->DisableStepVUs();
 
-    gAux->x = MainX1;
-    gAux->y = AuxY1;
-    gAux->width = AuxX2 - AuxX1 + MixCenterWidth;
-    gAux->height = AuxY2 - AuxY1 + 1;
+    aux_panel->x = MainX1;
+    aux_panel->y = AuxY1;
+    aux_panel->width = AuxX2 - AuxX1 + MixCenterWidth;
+    aux_panel->height = AuxY2 - AuxY1 + 1;
 
-    gAux->v_sbar->active = false;
-    gAux->h_sbar->active = false;
+    aux_panel->v_sbar->active = false;
+    aux_panel->h_sbar->active = false;
 
-    if(gAux->auxmode == AuxMode_Vols)
+    if(aux_panel->auxmode == AuxMode_Vols)
     {
         g.saveState();
         g.reduceClipRegion(AuxRX1, AuxRY1, AuxRX2 - AuxRX1 + 1, AuxRY2 - AuxRY1 + 1);
         J_VolLane(g, Loc_MainGrid, NULL, NULL, AuxRX1, AuxRY1, AuxRX2, AuxRY2);
         g.restoreState();
     }
-    else if(gAux->auxmode == AuxMode_Pans)
+    else if(aux_panel->auxmode == AuxMode_Pans)
     {
         g.saveState();
         g.reduceClipRegion(AuxRX1, AuxRY1, AuxRX2 - AuxRX1 + 1, AuxRY2 - AuxRY1 + 1);
         J_PanLane(g, Loc_MainGrid, NULL, NULL, AuxRX1, AuxRY1, AuxRX2, AuxRY2);;
         g.restoreState();
     }
-    else if(gAux->auxmode == AuxMode_Pattern)
+    else if(aux_panel->auxmode == AuxMode_Pattern)
     {
         J_Aux_PattMode(g);
     }
-    else if(gAux->auxmode == AuxMode_Mixer)
+    else if(aux_panel->auxmode == AuxMode_Mixer)
     {
         J_Aux_MixMode(g);
     }
 
-    if(gAux->auxmode != AuxMode_Mixer)
+    if(aux_panel->auxmode != AuxMode_Mixer)
     {
         J_Aux_ModeButtons(g, AuxX2 , AuxY1 + 2);
-        if(gAux->auxmode == AuxMode_Pattern)
+        if(aux_panel->auxmode == AuxMode_Pattern)
         {
             int yy = GridYS2 > AuxY1 + 188 ? GridYS2 : AuxY1 + 188;
             J_Aux_PattButtons(g, AuxX2, AuxY1 + 148, yy);
-            if(gAux->workPt->ptype == Patt_StepSeq)
+            if(aux_panel->workPt->ptype == Patt_StepSeq)
             {
                 //J_Button(Aux->revsmp, MainX2 + 4, MainY2 + 3 + 30 + 3 + 20 + 54 + 25 + 3 + 25 + 3, 26, 25);
             }
-            else if(gAux->workPt->ptype == Patt_Pianoroll)
+            else if(aux_panel->workPt->ptype == Patt_Pianoroll)
             {
             }
-            else if(gAux->workPt->ptype == Patt_Grid)
+            else if(aux_panel->workPt->ptype == Patt_Grid)
             {
                 if(GridYS2 > GridYS1)
                 {
                     g.saveState();
-                    g.reduceClipRegion(AuxX1, GridYS1, gAux->keywidth, GridYS2 - GridYS1);
-                    if(gAux->workPt->OrigPt->autopatt == true)
+                    g.reduceClipRegion(AuxX1, GridYS1, aux_panel->keywidth, GridYS2 - GridYS1);
+                    if(aux_panel->workPt->OrigPt->autopatt == true)
                     {
                         /* //Postponed
                         gAux->relswitch->Activate();
@@ -11134,9 +11082,9 @@ void J_Aux(Graphics& g)
                                                  rtg->height);
                         */
 
-                        gAux->reloctaver->btdn->Activate();
-                        gAux->reloctaver->btup->Activate();
-                        J_Numba(g, gAux->reloctaver, AuxX1 + 4, GridYS1 + 4);
+                        aux_panel->reloctaver->btdn->Activate();
+                        aux_panel->reloctaver->btup->Activate();
+                        J_Numba(g, aux_panel->reloctaver, AuxX1 + 4, GridYS1 + 4);
                     }
                     g.restoreState();
                 }
@@ -12208,11 +12156,6 @@ int J_Instr(Graphics& g, int x, int y, Instrument* instr)
     int aw = J_TString_Instr_xy(g, alx, y + InstrFoldedHeight - 3, instr->alias);
     g.restoreState();
 
-    if((x + 94) >= 0)
-    {
-        instr->awidth = aw;
-    }
-
     J_DigitStr_xy(g, x + instr->width - 26, y + InstrFoldedHeight - 2, instr->dfxstr, true);
     instr->dfxstr->Activate(instr->dfxstr->x - 1, instr->dfxstr->y - 11, instr->dfxstr->edx, instr->dfxstr->edy,
                             bx1, by1, bx2, by2);
@@ -12276,7 +12219,7 @@ int J_Instr(Graphics& g, int x, int y, Instrument* instr)
         //J_AutoToggle(g, instr->autopt, x + instr->width - 92, y + 20);
         g.setColour(Colour(38, 38, 38));
         g.fillRect(x + 29, y + 19, 26, 17);
-        J_WindowToggle(g, instr->pEditButton, x + 30, y + InstrFoldedHeight + 4);
+        J_WindowToggle(g, instr->pEditorButton, x + 30, y + InstrFoldedHeight + 4);
 
         instr->Enable();
         instr->vu->drawarea->SetBounds(x + 4, y + InstrUnfoldedHeight - 17, 28, 22,
@@ -12285,13 +12228,11 @@ int J_Instr(Graphics& g, int x, int y, Instrument* instr)
                               bx1, by1, bx2, by2);
         instr->solo->Activate(instr->solo->x, instr->solo->y, instr->solo->width, instr->solo->height,
                               bx1, by1, bx2, by2);
-        instr->autopt->Activate(instr->autopt->x, instr->autopt->y, instr->autopt->width, instr->autopt->height,
-                              bx1, by1, bx2, by2);
         instr->mvol->Activate(instr->mvol->x - 5, instr->mvol->y - 1, instr->mvol->width + 5 + 5, instr->mvol->height + 3,
                               bx1, by1, bx2, by2);
         instr->mpan->Activate(instr->mpan->x - 5, instr->mpan->y, instr->mpan->width + 5 + 5, instr->mpan->height + 2,
                               bx1, by1, bx2, by2);
-        instr->pEditButton->Activate(instr->pEditButton->x, instr->pEditButton->y, instr->pEditButton->width, instr->pEditButton->height,
+        instr->pEditorButton->Activate(instr->pEditorButton->x, instr->pEditorButton->y, instr->pEditorButton->width, instr->pEditorButton->height,
                               bx1, by1, bx2, by2);
     }
     else
@@ -12954,25 +12895,6 @@ void J_GainFolded(Graphics& g, int x, int y, Gain* amp, Mixcell* mcell)
     J_TString_Instr_xy(g, x + MixCellGap + 3, y - 11, mcell->mixstr);
 }
 
-void J_SendFolded(Graphics& g, int x, int y, Send* snd, Mixcell* mcell)
-{
-    g.drawImageAt(img_mcsend, x + MixCellGap + 1, y - MixCellBasicHeight - 3, false);
-
-    J_DigitStr_xy(g, x + MixCellGap + 31, y - 23, snd->fxstr, snd->send_mixcell != NULL);
-    snd->fxstr->edx = 18;
-    snd->fxstr->edy = 12;
-    snd->fxstr->Activate(snd->fxstr->x - 1, snd->fxstr->y - 11, snd->fxstr->edx, snd->fxstr->edy + 3,
-                         MixX, MixY, MixX + MixW, MixY + MixH);
-
-    Knob* kb = snd->r_amount;
-	J_KnobXLarge(g, kb, false, x + MixCellGap + 70, y - 24);
-    kb->Activate(kb->x - kb->rad, kb->y - kb->rad, kb->rad*2, kb->rad*2,
-                         MixX, MixY, MixX + MixW, MixY + MixH);
-
-    g.setColour(Colour(0xffFFFFFF));
-    J_TString_Instr_xy(g, x + MixCellGap + 3, y - 11, mcell->mixstr);
-}
-
 void J_VSTPluginFolded(Graphics& g, int x, int y, Mixcell* mcell)
 {
     CVSTPlugin* pPlug = NULL;
@@ -13003,73 +12925,6 @@ void J_VSTPluginFolded(Graphics& g, int x, int y, Mixcell* mcell)
         //J_TextButton(x, y - mcell->height + 11, 20, 10, ((VSTEffect*)(mcell->effect))->pEditButton);
         J_WindowButton(g, x + MixCellGap + 16, y - MixCellBasicHeight - 2, 20, 12, ((VSTEffect*)(mcell->effect))->pEditButton);
     }
-}
-
-int J_DrawMixcellContent(Graphics& g, int x, int y, Mixcell* mcell)
-{
-    int ret_val = MixCellBasicHeight;
-
-    switch(mcell->effect->type)
-    {
-        case EffType_Tremolo:
-        {
-            ret_val = J_Tremolo(g, x, y, (CTremolo*)(mcell->effect), mcell);
-        }break;
-        case EffType_Default:
-        {
-            ret_val = J_BlankEffect(g, x, y, (BlankEffect*)(mcell->effect), mcell);
-        }break;
-        case EffType_VSTPlugin:
-        {
-            J_VSTPluginFolded(g, x, y, mcell);
-            mcell->mixstr->active = false;
-        }
-        break;
-        case EffType_Gain:
-        {
-            J_GainFolded(g, x, y, (Gain*)(mcell->effect), mcell);
-        }break;
-        case EffType_Send:
-        {
-            J_SendFolded(g, x, y, (Send*)(mcell->effect), mcell);
-        }break;
-        case EffType_Filter:
-        {
-            ret_val = J_Filter(g, x, y, (Filter*)(mcell->effect), mcell);
-        }break;
-        case EffType_Equalizer1:
-        {
-            ret_val = J_Equalizer1(g, x, y, (EQ1*)(mcell->effect), mcell);
-        }break;
-        case EffType_Equalizer3:
-        {
-            ret_val = J_Equalizer3(g, x, y, (EQ3*)(mcell->effect), mcell);
-        }break;
-        case EffType_GraphicEQ:
-        {
-            ret_val = J_GraphicEQ(g, x, y, (GraphicEQ*)(mcell->effect), mcell);
-        }break;
-        case EffType_CFilter:
-        {
-            ret_val = J_CFilter(g, x, y, (CFilter*)(mcell->effect), mcell);
-        }break;
-        case EffType_XDelay:
-        {
-            ret_val = J_XDelay(g, x, y, (XDelay*)(mcell->effect), mcell);
-        }break;
-        case EffType_Compressor:
-        {
-            ret_val = J_Compressor(g, x, y, (Compressor*)(mcell->effect), mcell);
-        }break;
-        case EffType_Reverb:
-        {
-            ret_val = J_Reverb(g, x, y, (CReverb*)(mcell->effect), mcell);
-        }break;
-    }
-
-    // Draw common part for any FX. Right, Save button for presets
-    //GL_FxCommonButtons();
-    return ret_val;
 }
 
 int J_VSTPlugin(Graphics& g, int x, int y, VSTEffect* eff, MixChannel* mchan)
@@ -13498,7 +13353,7 @@ int J_DrawMixChannelContent(Graphics& g, int x, int y, MixChannel* mchan)
     while(eff != NULL)
     {
 		eff->x = x;
-		eff->w = MixChanWidth - 2;
+		eff->width = MixChanWidth - 2;
         eff->y = y + h;
 		effh = 0; // Insurance
         switch(eff->type)
@@ -13602,7 +13457,7 @@ int J_DrawMixChannelContent(Graphics& g, int x, int y, MixChannel* mchan)
             }break;
         }
 
-        if(eff->y + eff->h < mchan->ry1 || eff->y > mchan->ry2)
+        if(eff->y + eff->height < mchan->ry1 || eff->y > mchan->ry2)
         {
             eff->visible = false;
         }
@@ -13611,7 +13466,7 @@ int J_DrawMixChannelContent(Graphics& g, int x, int y, MixChannel* mchan)
             eff->visible = true;
         }
 
-        eff->h = effh;
+        eff->height = effh;
         h += effh;
 
         eff = eff->cnext;
@@ -13632,115 +13487,6 @@ void J_BlankMixcell(Graphics& g, int x, int y, Mixcell* mcell)
         J_Line(g, x + MixCellGap + 1, y - 9, x + MixCellWidth - 1, y - 9);
     
         J_Line(g, x + MixCellGap + 2, y - mcell->height + 10, x + MixCellWidth - 1, y - mcell->height + 10);
-    }
-}
-
-void J_Mixcell(Graphics& g, int xc, int yc, Mixcell* mcell, bool visible, int xb)
-{
-    mcell->visible = visible;
-    if(visible == true)
-    {
-        mcell->x = xc + MixCellGap + 1;
-        mcell->x1 = xc + MixCellWidth - 1;
-        mcell->y1 = yc - 10;
-        
-        int xstr;
-        xstr = xc + MixCellGap + 3;
-        if(xstr < xb || xstr >= WindWidth)
-        {
-            mcell->mixstr->active = false;
-        }
-        else
-        {
-            mcell->mixstr->active = true;
-        }
-
-        if(mcell->effect == NULL)
-        {
-            mcell->height = MixCellBasicHeight;
-            J_BlankMixcell(g, xc, yc, mcell);
-            g.setColour(Colour(0xff6482C8));
-            J_TString_Base_xy(g, xstr, yc - 11, mcell->mixstr);
-
-            mcell->fold_toggle->Deactivate();
-        }
-        else
-        {
-            mcell->height = J_DrawMixcellContent(g, xc, yc, mcell);
-            J_MixBypassToggle(g, xc + MixCellWidth + 1, yc - mcell->height + 6, mcell->bypass_toggle);
-            mcell->bypass_toggle->Activate(mcell->bypass_toggle->x,
-                                           mcell->bypass_toggle->y,
-                                           mcell->bypass_toggle->width,
-                                           mcell->bypass_toggle->height,
-                                           MixX,
-                                           MixY,
-                                           MixX + MixW,
-                                           MixY + MixH);
-            mcell->fold_toggle->Activate();
-        }
-        mcell->y = yc - mcell->height - 2;
-
-        int edxlen = MixCellWidth - 40;
-        if(xstr + edxlen > WindWidth)
-        {
-            edxlen -= (xstr + edxlen) - WindWidth;
-        }
-        mcell->mixstr->edx = edxlen;
-        mcell->mixstr->edy = 14;
-
-        g.setColour(Colour(0xff000000));
-        J_TextSmall_xy(g, mcell->x + 3, mcell->y + 11, mcell->indexstr);
-        if(mcell->queued == true)
-        {
-            g.setColour(Colour(0xffFF2000));
-            J_TextSmall_xy(g, mcell->x + 2, mcell->y + 10, mcell->indexstr);
-            g.setColour(Colour(0x4fFF2000));
-            J_TextSmall_xy(g, mcell->x + 1, mcell->y + 10, mcell->indexstr);
-            J_TextSmall_xy(g, mcell->x + 3, mcell->y + 10, mcell->indexstr);
-        }
-        else
-        {
-            //g.setColour(Colour(122, 164, 144));
-            if(mcell->effect == NULL)
-            {
-                g.setColour(Colour(83, 106, 115));
-            }
-            else
-            {
-                g.setColour(Colour(122, 164, 144));
-            }
-            J_TextSmall_xy(g, mcell->x + 2, mcell->y + 10, mcell->indexstr);
-        }
-
-        if(mcell->outpin->offset == false)
-        {
-            mcell->outpin->offset = true;
-            if(mcell->outcell != NULL && mcell->outcell->inpin->type == Ctrl_InPin_Bus)
-            {
-                mcell->outpin->xc_offs = 0;
-                mcell->outpin->yc_offs = yc - mcell->outcell->inpin->yc - 8;
-            }
-        }
-        J_InPin_pic(g, xc + MixCellWidth - 9, yc - mcell->height - 1, mcell->inpin);
-        J_OutPin(g, xc + MixCellWidth - 7, yc - 16, mcell->outpin);
-        mcell->drawarea->SetBounds(mcell->x, mcell->y, mcell->x1 - mcell->x + 1, mcell->y1 - mcell->y + 1);
-        mcell->Enable();
-    }
-    else if(visible == false)
-    {
-        mcell->inpin->x = xc + MixCellWidth - 10;
-        mcell->inpin->y = yc - mcell->height - 2;
-
-        mcell->inpin->xc = mcell->inpin->x + 4;
-        mcell->inpin->yc = mcell->inpin->y + 3;
-
-        mcell->outpin->x = xc + MixCellWidth - 10;
-        mcell->outpin->y = yc - 16;
-
-        mcell->outpin->xc = mcell->outpin->x + 5;
-        mcell->outpin->yc = mcell->outpin->y + 3;
-
-        mcell->Disable();
     }
 }
 
@@ -13767,153 +13513,6 @@ void J_DrawHint(Graphics& g, Control *ctrl, int x , int y)
         //text::print_simple(hint_font, (GLfloat)x + 4, (GLfloat)y + 16, ctrl->hint);
         J_TextInstr_xy(g, x + 4, y + 16, ctrl->hint);
     }
-}
-
-bool J_SingleTrackControls(Graphics& g, int trknum, Trk* trkdata, SliderHPan* pan, SliderHVol* vol, Toggle* mute, Toggle* solo, int x, int y)
-{
-    g.setColour(Colour(0xff144650));
-    J_LineRect(g, x - 10, y, x + MixCenterWidth - 53, y + lineHeight);
-
-    g.setColour(Colour(0xff145660));
-    J_LineRect(g, x + 127, y, x + MixCenterWidth - 13, y + lineHeight);
-    
-    DigitStr* dstr = mix->trkfxstr[trknum];
-    J_DigitStr_xy(g, x + 131, y + lineHeight - 1, dstr, true);
-    dstr->edx = 34;
-    dstr->edy = 10;
-    dstr->active = true;
-    dstr->drawarea->Enable();
-    dstr->drawarea->SetBounds(dstr->x - 1, dstr->y - 11, dstr->edx, dstr->edy + 3,
-                              MainX2 + 3, MainY1 + 18, MainX2 + MixCenterWidth, GridY2);
-
-    pan->active = vol->active = mute->active = solo->active = true;
-
-    //J_KnobSmall(g, pan, x, y + 6);
-    J_SliderTrackPan(g, pan, x - 8, y + 2, true);
-    pan->drawarea->Enable();
-    pan->drawarea->SetBounds(pan->x, pan->y, pan->width + 2, pan->height + 2,
-                             MainX2 + 3, MainY1 + 18, MainX2 + MixCenterWidth, GridY2);
-    //pan->drawarea->SetBounds(pan->x - 6, pan->y - 6, pan->rad*2 + 1, pan->rad*2 + 1,
-    //                         MainX2 + 3, MainY1 + 18, MainX2 + MixCenterWidth, GridY2);
-
-    J_SliderTrackVol(g, vol, x + 37, y + 2);
-    vol->drawarea->Enable();
-    vol->drawarea->SetBounds(vol->x - 1, vol->y - 1, vol->width + 5, vol->height + 3,
-                             MainX2 + 3, MainY1 + 18, MainX2 + MixCenterWidth, GridY2);
-    
-    J_MuteToggle(g, mute, x + 101, y + 1);
-    mute->drawarea->Enable();
-    mute->drawarea->SetBounds(mute->x, mute->y, mute->width, mute->height,
-                              MainX2 + 3, MainY1 + 18, MainX2 + MixCenterWidth, GridY2);
-
-    J_SoloToggle(g, solo, x + 113, y + 1);
-    solo->drawarea->Enable();
-    solo->drawarea->SetBounds(solo->x, solo->y, solo->width, solo->height,
-                              MainX2 + 3, MainY1 + 18, MainX2 + MixCenterWidth, GridY2);
-
-    if((trkdata == C.maintrk && C.maintrk->bunchito == false)||
-       ((trkdata->buncho && C.maintrk == trkdata)||
-        (C.maintrk->bunched && C.maintrk->trkbunch->trk_start == trkdata)))
-    {
-        //g.setColour(Colour(0xff64FFFF));
-        //J_FilledRect(g, x - 10, y + 3, x - 8, yc + lineHeight - 3);
-        //J_Line(g, x - 10, y + 1, x + 126, y + 1);
-        //J_Line(g, x - 10, y + lineHeight - 1, x + 126, y + lineHeight - 1);
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
-
-void J_TrackControls(Graphics& g, int x, int y, int w, int h)
-{
-    bool prolled;
-    int linenum = OffsLine;
-    int trknum;
-    Trk* trkdata;
-    TrkBunch* ttb = NULL;
-    bool    bunched;
-    bool    buncho;
-    bool    curtrk;
-    int     bunchsize;
-
-    mixBrw->x = x;
-    mixBrw->y = y;
-    mixBrw->width = w;
-    mixBrw->height = h;
-
-    g.saveState();
-    g.reduceClipRegion(x, y, w, h);
-
-    trkdata = GetTrkDataForLine(OffsLine, field);
-    trknum = trkdata->trknum;
-    if(trknum < 999)
-    {
-        J_PanelRect1(g, x, y - 1, x + 4, MainY2 + 1);
-
-        g.setColour(Colour(0xff142428));
-        J_FillRect(g, x + 4, MainY1 + 16, x + MixCenterWidth - 39, GridY2 + 1);
-
-        g.setColour(Colour(0xff000000));
-        //J_Line(g, x + 9, MainY1 + 16, x + 9, GridY2 + 1);
-        g.fillRect(x + MixCenterWidth - 39, MainY1 + 16, 39, GridY2 - GridY1);
-
-        for(int yc = GridY1; yc <= GridY2; yc += lineHeight)
-        {
-            bunched = false;
-            buncho = false;
-            bunchsize = 1;
-
-            prolled = false;
-            if(linenum > trkdata->start_line)
-            {
-                prolled = true;
-            }
-
-            ttb = trkdata->trkbunch;    //CheckIfTrackBunched(trknum, field);
-            if(ttb != NULL)
-            {
-                bunchsize = ttb->end_track - ttb->start_track + 1;
-                if(trknum == ttb->start_track)
-                {
-                    buncho = true;
-                }
-                else
-                {
-                    bunched = true;
-                }
-            }
-
-            if(bunched == false && prolled == false)
-            {
-                curtrk = J_SingleTrackControls(g, trknum, trkdata, trkdata->pan, trkdata->vol, trkdata->mute, trkdata->solo, x + 13, yc);
-                if(curtrk)
-                {
-                    g.setColour(Colour(0xff14C800));
-                    J_FillRect(g, x + 2, yc, x + 2, yc + lineHeight);
-                }
-            }
-            linenum++;
-
-            if(trkdata->end_line < linenum)
-            {
-                trkdata = trkdata->next;
-                trknum = trkdata->trknum;
-                if(trknum > 999)
-                {
-                    break;
-                }
-            }
-        }
-    }
-    g.restoreState();
-}
-
-void J_TrackControls(Graphics& g)
-{
-    J_TrackControls(g, mixBrw->x, mixBrw->y, mixBrw->width, mixBrw->height);
 }
 
 void J_NodeSmall(Graphics& g, int x, int y)
@@ -14116,242 +13715,6 @@ void J_MixCenter(Graphics& g)
     //J_Button(g, gAux->AccCenter, MainX2 + 79, yacc + 3, 40, 17);
 }
 
-void J_Mixcells(Graphics& g, int xb, int yb, int xb_offs)
-{
-    mix->full_height = 0;
-    bool visible;
-    Mixcell* mcell;
-    SliderBase* sl;
-    SliderHPan* sl1;
-    Toggle* mute;
-    Toggle* solo;
-    int ycell;
-    int xcell = 0;
-    int xbb;
-    int yc, xc;
-    for(xc = xb_offs; xc < (xb_offs + MixCellWidth*NUM_MIXER_COLUMNS); xc += MixCellWidth)
-    {
-        g.setColour(Colour(0xffFFFFFF));
-        xbb = xb_offs + xcell*MixCellWidth + MixCellWidth + 7;
-        J_InPin_mbus(g, xbb, yb + 12, mix->f_cell[xcell].inpin);
-    
-        mute = mix->f_cell[xcell].mute_toggle;
-        solo = mix->f_cell[xcell].solo_toggle;
-		sl = mix->f_cell[xcell].vol_slider;
-        sl1 = mix->f_cell[xcell].pan_slider;
-
-        if(xc < WindWidth && xbb + 50 > xb)
-        {
-            mix->f_cell[xcell].Enable();
-
-            g.setColour(Colour(0xff000000));
-            J_TextInstr_xy(g, xbb - 41, WindHeight - MixMasterHeight + 10 + mix->v_offs, mix->f_cell[xcell].indexstr);
-            g.setColour(Colour(0xffFFFFFF));
-            J_TextInstr_xy(g, xbb - 42, WindHeight - MixMasterHeight + 9 + mix->v_offs, mix->f_cell[xcell].indexstr);
-    
-            J_SliderVertical(g, sl, xbb - 4, WindHeight - 3 + mix->v_offs, 14);
-
-            sl->Activate(sl->x - 13 + 11, sl->y - sl->height - 5, 18, 78 + 5,
-                         xb - 1, WindHeight - MixMasterHeight + mix->v_offs, WindWidth, WindHeight);
-
-            J_SliderMixPan(g, sl1, xbb - 28, WindHeight - MixMasterHeight + 14 + mix->v_offs, 8, true);
-            sl1->Activate(sl1->x, sl1->y, sl1->width + 2, sl1->height + 2,
-                          xb - 1, WindHeight - MixMasterHeight + mix->v_offs, WindWidth, WindHeight);
-
-            g.setColour(Colour(20, 40, 35));
-            J_FillRect(g, xbb - 10, WindHeight - MixMasterHeight - 1 + mix->v_offs,
-                          xbb + 17, WindHeight - MixMasterHeight + 11 + mix->v_offs);
-
-            //g.setColour(Colour(5, 66, 57));
-            //J_FillRect(g, xbb + 3, WindHeight - MixMasterHeight - 3 + 1 + mix->v_offs,
-            //              xbb + 4, WindHeight - MixMasterHeight - 3 + 12 + mix->v_offs);
-
-            J_MuteToggle1(g, mute, xbb - 9, WindHeight - MixMasterHeight + mix->v_offs);
-            mute->Activate(mute->x, mute->y, mute->width, mute->height,
-                           xb - 1, WindHeight - MixMasterHeight + mix->v_offs, WindWidth, WindHeight);
-
-            J_SoloToggle1(g, solo, xbb + 4, WindHeight - MixMasterHeight + mix->v_offs);
-            solo->Activate(solo->x, solo->y, solo->width, solo->height,
-                                      xb - 1, WindHeight - MixMasterHeight + mix->v_offs, WindWidth, WindHeight);
-
-        }
-        else
-        {
-            mix->f_cell[xcell].Disable();
-        }
-    
-        visible = false;
-        if((xc < (WindWidth))&&((xc + MixCellWidth - 1) > xb))
-        {
-            visible = true;
-        }
-    
-        ycell = NUM_MIXER_ROWS - 1;
-        yc = yb;        // for condition:  yc > (yb - MixCellBasicHeight*16)
-        while(ycell >= 0)
-        {
-            mcell = &(mix->r_cell[xcell][ycell]);
-            J_Mixcell(g, xc, yc, mcell, visible, xb);
-
-            if(ycell < NUM_MIXER_ROWS - 1)
-            {
-                g.setColour(Colour(23, 36, 46));
-                g.fillRect(xc + MixCellGap + 2, yc - 7, 94, 3);
-                //g.setColour(Colour(48, 82, 94));
-                //g.drawRect(xc + MixCellGap + 2, yc - 8, 94, 5);
-            }
-
-            yc -= mcell->height;
-            ycell--;
-        }
-    
-        if((WindHeight - yc) > mix->full_height)
-        {
-            mix->full_height = WindHeight - yc;
-        }
-    
-        xcell++;
-        if(xcell > NUM_MIXER_COLUMNS - 1)
-        {
-            break;
-        }
-    }
-    
-    // Draw master cells if they're visible
-    if(mix->horiz_bar->offset + mix->horiz_bar->visible_len >= mix->master_offset)
-    {
-        xc += MixCellWidth + 10;
-        ycell = NUM_MASTER_CELLS - 1;
-        yc = yb;
-        while(ycell >= 0)
-        {
-            mcell = &(mix->o_cell[ycell]);
-            J_Mixcell(g, xc, yc, mcell, true, xb);
-    
-            yc -= mcell->height;
-            ycell--;
-        }
-    
-        g.setColour(Colour(52, 107, 127));
-        for(yc = 0; yc < NUM_MASTER_CELLS; yc++)
-        {
-            mcell = &(mix->o_cell[yc]);
-            if(mcell->outcell != NULL && mcell->outpin->connected == true)
-            {
-                J_Line(g, mcell->outpin->xc - 1, mcell->outpin->yc,
-                        mcell->outcell->inpin->xc + mcell->outpin->xc_offs, mcell->outcell->inpin->yc + mcell->outpin->yc_offs);
-
-                g.drawImageAt(img_node2, mcell->outcell->inpin->xc + mcell->outpin->xc_offs - 4, mcell->outcell->inpin->yc + mcell->outpin->yc_offs - 1, false);
-            }
-    
-            mcell->outpin->active = false;
-            mcell->inpin->active = false;
-        }
-    
-        J_Line(g, mcell->outpin->xc - 1, mcell->outpin->yc, mcell->outpin->xc - 1, yb + 12);
-        J_FillRect(g, mcell->outpin->xc - 6, yb + 10, mcell->outpin->xc + 3, yb + 12);
-    
-        sl = mix->m_cell.vol_slider;
-        J_SliderVertical(g, sl, mcell->outpin->xc - 7, WindHeight - 3 + mix->v_offs, 14);
-    
-        sl->drawarea->Enable();
-        sl->drawarea->SetBounds(sl->x - 16, sl->y - sl->height - 5, 47, 78 + 5);
-    
-        sl->vu->drawarea->Enable();
-        sl->vu->drawarea->SetBounds(sl->x - 16, sl->y - sl->height - 5, 47, 78 + 5);
-    }
-    else
-    {
-        mix->m_cell.vol_slider->drawarea->Disable();
-        mix->m_cell.vol_slider->vu->drawarea->Disable();
-    
-        for(int y = 0; y < NUM_MASTER_CELLS; y++)
-        {
-            mix->o_cell[y].Disable();
-        }
-    }
-}
-
-void J_Mixer(Graphics& g)
-{
-    int xb;
-    xb = MainX2 + MixCenterWidth+ 8;
-
-    MixX = xb - 1;
-    MixY = 0;
-    MixW = WindWidth - xb + 1;
-    MixH = WindHeight;
-
-    bool skip_mix_area;
-    if((WindWidth - xb) <= 1)
-    {
-        skip_mix_area = true;
-        mix->horiz_bar->active = false;
-		mix->visible = false;
-
-        for(int x = 0; x < NUM_MIXER_COLUMNS; x++)
-        {
-            mix->f_cell[x].Disable();
-            for(int y = 0; y < NUM_MIXER_ROWS; y++)
-            {
-                mix->r_cell[x][y].Disable();
-            }
-        }
-
-        for(int y = 0; y < NUM_MASTER_CELLS; y++)
-        {
-            mix->o_cell[y].Disable();
-        }
-
-        mix->m_cell.Disable();
-    }
-    else
-    {
-        skip_mix_area = false;
-        mix->visible = true;
-    }
-
-    if(skip_mix_area == false)
-    {
-        g.setColour(Colour(0xff3264A0));
-        //J_Line(g, xb - 2, 28, WindWidth, 28);
-
-        g.setColour(Colour(0xff3C3C64));
-        //J_Line(g, xb - 2, 29, WindWidth, 29);
-
-        int yb = WindHeight - 1 - MixMasterHeight - 6 + mix->v_offs;
-        mix->horiz_bar->visible_len = (float)(WindWidth - xb);
-        if(mix->horiz_bar->visible_len > 120)
-        {
-            mix->horiz_bar->active = true;
-            J_ScrollBard(g, xb, WindWidth - 1, 0, mix->horiz_bar, false, true);
-        }
-        else
-        {
-            mix->horiz_bar->active = false;
-        }
-
-        g.saveState();
-        g.reduceClipRegion(xb - 1, 27, WindWidth - xb + 1, WindHeight - 27);
-
-        g.setColour(Colour(0xff000000));
-        g.fillRect(xb - 1, 27, WindWidth - xb + 1, WindHeight - 27);
-
-        int xb_offs = xb - (int)(mix->horiz_bar->offset);
-
-        // Master area
-        J_PanelRect(g, xb_offs, WindHeight - 1 - MixMasterHeight + mix->v_offs, WindWidth, WindHeight - 1 - MixMasterHeight + 120 + mix->v_offs);
-
-        J_Mixcells(g, xb, yb, xb_offs);
-
-        MC->MakeSnapshot(&MC->mixer, xb - 1, 29, WindWidth - xb + 1, WindHeight - 29 - ((MixMasterHeight - mix->v_offs) > 0 ? (MixMasterHeight - mix->v_offs) : 0));
-
-        J_MixerConnectionsAndHighlights(g);
-
-        g.restoreState();
-    }
-}
-
 void J_Menu(Graphics& g, Menu* mn)
 {
     switch(mn->mtype)
@@ -14377,9 +13740,9 @@ void J_Menu(Graphics& g, Menu* mn)
             {
                 J_QuantMenu(g, CP->qMenu->x, CP->qMenu->y, CP->qMenu);
             }
-            else if(mn == gAux->qMenu)
+            else if(mn == aux_panel->qMenu)
             {
-                J_QuantMenu(g, gAux->qMenu->x, gAux->qMenu->y - 20 + gAux->qMenu->height, gAux->qMenu);
+                J_QuantMenu(g, aux_panel->qMenu->x, aux_panel->qMenu->y - 20 + aux_panel->qMenu->height, aux_panel->qMenu);
             }
         }break;
     }
@@ -14556,11 +13919,6 @@ INLINE void J_Separates(Graphics& g)
             {
                 Instrument* instr = (Instrument*)da->drawobject;
                 J_Instr(g, instr->x, instr->y, instr);
-            }
-            else if(da->type == Draw_Mixcell)
-            {
-                Mixcell* mc = (Mixcell*)da->drawobject;
-                J_Mixcell(g, mc->x - MixCellGap - 1, mc->y + mc->height + 2, mc, mc->visible, MixX + 1);
             }
             else if(da->type == Draw_Param)
             {
@@ -14813,12 +14171,12 @@ void J_TestFonts(Graphics& g)
 
 void J_UnderPanel(Graphics& g)
 {
-    J_PanelRectBW(g, MainX1, GridY1 + (field->num_lines - OffsLine)*lineHeight, MainX2 + MixCenterWidth, GridY2);
+    J_PanelRectBW(g, MainX1, GridY1 + (field_pattern->num_lines - OffsLine)*lineHeight, MainX2 + MixCenterWidth, GridY2);
 }
 
 void J_UnderPanelRefresh()
 {
-    int y1 = GridY1 + (field->num_lines - OffsLine)*lineHeight;
+    int y1 = GridY1 + (field_pattern->num_lines - OffsLine)*lineHeight;
     MC->listen->repaint(MainX1, y1, MainX2 + MixCenterWidth - MainX1, GridY2 - y1 + 1);
 }
 
@@ -14832,7 +14190,6 @@ void J_DrawAll(Graphics& g)
 
     J_Content_Main(g);
 
-    //J_InstrCenter(g, MainX1 - InstrPanelWidth - GenBrowserGap - GenBrowserWidth + 5 - InstrCenterOffset, MainY1 - 2);
     J_InstrCenter(g, 0, MainY1 - 2);
 
     J_InstrPanel(g, MainX1 - InstrPanelWidth - InstrCenterOffset, MainY1 - 2);
@@ -14841,7 +14198,6 @@ void J_DrawAll(Graphics& g)
 
     J_MainScale(g);
 
-    //J_Mixer(g);
     J_MixCenter(g);
 
     if(J_IsUnder())
@@ -14871,7 +14227,7 @@ void J_UnderDrawAll(Graphics& g)
 
 bool J_IsUnder()
 {
-    if(OffsLine + numFieldLines + 1 > field->num_lines)
+    if(OffsLine + numFieldLines + 1 > field_pattern->num_lines)
     {
         return true;
     }

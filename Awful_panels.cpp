@@ -164,10 +164,6 @@ CtrlPanel::CtrlPanel()
     //MPan->SetHint("Master Panning Control\0");
 
     mAster.params->vol->AddControl(MVol);
-    if(mix != NULL)
-    {
-        mAster.params->vol->AddControl(mix->m_cell.vol_slider);
-    }
     mAster.params->vol->scope = &scope;
     mAster.params->pan->scope = &scope;
     MVol->SetAnchor(1);
@@ -464,24 +460,24 @@ void CtrlPanel::HandleButtDown(Butt* bt)
         }
         MixerWidth = MixCenterWidth;
         MainX2 = WindWidth - MixerWidth - 1;
-        gAux->volpan_height = 124;
-        MainY2 = WindHeight - gAux->volpan_height;
+        aux_panel->volpan_height = 124;
+        MainY2 = WindHeight - aux_panel->volpan_height;
         Grid2Main();
 
-        if(gAux->auxmode == AuxMode_Mixer)
+        if(aux_panel->auxmode == AuxMode_Mixer)
         {
             CP->HandleButtDown(CP->view_mixer);
         }
 
-        if(gAux->auxmode == AuxMode_Pattern)
+        if(aux_panel->auxmode == AuxMode_Pattern)
         {
-            if(gAux->last_vpmode == AuxMode_Vols)
+            if(aux_panel->last_vpmode == AuxMode_Vols)
             {
-                gAux->HandleButtDown(gAux->Vols);
+                aux_panel->HandleButtDown(aux_panel->Vols);
             }
-            else if(gAux->last_vpmode == AuxMode_Pans)
+            else if(aux_panel->last_vpmode == AuxMode_Pans)
             {
-                gAux->HandleButtDown(gAux->Pans);
+                aux_panel->HandleButtDown(aux_panel->Pans);
             }
         }
 
@@ -499,37 +495,37 @@ void CtrlPanel::HandleButtDown(Butt* bt)
         MainX2 = WindWidth - MixerWidth - 1;
         Grid2Main();
 
-        if(gAux->auxmode != AuxMode_Pattern)
+        if(aux_panel->auxmode != AuxMode_Pattern)
         {
-            if(gAux->workPt->ptype == Patt_Pianoroll)
+            if(aux_panel->workPt->ptype == Patt_Pianoroll)
             {
-                gAux->HandleButtDown(gAux->PtPianorol);
+                aux_panel->HandleButtDown(aux_panel->PtPianorol);
             }
-            else if(gAux->workPt->ptype == Patt_StepSeq)
+            else if(aux_panel->workPt->ptype == Patt_StepSeq)
             {
-                gAux->HandleButtDown(gAux->PtStepseq);
+                aux_panel->HandleButtDown(aux_panel->PtStepseq);
             }
             else
             {
-                gAux->HandleButtDown(gAux->PtUsual);
+                aux_panel->HandleButtDown(aux_panel->PtUsual);
             }
             
-            gAux->auxmode = AuxMode_Pattern;
+            aux_panel->auxmode = AuxMode_Pattern;
         }
 
-        if(gAux->PattExpand->pressed == false)
+        if(aux_panel->PattExpand->pressed == false)
         {
-            gAux->HandleButtDown(gAux->PattExpand);
+            aux_panel->HandleButtDown(aux_panel->PattExpand);
         }
 
         R(Refresh_All);
     }
     else if(bt == play_butt)
     {
-        if(gAux->playing == true)
+        if(aux_panel->playing == true)
         {
-            gAux->playing = false;
-            gAux->playbt->Release();
+            aux_panel->playing = false;
+            aux_panel->playbt->Release();
         }
 
         PlayMain();
@@ -546,12 +542,12 @@ void CtrlPanel::HandleButtDown(Butt* bt)
     {
         StopMain();
         play_butt->pressed = false;
-        gAux->playbt->pressed = false;
+        aux_panel->playbt->pressed = false;
 
         play_butt->Refresh();
-        if(gAux->auxmode == AuxMode_Pattern)
+        if(aux_panel->auxmode == AuxMode_Pattern)
         {
-            gAux->playbt->Refresh();
+            aux_panel->playbt->Refresh();
         }
     }
     else if(bt == Go2Home)
@@ -734,7 +730,7 @@ void CtrlPanel::HandleButtDown(Butt* bt)
             followPos = true;
             bt->Press();
 
-            if(!(Playing || gAux->playing))
+            if(!(Playing || aux_panel->playing))
             {
                 float currtick = Frame2Tick(pbkMain->currFrame_tsync);
                 if((currtick < main_bar->offset) ||
@@ -751,7 +747,7 @@ void CtrlPanel::HandleButtDown(Butt* bt)
         if(bt->pressed == false)
         {
             bt->Press();
-            if(gAux->playing == true)
+            if(aux_panel->playing == true)
             {
                 // Cancel aux playback by simulating keypress
                 //gAux->HandleButtDown(gAux->playbt);
@@ -811,11 +807,11 @@ void CtrlPanel::HandleButtDown(Butt* bt)
         if(bt->pressed == false)
         {
             bt->Press();
-            gAux->DisableAuxStuff();
-            gAux->DisablePatternStuff();
-            gAux->EnableMixStuff();
-            lastauxmode = gAux->auxmode;
-            gAux->auxmode = AuxMode_Mixer;
+            aux_panel->DisableAuxStuff();
+            aux_panel->DisablePatternStuff();
+            aux_panel->EnableMixStuff();
+            lastauxmode = aux_panel->auxmode;
+            aux_panel->auxmode = AuxMode_Mixer;
 
             if(mixBrw->CurrButt != mixBrw->HideTrackControls)
             {
@@ -831,10 +827,10 @@ void CtrlPanel::HandleButtDown(Butt* bt)
         else if(bt->pressed == true)
         {
             bt->Release();
-            gAux->DisableMixStuff();
+            aux_panel->DisableMixStuff();
             mixbrowse = false;
-            gAux->auxmode = lastauxmode;
-            gAux->EnableAuxStuff();
+            aux_panel->auxmode = lastauxmode;
+            aux_panel->EnableAuxStuff();
             switch(lastauxmode)
             {
                 case AuxMode_Vols:
@@ -844,7 +840,7 @@ void CtrlPanel::HandleButtDown(Butt* bt)
                     //gAux->HandleButtDown(gAux->Pans);
                     break;
                 case AuxMode_Pattern:
-                    gAux->EnablePatternStuff();
+                    aux_panel->EnablePatternStuff();
                     //gAux->HandleButtDown(gAux->CurrPt);
                     break;
             }
@@ -1610,10 +1606,10 @@ void Browser::UpdateParamsData()
     }
     else if (this->btype == Brw_Effects)
     {
-        if(gAux->current_eff != NULL)
+        if(aux_panel->current_eff != NULL)
         {
-            module = gAux->current_eff;
-            scope = &gAux->current_eff->scope;
+            module = aux_panel->current_eff;
+            scope = &aux_panel->current_eff->scope;
         }
 
         /*
@@ -1681,10 +1677,10 @@ void Browser::UpdatePresetData()
     }
     else if (this->btype == Brw_Effects)
     {
-        if(gAux->current_eff != NULL)
+        if(aux_panel->current_eff != NULL)
         {
-            module = gAux->current_eff;
-			if(gAux->current_eff->type != EffType_VSTPlugin)
+            module = aux_panel->current_eff;
+			if(aux_panel->current_eff->type != EffType_VSTPlugin)
 			{
                 // Rescan presets list since it can be changed outside of this module
 				module->DeletePresets();
@@ -1742,7 +1738,7 @@ void Browser::UpdateCurrentHighlight()
             Eff* eff = NULL;
             if(this->btype == Brw_Effects)
             {
-				eff = gAux->current_eff;
+				eff = aux_panel->current_eff;
                 //eff = mix->current_mixcell->effect;
             }
             else if(this->btype == Brw_Generators)
@@ -1768,6 +1764,7 @@ void Browser::UpdateCurrentHighlight()
                 }
             }
         }break;
+        /*
         case Browse_Files:
         {
             if (this->btype == Brw_Effects)
@@ -1800,6 +1797,7 @@ void Browser::UpdateCurrentHighlight()
                 }
             }
         }break;
+        */
 
         default:
             break;
@@ -2325,401 +2323,6 @@ Mixcell::Mixcell()
     MC->AddDrawArea(drawarea);
 }
 
-void Mixcell::ConnectInputCell(Mixcell* mc)
-{
-    /* Use sema to prevent conflict on race condition */
-    WaitForSingleObject(mix->hMixMutex, INFINITE);
-
-	if(mc->outcell != this)
-	{
-		num_inputs++;
-		mc->outcell = this;
-		mc->outpin->dst = inpin;
-		mc->outpin->connected = true;
-		mc->active_inputs_count = mc->num_active_inputs;
-		
-		if(mc->ReceivingSignal())
-		{
-		    Promote();
-		}
-	}
-
-    ReleaseMutex(mix->hMixMutex);
-}
-
-bool Mixcell::ReceivingSignal()
-{
-    return (num_active_inputs > 0 || queued == true);
-}
-
-void Mixcell::Disconnect()
-{
-    /* Use sema to prevent conflict on race condition */
-    WaitForSingleObject(mix->hMixMutex, INFINITE);
-
-	if(outcell != NULL)
-	{
-        if(ReceivingSignal())
-        {
-            outcell->Unpromote();
-        }
-        outcell->num_inputs--;
-		outcell = NULL;
-		outpin->dst = NULL;
-		outpin->connected = false;
-	}
-
-    ReleaseMutex(mix->hMixMutex);
-}
-
-void Mixcell::RenderIn2Out(int num_frames)
-{
-    float panv, volv, volL, volR;
-    bool off = false;
-    if(grouper == true)
-    {
-        if(params->muted == true || (Solo_Mixcell != NULL && Solo_Mixcell != this))
-        {
-            off = true;
-        }
-
-        bool fill;
-        if(off == false || mutecount < DECLICK_COUNT)
-            fill = true;
-        else
-            fill = false;
-
-        if(fill)
-        {
-            Envelope* venv = NULL;
-            Envelope* penv = NULL;
-            if(params->vol->envelopes != NULL)
-            {
-                venv = (Envelope*)((Command*)params->vol->envelopes->el)->paramedit;
-            }
-            if(params->pan->envelopes != NULL)
-            {
-                penv = (Envelope*)((Command*)params->pan->envelopes->el)->paramedit;
-            }
-
-            volv = params->vol->outval;
-
-            panv = params->pan->outval;
-            PanLinearRule(panv, &volL, &volR);
-
-            float aa = 1;
-            float outL, outR;
-			float mL, mR;
-            long tc = 0;
-            for(long cc = 0; cc < num_frames; cc++)
-            {
-                if(venv != NULL)
-                {
-                    volv = venv->buffoutval[cc];
-                }
-
-                if(penv != NULL)
-                {
-                    panv = penv->buffoutval[cc];
-                    PanLinearRule(panv, &volL, &volR);
-                }
-
-				if(volL > volR)
-					mR = (volL - volR)*in_buff[tc + 1];
-				else
-					mR = 0;
-
-				if(volR > volL)
-					mL = (volR - volL)*in_buff[tc];
-				else
-					mL = 0;
-
-				outL = in_buff[tc]*volL + mR;
-                outR = in_buff[tc + 1]*volR + mL;
-
-                if(off == true)
-                {
-                    // Fadeout case
-                    if(mutecount < DECLICK_COUNT)
-                    {
-                        aa = float(DECLICK_COUNT - mutecount)/DECLICK_COUNT;
-                        mutecount++;
-                    }
-                    else
-                        aa = 0;
-                }
-                else
-                {
-                    // Fadein case
-                    if(mutecount > 0)
-                    {
-                        aa = float(DECLICK_COUNT - mutecount)/DECLICK_COUNT;
-                        mutecount--;
-                    }
-                    else if(mutecount == 0)
-                        aa = 1;
-                }
-
-                out_buff[tc++] = outL*volv*aa;
-                out_buff[tc++] = outR*volv*aa;
-
-                vol_slider->vu->SetLR(out_buff[tc - 2], out_buff[tc - 1]);
-            }
-        }
-        else
-        {
-            memset(out_buff, 0, num_frames*sizeof(float)*2);
-        }
-    }
-    else
-    {
-        off = false;
-        if((effect == NULL)||(this->bypass == true)||(effect != NULL && effect->type == EffType_Send))
-        {
-            off = true;
-        }
-
-        bool process;
-        if(off == false || mutecount < DECLICK_COUNT)
-            process = true;
-        else
-            process = false;
-
-        if(process == true && effect != NULL)
-        {
-            if(off == false && mutecount > 0)
-            {
-                memcpy(auxbuff, in_buff, sizeof(float)*DECLICK_COUNT*2);
-                int cutecount = mutecount;
-                float aa = 1;
-                long tc = 0;
-                for(long cc = 0; cc < num_frames; cc++)
-                {
-                    if(cutecount > 0)
-                    {
-                        aa = float(DECLICK_COUNT - cutecount)/DECLICK_COUNT;
-                        cutecount--;
-                    }
-                    else if(cutecount == 0)
-                        aa = 1;
-
-                    // Fadein input buffer
-                    in_buff[tc++] *= (aa);
-                    in_buff[tc++] *= (aa);
-                }
-            }
-
-
-            if(effect != NULL)
-            {
-                effect->ProcessData(in_buff, out_buff, num_frames);
-            }
-            else
-            {
-                memcpy(out_buff, in_buff, num_frames*sizeof(float)*2);
-            }
-
-            // If need to antialias per switching
-            if(off == true)
-            {
-                float aa = 1;
-                long tc = 0;
-                for(long cc = 0; cc < num_frames; cc++)
-                {
-                    if(mutecount < DECLICK_COUNT)
-                    {
-                        aa = float(DECLICK_COUNT - mutecount)/DECLICK_COUNT;
-                        mutecount++;
-                    }
-                    else
-                    {
-                        aa = 0;
-                    }
-
-                    // Cross-fade input and output buffers
-                    out_buff[tc] = out_buff[tc]*aa + in_buff[tc++]*(1.0f - aa);
-                    out_buff[tc] = out_buff[tc]*aa + in_buff[tc++]*(1.0f - aa);
-                }
-            }
-            else if(off == false && mutecount > 0)
-            {
-                memcpy(in_buff, auxbuff, sizeof(float)*DECLICK_COUNT*2);
-                float aa = 1;
-                long tc = 0;
-                for(long cc = 0; cc < num_frames; cc++)
-                {
-                    // Fadein input buffer
-                    if(mutecount > 0)
-                    {
-                        aa = float(DECLICK_COUNT - mutecount)/DECLICK_COUNT;
-                        mutecount--;
-                    }
-                    else if(mutecount == 0)
-                        aa = 1;
-
-                    // Cross-fade input and output buffers
-                    out_buff[tc] = out_buff[tc]*aa + in_buff[tc++]*(1.0f - aa);
-                    out_buff[tc] = out_buff[tc]*aa + in_buff[tc++]*(1.0f - aa);
-                }
-            }
-        }
-        else
-        {
-            memcpy(out_buff, in_buff, num_frames*sizeof(float)*2);
-        }
-    }
-}
-
-void Mixcell::Clean()
-{
-    Disable();
-    if(effect != NULL)
-    {
-        WaitForSingleObject(mix->hMixMutex, INFINITE);
-
-        if(Playing == false && gAux->playing == false)
-        {
-            if(mix->current_mixcell == this && 
-                (mixBrw->brwmode == Browse_Params || mixBrw->brwmode == Browse_Presets))
-            {
-                mixBrw->Clean();
-            }
-            RemoveEff(effect);
-        }
-        else
-        {
-            effect->QueueDeletion();
-        }
-        effect = NULL;
-
-        ReleaseMutex(mix->hMixMutex);
-
-        height = MixCellBasicHeight;
-        folded = true;
-        bypass = false;
-        bypass_toggle->Deactivate();
-        fold_toggle->Deactivate();
-    }
-
-    R(Refresh_Mixer);
-}
-
-void Mixcell::Update()
-{
-    if(mixstr != NULL)
-    {
-        AliasRecord* ar = GetAliasRecordFromString(mixstr->string);
-
-        if(ar != NULL)
-        {
-            if(effect != NULL && effect->type != ar->type)
-            {
-                Clean();
-            }
-
-            if(effect == NULL)
-            {
-                switch(ar->type)
-                {
-                    case EffType_Gain:
-                    {
-                        effect = new Gain(this, ar);
-                    }break;
-                    case EffType_Filter:
-                    {
-                        effect = new Filter(this, ar);
-                    }break;
-                    case EffType_CFilter:
-                    {
-                        effect = new CFilter(this, ar);
-                    }break;
-                    case EffType_Equalizer1:
-                    {
-                        effect = new EQ1(this, ar);
-                    }break;
-                    case EffType_Equalizer3:
-                    {
-                        effect = new EQ3(this, ar);
-                    }break;
-                    case EffType_GraphicEQ:
-                    {
-                        effect = new GraphicEQ(this, ar);
-                    }break;
-                    case EffType_XDelay:
-                    {
-                        effect = new XDelay(this, ar);
-                    }break;
-                    case EffType_Reverb:
-                    {
-                        effect = new CReverb(this, ar);
-                    }break;
-                    case EffType_Tremolo:
-                    {
-                        effect = new CTremolo(this, ar);
-                    }break;
-                    case EffType_Send:
-                    {
-                        effect = new Send(this, ar);
-                    }break;
-                    case EffType_Compressor:
-                    {
-                        effect = new Compressor(this, ar);
-                    }break;
-                    case EffType_Default:
-                        effect = new BlankEffect(this, ar);
-                        break;
-                    case EffType_VSTPlugin:
-                    {
-                        folded = true;
-                        VSTEffect *pEffect = new VSTEffect(this, ar);
-
-                        if( pEffect->pPlug != NULL )
-                        {
-                            if (pEffect->category == EffCategory_Effect)
-                            {
-                                effect = pEffect;
-                            }
-                            else
-                            {
-                                AlertWindow::showMessageBox(AlertWindow::InfoIcon,
-                                                            T("Can't load FX"),
-                                                            T("Can't load this plugin into the Mixer slot"),
-                                                            T("OK"));
-                                delete pEffect;
-                                pEffect = NULL;
-                            }
-                        }
-                        else
-                        {
-                            delete pEffect;
-                            pEffect = NULL;
-                        }
-                    }break;
-                }
-
-                if(effect != NULL)
-                {
-                    AddEff(effect);
-                    bypass_toggle->Activate();
-                    fold_toggle->Activate();
-                }
-            }
-        }
-        else if(effect != NULL) // && (strlen(this->mixstr->string) == 0))
-        {
-            Clean();
-        }
-
-        if((mixBrw->brwmode == Browse_Presets || 
-            mixBrw->brwmode == Browse_Params) && mix->current_mixcell == this)
-        {
-            mixBrw->Update();
-        }
-
-        R(Refresh_Mixer);
-    }
-}
-
 void Mixcell::UpdateIndexStr()
 {
     if(auxcell)
@@ -2858,968 +2461,6 @@ void Mixcell::HandleToggle(Toggle* tg)
 	}
 }
 
-void Mixcell::Promote()
-{
-    num_active_inputs++;
-    active_inputs_count = num_active_inputs;
-    if(num_active_inputs == 1 && queued == false)
-    {
-        mix->PromoteMixcell(this);
-    }
-}
-
-void Mixcell::Unpromote()
-{
-    if(num_active_inputs > 0)
-    {
-        num_active_inputs--;
-        active_inputs_count = num_active_inputs;
-        if(num_active_inputs == 0 && queued == false)
-        {
-            mix->UnpromoteMixcell(this);
-        }
-    }
-}
-
-Mixer::Mixer()
-{
-    type = Panel_Mixer;
-    visible = false;
-    locked = false;
-    horiz_bar = new ScrollBard(Ctrl_HScrollBar, 0, 0, 25);
-    horiz_bar->full_len = (float)(MixCellWidth*NUM_MIXER_COLUMNS + MixCellWidth + 60);
-    horiz_bar->active = true;
-    master_offset = (float)(MixCellWidth*NUM_MIXER_COLUMNS);
-    last_mainx2 = -1;
-    full_height = 0;
-    v_offs = 0;
-    vert_bar = new ScrollBard(Ctrl_VScrollBar, 0, 0, 14);
-    AddNewControl(horiz_bar, this);
-    AddNewControl(vert_bar, this);
-    memset(&trkscope, 0, sizeof(Scope));
-    trkscope.for_track = true;
-    first_mixstr = last_mixstr = NULL;
-    this->hMixMutex = CreateMutex(NULL, FALSE, NULL);
-}
-
-void Mixer::InitCells()
-{
-    first_initial_mix_cell = NULL;
-    last_initial_mix_cell = NULL;
-    first_working = NULL;
-    last_working = NULL;
-
-    m_cell.vol_slider = new SliderBase(this, NULL);
-
-    //m_cell.params = new ParamSet(100, 50);
-    //m_cell.params->vol->AddControl(m_cell.vol_slider);
-    //m_cell.params->vol->SetNormalValue(1);
-    //m_cell.params->pan->SetNormalValue(0);
-
-	m_cell.inpin = new InPin;
-    m_cell.inpin->owna = &m_cell;
-    m_cell.outpin = new OutPin;
-    m_cell.outpin->owna = &m_cell;
-
-    m_cell.master = true;
-    m_cell.grouper = false;
-
-    AddNewControl(m_cell.vol_slider, &m_cell);
-    AddNewControl(m_cell.inpin, &m_cell);
-    AddNewControl(m_cell.outpin, &m_cell);
-
-    for(int i = 0; i < 1000; i++)
-    {
-        trkfxstr[i] = new DigitStr("--");
-        trkfxstr[i]->num_digits = 2;
-        trkfxstr[i]->panel = this;
-        trkfxstr[i]->highlightable = false;
-        Add_PEdit(trkfxstr[i]);
-    }
-
-    for(int f = 0; f < NUM_MIXER_COLUMNS; f++)
-    {
-        f_cell[f].vol_slider = new SliderBase(this, &f_cell[f].scope);
-        f_cell[f].pan_slider = new SliderHPan(60, this, &f_cell[f].scope);
-
-        f_cell[f].params = new ParamSet(100, 50, &f_cell[f].scope);
-        f_cell[f].params->vol->AddControl(f_cell[f].vol_slider);
-        f_cell[f].params->pan->AddControl(f_cell[f].pan_slider);
-        f_cell[f].params->vol->SetNormalValue(1);
-        f_cell[f].params->pan->SetNormalValue(0);
-
-        f_cell[f].vol_slider->SetAnchor(1);
-        f_cell[f].pan_slider->SetAnchor(0);
-
-        f_cell[f].mute_toggle = new Toggle(&f_cell[f], Toggle_Mute1);
-        f_cell[f].solo_toggle = new Toggle(&f_cell[f], Toggle_Solo1);
-
-        f_cell[f].inpin = new InPin_Bus;
-        f_cell[f].inpin->owna = &f_cell[f];
-        f_cell[f].outpin = new OutPin;
-        f_cell[f].outpin->owna = &f_cell[f];
-        f_cell[f].mixstr = new TString("", false);
-        f_cell[f].mixstr->panel = &f_cell[f];
-        f_cell[f].mixstr->highlightable = false;
-
-        f_cell[f].grouper = true;
-        f_cell[f].col = f;
-
-        f_cell[f].UpdateIndexStr();
-        f_cell[f].Disable();
-
-        m_cell.ConnectInputCell(&f_cell[f]);
-
-        AddNewControl(f_cell[f].mute_toggle, &f_cell[f]);
-        AddNewControl(f_cell[f].solo_toggle, &f_cell[f]);
-
-        AddNewControl(f_cell[f].vol_slider, &f_cell[f]);
-        AddNewControl(f_cell[f].pan_slider, &f_cell[f]);
-        AddNewControl(f_cell[f].inpin, &f_cell[f]);
-        AddNewControl(f_cell[f].outpin, &f_cell[f]);
-    }
-
-    for(int x = 0; x < NUM_MIXER_COLUMNS; x++)
-    {
-        for(int y = 0; y < NUM_MIXER_ROWS; y++)
-        {
-            r_cell[x][y].inpin = new InPin;
-            r_cell[x][y].inpin->owna = &r_cell[x][y];
-            r_cell[x][y].outpin = new OutPin;
-            r_cell[x][y].outpin->owna = &r_cell[x][y];
-            r_cell[x][y].mixstr = new TString("", false);
-            r_cell[x][y].mixstr->panel = &r_cell[x][y];
-            r_cell[x][y].mixstr->highlightable = false;
-
-            r_cell[x][y].row = y;
-            r_cell[x][y].col = x;
-            r_cell[x][y].UpdateIndexStr();
-            r_cell[x][y].Disable();
-
-            AddNewControl(r_cell[x][y].inpin, &r_cell[x][y]);
-            AddNewControl(r_cell[x][y].outpin, &r_cell[x][y]);
-            Add_PEdit(r_cell[x][y].mixstr);
-
-            if(y > 0)
-            {
-                r_cell[x][y].ConnectInputCell(&r_cell[x][y - 1]);
-            }
-        }
-        f_cell[x].ConnectInputCell(&r_cell[x][NUM_MIXER_ROWS - 1]);
-    }
-
-    for(int o = 0; o < NUM_MASTER_CELLS; o++)
-    {
-        o_cell[o].inpin = new InPin;
-        o_cell[o].inpin->owna = &o_cell[o];
-
-        o_cell[o].outpin = new OutPin;
-        o_cell[o].outpin->owna = &o_cell[o];
-
-        o_cell[o].mixstr = new TString("", false);
-        o_cell[o].mixstr->panel = &o_cell[o];
-        o_cell[o].mixstr->highlightable = false;
-    
-        o_cell[o].row = o;
-        o_cell[o].col = 0;
-        o_cell[o].indexstr[0] = '=';
-        o_cell[o].indexstr[1] = 0x30 + o;
-
-        AddNewControl(o_cell[o].inpin, &o_cell[o]);
-        AddNewControl(o_cell[o].outpin, &o_cell[o]);
-        Add_PEdit(o_cell[o].mixstr);
-
-        if(o > 0)
-        {
-            o_cell[o].ConnectInputCell(&o_cell[o - 1]);
-        }
-    }
-
-    current_mixcell = &r_cell[0][10];
-}
-
-bool Mixer::CheckPos4Control(int mouse_x, int mouse_y)
-{
-    int trk_num = Y2Line(mouse_y, Loc_MainGrid);
-    if(CheckIfTrackBunched(trk_num, field) != NULL)
-    {
-        return true;
-    }
-
-    Control* ct = first_ctrl;
-    while(ct != NULL)
-    {
-        if(ct->MouseCheck(mouse_x, mouse_y) != false)
-        {
-            return true;
-        }
-        ct = ct->pn_next;
-    }
-    return false;
-}
-
-void Mixer::CheckFXString(DigitStr * mixstr)
-{
-    Mixcell* mcell = GetMixcellFromFXString(mixstr);
-    mixstr->mcell = mcell;
-    if(mixstr->instr != NULL)
-    {
-        mixstr->instr->fxcell = mcell;
-    }
-    else if(mixstr->trk != NULL)
-    {
-        mixstr->trk->mcell = trkfxcell[mixstr->trk->trknum] = mcell;
-    }
-
-    if(mcell == &m_cell)
-    {
-        if(mixstr->queued == true)
-        {
-            RemoveMixstr(mixstr);
-        }
-    }
-    else
-    {
-        if(mixstr->queued == false)
-        {
-            AddMixstr(mixstr);
-        }
-        else
-            UpdatePaths();
-    }
-	R(Refresh_Mixer);
-}
-
-void Mixer::AddMixstr(DigitStr * mixstr)
-{
-    if((first_mixstr == NULL)&&(last_mixstr == NULL))
-    {
-        mixstr->mix_prev = NULL;
-        mixstr->mix_next = NULL;
-        first_mixstr = mixstr;
-        last_mixstr = first_mixstr;
-    }
-    else
-    {
-        last_mixstr->mix_next = mixstr;
-        mixstr->mix_prev = last_mixstr;
-        mixstr->mix_next = NULL;
-        last_mixstr = mixstr;
-    }
-    mixstr->queued = true;
-	UpdatePaths();
-}
-
-void Mixer::RemoveMixstr(DigitStr * mixstr)
-{
-    if((mixstr == first_mixstr)&&(mixstr == last_mixstr))
-    {
-        first_mixstr = NULL;
-        last_mixstr = NULL;
-    }
-    else if(mixstr == first_mixstr)
-    {
-        first_mixstr = mixstr->mix_next;
-        first_mixstr->mix_prev = NULL;
-    }
-    else if(mixstr == last_mixstr)
-    {
-        last_mixstr = mixstr->mix_prev;
-        last_mixstr->mix_next = NULL;
-    }
-    else
-    {
-        if(mixstr->mix_prev != NULL)
-        {
-            mixstr->mix_prev->mix_next = mixstr->mix_next;
-        }
-        if(mixstr->mix_next != NULL)
-        {
-            mixstr->mix_next->mix_prev = mixstr->mix_prev;
-        }
-    }
-    mixstr->queued = false;
-	UpdatePaths();
-}
-
-void Mixer::UpdatePaths()
-{
-    WaitForSingleObject(hMixMutex, INFINITE);
-
-    UnpromotePaths();
-    first_initial_mix_cell = NULL;
-    last_initial_mix_cell = NULL;
-    Mixcell* mcell;
-    DigitStr* fxstr = first_mixstr;
-    while(fxstr != NULL)
-    {
-        mcell = GetMixcellFromFXString(fxstr);
-
-        if(mcell != &m_cell && mcell->queued == false)
-        {
-            EnqueueMixcell(mcell);
-        }
-
-        fxstr = fxstr->mix_next;
-    }
-    PromotePaths();
-
-    ReleaseMutex(hMixMutex);
-}
-
-void Mixer::Update()
-{
-/*
-    first_initial_mix_cell = NULL;
-    last_initial_mix_cell = NULL;
-
-    for(int x = 0; x < NUM_MIXER_COLUMNS; x++)
-    {
-        f_cell[x].queued = false;
-        f_cell[x].num_active_inputs = 0;
-        f_cell[x].active_inputs_count = 0;
-
-        for(int y = 0; y < NUM_MIXER_ROWS; y++)
-        {
-            r_cell[x][y].queued = false;
-            r_cell[x][y].num_active_inputs = 0;
-            r_cell[x][y].active_inputs_count = 0;
-        }
-    }
-
-    m_cell.queued = false;
-    m_cell.num_active_inputs = 0;
-    m_cell.active_inputs_count = 0;
-
-    for(int i = 0; i < 1000; i++)
-    {
-        trkfxcell[i] = GetMixcellFromFXString(trkfxstr[i]);
-        if(trkfxcell[i] != &m_cell && trkfxcell[i]->queued == false)
-        {
-            EnqueueMixcell(trkfxcell[i]);
-        }
-    }
-
-    Instrument* i = first_instr;
-    while(i != NULL)
-    {
-        i->fxcell = GetMixcellFromFXString(i->dfxstr);
-        if(i->fxcell != &m_cell && i->fxcell->queued == false)
-        {
-            EnqueueMixcell(i->fxcell);
-        }
-        i = i->next;
-    }
-
-    PromotePaths();
-*/
-}
-
-// Unscan mixcell path until a node or master including sends recursively
-void Mixer::UnpromoteMixcell(Mixcell* mc)
-{
-    while(mc != NULL)
-    {
-        if(mc->effect != NULL && mc->effect->type == EffType_Send)
-        {
-            Send* snd = (Send*)mc->effect;
-            if(snd->send_mixcell != NULL)
-                snd->send_mixcell->Unpromote();
-        }
-    
-        mc = mc->outcell;
-        if(mc != NULL)
-        {
-            mc->num_active_inputs--;
-            mc->active_inputs_count = mc->num_active_inputs;
-            if(mc->ReceivingSignal())
-            {
-                break;
-            }
-        }
-    }
-}
-
-// Scan mixcell path until a node or master including sends recursively
-void Mixer::PromoteMixcell(Mixcell* mc)
-{
-    while(mc != NULL)
-    {
-        if(mc->effect != NULL && mc->effect->type == EffType_Send)
-        {
-            Send* snd = (Send*)mc->effect;
-            if(snd->send_mixcell != NULL)
-                snd->send_mixcell->Promote();
-        }
-    
-        mc = mc->outcell;
-        if(mc != NULL)
-        {
-            mc->num_active_inputs++;
-            mc->active_inputs_count = mc->num_active_inputs;
-            if(mc->num_active_inputs > 1 || mc->queued == true)
-            {
-                break;
-            }
-        }
-    }
-}
-
-void Mixer::UnpromotePaths()
-{
-    Mixcell* m;
-    Mixcell* mc = first_initial_mix_cell;
-    while(mc != NULL)
-    {
-        m = mc;
-        if(m->queued == true)
-        {
-            m->queued = false;
-			if(m->num_active_inputs == 0)
-			{
-				UnpromoteMixcell(m);
-			}
-        }
-        mc = mc->initial_next;
-    }
-}
-
-void Mixer::PromotePaths()
-{
-/*
-    Mixcell* m;
-    Mixcell* mc = first_initial_mix_cell;
-    while(mc != NULL)
-    {
-        m = mc;
-        while(m != NULL)
-        {
-            m->num_active_inputs = 0;
-            m->active_inputs_count = 0;
-            if(m == &m_cell)
-            {
-                break;
-            }
-            m = m->outcell;
-        }
-*/
-        // Dequeuing cells with dead end (probably unrequired)
-        /*
-        if(m == NULL)
-        {
-            m = mc;
-            mc = mc->initial_next;
-            DequeueMixcell(m);
-        }
-        else
-        {
-            mc = mc->initial_next;
-        }*/
-//      mc = mc->initial_next;
-//  }
-
-    Mixcell* m;
-    Mixcell* mc = first_initial_mix_cell;
-    while(mc != NULL)
-    {
-        m = mc;
-        if(m->queued == true)
-        {
-            PromoteMixcell(m);
-        }
-        mc = mc->initial_next;
-    }
-}
-
-void Mixer::EnqueueMixcell(Mixcell* mc)
-{
-    mc->queued = true;
-    if(first_initial_mix_cell == NULL && last_initial_mix_cell == NULL)
-    {
-        mc->initial_prev = NULL;
-        mc->initial_next = NULL;
-        first_initial_mix_cell = mc;
-    }
-    else
-    {
-        last_initial_mix_cell->initial_next = mc;
-        mc->initial_prev = last_initial_mix_cell;
-        mc->initial_next = NULL;
-    }
-    last_initial_mix_cell = mc;
-}
-
-void Mixer::DequeueMixcell(Mixcell* mc)
-{
-    mc->queued = false;
-	if(mc == first_initial_mix_cell && mc == last_initial_mix_cell)
-	{
-		first_initial_mix_cell = NULL;
-		last_initial_mix_cell = NULL;
-	}
-	else if(mc == first_initial_mix_cell)
-	{
-		first_initial_mix_cell = mc->initial_next;
-		first_initial_mix_cell->initial_prev = NULL;
-	}
-	else if(mc == last_initial_mix_cell)
-	{
-		last_initial_mix_cell = mc->initial_prev;
-		last_initial_mix_cell->initial_next = NULL;
-	}
-	else
-	{
-		if(mc->initial_prev != NULL)
-		{
-		    mc->initial_prev->initial_next = mc->initial_next;
-        }
-		if(mc->initial_next != NULL)
-		{
-		    mc->initial_next->initial_prev = mc->initial_prev;
-        }
-	}
-}
-
-void Mixer::ProcessMasterCells(int num_frames)
-{
-    Mixcell* mc = &o_cell[0];
-    memcpy(mc->in_buff, m_cell.in_buff, num_frames*8);
-    while(mc != NULL)
-    {
-        mc->RenderIn2Out(num_frames);
-		if(mc->outcell != NULL)
-		{
-        	memcpy(mc->outcell->in_buff, mc->out_buff, num_frames*8);
-		}
-        mc = mc->outcell;
-    }
-    memcpy(m_cell.in_buff, o_cell[NUM_MASTER_CELLS - 1].out_buff, num_frames*8);
-}
-
-void Mixer::FadeOutCells(int num_frames, int fpb)
-{
-    Mixcell* mcell = &m_cell;
-    float aaV = 1;
-    while(mcell != NULL)
-    {
-        for(int nc = 0; nc < fpb; nc++)
-        {
-            if(nc < num_frames)
-            {
-                mcell->in_buff[nc*2] *= float(num_frames - nc)/num_frames;
-                mcell->in_buff[nc*2 + 1] *= float(num_frames - nc)/num_frames;
-            }
-            else
-            {
-                mcell->in_buff[nc*2] = 0;
-                mcell->in_buff[nc*2 + 1] = 0;
-            }
-        }
-        if(mcell == &m_cell)
-			mcell = first_initial_mix_cell;
-		else
-			mcell = mcell->initial_next;
-    }
-}
-
-void Mixer::MixCellsToMaster(int num_frames)
-{
-    WaitForSingleObject(hMixMutex, INFINITE);
-
-	int i;
-    long fc;
-    Mixcell* mc;
-
-    AssignWorkingCellsToInitialCells();
-
-    while(first_working != &m_cell && first_working != NULL)
-    {
-        mc = first_working;
-        while(mc != NULL)
-        {
-			if(mc->outcell != NULL)
-			{
-				jassert(mc->outcell->active_inputs_count > 0);
-			}
-			jassert(mc->num_active_inputs >= 0);
-			jassert(mc->active_inputs_count >= 0);
-			///jassert(!(mc->active_inputs_count > 0 && (mc->working_prev == NULL && mc->working_next == NULL)));
-			if(mc->outcell == NULL || 
-               mc->outcell->active_inputs_count == 0 || 
-               mc->num_active_inputs < 0 || 
-               mc->active_inputs_count < 0 || 
-              (mc->active_inputs_count > 0 && (mc->working_prev == NULL && mc->working_next == NULL)))
-			{
-                // debug points
-                if(mc->outcell == NULL)
-                {
-                	int a = 1;
-                }
-                else if(mc->outcell->active_inputs_count == 0)
-                {
-                	int a = 11;
-                }
-                else if(mc->num_active_inputs < 0)
-                {
-                	int a = 2;
-                }
-                else if(mc->active_inputs_count < 0)
-                {
-                	int a = 3;
-                }
-                else if(mc->active_inputs_count > 0 && (mc->working_prev == NULL && mc->working_next == NULL))
-                {
-                	int a = 4;
-                }
-                // end of debug points
-
-                mc->active_inputs_count = mc->num_active_inputs;
-                mc->working = false;
-				memset(mc->in_buff, 0, sizeof(float)*MAX_BUFF_SIZE);
-				memset(mc->out_buff, 0, sizeof(float)*MAX_BUFF_SIZE);
-
-                if(mc->working_prev != NULL)
-                {
-                    mc->working_prev->working_next = mc->working_next;
-                }
-                else
-                {
-                    first_working = mc->working_next;
-                }
-
-                if(mc->working_next != NULL)
-                {
-                    mc->working_next->working_prev = mc->working_prev;
-                }
-                else
-                {
-                    last_working = mc->working_prev;
-                }
-            }
-            else if(mc->active_inputs_count == 0)
-            {
-                mc->active_inputs_count = mc->num_active_inputs;
-                if(mc->outcell != NULL)
-                {
-                    //proces bufo
-                    mc->RenderIn2Out(num_frames);
-                    mc->buff_new = true;
-
-                    if(mc->outcell->buff_new == true)
-                    {
-                        mc->outcell->buff_new = false;
-                        memcpy(mc->outcell->in_buff, mc->out_buff, num_frames*8);
-                    }
-                    else
-                    {
-                        i = 0;
-                        fc = 0;
-                        while(i < num_frames)
-                        {
-                            mc->outcell->in_buff[fc] += mc->out_buff[fc++];
-                            mc->outcell->in_buff[fc] += mc->out_buff[fc++];
-                            i++;
-                        }
-                    }
-
-                    if(mc->effect != NULL && mc->effect->type == EffType_Send)
-                    {
-                        Send* smc = (Send*)mc->effect;
-                        if(smc->send_mixcell != NULL)
-                        {
-                            if(smc->send_mixcell->buff_new == true)
-                            {
-                                smc->send_mixcell->buff_new = false;
-                                i = 0;
-                                fc = 0;
-                                while(i < num_frames)
-                                {
-                                    smc->send_mixcell->in_buff[fc] = mc->out_buff[fc++]*smc->amount->val;
-                                    smc->send_mixcell->in_buff[fc] = mc->out_buff[fc++]*smc->amount->val;
-                                    i++;
-                                }
-                            }
-                            else
-                            {
-                                i = 0;
-                                fc = 0;
-                                while(i < num_frames)
-                                {
-                                    smc->send_mixcell->in_buff[fc] += mc->out_buff[fc++]*smc->amount->val;
-                                    smc->send_mixcell->in_buff[fc] += mc->out_buff[fc++]*smc->amount->val;
-                                    i++;
-                                }
-                            }
-
-                            if(smc->send_mixcell != &m_cell && 
-                               smc->send_mixcell->active_inputs_count == smc->send_mixcell->num_active_inputs && 
-                               smc->send_mixcell->working == false)
-                            {
-                                smc->send_mixcell->working = true;
-                                smc->send_mixcell->working_prev = last_working;
-                                last_working->working_next = smc->send_mixcell;
-                                smc->send_mixcell->working_next = NULL;
-                                last_working = smc->send_mixcell;
-                            }
-                            smc->send_mixcell->active_inputs_count--;
-                        }
-                    }
-
-                    mc->working = false;
-                    if(mc->outcell != &m_cell && 
-                       mc->outcell->active_inputs_count == mc->outcell->num_active_inputs && 
-                       mc->outcell->working == false)
-                    {
-                        mc->outcell->working = true;
-                        mc->outcell->working_prev = mc->working_prev;
-                        mc->outcell->working_next = mc->working_next;
-
-                        if(mc->working_prev != NULL)
-                        {
-                            mc->working_prev->working_next = mc->outcell;
-                        }
-                        else
-                        {
-                            first_working = mc->outcell;
-                        }
-
-                        if(mc->working_next != NULL)
-                        {
-                            mc->working_next->working_prev = mc->outcell;
-                        }
-                        else
-                        {
-                            last_working = mc->outcell;
-                        }
-                    }
-                    else
-                    {
-                        if(mc->working_prev == NULL && mc->working_next == NULL)
-                        {
-                            // shit happens
-                            int a = 666;
-                        }
-
-                        if(mc->working_prev != NULL)
-                        {
-                            mc->working_prev->working_next = mc->working_next;
-                        }
-                        else
-                        {
-                            first_working = mc->working_next;
-                        }
-
-                        if(mc->working_next != NULL)
-                        {
-                            mc->working_next->working_prev = mc->working_prev;
-                        }
-                        else
-                        {
-                            last_working = mc->working_prev;
-                        }
-                    }
-                    mc->outcell->active_inputs_count--;
-				}
-            }
-
-            mc = mc->working_next;
-        }
-    }
-
-    // Cleanup cells that remain working to prevent blocking in future sessions
-    mc = first_working;
-    while(mc != NULL)
-    {
-        mc->working = false;
-        mc->buff_new = true;
-        mc->active_inputs_count = mc->num_active_inputs;
-
-        mc = mc->working_next;
-    }
-    m_cell.buff_new = true;
-    m_cell.active_inputs_count = m_cell.num_active_inputs;
-
-    ReleaseMutex(hMixMutex);
-}
-
-void Mixer::AddEffectFromBrowser(FileData * fdi, Mixcell* mcell)
-{
-    VSTEffect* pEffect = NULL;
-    AliasRecord ar;
-    char fullpath[MAX_PATH_STRING] = {0};
-
-    strcpy(fullpath, fdi->path);
-
-    char alias[MAX_ALIAS_STRING] = {0};
-    char *pAlias = NULL;
-
-    /* If effect is external plugin */
-    if ((pAlias = strstr(fullpath, "internal://")) == NULL)
-    {
-        ar.type = EffType_VSTPlugin;
-        strcpy(ar.alias, "plugins");
-
-        pEffect = new VSTEffect(mcell, &ar, fullpath);
-
-        if( pEffect->pPlug != NULL )
-        {
-            if (pEffect->pPlug->nAllocatedInbufs == 0)
-            {
-                delete pEffect;
-                pEffect = NULL;
-                AlertWindow::showMessageBox(AlertWindow::InfoIcon,
-                                            T(""),
-                                            T("This plugin can't be used as an effect."),
-                                            T("OK"));
-            }
-            else
-            {
-                if(mcell->effect != NULL)
-                {
-                    mcell->Clean();
-                }
-
-                AddEff((Eff*)pEffect);
-                mcell->effect = (Eff*)pEffect;
-
-                pEffect->pPlug->GetDisplayName(alias, 4);
-                strcpy(mcell->mixstr->string, alias);
-            }
-        }
-        else
-        {
-            delete pEffect;
-            pEffect = NULL;
-        }
-
-        R(Refresh_Mixer);
-    }
-    else /* it is internal FX */
-    {
-        AliasRecord* ar = NULL;
-        Eff* pEff = NULL;
-        pAlias += strlen("internal://");
-        ar = GetAliasRecordFromString(pAlias);
-
-        switch(ar->type)
-        {
-            case EffType_Gain:
-                pEff = new Gain(mcell, ar);
-                break;
-            case EffType_Filter:
-                pEff = new Filter(mcell, ar);
-                break;
-            case EffType_CFilter:
-                pEff = new CFilter(mcell, ar);
-                break;
-            case EffType_Equalizer1:
-                pEff = new EQ1(mcell, ar);
-                break;
-            case EffType_Equalizer3:
-                pEff = new EQ3(mcell, ar);
-                break;
-            case EffType_GraphicEQ:
-                pEff = new GraphicEQ(mcell, ar);
-                break;
-            case EffType_XDelay:
-                pEff = new XDelay(mcell, ar);
-                break;
-            case EffType_Reverb:
-                pEff = new CReverb(mcell, ar);
-                break;
-            case EffType_Tremolo:
-                pEff = new CTremolo(mcell, ar);
-                break;
-            case EffType_Send:
-                pEff = new Send(mcell, ar);
-                break;
-            case EffType_Compressor:
-                pEff = new Compressor(mcell, ar);
-                break;
-            case EffType_Default:
-                pEff = new BlankEffect(mcell, ar);
-                break;
-            default:
-                break;
-        }
-
-        if(pEff != NULL)
-        {
-            AddEff(pEff);
-
-            mcell->Clean();
-            mcell->effect = (Eff*)pEff;
-            mcell->mixstr->SetString(pAlias);
-            mcell->mixstr->CapFirst();
-            if(ar->type == EffType_GraphicEQ)
-            {
-                mcell->mixstr->string[1] -= 0x20;
-                mcell->mixstr->string[2] -= 0x20;
-            }
-            else if(ar->type == EffType_Equalizer1 || ar->type == EffType_Equalizer3)
-            {
-                mcell->mixstr->string[1] -= 0x20;
-            }
-
-            R(Refresh_Mixer);
-        }
-    }
-}
-
-void Mixer::PreInitialize()
-{
-    Mixcell* mc =first_initial_mix_cell;
-    while(mc != NULL)
-    {
-        memset(mc->in_buff, 0, sizeof(float)*MAX_BUFF_SIZE);
-        mc->buff_new = false;
-        mc->working = true;
-        mc->workqueued = true;
-        mc->working_prev = mc->initial_prev;
-        mc->working_next = mc->initial_next;
-        mc = mc->initial_next;
-    }
-    memset(mix->m_cell.in_buff, 0, sizeof(float)*MAX_BUFF_SIZE);
-    mix->m_cell.buff_new = false;
-}
-
-void Mixer::AssignWorkingCellsToInitialCells()
-{
-    Mixcell* mc = first_initial_mix_cell;
-    while(mc != NULL)
-    {
-        mc->buff_new = false;
-        mc->working = true;
-        mc->workqueued = true;
-        mc->working_prev = mc->initial_prev;
-        mc->working_next = mc->initial_next;
-        mc = mc->initial_next;
-    }
-    first_working = first_initial_mix_cell;
-    last_working = last_initial_mix_cell;
-}
-
-void Mixer::Click(int mouse_x, int mouse_y, bool dbclick, unsigned flags)
-{
-    if(M.active_mixcell != NULL &&
-        !(M.mmode & MOUSE_CONTROLLING && (M.active_ctrl->type == Ctrl_OutPin_Point || 
-                                          M.active_ctrl->type == Ctrl_InPin_Point || 
-                                          M.active_ctrl->type == Ctrl_Toggle)))
-    {
-		if(M.active_mixcell != current_mixcell)
-		{
-			current_mixcell = M.active_mixcell;
-			if((mixBrw->brwmode == Browse_Params) || (mixBrw->brwmode == Browse_Presets))
-			{
-				mixBrw->Update();
-			}
-		}
-
-        R(Refresh_MixHighlights);
-        R(Refresh_MixCenter);
-    }
-}
-
 InstrPanel::InstrPanel()
 {
     main_offs = 0;
@@ -3847,26 +2488,26 @@ InstrPanel::InstrPanel()
 
 void InstrPanel::EditInstrumentAutopattern(Instrument * instr)
 {
-    if(gAux->auxmode != AuxMode_Pattern)
+    if(aux_panel->auxmode != AuxMode_Pattern)
     {
-        gAux->EnablePatternStuff();
+        aux_panel->EnablePatternStuff();
     }
 
     // Place cursor at the previously edited pattern
-    if(C.loc == Loc_SmallGrid && gAux->workPt != gAux->blankPt)
+    if(C.loc == Loc_SmallGrid && aux_panel->workPt != aux_panel->blankPt)
     {
-        gAux->workPt->Activate();
+        aux_panel->workPt->Activate();
         C.loc = Loc_MainGrid;
-        C.patt = field;
-        CLine = gAux->workPt->track_line;
-        CTick = gAux->workPt->start_tick;
+        C.patt = field_pattern;
+        CLine = aux_panel->workPt->track_line;
+        CTick = aux_panel->workPt->start_tick;
     }
 
     if(instr->autoPatt == NULL)
     {
         instr->CreateAutoPattern();
     }
-    gAux->EditPattern(instr->autoPatt);
+    aux_panel->EditPattern(instr->autoPatt);
     UpdateElementsVisibility();
     R(Refresh_Aux);
 }
@@ -3926,7 +2567,7 @@ void InstrPanel::HandleButtUp(Butt* bt)
 void InstrPanel::Click(int mouse_x, int mouse_y, bool dbclick, unsigned flags)
 {
     if(!(flags & kbd_ctrl) && 
-        !(M.mmode & MOUSE_CONTROLLING && M.active_ctrl != M.active_instr->pEditButton) &&
+        !(M.mmode & MOUSE_CONTROLLING && M.active_ctrl != M.active_instr->pEditorButton) &&
          !(M.active_paramedit != NULL))
     {
         ChangeCurrentInstrument(M.active_instr);
@@ -4107,7 +2748,7 @@ void InstrPanel::RemoveInstrument(Instrument* i)
 			if(current_instr != NULL && current_instr->type == Instr_Sample)
 			{
 				SmpWnd->SetSample((Sample*)current_instr);
-				current_instr->pEditButton->pressed = i->pEditButton->pressed;
+				current_instr->pEditorButton->pressed = i->pEditorButton->pressed;
 			}
 			else
 			{
@@ -4122,9 +2763,9 @@ void InstrPanel::RemoveInstrument(Instrument* i)
         }
     }
 
-    if(gAux->workPt == i->autoPatt)
+    if(aux_panel->workPt == i->autoPatt)
     {
-        gAux->HandleButtDown(gAux->PtPianorol);
+        aux_panel->HandleButtDown(aux_panel->PtPianorol);
     }
 
     if((i == first_instr)&&(i == last_instr))
@@ -4236,7 +2877,7 @@ Instrument* InstrPanel::AddInstrumentFromBrowser(FileData * fdi, bool bottom)
         UpdateStepSequencers();
 
         R(Refresh_InstrPanel);
-        if(gAux->auxmode == AuxMode_Pattern && gAux->workPt->ptype == Patt_StepSeq)
+        if(aux_panel->auxmode == AuxMode_Pattern && aux_panel->workPt->ptype == Patt_StepSeq)
         {
             R(Refresh_Aux);
         }
@@ -4277,14 +2918,14 @@ void MixChannelScrollClick(Object* owner, Object* self)
         Eff* eff = mchan->first_eff;
         while(eff != NULL)
         {
-            if(eff->y + eff->h >= mchan->ry1 - 1)
+            if(eff->y + eff->height >= mchan->ry1 - 1)
             {
                 mchan->voffs = offs;
                 break;
             }
             else
             {
-                offs += eff->h;
+                offs += eff->height;
             }
             eff = eff->cnext;
         }
@@ -4302,7 +2943,7 @@ void MixChannelScrollClick(Object* owner, Object* self)
             }
             else
             {
-                offs += eff->h;
+                offs += eff->height;
             }
             eff = eff->cnext;
         }
@@ -5018,16 +3659,6 @@ Aux::Aux()
     relswitch = new Toggle(Toggle_RelSwitch, &relative_oct);
     AddNewControl(relswitch, this);
 
-    AccMixer = new Butt(false);
-    AccGrid = new Butt(false);
-    AccCenter = new Butt(false);
-    AccMixer->coverable = false;
-    AccGrid->coverable = false;
-    AccCenter->coverable = false;
-    AddNewControl(AccMixer, this);
-    AddNewControl(AccGrid, this);
-    AddNewControl(AccCenter, this);
-
     curr_play_x = 0;
     curr_play_x_f = 0;
 
@@ -5204,7 +3835,7 @@ MixChannel* Aux::CheckFXString(DigitStr * mixstr)
 
     if(mixstr->instr != NULL)
     {
-        mixstr->instr->fxchan = mixstr->mchanout;
+        mixstr->instr->fx_channel = mixstr->mchanout;
     }
     else if(mixstr->trk != NULL)
     {
@@ -5250,8 +3881,8 @@ void Aux::Play()
             // Soft preinit envelopes (without param initialization)
             if(pbkAux->playPatt->autopatt == false)
             {
-                PreInitEnvelopes(pbkMain->currFrame, pbkAux->playPatt, field->first_ev, true, false);
-                PreInitSamples(pbkMain->currFrame, pbkAux->playPatt, field->first_ev);
+                PreInitEnvelopes(pbkMain->currFrame, pbkAux->playPatt, field_pattern->first_ev, true, false);
+                PreInitSamples(pbkMain->currFrame, pbkAux->playPatt, field_pattern->first_ev);
             }
             else
             {
@@ -5402,11 +4033,11 @@ Butt* Aux::CheckEditModeVariance(Butt* bt)
         if(C.loc != Loc_MainGrid)
         {
             C.loc = Loc_MainGrid;
-            C.patt = field;
+            C.patt = field_pattern;
             CLine = C.fieldposy;
             CTick = C.fieldposx;
 
-            Element* el = IsElemExists(C.fieldposx, C.fieldposy, field);
+            Element* el = IsElemExists(C.fieldposx, C.fieldposy, field_pattern);
             if(el != NULL)
             {
                 el->Activate();
@@ -5645,11 +4276,11 @@ void Aux::HandleButtDown(Butt* bt)
         Vols->pressed = false;
         Pans->pressed = false;
         bt->pressed = true;
-        if(auxmode == AuxMode_Pattern && gAux->workPt != gAux->blankPt)
+        if(auxmode == AuxMode_Pattern && aux_panel->workPt != aux_panel->blankPt)
         {
             //Switch cursor to pattern name and reset
             C.loc = Loc_MainGrid;
-            C.patt = field;
+            C.patt = field_pattern;
             workPt->Activate();
         }
         auxmode = AuxMode_Undefined;
@@ -5709,7 +4340,7 @@ void Aux::HandleButtDown(Butt* bt)
             {
                 workPt->Activate();
                 C.loc = Loc_MainGrid;
-                C.patt = field;
+                C.patt = field_pattern;
                 CLine = workPt->track_line;
                 CTick = workPt->start_tick;
             }
@@ -5956,8 +4587,8 @@ void Aux::HandleButtDown(Butt* bt)
             ltype = Lane_Pitch;
 			if(MC->listen->comboCC != NULL)
 				MC->listen->comboCC->setSelectedId(Lane_Pitch);
-            if(gAux->workPt->OrigPt->pitch == NULL)
-                gAux->workPt->OrigPt->AddEnvelope(Param_Pitch);
+            if(aux_panel->workPt->OrigPt->pitch == NULL)
+                aux_panel->workPt->OrigPt->AddEnvelope(Param_Pitch);
 
             R(Refresh_SubAux);
         }
@@ -5980,70 +4611,6 @@ void Aux::HandleButtDown(Butt* bt)
         {
             revsmp->pressed = true;
         }
-    }
-    else if(bt == AccCenter)
-    {
-        MixerWidth = WindWidth/2 + 25;
-        MainX2 = WindWidth - MixerWidth - 1;
-        Grid2Main();
-
-        R(Refresh_All);
-    }
-    else if(bt == AccMixer)
-    {
-        if(MainX2 > GridX1)
-        {
-            mix->last_mainx2 = MainX2;
-            MainX2 = GridX1;
-            Grid2Main();
-            MixerWidth = WindWidth - MainX2 - 1;
-        }
-        /*
-        else
-        {
-            if(mix->last_mainx2 > 0)
-            {
-                MainX2 = mix->last_mainx2;
-            }
-            else
-            {
-                MainX2 = WindWidth - MixCenterWidth - 1;
-                mix->last_mainx2 = MainX2;
-            }
-            Grid2Main();
-            MixerWidth = WindWidth - MainX2 - 1;
-        }*/
-
-        R(Refresh_All);
-    }
-    else if(bt == AccGrid)
-    {
-        if(MainX2 < (WindWidth - MixCenterWidth - 1))
-        {
-            mix->last_mainx2 = MainX2;
-
-            MixerWidth = MixCenterWidth;
-            MainX2 = WindWidth - MixerWidth - 1;
-            Grid2Main();
-        }
-        /*
-        else
-        {
-            //MixerWidth = TrackControlsWidth;
-            if(mix->last_mainx2 > 0)
-            {
-                MainX2 = mix->last_mainx2;
-            }
-            else
-            {
-                mix->last_mainx2 = MainX2;
-                MainX2 = GridX1;
-            }
-            MixerWidth = WindWidth - MainX2 - 1;
-            Grid2Main();
-        }
-        */
-        R(Refresh_All);
     }
     else if(bt == mixBrw->ShowFiles || 
 		    bt == mixBrw->ShowParams || 
@@ -6198,7 +4765,7 @@ void Aux::EditPattern(Pattern* pt, bool dbclick)
     Grid2Main();
     UpdatePerScale();
     AuxPos2MainPos();
-    auxPatternSet = workPt;
+    aux_Pattern = workPt;
     if(C.loc == Loc_SmallGrid)
     {
 		C.ExitToCurrentMode();
@@ -6491,7 +5058,7 @@ void Aux::DecreaseScale(bool mouse)
 
 void Aux::CreateNew()
 {
-    C.patt = field;
+    C.patt = field_pattern;
     char* pname = GetOriginalPatternName();
     workPt->name->SetString(pname);
     workPt->OrigPt->name->SetString(pname);
@@ -6515,12 +5082,12 @@ void Aux::CreateNew()
     workPt->folded = true;
     workPt->last_edited_param = workPt->name;
     workPt->Update();
-    auxPatternSet = workPt;
+    aux_Pattern = workPt;
     pbkAux->AlignRangeToPattern();
 
     InitBlank(workPt->ptype);
     AuxPos2MainPos();
-    C.patt = gAux->workPt;
+    C.patt = aux_panel->workPt;
     C.loc = Loc_SmallGrid;
 
     if(auxmode == AuxMode_Pattern)
@@ -6548,7 +5115,7 @@ void Aux::InitBlank(PattType ptype)
     }
     blankPt->last_pianooffs = blankPt->offs_line;
     
-    ptmain->patt = blankPt->patt = field;
+    ptmain->patt = blankPt->patt = field_pattern;
 
     if(ltype == Lane_Pitch)
     {
@@ -6595,7 +5162,7 @@ void Aux::AuxReset()
                 C.curElem->Leave();
             C.ExitToCurrentMode();
             C.loc = Loc_MainGrid;
-            C.patt = field;
+            C.patt = field_pattern;
             if(workPt->OrigPt->autopatt == false)
             {
                 CLine = workPt->track_line;
@@ -6608,7 +5175,7 @@ void Aux::AuxReset()
         {
             EditPattern(workPt);
         }
-        auxPatternSet = workPt;
+        aux_Pattern = workPt;
         if(blankPt->ptype == Patt_Pianoroll)
         {
             lineHeight = PianorollLineHeight;
@@ -6634,7 +5201,7 @@ bool Aux::CheckIfMouseOnKeys(int mouse_x, int mouse_y, int* pianokey_num, float 
 {
     if((mouse_x < (pattx1 + keywidth))&&(mouse_x < GridXS2)&&(mouse_y > GridYS1 + 1)&&(mouse_y <= GridYS2))
     {
-        if(gAux->workPt->ptype == Patt_Pianoroll)
+        if(aux_panel->workPt->ptype == Patt_Pianoroll)
         {
             int keypix = OffsLine*lineHeight + (mouse_y - GridYS1) + bottomincr;
             int keypix1 = (NUM_PIANOROLL_LINES)*lineHeight - keypix;
@@ -7107,9 +5674,6 @@ Eff* Aux::AddEffectFromBrowser(FileData * fdi, MixChannel* mchan)
             case EffType_Tremolo:
                 pEff = new CTremolo(mchan->mc_main, ar);
                 break;
-            case EffType_Send:
-                pEff = new Send(mchan->mc_main, ar);
-                break;
             case EffType_Compressor:
                 pEff = new Compressor(mchan->mc_main, ar);
                 break;
@@ -7329,20 +5893,20 @@ bool Aux::CheckIfMouseOnBinder(int mouse_x, int mouse_y)
 
 void ChangeAuxLane(LaneType lt)
 {
-    gAux->ltype = lt;
+    aux_panel->ltype = lt;
     if(lt == Lane_Vol)
     {
-        gAux->HandleButtDown(gAux->Vols1);
+        aux_panel->HandleButtDown(aux_panel->Vols1);
     }
     else if(lt == Lane_Pan)
     {
-        gAux->HandleButtDown(gAux->Pans1);
+        aux_panel->HandleButtDown(aux_panel->Pans1);
     }
     else if(lt == Lane_Pitch)
     {
-        gAux->Vols1->Release();
-        gAux->Pans1->Release();
-        gAux->workPt->OrigPt->AddEnvelope(Param_Pitch);
+        aux_panel->Vols1->Release();
+        aux_panel->Pans1->Release();
+        aux_panel->workPt->OrigPt->AddEnvelope(Param_Pitch);
 
         R(Refresh_Buttons);
         R(Refresh_Aux);
@@ -7464,15 +6028,15 @@ void Numba::HandleButtUp(Butt* bt)
 
         UpdateQuants();
         AdjustTick();
-        gAux->AdjustTick();
+        aux_panel->AdjustTick();
         UpdatePerBPM();
 
         R(Refresh_Grid);
-        if(gAux->isVolsPansMode())
+        if(aux_panel->isVolsPansMode())
         {
             R(Refresh_Aux);
         }
-        else if(gAux->isPatternMode())
+        else if(aux_panel->isPatternMode())
         {
             R(Refresh_AuxScale);
             R(Refresh_AuxGrid);
@@ -7494,11 +6058,11 @@ void Numba::HandleButtUp(Butt* bt)
         UpdatePerBPM();
 
         R(Refresh_Grid);
-        if(gAux->isVolsPansMode())
+        if(aux_panel->isVolsPansMode())
         {
             R(Refresh_Aux);
         }
-        else if(gAux->isPatternMode())
+        else if(aux_panel->isPatternMode())
         {
             R(Refresh_AuxScale);
             R(Refresh_AuxGrid);

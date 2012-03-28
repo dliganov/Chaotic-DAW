@@ -15,7 +15,7 @@ void                    PreInitEnvelopes(tframe frame, Pattern* pt, Event* first
 void                    ProcessPlacedEnvelopes(Pattern* pt, long buffframe, long num_frames, long curr_frame);
 extern void             SetMixcell4Trigger(Trigger* tg);
 extern void             SetMixChannel4Trigger(Trigger* tg);
-extern void             AddAutoInstance(Trigger* tg, Instance* ii, bool add);
+extern void             AddAutopatternInstance(Trigger* tg, Instance* ii, bool add);
 extern void             DisableAllPlaybacks();
 extern void             GlobalAddActiveTrigger(Trigger* tg);
 extern void             GlobalRemoveActiveTrigger(Trigger* tg);
@@ -103,15 +103,15 @@ void Del_Element_Triggers(Element* el)
         tg->Deactivate();
         RemoveTriggerFromEvent(tg);
         tg->patt->RemoveInternalTrigger(tg);
-        if(tg->ai != NULL)
+        if(tg->apatt_instance != NULL)
         {
             // Take care of autopattern playback, if any. Pattern doesn't care about this, when being deleted.
-            if(tg->ai->IsPlaybackActive())
+            if(tg->apatt_instance->IsPlaybackActive())
             {
-                DeactivatePlayback(tg->ai->pbk);
+                DeactivatePlayback(tg->apatt_instance->pbk);
             }
 
-            DeleteElement(tg->ai, true, true);
+            DeleteElement(tg->apatt_instance, true, true);
         }
         tgnext = tg->el_next;
         delete tg;
@@ -131,15 +131,15 @@ void Del_Pattern_Internal_Triggers(Pattern* pt, bool skipelremove)
         RemoveTriggerFromEvent(tg);
         if(!skipelremove)
             tg->el->RemoveTrigger(tg);
-        if(tg->ai != NULL)
+        if(tg->apatt_instance != NULL)
         {
             // Take care of autopattern playback, if any. Pattern doesn't care about this, when being deleted.
-            if(tg->ai->IsPlaybackActive())
+            if(tg->apatt_instance->IsPlaybackActive())
             {
-                DeactivatePlayback(tg->ai->pbk);
+                DeactivatePlayback(tg->apatt_instance->pbk);
             }
 
-            DeleteElement(tg->ai, true, true);
+            DeleteElement(tg->apatt_instance, true, true);
         }
         delete tg;
         tg = tgnext;
@@ -198,16 +198,16 @@ void SetMixChannel4Trigger(Trigger* tg)
 {
     if(tg->trkdata == NULL)
     {
-        tg->mchan = &gAux->masterchan;
+        tg->mchan = &aux_panel->masterchan;
     }
     else
     {
         tg->mchan = tg->trkdata->mchan;
     }
 
-    if((tg->el->IsInstance()) && (tg->mchan == NULL || tg->mchan == &gAux->masterchan))
+    if((tg->el->IsInstance()) && (tg->mchan == NULL || tg->mchan == &aux_panel->masterchan))
     {
-        tg->mchan = ((Instance*)tg->el)->instr->fxchan;
+        tg->mchan = ((Instance*)tg->el)->instr->fx_channel;
     }
 }
 
@@ -221,9 +221,9 @@ void Locate_Trigger(Trigger* tg)
     Event** lastEv;
     if(tg->patt->OrigPt== NULL || tg->patt->OrigPt->autopatt == false)
     {
-        firstEv = &field->first_ev;
-        lastEv = &field->last_ev;
-        evpatt = field;
+        firstEv = &field_pattern->first_ev;
+        lastEv = &field_pattern->last_ev;
+        evpatt = field_pattern;
     }
     else
     {
@@ -233,7 +233,7 @@ void Locate_Trigger(Trigger* tg)
     }
 
     // Determine the target global trackdata
-    if(tg->patt == field)
+    if(tg->patt == field_pattern)
     {
         tg->trkdata = tg->el->field_trkdata;
     }
@@ -319,41 +319,26 @@ void Locate_Trigger(Trigger* tg)
     }
 }
 
-void AddAutoInstance(Trigger* tg, Instance* ii, bool add)
+void AddAutopatternInstance(Trigger* tg, Instance* ii, bool add)
 {
     if(ii->instr->autoPatt != NULL)
     {
-        tg->ai = new Pattern("autoinstance", ii->instr->autoPatt->StartTick(), 
+        tg->apatt_instance = new Pattern("autoinstance", ii->instr->autoPatt->StartTick(), 
                              ii->instr->autoPatt->EndTick(), 
                              ii->track_line, 
                              ii->track_line, 
                              false);
-		tg->ai->patt = tg->patt;
-        tg->ai->displayable = false;
-        tg->ai->parent_trigger = tg;
-        tg->ai->folded = true;
-        tg->ai->Update();
-        ii->instr->autoPatt->AddDerivedPattern(tg->ai, add == false);
-        tg->ai->AddPlayback();
-        tg->tgvolloc = NULL;
-        /*tg->tgvolloc = tg->ai->tg_internal_first;
-        // Get local volume envelope from this autopattern
-        while(tg->tgvolloc != NULL)
-        {
-            if(tg->tgvolloc->el->type == El_Command)
-            {
-                Command* cmd = (Command*)tg->tgvolloc->el;
-                if(cmd->cmdtype == Cmd_LocVolEnv)
-                {
-                    break;
-                }
-            }
-            tg->tgvolloc = tg->tgvolloc->pt_next;
-        }*/
+		tg->apatt_instance->patt = tg->patt;
+        tg->apatt_instance->displayable = false;
+        tg->apatt_instance->parent_trigger = tg;
+        tg->apatt_instance->folded = true;
+        tg->apatt_instance->Update();
+        ii->instr->autoPatt->AddDerivedPattern(tg->apatt_instance, add == false);
+        tg->apatt_instance->AddPlayback();
 
         if(add)
         {
-            AddNewElement(tg->ai, true);
+            AddNewElement(tg->apatt_instance, true);
         }
     }
 }
@@ -415,7 +400,7 @@ void CreateElementTriggersPerPattern(Pattern* pt, Element* el, bool skipaddtoele
 
         if(el->IsInstance() && pt->OrigPt->autopatt == false)
         {
-            AddAutoInstance(tg_start, (Instance*)el, true);
+            AddAutopatternInstance(tg_start, (Instance*)el, true);
         }
     }
 }
@@ -490,8 +475,8 @@ void RemoveTriggerFromEvent(Trigger* tg)
     Event** lastEv;
     if(tg->patt->OrigPt== NULL || tg->patt->OrigPt->autopatt == false)
     {
-        firstEv = &field->first_ev;
-        lastEv = &field->last_ev;
+        firstEv = &field_pattern->first_ev;
+        lastEv = &field_pattern->last_ev;
     }
     else
     {
@@ -503,7 +488,7 @@ void RemoveTriggerFromEvent(Trigger* tg)
     bool last = ev->RemoveTrigger(tg);
     if(last == true)
     {
-        if(Playing == true || gAux->playing == true || ev->queued == true || 
+        if(Playing == true || aux_panel->playing == true || ev->queued == true || 
             (ev->patt->pbk != NULL && ev->patt->pbk->dworking == true))
         {
             ev->to_be_deleted = true;
@@ -594,7 +579,7 @@ void GlobalRemoveActiveTrigger(Trigger* tg)
 
 void ActivateCommandTrigger(Trigger* tg)
 {
-    tg->tworking = true;
+    tg->tgworking = true;
     tg->frame_phase = 0;
     if(last_active_command_trigger == NULL)
     {
@@ -639,13 +624,13 @@ void DeactivateCommandTrigger(Trigger* tg)
             tg->loc_act_next->loc_act_prev = tg->loc_act_prev;
         }
     }
-    tg->tworking = false;
+    tg->tgworking = false;
 }
 
 // Activates effect-element's trigger
 inline void ActivateSymbolTrigger(Trigger* stg)
 {
-    stg->tworking = true;
+    stg->tgworking = true;
     stg->frame_phase = 0;
     FXState* fxstate;
     if(stg->patt->OrigPt->autopatt)
@@ -817,7 +802,7 @@ inline void DeactivateSymbolTrigger(Trigger* stg)
         }break;
     }
 
-    stg->tworking = false;
+    stg->tgworking = false;
 }
 
 void DeactivatePatternTrigger(Trigger* ptg)
@@ -848,12 +833,12 @@ void DeactivatePatternTrigger(Trigger* ptg)
             ptg->loc_act_next->loc_act_prev = ptg->loc_act_prev;
         }
     }
-    ptg->tworking = false;
+    ptg->tgworking = false;
 }
 
 void ActivatePatternTrigger(Trigger* ptg)
 {
-    ptg->tworking = true;
+    ptg->tgworking = true;
     ptg->frame_phase = 0;
     if(last_active_pattern_trigger == NULL)
     {
@@ -877,7 +862,7 @@ Trigger::Trigger()
 
 void Trigger::Initialize()
 {
-    tworking = activator = rev = skip = muted = broken = toberemoved = globallisted = outsync = false;
+    tgworking = activator = rev = skip = muted = broken = toberemoved = globallisted = outsync = false;
     loc_act_prev = loc_act_next = ev_prev = ev_next = el_prev = el_next = group_prev = group_next = act_prev = act_next = NULL;
     aaIN = aaOUT = false;
     pslot = NULL;
@@ -888,7 +873,7 @@ void Trigger::Initialize()
     el = NULL;
     patt = NULL;
 
-    tgsparent = tgsactive = tgvolloc = first_tgslide = NULL;
+    tgsparent = tgsactive = first_tgslide = NULL;
     tgsactnum = 0;
 
     voicenum = 0;
@@ -904,7 +889,7 @@ void Trigger::Initialize()
     wt_pos = 0;
     signal = 1;
 
-    ai = NULL;
+    apatt_instance = NULL;
 
     lcount = 0;
 
@@ -915,7 +900,7 @@ void Trigger::Activate()
 {
     // reset remove flag
     toberemoved = false;
-    if(tworking == false && globallisted == false)
+    if(tgworking == false && globallisted == false)
     {
         switch(el->type)
         {
@@ -989,7 +974,7 @@ void Trigger::Deactivate()
         GlobalRemoveActiveTrigger(this);
     }
 
-    if(tworking)
+    if(tgworking)
     {
         switch(el->type)
         {
@@ -1164,7 +1149,7 @@ void PreInitSamples(tframe frame, Pattern* pt, Event* firstev)
         tg = ev->tg_first;
         while(tg != NULL)
         {
-            if((pt == field || tg->patt == pt) && 
+            if((pt == field_pattern || tg->patt == pt) && 
                 tg->el->IsPresent() && tg->patt->IsPresent() && 
                 tg->el->IsInstance() && 
                 tg->activator)
@@ -1210,7 +1195,7 @@ void PreInitEnvelopes(tframe frame, Pattern* pt, Event* firstev, bool activate_e
         tg = ev->tg_first;
         while(tg != NULL)
         {
-            if((pt == field || tg->patt == pt) && 
+            if((pt == field_pattern || tg->patt == pt) && 
                 tg->el->IsPresent() && tg->patt->IsPresent() && 
                 tg->el->type == El_Command && 
                 tg->activator)
@@ -1253,9 +1238,9 @@ void ProcessTriggers(Event* queued_ev, Pattern* pt, bool deactonly = false)
     tg = queued_ev->tg_first;
     while(tg != NULL)
     {
-        if(((pt == field && !tg->patt->muted) || tg->patt == pt) && tg->patt->IsPresent() && tg->el->IsPresent())
+        if(((pt == field_pattern && !tg->patt->muted) || tg->patt == pt) && tg->patt->IsPresent() && tg->el->IsPresent())
         {
-            if(tg->patt != field && tg->activator && 
+            if(tg->patt != field_pattern && tg->activator && 
                    (queued_ev->vick < tg->patt->start_tick || queued_ev->vick >= tg->patt->end_tick))
             {
                 // skip out-of-pattern activators
@@ -1267,26 +1252,26 @@ void ProcessTriggers(Event* queued_ev, Pattern* pt, bool deactonly = false)
                     if(tg->activator == true)
                     {
                         Instance* ii = (Instance*)tg->el;
-                        if(tg->tworking == true)
+                        if(tg->tgworking == true)
                         {
                             ii->instr->FlowTriggers(tg, tg);
-                            if(tg->tworking == true) // it could change
+                            if(tg->tgworking == true) // it could change
                                 tg->Deactivate();
                         }
                         tg->Activate();
 
-                        if(tg->ai != NULL)
+                        if(tg->apatt_instance != NULL)
                         {
-                            if(tg->ai->pbk->dworking == true)
+                            if(tg->apatt_instance->pbk->dworking == true)
                             {
-                                DeactivatePlayback(tg->ai->pbk);
+                                DeactivatePlayback(tg->apatt_instance->pbk);
                             }
-                            ActivatePlayback(tg->ai->pbk);
+                            ActivatePlayback(tg->apatt_instance->pbk);
                         }
                     }
                     else
                     {
-                        if(tg->tgact->tworking == true)
+                        if(tg->tgact->tgworking == true)
                         {
                             tg->tgact->Deactivate();
                         }
@@ -1302,7 +1287,7 @@ void ProcessTriggers(Event* queued_ev, Pattern* pt, bool deactonly = false)
                     {
                         if(tg->activator == true)
                         {
-                            if(tg->tworking == true)
+                            if(tg->tgworking == true)
                             {
                                 tg->Deactivate();
                             }
@@ -1310,7 +1295,7 @@ void ProcessTriggers(Event* queued_ev, Pattern* pt, bool deactonly = false)
                         }
                         else
                         {
-                            if(tg->tgact->tworking == true)
+                            if(tg->tgact->tgworking == true)
                             {
                                 tg->tgact->Deactivate();
                             }
@@ -1337,7 +1322,7 @@ void ProcessTriggers(Event* queued_ev, Pattern* pt, bool deactonly = false)
                     // symbol elements
                     if(tg->activator == true)
                     {
-                        if(tg->tworking == true)
+                        if(tg->tgworking == true)
                         {
                             tg->Deactivate();
                         }
@@ -1345,7 +1330,7 @@ void ProcessTriggers(Event* queued_ev, Pattern* pt, bool deactonly = false)
                     }
                     else
                     {
-                        if(tg->tgact->tworking == true)
+                        if(tg->tgact->tgworking == true)
                         {
                             tg->tgact->Deactivate();
                         }
@@ -1409,7 +1394,7 @@ void Playback::UnqueueAll()
 {
     Event* ev;
     if(playPatt->OrigPt == NULL || playPatt->OrigPt->autopatt == false)
-        ev = field->first_ev;
+        ev = field_pattern->first_ev;
     else
         ev = playPatt->first_ev;
 
@@ -1440,7 +1425,7 @@ void Playback::UpdateQueuedEv()
 
         Event* ev;
         if(playPatt->OrigPt == NULL || playPatt->OrigPt->autopatt == false)
-            ev = field->first_ev;
+            ev = field_pattern->first_ev;
         else
             ev = playPatt->first_ev;
 
@@ -1610,11 +1595,11 @@ void Playback::GetSmallestCountDown(long* count)
             Trigger* tg = queued_ev->tg_first;
             while(tg != NULL)
             {
-                if(tg->ai != NULL && tg->ai->first_ev != NULL)
+                if(tg->apatt_instance != NULL && tg->apatt_instance->first_ev != NULL)
                 {
 					//jassert(tg->ai->first_ev->frame >= 0);
-					if(tg->ai->first_ev->frame > 0 && tg->ai->first_ev->frame < newcount)
-						newcount = tg->ai->first_ev->frame;
+					if(tg->apatt_instance->first_ev->frame > 0 && tg->apatt_instance->first_ev->frame < newcount)
+						newcount = tg->apatt_instance->first_ev->frame;
                 }
                 tg = tg->ev_next;
             }

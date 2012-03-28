@@ -629,7 +629,6 @@ typedef enum ToggleType
     Toggle_Solo1, // Small size
     Toggle_AutoPatt,
     Toggle_MixBypass,
-    Toggle_Window,
     Toggle_EnvFold,
     Toggle_EnvTime,
     Toggle_AutoSwitch,
@@ -677,8 +676,7 @@ typedef enum DragType
 {
     Drag_Instrument_Alias,
     Drag_MixCell_Content,
-    Drag_MixCell_Indeks,
-    Drag_MixChannel_Indeks,
+    Drag_MixChannel_Index,
     Drag_Instrument_File,
     Drag_Effect_File,
     Drag_Command,
@@ -1254,10 +1252,9 @@ extern bool             Rendering; // Global flag indicating whether rendering i
 extern Master		    mAster;
 extern float            fSampleRate; // global variable holding current sample rate
 
-extern Pattern*         field;
+extern Pattern*         field_pattern;
 extern Control*         firstCtrl;
 extern Control*         lastCtrl;
-extern Mixer*			mix;
 extern int				CtrlPanelHeight;
 extern int              CtrlPanelWidth;
 extern int              MixMasterHeight;
@@ -1386,7 +1383,7 @@ extern float            frames_per_tick;
 extern Panel*           firstPanel;
 extern Panel*           lastPanel;
 
-extern Aux*             gAux;
+extern Aux*             aux_panel;
 
 extern Playback*        pbkMain;
 extern Playback*        pbkAux;
@@ -1505,7 +1502,7 @@ extern RenderWindow*    RenderWnd;
 extern SampleWindow*     SmpWnd;
 extern Playback*        first_active_playback;
 extern Playback*        last_active_playback;
-extern Pattern*         auxPatternSet;
+extern Pattern*         aux_Pattern;
 extern int              bottomIncr;
 extern int              numFieldLines;
 extern Event*           ev0;

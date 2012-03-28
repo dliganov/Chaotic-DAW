@@ -311,7 +311,7 @@ int Tick2X(float tick, Loc loc)
     else if(loc == Loc_SmallGrid)
     {
         //return ApproxFloat((tick - gAux->OffsTick)*gAux->tickWidth + GridXS1);
-		return RoundFloat(tick*gAux->tickWidth) - RoundFloat(gAux->OffsTick*gAux->tickWidth) + GridXS1;
+		return RoundFloat(tick*aux_panel->tickWidth) - RoundFloat(aux_panel->OffsTick*aux_panel->tickWidth) + GridXS1;
     }
     else
     {
@@ -339,7 +339,7 @@ float X2Tick(int x, Loc loc)
     }
     else if(loc == Loc_SmallGrid)
     {
-        return ((float)x - GridXS1)/gAux->tickWidth + gAux->OffsTick;
+        return ((float)x - GridXS1)/aux_panel->tickWidth + aux_panel->OffsTick;
     }
     else if(loc == Loc_StaticGrid)
     {
@@ -371,7 +371,7 @@ int Line2Y(int line, Loc loc)
     }
     else if(loc == Loc_SmallGrid)
     {
-        return ((line - gAux->OffsLine)*gAux->lineHeight + gAux->lineHeight + GridYS1);
+        return ((line - aux_panel->OffsLine)*aux_panel->lineHeight + aux_panel->lineHeight + GridYS1);
     }
     else
     {
@@ -399,7 +399,7 @@ int Y2Line(int y, Loc loc)
     }
     else if(loc == Loc_SmallGrid)
     {
-        return (y - GridYS1)/gAux->lineHeight + gAux->OffsLine;
+        return (y - GridYS1)/aux_panel->lineHeight + aux_panel->OffsLine;
     }
     else
     {
@@ -427,7 +427,7 @@ int Gx(int xc, Loc loc)
     }
     else if(loc == Loc_SmallGrid)
     {
-        return (int)(xc + gAux->OffsTick*gAux->tickWidth - GridXS1);
+        return (int)(xc + aux_panel->OffsTick*aux_panel->tickWidth - GridXS1);
     }
     else if(loc == Loc_StaticGrid)
     {
@@ -459,7 +459,7 @@ int Gy(int yc, Loc loc)
     }
     else if(loc == Loc_SmallGrid)
     {
-        return yc + gAux->OffsLine * gAux->lineHeight - GridYS1;
+        return yc + aux_panel->OffsLine * aux_panel->lineHeight - GridYS1;
     }
     else
     {
@@ -709,7 +709,7 @@ long ParamString2Num(char* string)
 
 float CalcSampleFreqIncrement(Sample* sample, int semitones)
 {
-    float rate_inc = (float)((float)sample->info.samplerate / (float)fSampleRate);
+    float rate_inc = (float)((float)sample->sample_info.samplerate / (float)fSampleRate);
     float note_mul = (float)(CalcFreqRatio(semitones));
     return rate_inc*note_mul;
 }
@@ -1042,7 +1042,7 @@ void AuxCheck()
         if(el->IsPresent() && el->displayable == true)
         {
             tick = el->start_tick + el->patt->start_tick;
-            if(el->patt == field && (el->type == El_Samplent || 
+            if(el->patt == field_pattern && (el->type == El_Samplent || 
                                      el->type == El_GenNote ||
                                      el->type == El_Pattern ||
                                     (el->type == El_SlideNote && el->patt->ptype != Patt_StepSeq)))
@@ -1070,10 +1070,10 @@ void AuxCheck()
         el = el->next;
     }
 
-    if(gAux->auxmode == AuxMode_Pattern)
+    if(aux_panel->auxmode == AuxMode_Pattern)
     {
-        right_tick_margin1 = (GridXS2 - GridXS1)/gAux->tickWidth + gAux->OffsTick - 1;
-        el = gAux->workPt->OrigPt->first_elem;
+        right_tick_margin1 = (GridXS2 - GridXS1)/aux_panel->tickWidth + aux_panel->OffsTick - 1;
+        el = aux_panel->workPt->OrigPt->first_elem;
         while(el != NULL)
         {
             if(el->IsPresent() && el->displayable == true)
@@ -1137,101 +1137,6 @@ bool IsPianoKeyPressed(int pkeynum)
     return pressed;
 }
 
-Mixcell* GetMixcellFromFXString(DigitStr* dfxstr)
-{
-    int d1, d2;
-    if(dfxstr->digits[0] == 0 || dfxstr->digits[1] == 0)
-    {
-        return &mix->m_cell;
-    }
-    else
-    {
-        if(dfxstr->digits[0] >= 0x30 && dfxstr->digits[0] <= 0x39)
-        {
-            d1 = int(dfxstr->digits[0] - 0x30);
-        }
-        else if(dfxstr->digits[0] >= 0x41 && dfxstr->digits[0] <= 0x40 + NUM_MIXER_COLUMNS - 10)
-        {
-            d1 = int(dfxstr->digits[0] - 0x41 + 10);
-        }
-        else if(dfxstr->digits[0] >= 0x61 && dfxstr->digits[0] <= 0x60 + NUM_MIXER_COLUMNS - 10)
-        {
-            d1 = int(dfxstr->digits[0] - 0x61 + 10);
-        }
-        else
-        {
-            return &mix->m_cell;
-        }
-    
-        if(dfxstr->digits[1] >= 0x30 && dfxstr->digits[1] <= 0x39)
-        {
-            d2 = int(dfxstr->digits[1] - 0x30);
-        }
-        else if(dfxstr->digits[1] >= 0x41 && dfxstr->digits[1] <= 0x40 + NUM_MIXER_ROWS - 10)
-        {
-            d2 = int(dfxstr->digits[1] - 0x41 + 10);
-        }
-        else if(dfxstr->digits[1] >= 0x61 && dfxstr->digits[1] <= 0x60 + NUM_MIXER_ROWS - 10)
-        {
-            d2 = int(dfxstr->digits[1] - 0x61 + 10);
-        }
-        else
-        {
-            return &mix->m_cell;
-        }
-    
-        return &mix->r_cell[d1][d2];
-    }
-}
-
-////////////////////////////////////////////////////
-// Recursively checks for mixcell loops
-bool CheckMixcellLoop(Mixcell * mc, Mixcell * outmc)
-{
-    Mixcell* mm;
-    Mixcell* mlast;
-    Mixcell* m = outmc;
-    while(m != NULL)
-    {
-        mm = mc;
-        while(mm != NULL)
-        {
-            if(m == mm)
-            {
-                m = mc;
-                while(m->check_next != NULL)
-                {
-                    mm = m->check_next;
-                    m->check_next = NULL;
-                    m = mm;
-                }
-                return true;
-            }
-            mlast = mm;
-            mm = mm->check_next;
-        }
-
-        if(m->effect != NULL && m->effect->type == EffType_Send)
-        {
-            Send* snd = (Send*)m->effect;
-            if(snd->send_mixcell != NULL)
-            {
-                mlast->check_next = m;
-                m->check_next = NULL;
-                if(CheckMixcellLoop(mc, snd->send_mixcell) == true)
-                {
-                    return true;
-                }
-                mlast->check_next = NULL;
-            }
-        }
-
-        m = m->outcell;
-    }
-
-    return false;
-}
-
 void GetOriginalInstrumentAlias(const char* name, char* alias)
 {
     char n[MAX_ALIAS_STRING];  // TODO: overflow zone
@@ -1284,9 +1189,9 @@ void GetOriginalInstrumentName(const char* name, char* newname)
 
 bool AuxCheckPosData(int* posX)
 {
-    if(gAux->auxmode == AuxMode_Pattern && gAux->workPt != gAux->blankPt)
+    if(aux_panel->auxmode == AuxMode_Pattern && aux_panel->workPt != aux_panel->blankPt)
     {
-       *posX = gAux->curr_play_x - RoundFloat(gAux->OffsTick*gAux->tickWidth);
+       *posX = aux_panel->curr_play_x - RoundFloat(aux_panel->OffsTick*aux_panel->tickWidth);
         return true;
     }
     else
@@ -1402,17 +1307,17 @@ void GetPatternNameImage(Pattern* pt)
 
 void GetInstrAliasImage(Instrument* instr)
 {
-    if(instr->alimg != NULL)
+    if(instr->alias_image != NULL)
 	{
-       delete instr->alimg;
-	   instr->alimg = NULL;
+       delete instr->alias_image;
+	   instr->alias_image = NULL;
 	}
 
     int aw = ins->getStringWidth(instr->alias->string);
 	if(aw > 0)
 	{
-		instr->alimg = new Image(Image::ARGB, aw, (int)(ins->getHeight() + 3), true);
-		Graphics imageContext(*(instr->alimg));
+		instr->alias_image = new Image(Image::ARGB, aw, (int)(ins->getHeight() + 3), true);
+		Graphics imageContext(*(instr->alias_image));
 		//imageContext.setColour(Colour(0xff6496FF));
 		if(instr->type == Instr_Sample)
 		    imageContext.setColour(Colour(smpcolour));

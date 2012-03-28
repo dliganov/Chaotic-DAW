@@ -25,8 +25,8 @@ HANDLE              hPreviewMutex;
 
 unsigned int        NumPrevs;
 
-bool                Release = false;
-bool                Finish = false;
+bool                preview_mouse_release = false;
+bool                preview_finish_all = false;
 
 void Preview_Init()
 {
@@ -48,7 +48,7 @@ bool Preview_StopPerPattern(Element* el)
     {
         if(PrevSlot[ic].state != PState_Free && 
            PrevSlot[ic].state != PState_Inactive && 
-           PrevSlot[ic].trig.patt == el)
+           PrevSlot[ic].trigger.patt == el)
         {
             PrevSlot[ic].state = PState_Stopped;
             any_stopped = true;
@@ -70,18 +70,18 @@ void Preview_ForceCleanForInstrument(Instrument* instr)
 
 int Preview_GetFreeSlot(int key)
 {
-	if(key != -1)
-	{
-		for(int ic = 0; ic < MAX_PREVIEW_ELEMENTS; ic++)
-		{
-			if(PrevSlot[ic].key == key)
-			{
-				return 0xFFFF;
-			}
-		}
-	}
+    if(key != -1)
+    {
+        for(int ic = 0; ic < MAX_PREVIEW_ELEMENTS; ic++)
+        {
+            if(PrevSlot[ic].key == key)
+            {
+                return 0xFFFF;
+            }
+        }
+    }
 
-	for(int ic = 0; ic < MAX_PREVIEW_ELEMENTS; ic++)
+    for(int ic = 0; ic < MAX_PREVIEW_ELEMENTS; ic++)
     {
         if(PrevSlot[ic].state == PState_Inactive)
         {
@@ -118,10 +118,10 @@ extern int Preview_Add(Instance* ii, Instrument* i, int key, int note, Pattern* 
             else
             {
                 pslot->ii = CreateElement_Note(i, false);
-				if(setrelative)
-				{
-					pslot->ii->ed_note->SetRelative(true);
-				}
+                if(setrelative)
+                {
+                    pslot->ii->ed_note->SetRelative(true);
+                }
                 if(i->type == Instr_Sample)
                 {
                     // Avoid partial length for instrument-only preview
@@ -139,7 +139,7 @@ extern int Preview_Add(Instance* ii, Instrument* i, int key, int note, Pattern* 
             if(pt != NULL)
                 pslot->ii->patt = pt->OrigPt;
             else
-                pslot->ii->patt = field;
+                pslot->ii->patt = field_pattern;
 
             pslot->ii->Update();
 
@@ -148,39 +148,34 @@ extern int Preview_Add(Instance* ii, Instrument* i, int key, int note, Pattern* 
                 pslot->ii->field_trkdata = trk;
             else if(ii == NULL)
                 pslot->ii->field_trkdata = i->ptrk;
-			else if(ii != NULL)
+            else if(ii != NULL)
                 pslot->ii->field_trkdata = ii->field_trkdata;
 
             pslot->ii->track_params = pslot->ii->field_trkdata->params;
 
-            memset(&pslot->trig, 0, sizeof(Trigger));
-            Trigger* tg = &pslot->trig;
+            memset(&pslot->trigger, 0, sizeof(Trigger));
+            Trigger* tg = &pslot->trigger;
             tg->tgstate = TgState_Sustain;
             tg->el = pslot->ii;
             if(pt != NULL)
                 tg->patt = pt;
             else
-                tg->patt = field;
+                tg->patt = field_pattern;
 
             tg->trkdata = pslot->ii->field_trkdata;
 
             // Pattern trackdata always overrides ii trackdata
-			if(tg->patt->field_trkdata != NULL)
-			{
-				tg->trkdata = tg->patt->field_trkdata;
-			}
+            if(tg->patt->field_trkdata != NULL)
+            {
+                tg->trkdata = tg->patt->field_trkdata;
+            }
 
             tg->pslot = pslot;
             ev0->AddTrigger(tg);
 
-            if(mcell != NULL)
-            {
-                tg->mcell = ((Instance*)tg->el)->instr->fxcell;
-            }
-
             // Add autoinstance without external bindings (for safety)
             if(!noauto)
-			    AddAutoInstance(tg, pslot->ii, false);
+                AddAutopatternInstance(tg, pslot->ii, false);
 
             pslot->state = PState_Ready;
             NumPrevs++;
@@ -195,13 +190,13 @@ void  Preview_Release(Instrument* i, int note)
 	bool released = false;
     for(int ic = 0; ic < MAX_PREVIEW_ELEMENTS; ic++)
     {
-        if((PrevSlot[ic].trig.tgstate != TgState_Release) && 
+        if((PrevSlot[ic].trigger.tgstate != TgState_Release) && 
            (PrevSlot[ic].ii != NULL && PrevSlot[ic].ii->ed_note->value == note))
         {
             if(PrevSlot[ic].state == PState_Playing)
             {
                 released = true;
-                PrevSlot[ic].trig.Release();
+                PrevSlot[ic].trigger.Release();
             }
             else if(PrevSlot[ic].state == PState_Ready)
                 PrevSlot[ic].sustainable = false;
@@ -209,7 +204,7 @@ void  Preview_Release(Instrument* i, int note)
             if(PrevSlot[ic].state == PState_Playing || PrevSlot[ic].state == PState_Ready)
             {
 				// Record a note for generator here as it's released
-                if(Recording && C.patt != field && PrevSlot[ic].ii->type != Instr_Sample)
+                if(Recording && C.patt != field_pattern && PrevSlot[ic].ii->type != Instr_Sample)
                 {
                     //Place_Note(((Instance*)(PrevSlot[ic].trig.el))->instr,
                     //        note, PrevSlot[ic].trig.vol_val, PrevSlot[ic].start_frame, pbMain->currFrame - pbAux->currFrame);
@@ -223,7 +218,7 @@ void  Preview_Release(Instrument* i, int note)
                     if(frame2 <= frame1)
                         frame2 = frame1 + 44;
                     Grid_PutInstanceSpecific(PrevSlot[ic].ii->patt, 
-                                            ((Instance*)(PrevSlot[ic].trig.el))->instr, 
+                                            ((Instance*)(PrevSlot[ic].trigger.el))->instr, 
                                               PrevSlot[ic].ii->ed_note->value + 1, 
                                               PrevSlot[ic].ii->loc_vol->val, 
                                               frame1,
@@ -251,10 +246,10 @@ void  Preview_Release(int key)
         for(int ic = 0; ic < MAX_PREVIEW_ELEMENTS; ic++)
         {
             if((PrevSlot[ic].state == PState_Playing)&&
-               (PrevSlot[ic].trig.tgstate != TgState_Release) && 
+               (PrevSlot[ic].trigger.tgstate != TgState_Release) && 
                (PrevSlot[ic].key == key))
             {
-                PrevSlot[ic].trig.Release();
+                PrevSlot[ic].trigger.Release();
             }
         }
     }
@@ -265,7 +260,7 @@ inline void Preview_SetNoteVolume(unsigned int note, float volume)
     for(int ic = 0; ic < MAX_PREVIEW_ELEMENTS; ic++)
     {
         if(!(PrevSlot[ic].state == PState_Inactive || PrevSlot[ic].state == PState_Free) &&
-            (PrevSlot[ic].trig.tgstate == TgState_Sustain) &&
+            (PrevSlot[ic].trigger.tgstate == TgState_Sustain) &&
             (PrevSlot[ic].ii->ed_note->value == note))
         {
             PrevSlot[ic].ii->ed_vol->fvalue = volume;
@@ -280,7 +275,7 @@ inline void Preview_SetVolume(float volume)
     for(int ic = 0; ic < MAX_PREVIEW_ELEMENTS; ic++)
     {
         if(!(PrevSlot[ic].state == PState_Inactive || PrevSlot[ic].state == PState_Free) &&
-            (PrevSlot[ic].trig.tgstate == TgState_Sustain))
+            (PrevSlot[ic].trigger.tgstate == TgState_Sustain))
         {
             PrevSlot[ic].ii->ed_vol->fvalue = volume;
             PrevSlot[ic].ii->loc_vol->outval = volume;
@@ -293,22 +288,22 @@ void Preview_ReleaseData(unsigned int ic)
 {
     if(ic < MAX_PREVIEW_ELEMENTS)
     {
-        PrevSlot[ic].trig.Deactivate();
-        if(PrevSlot[ic].trig.ai != NULL)
+        PrevSlot[ic].trigger.Deactivate();
+        if(PrevSlot[ic].trigger.apatt_instance != NULL)
         {
-            if(PrevSlot[ic].trig.ai->IsPlaybackActive())
+            if(PrevSlot[ic].trigger.apatt_instance->IsPlaybackActive())
             {
-                DeactivatePlayback(PrevSlot[ic].trig.ai->pbk);
+                DeactivatePlayback(PrevSlot[ic].trigger.apatt_instance->pbk);
             }
-            Del_Pattern_Internal_Triggers(PrevSlot[ic].trig.ai, true);
-            delete PrevSlot[ic].trig.ai;
-            PrevSlot[ic].trig.ai = NULL;
+            Del_Pattern_Internal_Triggers(PrevSlot[ic].trigger.apatt_instance, true);
+            delete PrevSlot[ic].trigger.apatt_instance;
+            PrevSlot[ic].trigger.apatt_instance = NULL;
         }
 
         delete PrevSlot[ic].ii;
         PrevSlot[ic].ii = NULL;
         PrevSlot[ic].state = PState_Free;
-        PrevSlot[ic].trig.patt = NULL;
+        PrevSlot[ic].trigger.patt = NULL;
         PrevSlot[ic].key = -1;
     }
 }
@@ -318,7 +313,7 @@ void Preview_MouseRelease()
     M.pianokey_pressed = false;
     M.pianokey_slot = 0xFFFF;
 
-    Release = true;
+    preview_mouse_release = true;
     /*
     for(int ic = 0; ic < MAX_PREVIEW_ELEMENTS; ic++)
     {
@@ -332,7 +327,7 @@ void Preview_MouseRelease()
 
 void Preview_FinishAll()
 {
-    Finish = true;
+    preview_finish_all = true;
     /*
     for(int ic = 0; ic < MAX_PREVIEW_ELEMENTS; ic++)
     {
@@ -350,7 +345,7 @@ void Preview_ReleaseAll()
         if(PrevSlot[ic].state == PState_Ready || PrevSlot[ic].state == PState_Playing)
         {
             PrevSlot[ic].sustainable = false;
-            PrevSlot[ic].trig.Release();
+            PrevSlot[ic].trigger.Release();
         }
     }
 }
@@ -379,9 +374,9 @@ extern void Preview_StopAll()
 void Preview_CheckStates(long num_frames)
 {
     bool doR = false, doF = false;
-    if(Release)
+    if(preview_mouse_release)
         doR = true; // Use flags to ensure release and finish only from start of this function
-    if(Finish)
+    if(preview_finish_all)
         doF = true;
 
     if(NumPrevs > 0)
@@ -392,45 +387,45 @@ void Preview_CheckStates(long num_frames)
             {
                 if(PrevSlot[ic].keybound_pianokey == false)
                 {
-                    if(Release && doR)
-                        PrevSlot[ic].trig.Release();
-                    else if(Finish && doF)
-                        PrevSlot[ic].trig.SoftFinish();
+                    if(preview_mouse_release && doR)
+                        PrevSlot[ic].trigger.Release();
+                    else if(preview_finish_all && doF)
+                        PrevSlot[ic].trigger.SoftFinish();
                 }
             }
             else if(PrevSlot[ic].state == PState_Ready)
             {
-                Trigger* tg = &PrevSlot[ic].trig;
+                Trigger* tg = &PrevSlot[ic].trigger;
                 Instrument* instr = ((Instance*)tg->el)->instr;
 
-                if(tg->tworking == true)
+                if(tg->tgworking == true)
                 {
                     tg->Deactivate();
                 }
 
                 tg->Activate();
                 if(PrevSlot[ic].sustainable == false || 
-                   (Release && doR && PrevSlot[ic].ii->type != El_Samplent))
+                   (preview_mouse_release && doR && PrevSlot[ic].ii->type != El_Samplent))
                 {
                     tg->Release();
                 }
-                if(tg->ai != NULL)
+                if(tg->apatt_instance != NULL)
                 {
-                    if(tg->ai->pbk->dworking == true)
+                    if(tg->apatt_instance->pbk->dworking == true)
                     {
-                        DeactivatePlayback(tg->ai->pbk);
+                        DeactivatePlayback(tg->apatt_instance->pbk);
                     }
-                    ActivatePlayback(tg->ai->pbk);
+                    ActivatePlayback(tg->apatt_instance->pbk);
                 }
 
                 tg->pslot->state = PState_Playing;
             }
             else if(PrevSlot[ic].state == PState_Stopped)
             {
-                Trigger* tg = &PrevSlot[ic].trig;
-                if(tg->tworking)
+                Trigger* tg = &PrevSlot[ic].trigger;
+                if(tg->tgworking)
                     tg->Deactivate();
-                if(tg->ai == NULL || !tg->ai->IsPlaybackActive())
+                if(tg->apatt_instance == NULL || !tg->apatt_instance->IsPlaybackActive())
                 {
                     Instrument* instr = ((Instance*)tg->el)->instr;
                     PrevSlot[ic].state = PState_Inactive;
@@ -440,9 +435,9 @@ void Preview_CheckStates(long num_frames)
         }
     }
 
-    if(Release && doR)
-        Release = false;
-    if(Finish && doF)
-        Finish = false;
+    if(preview_mouse_release && doR)
+        preview_mouse_release = false;
+    if(preview_finish_all && doF)
+        preview_finish_all = false;
 }
 

@@ -73,15 +73,15 @@ void Cursor::SetPatternContext(int mouse_x, int mouse_y)
 
 void Cursor::PlaceCursor()
 {
-    if(patt == gAux->workPt && gAux->auxmode != AuxMode_Pattern)
+    if(patt == aux_panel->workPt && aux_panel->auxmode != AuxMode_Pattern)
     {
         type = CType_None;
     }
-    else if(patt != field && gAux->workPt != patt)
+    else if(patt != field_pattern && aux_panel->workPt != patt)
     {
         type = CType_None;
     }
-    else if(patt == gAux->workPt && gAux->workPt->ptype == Patt_StepSeq)
+    else if(patt == aux_panel->workPt && aux_panel->workPt->ptype == Patt_StepSeq)
     {
         if(curElem != NULL)
         {
@@ -93,7 +93,7 @@ void Cursor::PlaceCursor()
             type = CType_Quad;
         }
     }
-    else if(patt == gAux->workPt && gAux->workPt->ptype == Patt_Pianoroll)
+    else if(patt == aux_panel->workPt && aux_panel->workPt->ptype == Patt_Pianoroll)
     {
         if(curElem != NULL)
         {
@@ -156,8 +156,8 @@ void Cursor::AdvanceView(float dtick, int dline)
             R(Refresh_MixCenter);
         }
 
-        if(gAux->auxmode == AuxMode_Vols ||
-           gAux->auxmode == AuxMode_Pans)
+        if(aux_panel->auxmode == AuxMode_Vols ||
+           aux_panel->auxmode == AuxMode_Pans)
         {
             R(Refresh_Aux);
         }
@@ -166,9 +166,9 @@ void Cursor::AdvanceView(float dtick, int dline)
     {
         if(dtick != 0)
         {
-            gAux->OffsTick += dtick;
-            if(gAux->OffsTick < 0)
-                gAux->OffsTick = 0;
+            aux_panel->OffsTick += dtick;
+            if(aux_panel->OffsTick < 0)
+                aux_panel->OffsTick = 0;
         }
 
         /*
@@ -231,7 +231,7 @@ void Cursor::AdvanceLine(int dline)
     {
         if(CLine == trk->trk_end_line)
         {
-            if(C.trk->next != bottom_trk && !(loc == Loc_SmallGrid && gAux->workPt->ptype == Patt_StepSeq && trk->next->defined_instr == NULL))
+            if(C.trk->next != bottom_trk && !(loc == Loc_SmallGrid && aux_panel->workPt->ptype == Patt_StepSeq && trk->next->defined_instr == NULL))
             {
                 CLine = trk->next->trk_start_line;
             }
@@ -245,7 +245,7 @@ void Cursor::AdvanceLine(int dline)
     PosUpdate();
 
     // Definarium
-    if(trk != NULL && loc == Loc_SmallGrid && gAux->workPt->ptype == Patt_StepSeq && trk->defined_instr != NULL)
+    if(trk != NULL && loc == Loc_SmallGrid && aux_panel->workPt->ptype == Patt_StepSeq && trk->defined_instr != NULL)
     {
         ChangeCurrentInstrument(trk->defined_instr);
     }
@@ -263,11 +263,11 @@ void Cursor::PatternUpdate()
 {
     if(loc == Loc_MainGrid)
     {
-        patt = field;
+        patt = field_pattern;
     }
     else if(loc == Loc_SmallGrid)
     {
-        patt = gAux->workPt;
+        patt = aux_panel->workPt;
     }
 }
 
@@ -295,7 +295,7 @@ void Cursor::PosUpdate()
     {
         CursX = Tick2X(CTick + patt->start_tick, loc);
         CursY = Line2Y(CLine + patt->track_line, loc);
-        existel = IsElemExists(CTick, CLine, field);
+        existel = IsElemExists(CTick, CLine, field_pattern);
         fieldposx = CTick;
         fieldposy = CLine;
         maintrk = trk;
@@ -303,12 +303,12 @@ void Cursor::PosUpdate()
     else if(loc == Loc_SmallGrid)
     {
         CursX = Tick2X(CTick, loc);
-        CursY = Line2Y(CLine, loc) - gAux->bottomincr;
-        existel = gAux->workPt->OrigPt->IsElemExists(CTick, CLine);
+        CursY = Line2Y(CLine, loc) - aux_panel->bottomincr;
+        existel = aux_panel->workPt->OrigPt->IsElemExists(CTick, CLine);
     }
     CursX0 = CursX;
 
-    qsize = loc == Loc_SmallGrid ? gAux->quantsize : quantsize;
+    qsize = loc == Loc_SmallGrid ? aux_panel->quantsize : quantsize;
 
     // Activate an element in position if any
     if(curElem == NULL && existel != NULL && (type == CType_Vertical || type == CType_UnderVert || type == CType_InstanceNote))
@@ -330,9 +330,9 @@ Element* Cursor::CheckVisibility()
     }
     else if(loc == Loc_SmallGrid)
     {
-        if((CursX < GridXS1)||(CursX > GridXS2)||(CursY < GridYS1)||(CursY > GridYS2 + gAux->lineHeight))
+        if((CursX < GridXS1)||(CursX > GridXS2)||(CursY < GridYS1)||(CursY > GridYS2 + aux_panel->lineHeight))
         {
-            return gAux->workPt;
+            return aux_panel->workPt;
         }
         else
         {
@@ -349,7 +349,7 @@ Element* Cursor::CheckVisibility()
            ((CursX < GridX1)||(CursX > GridX2)||(CursY <= GridY1)||(CursY > GridY2 + lineHeight)))
     {
         {
-            return field;
+            return field_pattern;
         }
     }
 
@@ -380,7 +380,7 @@ void Cursor::ExitPerClickInAnotherGridPlace()
     if(mode == CMode_ElemParamEdit)
     {
         if(curParam->type == Param_Note &&
-           !(loc == Loc_SmallGrid && gAux->workPt->ptype == Patt_StepSeq)&&
+           !(loc == Loc_SmallGrid && aux_panel->workPt->ptype == Patt_StepSeq)&&
            (CursModeCorrespondsToCursorMode()))
         {
             //if(curElem->type == El_SlideNote)
@@ -464,7 +464,7 @@ void Cursor::ExitToNoteMode(Instrument* instr, int note_num)
     jassert(curElem != NULL);
     if(loc == Loc_MainGrid)
     {
-        if(!(gAux->auxmode == AuxMode_Pattern && gAux->workPt->OrigPt->autopatt))
+        if(!(aux_panel->auxmode == AuxMode_Pattern && aux_panel->workPt->OrigPt->autopatt))
         {
             ChangeCurrentInstrument(instr);
         }
@@ -480,7 +480,7 @@ void Cursor::ExitToNoteMode(Instrument* instr, int note_num)
     }
     else if(loc == Loc_SmallGrid)
     {
-        if(!(gAux->auxmode == AuxMode_Pattern && gAux->workPt->OrigPt->autopatt))
+        if(!(aux_panel->auxmode == AuxMode_Pattern && aux_panel->workPt->OrigPt->autopatt))
         {
             ChangeCurrentInstrument(instr);
         }
@@ -539,7 +539,7 @@ SlideNote* Cursor::PlaceSlideNote(char character, unsigned flags)
         }
     }*/
 
-    if(!(loc == Loc_SmallGrid && gAux->workPt->ptype == Patt_Pianoroll))
+    if(!(loc == Loc_SmallGrid && aux_panel->workPt->ptype == Patt_Pianoroll))
     {
         sl->ed_note->Show();
         sl->Switch2Param(sl->ed_note);
@@ -558,7 +558,7 @@ SlideNote* Cursor::PlaceSlideNote(char character, unsigned flags)
 
 void Cursor::PosAndCursor2Mouse(int mouse_x, int mouse_y)
 {
-	if(M.snappedTick >= 0 && M.snappedLine < field->num_lines)
+	if(M.snappedTick >= 0 && M.snappedLine < field_pattern->num_lines)
 	{
 		if(M.loc == Loc_MainGrid)
 		{
@@ -567,7 +567,7 @@ void Cursor::PosAndCursor2Mouse(int mouse_x, int mouse_y)
                 SwitchInputMode(CMode_TxtDefault);
             }
 
-            SetPattern(field, Loc_MainGrid);
+            SetPattern(field_pattern, Loc_MainGrid);
             SetPatternContext(mouse_x, mouse_y);
 		}
 		else if(M.loc == Loc_SmallGrid)
@@ -577,7 +577,7 @@ void Cursor::PosAndCursor2Mouse(int mouse_x, int mouse_y)
 				SwitchInputMode(CMode_TxtDefault);
 			}
 
-            SetPattern(gAux->workPt, Loc_SmallGrid);
+            SetPattern(aux_panel->workPt, Loc_SmallGrid);
         }
         else if(M.loc == Loc_StaticGrid)
         {
@@ -714,7 +714,7 @@ void Mouse::CalcTickAndLine(int mx, int my, float * tick, int * line, Loc cloc)
     }
     *tick = (float)(int)tk;
 
-    float q = (cloc == Loc_MainGrid) ? quantsize : gAux->quantsize;
+    float q = (cloc == Loc_MainGrid) ? quantsize : aux_panel->quantsize;
     if(q < 1)
     {
         if(q > 0)
@@ -742,33 +742,33 @@ void Mouse::CalcTickAndLine(int mx, int my, float * tick, int * line, Loc cloc)
     }
     else if(cloc == Loc_SmallGrid)
     {
-        *line = Y2Line(my + gAux->bottomincr, Loc_SmallGrid);
+        *line = Y2Line(my + aux_panel->bottomincr, Loc_SmallGrid);
     }
 }
 
 void Mouse::CalcPosition(int mx, int my)
 {
     loc = Loc_UNKNOWN;
-    patt = field;
+    patt = field_pattern;
 
     if(IsMouseOnMainGrid(mx, my) == true)
     {
         loc = Loc_MainGrid;
         //M.patt = CheckPosForPatterns(X2Tick(mouse_x, Loc_MainGrid), Y2Line(mouse_y, Loc_MainGrid), field);
-        patt = field;
+        patt = field_pattern;
     }
     else if(IsMouseOnSmallGrid(mx, my) == true)
     {
         loc = Loc_SmallGrid;
-        patt = gAux->workPt;
-        current_line = Y2Line(my + gAux->bottomincr, Loc_SmallGrid);
-        current_trk = GetTrkDataForLine(current_line, gAux->workPt->OrigPt);
+        patt = aux_panel->workPt;
+        current_line = Y2Line(my + aux_panel->bottomincr, Loc_SmallGrid);
+        current_trk = GetTrkDataForLine(current_line, aux_panel->workPt->OrigPt);
     }
 
     if(loc == Loc_MainGrid || loc == Loc_SmallGrid)
     {
         current_tick = X2Tick(mx, loc);
-        qsize = (loc == Loc_MainGrid) ? quantsize : gAux->quantsize;
+        qsize = (loc == Loc_MainGrid) ? quantsize : aux_panel->quantsize;
         CalcTickAndLine(mx, my, &snappedTick, &snappedLine, loc);
     }
 
@@ -780,13 +780,7 @@ void Mouse::CalcPosition(int mx, int my)
 
 void Mouse::PosCheck(int mx, int my)
 {
-    if(M.mmode & MOUSE_MIXING && 
-       ((M.mmode & MOUSE_CONTROLLING && M.active_ctrl->type == Ctrl_OutPin_Point) || 
-        M.mixcellindexing))
-    {
-        R(Refresh_MixHighlights);
-    }
-    else if(M.mmode & MOUSE_AUXMIXING && M.auxcellindexing)
+    if(M.mmode & MOUSE_AUXMIXING && M.auxcellindexing)
     {
         R(Refresh_AuxHighlights);
     }
@@ -826,16 +820,16 @@ void Mouse::PosCheck(int mx, int my)
         if(IsMouseOnAux(mx,my) == true)
         {
             M.mmode |= MOUSE_AUXING;
-            M.active_panel = gAux;
+            M.active_panel = aux_panel;
 
-            if(gAux->auxmode == AuxMode_Pattern)
+            if(aux_panel->auxmode == AuxMode_Pattern)
             {
-                M.on_keys = gAux->CheckIfMouseOnKeys(mx, my, &M.pianokey_num, &(M.pianokey_vol));
+                M.on_keys = aux_panel->CheckIfMouseOnKeys(mx, my, &M.pianokey_num, &(M.pianokey_vol));
 
                 if(M.on_keys == true)
                 {
-                    M.current_line = Y2Line(my + gAux->bottomincr, Loc_SmallGrid);
-                    M.current_trk = GetTrkDataForLine(M.current_line, gAux->workPt->OrigPt);
+                    M.current_line = Y2Line(my + aux_panel->bottomincr, Loc_SmallGrid);
+                    M.current_trk = GetTrkDataForLine(M.current_line, aux_panel->workPt->OrigPt);
                 }
 
                 if(mx >= GridXS1 && mx <= GridXS2 && 
@@ -845,14 +839,14 @@ void Mouse::PosCheck(int mx, int my)
                 }
 
                 if(mx >= GridXS1 && mx <= GridXS2 && 
-                   my > (gAux->patty2 - gAux->eux + 1) && my < gAux->patty2)
+                   my > (aux_panel->patty2 - aux_panel->eux + 1) && my < aux_panel->patty2)
                 {
                     M.mmode |= MOUSE_AUXAUXING;
                 }
 
-                if(gAux->ltype == Lane_Pitch)
+                if(aux_panel->ltype == Lane_Pitch)
                 {
-                    Envelope* env = (Envelope*)gAux->workPt->OrigPt->pitch->paramedit;
+                    Envelope* env = (Envelope*)aux_panel->workPt->OrigPt->pitch->paramedit;
                     env->Check(mx, my);
                 }
             }
@@ -957,7 +951,7 @@ void Mouse::PosCheck(int mx, int my)
             CheckMixerStuff(mx, my);
         }
 		*/
-        else if(gAux->auxmode == AuxMode_Mixer && M.mmode & MOUSE_AUXING)
+        else if(aux_panel->auxmode == AuxMode_Mixer && M.mmode & MOUSE_AUXING)
         {
             M.mmode |= MOUSE_AUXMIXING;
 
@@ -990,7 +984,7 @@ void Mouse::PosCheck(int mx, int my)
             M.mmode |= MOUSE_LINING;
             M.lineloc = Loc_MainGrid;
         }
-        else if(gAux->auxmode == AuxMode_Pattern && 
+        else if(aux_panel->auxmode == AuxMode_Pattern && 
                 mx >= GridXS1 && mx <= GridXS2 && my >= AuxY1 + 21 && my <= AuxY1 + 33)
         {
             M.mmode |= MOUSE_LINING;
@@ -1018,7 +1012,7 @@ void Mouse::PosCheck(int mx, int my)
                 {
                     // If resize should stay, then reset any highlights
                     M.active_elem->highlighted = false;
-                    if(M.active_elem->patt == field)
+                    if(M.active_elem->patt == field_pattern)
                     {
                         R(Refresh_GridContent);
                     }
@@ -1057,7 +1051,7 @@ void Mouse::PosCheck(int mx, int my)
             Control* ct = firstCtrl;
             while(ct != NULL)
             {
-				if(ct == gAux->playbt)
+				if(ct == aux_panel->playbt)
 					int a = 1;
 				if(ct->active == true && (ct->panel == NULL || 
                                            M.active_panel == NULL || 
@@ -1089,7 +1083,7 @@ void Mouse::PosCheck(int mx, int my)
                 M.lasthintctrl = NULL;
             }
 
-            if(M.active_ctrl == CP->qMenu || M.active_ctrl == gAux->qMenu)
+            if(M.active_ctrl == CP->qMenu || M.active_ctrl == aux_panel->qMenu)
             {
                 M.active_menu = (Menu*)M.active_ctrl;
                 //M.active_ctrl = ((Menu*)M.active_ctrl)->first_item;
@@ -1102,7 +1096,7 @@ void Mouse::PosCheck(int mx, int my)
                 {
                 	mn->drawarea->EnableWithBounds(mn->x - 1, mn->y, 59, yh);
                 }
-                else if(mn == gAux->qMenu)
+                else if(mn == aux_panel->qMenu)
                 {
                 	mn->drawarea->EnableWithBounds(mn->x - 1, mn->y - yh, 59, yh + 20);
                 }
@@ -1115,11 +1109,6 @@ void Mouse::PosCheck(int mx, int my)
                     mi = mi->inext;
                 }
             }
-
-            if(M.mmode & MOUSE_MIXING && M.mmode & MOUSE_CONTROLLING && M.active_ctrl->type == Ctrl_OutPin_Point)
-            {
-                R(Refresh_MixHighlights);
-            }
         }
 
         if(my > IP->y + brw_heading + 1 && 
@@ -1128,7 +1117,7 @@ void Mouse::PosCheck(int mx, int my)
             Instrument* i = first_instr;
             while(i != NULL)
             {
-                if(i->zisible && (mx >= i->x && mx <= i->x + i->width - 9)&&
+                if(i->visible && (mx >= i->x && mx <= i->x + i->width - 9)&&
                                  (my >= i->y + 2 && my <= i->y + 2 + i->height))
                 {
                     M.mmode |= MOUSE_INSTRUMENTING;
@@ -1191,7 +1180,7 @@ bool Mouse::IsMouseOnMainGrid(int mx, int my)
 
 bool Mouse::IsMouseOnSmallGrid(int mx,  int my)
 {
-    if(gAux->auxmode == AuxMode_Pattern && mx >= GridXS1 && mx <= GridXS2 && my >= GridYS1 && my <= GridYS2)
+    if(aux_panel->auxmode == AuxMode_Pattern && mx >= GridXS1 && mx <= GridXS2 && my >= GridYS1 && my <= GridYS2)
     {
         return true;
     }
@@ -1299,7 +1288,7 @@ void* Mouse::IsMouseOnBunch(int mx, int my)
 void Mouse::CheckAuxMixerStuff(int mx, int my)
 {
     MixChannel* mchan = NULL;
-    mchan = &gAux->masterchan;
+    mchan = &aux_panel->masterchan;
     if(mchan->visible && mx >= mchan->x && mx <= (mchan->x + mchan->width) && 
                          my >= mchan->y && my <= (mchan->y + mchan->height))
     {
@@ -1309,7 +1298,7 @@ void Mouse::CheckAuxMixerStuff(int mx, int my)
     {
         for(int mc = 0; mc < NUM_MIXCHANNELS; mc++)
         {
-            mchan = &gAux->mchan[mc];
+            mchan = &aux_panel->mchan[mc];
             if(mchan->visible)
             {
                 if(mx >= mchan->x && mx <= (mchan->x + mchan->width) && 
@@ -1331,7 +1320,7 @@ void Mouse::CheckAuxMixerStuff(int mx, int my)
 
         for(int mc = 0; mc < 3; mc++)
         {
-            mchan = &gAux->sendchan[mc];
+            mchan = &aux_panel->sendchan[mc];
             if(mchan->visible)
             {
                 if(mx >= mchan->x && mx <= (mchan->x + mchan->width) && 
@@ -1349,8 +1338,8 @@ void Mouse::CheckAuxMixerStuff(int mx, int my)
         Eff* eff = mchan->first_eff;
         while(eff != NULL)
         {
-            if(mx >= eff->x && mx <= (eff->x + eff->w) && 
-               my >= eff->y && my <= (eff->y + eff->h))
+            if(mx >= eff->x && mx <= (eff->x + eff->width) && 
+               my >= eff->y && my <= (eff->y + eff->height))
             {
                 M.active_effect = eff;
                 break;
@@ -1402,48 +1391,6 @@ void Mouse::CheckAuxMixerStuff(int mx, int my)
     }
 }
 
-void Mouse::CheckMixerStuff(int mx, int my)
-{
-    Mixcell* mc;
-    for(int mcx = 0; mcx < NUM_MIXER_COLUMNS; mcx++)
-    {
-        for(int mcy = 0; mcy < NUM_MIXER_ROWS; mcy++)
-        {
-            mc = &mix->r_cell[mcx][mcy];
-            if(mc->visible && mx >= mc->x && mx <= mc->x1 && my >= mc->y && my <= mc->y1)
-            {
-                M.active_mixcell = mc;
-                if(mx < mc->x + 12 && my < mc->y + 12)
-                {
-                    M.mixcellindexing = true;
-                }
-                else
-                {
-                    M.mixcellindexing = false;
-                }
-                break;
-            }
-        }
-    
-        if(mix->horiz_bar->offset + mix->horiz_bar->visible_len >= mix->master_offset)
-        {
-            for(int mcy = 0; mcy < NUM_MASTER_CELLS; mcy++)
-            {
-                mc = &mix->o_cell[mcy];
-                if(mc->visible && mx >= mc->x && mx <= mc->x1 && my >= mc->y && my <= mc->y1)
-                {
-                    M.active_mixcell = mc;
-                }
-            }
-        }
-    }
-    
-    if(M.mixcellindexing)
-    {
-        R(Refresh_MixHighlights);
-    }
-}
-
 void Mouse::CheckGridElements(int mx, int my)
 {
     //Samplent* samplent;
@@ -1456,12 +1403,12 @@ void Mouse::CheckGridElements(int mx, int my)
     }
     else if(loc == Loc_SmallGrid)
     {
-        el = gAux->workPt->OrigPt->first_elem;
-        lH = gAux->lineHeight;
+        el = aux_panel->workPt->OrigPt->first_elem;
+        lH = aux_panel->lineHeight;
     }
 
     // Not allowed resizing elements on stepsequencer currently and in brush mode
-    if(!(M.loc == Loc_SmallGrid && gAux->workPt->ptype == Patt_StepSeq) && CP->CurrentMode != CP->BrushMode)
+    if(!(M.loc == Loc_SmallGrid && aux_panel->workPt->ptype == Patt_StepSeq) && CP->CurrentMode != CP->BrushMode)
     {
         // Check envelopes first as they hide everything
         while(el != NULL)
@@ -1501,8 +1448,8 @@ void Mouse::CheckGridElements(int mx, int my)
             }
             else if(loc == Loc_SmallGrid)
             {
-                el = gAux->workPt->OrigPt->first_elem;
-                lH = gAux->lineHeight;
+                el = aux_panel->workPt->OrigPt->first_elem;
+                lH = aux_panel->lineHeight;
             }
 
             while(el != NULL)
@@ -1587,7 +1534,7 @@ void Mouse::CheckGridElements(int mx, int my)
 
     if(loc == Loc_SmallGrid && !(M.mmode & MOUSE_ENVELOPING) && !(M.mmode & MOUSE_RESIZE))
     {
-        if(abs(mx - Tick2X(gAux->workPt->tick_length, loc)) < 2)
+        if(abs(mx - Tick2X(aux_panel->workPt->tick_length, loc)) < 2)
         {
             M.mmode |= MOUSE_RESIZE;
             M.resize_object = Resize_AuxPattRange;
@@ -1607,13 +1554,13 @@ void Mouse::CheckGridElements(int mx, int my)
         {
             tc = OffsLine;
             last = (GridY2 - GridY1)/lineHeight + OffsLine;
-            patt = field;
+            patt = field_pattern;
         }
         else if(loc == Loc_SmallGrid)
         {
-            tc = gAux->OffsLine;
-            last = (GridYS2 - GridYS1)/gAux->lineHeight + gAux->OffsLine;
-            patt = gAux->workPt->OrigPt;
+            tc = aux_panel->OffsLine;
+            last = (GridYS2 - GridYS1)/aux_panel->lineHeight + aux_panel->OffsLine;
+            patt = aux_panel->workPt->OrigPt;
         }
 
         while(tc <= last)
@@ -1709,9 +1656,9 @@ void Mouse::CheckGridStuff(int mx, int my)
     }
     else if(M.loc == Loc_SmallGrid)
     {
-        M.current_line = Y2Line(my + gAux->bottomincr, Loc_SmallGrid);
+        M.current_line = Y2Line(my + aux_panel->bottomincr, Loc_SmallGrid);
         M.current_tick = X2Tick(mx, Loc_SmallGrid);
-        M.current_trk = GetTrkDataForLine(M.current_line, gAux->workPt->OrigPt);
+        M.current_trk = GetTrkDataForLine(M.current_line, aux_panel->workPt->OrigPt);
     }
 
     if((M.loc == Loc_MainGrid || M.loc == Loc_SmallGrid))
@@ -1779,7 +1726,7 @@ void Mouse::ClickActiveElement(int mx, int my, bool dbclick, unsigned flags)
     if(flags & kbd_ctrl)
     {
         el->Select();
-		if(loc == Loc_MainGrid && gAux->isVolsPansMode())
+		if(loc == Loc_MainGrid && aux_panel->isVolsPansMode())
 			R(Refresh_Aux);
 		else if(loc == Loc_SmallGrid)
 			R(Refresh_SubAux);
@@ -1790,7 +1737,7 @@ void Mouse::ClickActiveElement(int mx, int my, bool dbclick, unsigned flags)
 		Pattern* pt = (Pattern*)el;
         pt->aliasModeName = true;
 
-        if(gAux->playing)
+        if(aux_panel->playing)
         {
             ResetProcessing(false);
             ResetUnstableElements();
@@ -1801,7 +1748,7 @@ void Mouse::ClickActiveElement(int mx, int my, bool dbclick, unsigned flags)
             Looping_Reset();
         }
 
-        gAux->EditPattern((Pattern*)el, false);
+        aux_panel->EditPattern((Pattern*)el, false);
         JustClickedPattern = true;
     }
 }

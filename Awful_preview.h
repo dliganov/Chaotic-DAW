@@ -14,7 +14,7 @@ typedef struct PreviewSlot
 {
     Instance*           ii;
     PrevState           state;
-    Trigger             trig;
+    Trigger             trigger;
     bool                sustainable;    // Indicates immediate release after trigger activation. Useful shit.
     bool                mouse_preview;
     bool                keybound_pianokey;

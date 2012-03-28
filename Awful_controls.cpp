@@ -291,7 +291,7 @@ void ScrollBard::SetOffset(float offs)
     }
     else if(offset + visible_len > full_len && 
                                                this != main_bar && 
-                                               this != gAux->h_sbar)
+                                               this != aux_panel->h_sbar)
     {
         offset = full_len - visible_len;
         if(offset < 0)
@@ -437,10 +437,10 @@ void ScrollBard::MouseClick(int mouse_x, int mouse_y)
                 }
             }
 
-            if(gAux->workPt->ptype == Patt_Pianoroll && this == gAux->v_sbar && gAux->offset_correction == true)
+            if(aux_panel->workPt->ptype == Patt_Pianoroll && this == aux_panel->v_sbar && aux_panel->offset_correction == true)
             {
-                gAux->offset_correction = false;
-                gAux->bottomincr = 0;
+                aux_panel->offset_correction = false;
+                aux_panel->bottomincr = 0;
                 //sb->actual_offset = (float)(int)sb->actual_offset + 1;
             }
             float dtf = (float)pixdelta/cf;
@@ -1686,10 +1686,6 @@ Toggle::Toggle(Instrument* i, ToggleType tt)
     {
         state = &i->params->solo;
     }
-    else if(tt == Toggle_Window)
-    {
-        state = &i->window_visible;
-    }
 
     drawarea = new DrawArea((void*)this, Draw_Toggle);
     MC->AddDrawArea(drawarea);
@@ -2374,7 +2370,7 @@ void DropMenu::UpdateBounds(bool opened)
         }
         else
         {
-            if(this == gAux->qMenu)
+            if(this == aux_panel->qMenu)
             {
                 drawarea->SetBounds(x - 1, y - 1, width + 3, height + 3,
                                     panel->x, 

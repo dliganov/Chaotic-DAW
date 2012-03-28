@@ -117,7 +117,7 @@ void                        DoLoadPreset(Eff* eff);
 extern Pattern*             GetPatternByIndex(int index);
 extern bool                 ResetHighlights(bool* redrawmain, bool* redrawaux);
 extern void                 UpdateElementsVisibility();
-void                        MovePickedElements(int mx, int my, bool shift);
+void                        MovePickedUpElements(int mx, int my, bool shift);
 void                        ClonePickedToNew(float dtick, int dtrack);
 bool                        PickUpElements();
 void                        DropPickedElements();
@@ -441,8 +441,7 @@ Mouse       M;
 // Main panels
 CtrlPanel*      CP;
 InstrPanel*     IP;
-Mixer*          mix;
-Aux*            gAux;
+Aux*            aux_panel;
 
 Browser*        genBrw;
 Browser*        mixBrw;
@@ -539,10 +538,10 @@ int             delCount;
 Element*        delList[100];
 
 // Grids are represented by patterns. Field is the main grid.
-Pattern*        field;
+Pattern*        field_pattern;
 
 // Playback pattern to set for Aux.
-Pattern*        auxPatternSet;
+Pattern*        aux_Pattern;
 
 // Original patterns list
 Pattern*        first_original_pattern;
@@ -706,6 +705,21 @@ int             numLastSessions;
 Sample*         barsample = NULL;
 Sample*         beatsample = NULL;
 
+
+void MakeCoolVUFallDownEffectYo()
+{
+    CP->MVol->vu->SetLR(Random::getSystemRandom().nextFloat()*0.5f + 0.5f, 
+                        Random::getSystemRandom().nextFloat()*0.5f + 0.5f);
+
+    Instrument* i = first_instr;
+    while(i != NULL)
+    {
+        i->vu->SetLR(Random::getSystemRandom().nextFloat()*0.5f + 0.5f, 
+                        Random::getSystemRandom().nextFloat()*0.5f + 0.5f);
+        i = i->next;
+    }
+}
+
 void ChangesIndicate()
 {
     if(!ChangesHappened)
@@ -757,10 +771,10 @@ void CleanElements()
             StopMain(true);
             CP->play_butt->Release();
         }
-        else if(gAux->playing == true)
+        else if(aux_panel->playing == true)
         {
-            gAux->Stop();
-            gAux->playbt->Release();
+            aux_panel->Stop();
+            aux_panel->playbt->Release();
         }
 
         if(C.mode == CMode_NotePlacing)
@@ -796,14 +810,14 @@ void CleanProject()
         StopMain(true);
         CP->play_butt->Release();
     }
-    else if(gAux->playing == true)
+    else if(aux_panel->playing == true)
     {
-        gAux->Stop();
-        gAux->playbt->Release();
+        aux_panel->Stop();
+        aux_panel->playbt->Release();
     }
 
-    gAux->AuxReset();
-    pbkAux->SetPlayPatt(auxPatternSet); // force setting to blank pattern
+    aux_panel->AuxReset();
+    pbkAux->SetPlayPatt(aux_Pattern); // force setting to blank pattern
 
     if(C.mode == CMode_NotePlacing)
     {
@@ -828,7 +842,7 @@ void CleanProject()
         i = inext;
     }
 
-    gAux->current_eff = NULL;
+    aux_panel->current_eff = NULL;
     if(mixBrw->brwmode == Browse_Presets || mixBrw->brwmode == Browse_Params)
     {
         mixBrw->Update();
@@ -845,11 +859,11 @@ void CleanProject()
 
     for(int mc = 0; mc < NUM_MIXCHANNELS; mc++)
     {
-        gAux->mchan[mc].routestr->SetString("--");
-        gAux->mchan[mc].mc_main->params->Reset();
-        gAux->mchan[mc].amount1->Reset();
-        gAux->mchan[mc].amount2->Reset();
-        gAux->mchan[mc].amount3->Reset();
+        aux_panel->mchan[mc].routestr->SetString("--");
+        aux_panel->mchan[mc].mc_main->params->Reset();
+        aux_panel->mchan[mc].amount1->Reset();
+        aux_panel->mchan[mc].amount2->Reset();
+        aux_panel->mchan[mc].amount3->Reset();
     }
 
     Solo_Instr = NULL;
@@ -876,15 +890,15 @@ void CleanProject()
     // Position cursor, playback pos and mainbar
     SetPosX(0 - OffsTick*tickWidth, Loc_MainGrid);
     SetScale(tickWidthBack);
-    gAux->SetScale(gAux->tickWidthBack);
+    aux_panel->SetScale(aux_panel->tickWidthBack);
 
     OffsLine = 0;
     C.ExitToDefaultMode();
-    C.SetPattern(field, Loc_MainGrid);
+    C.SetPattern(field_pattern, Loc_MainGrid);
     C.SetPos(8, 4);
     main_bar->SetOffset(0);
     main_v_bar->SetOffset(0);
-    gAux->mix_sbar->SetOffset(0);
+    aux_panel->mix_sbar->SetOffset(0);
 
     PrjData.projpath = "";
     PrjData.SetName("Untitled");
@@ -934,7 +948,7 @@ void LoadElementsFromNode(XmlElement* xmlMainNode, Pattern* pttarget)
             Element* el = NULL;
             C.SaveState();
             C.SetPos(stick, trackline);
-            C.SetPattern(patt, patt == field ? Loc_MainGrid : Loc_SmallGrid);
+            C.SetPattern(patt, patt == field_pattern ? Loc_MainGrid : Loc_SmallGrid);
             switch(type)
             {
                 case El_TextString:
@@ -1150,9 +1164,9 @@ bool LoadProjectData(File chosenFile, LoadThread* thread)
             }
 
             // Populate step-sequencer if it's turned on
-            if(gAux->workPt->OrigPt->ptype == Patt_StepSeq)
+            if(aux_panel->workPt->OrigPt->ptype == Patt_StepSeq)
             {
-                gAux->PopulatePatternWithInstruments(gAux->workPt->OrigPt);
+                aux_panel->PopulatePatternWithInstruments(aux_panel->workPt->OrigPt);
             }
 
             // Load all effects into mixchannels
@@ -1161,7 +1175,7 @@ bool LoadProjectData(File chosenFile, LoadThread* thread)
                 char indexstr[15];
                 MixChannel* mchan = NULL;
                 xmlChild->getStringAttribute(T("Index")).copyToBuffer(indexstr, 15);
-                mchan = gAux->GetMixChannelByIndexStr(indexstr);
+                mchan = aux_panel->GetMixChannelByIndexStr(indexstr);
 
                 if(mchan != NULL)
                 {
@@ -1188,11 +1202,11 @@ bool LoadProjectData(File chosenFile, LoadThread* thread)
                         Eff* eff = NULL;
                         if(etype != EffType_VSTPlugin)
                         {
-                            eff = gAux->AddEffectByType(etype, mchan);
+                            eff = aux_panel->AddEffectByType(etype, mchan);
                         }
                         else
                         {
-                            eff = gAux->AddVSTEffectByPath((const char*)epath, mchan);
+                            eff = aux_panel->AddVSTEffectByPath((const char*)epath, mchan);
                         }
 
                         if(eff != NULL)
@@ -1233,7 +1247,7 @@ bool LoadProjectData(File chosenFile, LoadThread* thread)
                     patt->ptype = pattype;
                     if(patt->ptype == Patt_StepSeq)
                     {
-                        gAux->PopulatePatternWithInstruments(patt);
+                        aux_panel->PopulatePatternWithInstruments(patt);
                     }
                     patt->origindex = origindex;
                     
@@ -1295,12 +1309,14 @@ bool LoadProjectData(File chosenFile, LoadThread* thread)
     // If some instrument wasn't loaded, then need to adjust line positions in step sequencers
     ActualizeStepSeqPositions();
 
-    if(gAux->isPatternMode())
-        gAux->HandleButtDown(gAux->Vols);
+    if(aux_panel->isPatternMode())
+        aux_panel->HandleButtDown(aux_panel->Vols);
 
     undoMan->WipeEntireHistory();
 
     ProjectLoadingInProgress = false;
+
+    MakeCoolVUFallDownEffectYo();
 
     return retval;
 }
@@ -1342,7 +1358,7 @@ void SaveProjectData(File chosenFile)
     for(int mc = 0; mc < NUM_MIXCHANNELS; mc++)
     {
         XmlElement* xmlMChan = new XmlElement(T("MixChannel"));
-        mchan = &gAux->mchan[mc];
+        mchan = &aux_panel->mchan[mc];
         mchan->Save(xmlMChan);
 
         xmlProjectMain.addChildElement(xmlMChan);
@@ -1351,14 +1367,14 @@ void SaveProjectData(File chosenFile)
     for(int sc = 0; sc < 3; sc++)
     {
         XmlElement* xmlMChan = new XmlElement(T("MixChannel"));
-        mchan = &gAux->sendchan[sc];
+        mchan = &aux_panel->sendchan[sc];
         mchan->Save(xmlMChan);
 
         xmlProjectMain.addChildElement(xmlMChan);
     }
 
     XmlElement* xmlMChan = new XmlElement(T("MixChannel"));
-    mchan = &gAux->masterchan;
+    mchan = &aux_panel->masterchan;
     mchan->Save(xmlMChan);
 
     xmlProjectMain.addChildElement(xmlMChan);
@@ -1670,7 +1686,7 @@ Instance* CreateElement_Note(Instrument* instr, bool add, bool preventundo)
     jassert(ii != NULL);
     if(add)
     {
-        if(C.patt == gAux->workPt && gAux->workPt->autopatt == true && gAux->relative_oct)
+        if(C.patt == aux_panel->workPt && aux_panel->workPt->autopatt == true && aux_panel->relative_oct)
         {
             ii->ed_note->SetRelative(true);
         }
@@ -1753,7 +1769,7 @@ Instance* CreateElement_InstanceSpecific(Pattern* patt, Instrument *instr, int n
 extern SlideNote* CreateElement_SlideNote(bool add)
 {
     bool rel = false;
-    if(C.patt == gAux->workPt && gAux->workPt->autopatt == true && gAux->relative_oct)
+    if(C.patt == aux_panel->workPt && aux_panel->workPt->autopatt == true && aux_panel->relative_oct)
     {
         rel = true;
     }
@@ -1868,7 +1884,7 @@ extern Pattern* CreateElement_Pattern(float tk1, float tk2, int tr1, int tr2, Pa
     if(pattype == Patt_StepSeq)
     {
         // Pattern-original should be referenced to instruments
-        gAux->PopulatePatternWithInstruments(ptmain);
+        aux_panel->PopulatePatternWithInstruments(ptmain);
     }
     else if(pattype == Patt_Pianoroll)
     {
@@ -1995,7 +2011,7 @@ int GetBottomElementLine()
 
     while(pElem != NULL)
     {
-        if (pElem->IsPresent() && pElem->patt == field && pElem->track_line > line)
+        if (pElem->IsPresent() && pElem->patt == field_pattern && pElem->track_line > line)
         {
             line = pElem->track_line;
         }
@@ -2054,7 +2070,7 @@ void UpdateNavBarsData()
         R(Refresh_MainVBar);
     }
 
-    pElem = gAux->workPt->first_elem;
+    pElem = aux_panel->workPt->first_elem;
     maxFrame = 0;
     ftick = 0;
     while(pElem != NULL)
@@ -2072,19 +2088,19 @@ void UpdateNavBarsData()
     {
         btick = CTick;
     }
-    if(gAux->workPt->tick_length > btick)
+    if(aux_panel->workPt->tick_length > btick)
     {
-        btick = gAux->workPt->tick_length;
+        btick = aux_panel->workPt->tick_length;
     }
 
-    oldlen = gAux->h_sbar->full_len;
+    oldlen = aux_panel->h_sbar->full_len;
     newlen = jmax(ftick, btick) + 12;
-    gAux->h_sbar->full_len = newlen;
+    aux_panel->h_sbar->full_len = newlen;
 }
 
 void UpdateAuxNavBarOnly()
 {
-    Element* pElem = gAux->workPt->first_elem;
+    Element* pElem = aux_panel->workPt->first_elem;
     tframe maxFrame = 0;
     float ftick = 0;
 
@@ -2103,14 +2119,14 @@ void UpdateAuxNavBarOnly()
     {
         btick = CTick;
     }
-    if(gAux->workPt->tick_length > btick)
+    if(aux_panel->workPt->tick_length > btick)
     {
-        btick = gAux->workPt->tick_length;
+        btick = aux_panel->workPt->tick_length;
     }
 
-    float oldlen = gAux->h_sbar->full_len;
+    float oldlen = aux_panel->h_sbar->full_len;
     float newlen = jmax(ftick, btick) + 12;
-    gAux->h_sbar->full_len = newlen;
+    aux_panel->h_sbar->full_len = newlen;
 }
 
 void GetLastElementEndFrame(long *pLastFrame)
@@ -2148,10 +2164,10 @@ void AddNewElement(Element* el, bool preventundo)
     }
     lastElem = el;
 
-    field->first_elem = firstElem;
-    field->last_elem = lastElem;
+    field_pattern->first_elem = firstElem;
+    field_pattern->last_elem = lastElem;
 
-    if(el->type != El_Pattern && (C.patt != field))
+    if(el->type != El_Pattern && (C.patt != field_pattern))
     {
         if(C.patt->OrigPt != NULL)
             C.patt->OrigPt->AddElement(el);
@@ -2191,7 +2207,7 @@ void AddNewElement(Element* el, bool preventundo)
         pbkMain->UpdateQueuedEv();
         ReleaseMutex(hAudioProcessMutex);
     }
-    else if(gAux->isPlaying())
+    else if(aux_panel->isPlaying())
     {
         WaitForSingleObject(hAudioProcessMutex, INFINITE);
         pbkAux->UpdateQueuedEv();
@@ -2215,8 +2231,8 @@ void Add_trkdata(Trk* td)
     }
     last_trkdata = td;
 
-    field->first_trkdata = first_trkdata;
-    field->last_trkdata = last_trkdata;
+    field_pattern->first_trkdata = first_trkdata;
+    field_pattern->last_trkdata = last_trkdata;
 }
 
 void AddNewControl(Control* ctrl, Panel* owner)
@@ -2642,7 +2658,7 @@ void UpdatePatternIndices()
 Pattern* GetPatternByIndex(int index)
 {
     if(index == 0)
-        return field;
+        return field_pattern;
 
     Pattern* patt = first_original_pattern;
     while(patt != NULL)
@@ -2808,8 +2824,6 @@ void Add_Instrument(Instrument* i)
 {
     GetOriginalInstrumentName(i->name, i->name);
 
-    i->alias->active = false;
-    i->num = num_instrs;
     i->alias->active = true;
 
     strcpy(&C.last_char, "q");
@@ -3074,7 +3088,7 @@ void HardDelete(Element* el, bool preventundo)
         Del_Element_Triggers(el);
     }
 
-    if(el->type != El_Pattern && el->patt != field)
+    if(el->type != El_Pattern && el->patt != field_pattern)
     {
         el->patt->RemoveElement(el);
     }
@@ -3109,22 +3123,22 @@ void HardDelete(Element* el, bool preventundo)
         Pattern* pt = (Pattern*)el;
         pt->DisablePlayback(); // Care should be taken if this pattern's playback is globally listed, to unlist it before deletion.
 
-        if(pt == gAux->workPt)
+        if(pt == aux_panel->workPt)
         {
             if(C.loc == Loc_SmallGrid)
             {
                 C.ExitToDefaultMode();
-                C.SetPattern(field, Loc_MainGrid);
-                C.SetPos(gAux->workPt->start_tick, gAux->workPt->track_line);
+                C.SetPattern(field_pattern, Loc_MainGrid);
+                C.SetPos(aux_panel->workPt->start_tick, aux_panel->workPt->track_line);
             }
-            gAux->AuxReset();
+            aux_panel->AuxReset();
             C.PosUpdate();
         }
         else if(C.patt == pt)
         {
             C.ExitToDefaultMode();
-            C.SetPattern(field, Loc_MainGrid);
-            C.SetPos(gAux->workPt->start_tick, gAux->workPt->track_line);
+            C.SetPattern(field_pattern, Loc_MainGrid);
+            C.SetPos(aux_panel->workPt->start_tick, aux_panel->workPt->track_line);
         }
 
         pt->OrigPt->RemoveDerivedPattern(pt);
@@ -3166,8 +3180,8 @@ void HardDelete(Element* el, bool preventundo)
             el->next->prev = el->prev;
         }
     }
-    field->first_elem = firstElem;
-    field->last_elem = lastElem;
+    field_pattern->first_elem = firstElem;
+    field_pattern->last_elem = lastElem;
 
     delete el;
 }
@@ -3258,22 +3272,22 @@ void SoftDelete(Element *el, bool preventundo)
     {
         Pattern* pt = (Pattern*)el;
         pt->DisablePlayback();
-        if(pt == gAux->workPt)
+        if(pt == aux_panel->workPt)
         {
             if(C.loc == Loc_SmallGrid)
             {
                 C.ExitToDefaultMode();
-                C.SetPattern(field, Loc_MainGrid);
-                C.SetPos(gAux->workPt->start_tick, gAux->workPt->track_line);
+                C.SetPattern(field_pattern, Loc_MainGrid);
+                C.SetPos(aux_panel->workPt->start_tick, aux_panel->workPt->track_line);
             }
-            gAux->AuxReset();
+            aux_panel->AuxReset();
             C.PosUpdate();
         }
         else if(C.patt == pt)
         {
             C.ExitToDefaultMode();
-            C.SetPattern(field, Loc_MainGrid);
-            C.SetPos(gAux->workPt->start_tick, gAux->workPt->track_line);
+            C.SetPattern(field_pattern, Loc_MainGrid);
+            C.SetPos(aux_panel->workPt->start_tick, aux_panel->workPt->track_line);
         }
 
         if(pt->IsLastChild() == true)
@@ -3452,7 +3466,7 @@ void CleanupAll()
 {
     CleanupElements();
     CleanupEffects();
-    CleanupEvents(field);
+    CleanupEvents(field_pattern);
     CleanupInstruments();
 
     Element* el = firstElem;
@@ -3493,7 +3507,7 @@ void Relocate_Element(Element* el)
 
 void UpdateAllElements(Pattern* pt, bool tonly)
 {
-    if(pt == field)
+    if(pt == field_pattern)
     {
         Element* el = firstElem;
         while(el != NULL)
@@ -4003,7 +4017,7 @@ void DeletePointedAuxElement(int mprevx, int mprevy, int mx, int my)
 {
     if(mprevx == -1 || mprevy == -1)
     {
-        Element* el = gAux->workPt->OrigPt->first_elem;
+        Element* el = aux_panel->workPt->OrigPt->first_elem;
         while(el != NULL)
         {
             if(el->IsPointed(mx, my) == true)
@@ -4016,7 +4030,7 @@ void DeletePointedAuxElement(int mprevx, int mprevy, int mx, int my)
     }
     else
     {
-        Element* el = gAux->workPt->OrigPt->first_elem;
+        Element* el = aux_panel->workPt->OrigPt->first_elem;
         Element* elemnext;
 		while(el != NULL)
         {
@@ -4030,7 +4044,7 @@ void DeletePointedAuxElement(int mprevx, int mprevy, int mx, int my)
                                   mx - GridXS1, 
                                   my - GridYS1) == true)
             {
-                elemnext = gAux->workPt->OrigPt->NextElementToDelete(el);
+                elemnext = aux_panel->workPt->OrigPt->NextElementToDelete(el);
                 DeleteElement(el, false, false);
                 el = elemnext;
                 continue;
@@ -4049,7 +4063,7 @@ bool ResetHighlights(bool* redrawmain, bool* redrawaux)
         if(el->IsPresent() && el->highlighted == true)
         {
             el->highlighted = false;
-            if(el->patt == field)
+            if(el->patt == field_pattern)
                 *redrawmain = true; 
             else
                 *redrawaux = true;
@@ -4094,7 +4108,7 @@ Element* CheckHighlightsByEvents(Event* event, int mx, int my)
                     el->highlighted = false;
                     M.active_elem = NULL;
 
-                    if(el->patt == field)
+                    if(el->patt == field_pattern)
                     {
                         R(Refresh_GridContent);
                     }
@@ -4121,14 +4135,14 @@ Element* CheckElementsHighlights(int mx, int my)
     Element* el = NULL;
     bool    skip;
 
-    if(gAux->isPatternMode() && gAux->workPt->autopatt == true)
+    if(aux_panel->isPatternMode() && aux_panel->workPt->autopatt == true)
     {
-        pel = CheckHighlightsByEvents(gAux->workPt->first_ev, mx, my);
+        pel = CheckHighlightsByEvents(aux_panel->workPt->first_ev, mx, my);
     }
 
     if(pel == NULL)
     {
-        pel = CheckHighlightsByEvents(field->first_ev, mx, my);
+        pel = CheckHighlightsByEvents(field_pattern->first_ev, mx, my);
     }
 
     if(pel != NULL)
@@ -4249,7 +4263,7 @@ void UpdateScrollbarOutput(ScrollBard* sb)
         Selection_UpdateCoords();
         Looping_UpdateCoords();
 
-        if(followPos && (Playing || gAux->playing) && 
+        if(followPos && (Playing || aux_panel->playing) && 
             (pbkMain->currTick > sb->actual_offset + sb->visible_len ||
              pbkMain->currTick < sb->actual_offset))
         {
@@ -4259,7 +4273,7 @@ void UpdateScrollbarOutput(ScrollBard* sb)
 
         R(Refresh_MainBar);
         R(Refresh_Grid);
-        if(gAux->isVolsPansMode())
+        if(aux_panel->isVolsPansMode())
         {
             R(Refresh_Aux);
         }
@@ -4292,9 +4306,9 @@ void UpdateScrollbarOutput(ScrollBard* sb)
 
         R(Refresh_InstrPanel);
     }
-    else if(sb == gAux->h_sbar)
+    else if(sb == aux_panel->h_sbar)
     {
-        gAux->OffsTick = gAux->h_sbar->actual_offset;
+        aux_panel->OffsTick = aux_panel->h_sbar->actual_offset;
         C.PosUpdate();
         Selection_UpdateCoords();
         Looping_UpdateCoords();
@@ -4305,23 +4319,23 @@ void UpdateScrollbarOutput(ScrollBard* sb)
         R(Refresh_AuxScale);
         R(Refresh_SubAux);
     }
-    else if(sb == gAux->v_sbar)
+    else if(sb == aux_panel->v_sbar)
     {
-        gAux->OffsLine = (int)gAux->v_sbar->actual_offset;
-        if(gAux->workPt->ptype == Patt_Pianoroll)
+        aux_panel->OffsLine = (int)aux_panel->v_sbar->actual_offset;
+        if(aux_panel->workPt->ptype == Patt_Pianoroll)
         {
-            gAux->note_offset = NUM_PIANOROLL_LINES - gAux->OffsLine - 1;
-            if(gAux->note_offset < (int)gAux->v_sbar->visible_len)
+            aux_panel->note_offset = NUM_PIANOROLL_LINES - aux_panel->OffsLine - 1;
+            if(aux_panel->note_offset < (int)aux_panel->v_sbar->visible_len)
             {
-            	gAux->note_offset = (int)gAux->v_sbar->visible_len;
+            	aux_panel->note_offset = (int)aux_panel->v_sbar->visible_len;
             }
         }
 
-        gAux->workPt->offs_line = gAux->OffsLine;
+        aux_panel->workPt->offs_line = aux_panel->OffsLine;
 
-        gAux->UpdateDrawInfo();
+        aux_panel->UpdateDrawInfo();
 
-        gAux->DisableStepVUs();
+        aux_panel->DisableStepVUs();
 
         C.PosUpdate();
 
@@ -4335,16 +4349,10 @@ void UpdateScrollbarOutput(ScrollBard* sb)
         st->tick_offset = st->sbar->actual_offset;
 		C.PosUpdate();
     }
-	/*
-    else if(sb == mix->horiz_bar)
+    else if(sb == aux_panel->mix_sbar)
     {
-		R(Refresh_Mixer);
-    }
-	*/
-    else if(sb == gAux->mix_sbar)
-    {
-        gAux->hoffs = int(gAux->mix_sbar->actual_offset);
-		if(gAux->hoffs + gAux->mix_sbar->visible_len > gAux->mix_sbar->full_len)
+        aux_panel->hoffs = int(aux_panel->mix_sbar->actual_offset);
+		if(aux_panel->hoffs + aux_panel->mix_sbar->visible_len > aux_panel->mix_sbar->full_len)
 			int s = 1;
 
 		R(Refresh_Aux);
@@ -4409,7 +4417,7 @@ bool PickUpElements(int mx, int my, unsigned flags)
 
 		if(M.loc == Loc_SmallGrid)
 			R(Refresh_SubAux);
-		else if(gAux->isVolsPansMode())
+		else if(aux_panel->isVolsPansMode())
 			R(Refresh_Aux);
 	}
 
@@ -4464,11 +4472,11 @@ void ClonePickedToNew(float dtick, int dtrack, float tW, int tH, bool ptcopy)
                 C.SaveState();
                 if(M.pickloc == Loc_MainGrid)
                 {
-                    C.patt = field;
+                    C.patt = field_pattern;
                 }
                 else if(M.pickloc == Loc_SmallGrid)
                 {
-                    C.patt = gAux->workPt;
+                    C.patt = aux_panel->workPt;
                 }
 
                 if(el->type == El_Pattern && ptcopy == true)
@@ -4523,10 +4531,10 @@ void ClonePickedToNew(float dtick, int dtrack, float tW, int tH, bool ptcopy)
 
 void CheckElementMoveBlocking(Element* el, float* dtick, int* dtrack)
 {
-    if(el->patt != gAux->workPt->OrigPt)
+    if(el->patt != aux_panel->workPt->OrigPt)
     {
         // Move blocking conditions
-        if(el->patt == field)
+        if(el->patt == field_pattern)
         {
             if(el->start_tick >= 0 && el->start_tick + *dtick < 0)
             {
@@ -4543,12 +4551,12 @@ void CheckElementMoveBlocking(Element* el, float* dtick, int* dtrack)
         {
            *dtrack = -(el->track_line);
         }
-        else if(el->track_line + *dtrack > (field->num_lines - 1))
+        else if(el->track_line + *dtrack > (field_pattern->num_lines - 1))
         {
-           *dtrack = field->num_lines - 1 - el->track_line;
+           *dtrack = field_pattern->num_lines - 1 - el->track_line;
         }
     }
-    else if(el->patt == gAux->workPt->OrigPt)
+    else if(el->patt == aux_panel->workPt->OrigPt)
     {
         // Move blocking conditions
         if(el->start_tick >= 0 && el->start_tick + *dtick < 0)
@@ -4562,24 +4570,24 @@ void CheckElementMoveBlocking(Element* el, float* dtick, int* dtrack)
         }
         else
         {
-            if(gAux->workPt->ptype == Patt_Pianoroll)
+            if(aux_panel->workPt->ptype == Patt_Pianoroll)
             {
                 if(el->track_line + *dtrack > NUM_PIANOROLL_LINES - 1)
                 {
                    *dtrack = NUM_PIANOROLL_LINES - 1 - el->track_line;
                 }
             }
-            else if(gAux->workPt->ptype == Patt_StepSeq)
+            else if(aux_panel->workPt->ptype == Patt_StepSeq)
             {
-                Trk* ntrk = GetTrkDataForLine(el->track_line + *dtrack, gAux->workPt->OrigPt);
+                Trk* ntrk = GetTrkDataForLine(el->track_line + *dtrack, aux_panel->workPt->OrigPt);
                 if(ntrk == NULL || ntrk->defined_instr == NULL)
                 {
                    *dtrack = 0;
                 }
             }
-            else if(el->track_line + *dtrack > gAux->workPt->OrigPt->num_lines - 1)
+            else if(el->track_line + *dtrack > aux_panel->workPt->OrigPt->num_lines - 1)
             {
-               *dtrack = gAux->workPt->OrigPt->num_lines - 1 - el->track_line;
+               *dtrack = aux_panel->workPt->OrigPt->num_lines - 1 - el->track_line;
             }
         }
     }
@@ -4596,7 +4604,7 @@ void CheckElementMoveBlocking(Element* el, float* dtick, int* dtrack)
     }
 }
 
-void MovePickedElements(int mx, int my, unsigned flags)
+void MovePickedUpElements(int mx, int my, unsigned flags)
 {
     int dtrack, odtrack;
     float dtick, odtick;
@@ -4606,8 +4614,8 @@ void MovePickedElements(int mx, int my, unsigned flags)
 
     if(M.pickloc == Loc_SmallGrid)
     {
-        tW = gAux->tickWidth;
-        tH = gAux->lineHeight;
+        tW = aux_panel->tickWidth;
+        tH = aux_panel->lineHeight;
     }
     else if(M.pickloc == Loc_MainGrid)
     {
@@ -4622,8 +4630,8 @@ void MovePickedElements(int mx, int my, unsigned flags)
 
     float gw = (float)(GridX2 - GridX1)/tickWidth;
     //int gh = (int)(GridY2 - GridY1)/lineHeight;
-    float gw1 = (float)(GridXS2 - GridXS1)/gAux->tickWidth;
-    int gh1 = (int)(GridYS2 - GridYS1)/gAux->lineHeight;
+    float gw1 = (float)(GridXS2 - GridXS1)/aux_panel->tickWidth;
+    int gh1 = (int)(GridYS2 - GridYS1)/aux_panel->lineHeight;
     float gw3 = (float)(StX2 - StX1)/st_tickWidth;
     float s_tick;
     int s_track;
@@ -4691,7 +4699,7 @@ void MovePickedElements(int mx, int my, unsigned flags)
                 }
 
                 // Hear preview if on pianoroll
-                if(el->patt == gAux->workPt->OrigPt && gAux->workPt->ptype == Patt_Pianoroll && 
+                if(el->patt == aux_panel->workPt->OrigPt && aux_panel->workPt->ptype == Patt_Pianoroll && 
                   ((el->highlighted == true && el->selected == false)||(M.prepianorolling == true)) && !(s_tick == el->start_tick && s_track == el->track_line))
                 {
                     if(el->IsInstance())
@@ -4721,7 +4729,7 @@ void MovePickedElements(int mx, int my, unsigned flags)
         }
     }
 
-    if(M.loc == Loc_SmallGrid && gAux->workPt->ptype == Patt_StepSeq)
+    if(M.loc == Loc_SmallGrid && aux_panel->workPt->ptype == Patt_StepSeq)
     {
         Element* el = firstElem;
         while(el != NULL)
@@ -4929,85 +4937,6 @@ void MoveControls(int mouse_x, int mouse_y, unsigned flags)
 		int pixdelta = mouse_y - sb->ys;
         sb->SetPixDelta(pixdelta, mouse_x, mouse_y);
     }
-    else if(M.active_ctrl->type == Ctrl_OutPin_Point)
-    {
-        R(Refresh_MixHighlights);
-
-        OutPin* op = (OutPin*)M.active_ctrl;
-		InPin* in;
-        bool connected = true;
-        if(op->owna->outcell != NULL)
-        {
-            in = (InPin*)op->dst;
-            if(in->type == Ctrl_InPin_Point)
-            {
-                if(abs(mouse_x - in->xc) > 5 || abs(mouse_y - in->yc) > 5)
-                {
-                    connected = false;
-                }
-            }
-            else if(in->type == Ctrl_InPin_Bus)
-            {
-                if(abs(mouse_x - in->xc) > 5 || mouse_y >= (WindHeight - MixMasterHeight - 5 + mix->v_offs))
-                {
-					// To be able to move along the bus
-                    connected = false;
-                }
-            }
-
-            if(connected == false)
-            {
-                op->owna->Disconnect();
-            }
-        }
-        else
-        {
-            connected = false;
-        }
-        op->xconn = mouse_x;
-        op->yconn = mouse_y;
-
-        if(connected == false || (in != NULL && in->type == Ctrl_InPin_Bus))
-        {
-            op->xc_offs = 0;
-            op->yc_offs = 0;
-            Control* ct = firstCtrl;
-            while(ct != NULL)
-            {
-                if(ct->active == true)
-                {
-                    if(ct->type == Ctrl_InPin_Point)
-                    {
-                        InPin* in = (InPin*)ct;
-                        if(abs(mouse_x - in->xc) <= 5 && abs(mouse_y - in->yc) <= 5)
-                        {
-                            if(CheckMixcellLoop(op->owna, in->owna) == false)
-                            {
-                                Num_Selected++;
-    							in->owna->ConnectInputCell(op->owna);
-                                op->xconn = in->xc;
-                                op->yconn = in->yc;
-                            }
-                            break;
-                        }
-                    }
-                    else if(ct->type == Ctrl_InPin_Bus)
-                    {
-                        InPin_Bus* in = (InPin_Bus*)ct;
-                        if(abs(mouse_x - in->xc) <= 5 && mouse_y < (WindHeight - MixMasterHeight - 5 + mix->v_offs))
-                        {
-                            in->owna->ConnectInputCell(op->owna);
-                            op->xconn = in->xc;
-                            op->yconn = in->yc;
-                            op->yc_offs = mouse_y - in->yc;
-                            break;
-                        }
-                    }
-                }
-                ct = ct->next;
-            }
-        }
-    }
 }
 
 void MoveBorders(int mx, int my)
@@ -5105,7 +5034,7 @@ void MoveBorders(int mx, int my)
         else
             MainY1 = (CtrlPanelHeight + 1 + NavHeight + 2);
 
-        if(gAux->locked == true)
+        if(aux_panel->locked == true)
         {
             AuxHeight = WindHeight - MainY1 - LinerHeight - 1;
             MainY2 = WindHeight - AuxHeight;
@@ -5122,7 +5051,7 @@ void MoveBorders(int mx, int my)
         if(my > MainY1 + LinerHeight + 1)
         {
             MainY2 = my;
-            if(gAux->isVolsPansMode())
+            if(aux_panel->isVolsPansMode())
             {
                 if(MainY2 > WindHeight - 7)
                     MainY2 = WindHeight - 7;
@@ -5135,12 +5064,12 @@ void MoveBorders(int mx, int my)
 
             AuxHeight = WindHeight - MainY2;
 
-            if(gAux->auxmode == AuxMode_Mixer && MainY2 > WindHeight - 159)
+            if(aux_panel->auxmode == AuxMode_Mixer && MainY2 > WindHeight - 159)
             {
                 MainY2 = WindHeight - 159;
             }
 
-            if(gAux->auxmode == AuxMode_Mixer && 
+            if(aux_panel->auxmode == AuxMode_Mixer && 
                 mixBrw->sbar->full_len < mixBrw->sbar->offset + mixBrw->sbar->visible_len)
             {
                 mixBrw->main_offs += (mixBrw->sbar->offset + mixBrw->sbar->visible_len - mixBrw->sbar->full_len);
@@ -5154,23 +5083,23 @@ void MoveBorders(int mx, int my)
             AuxHeight = WindHeight - MainY2;
         }
 
-        if(gAux->locked == true)
+        if(aux_panel->locked == true)
         {
-            gAux->PattExpand->Release();
-            gAux->locked = false;
+            aux_panel->PattExpand->Release();
+            aux_panel->locked = false;
         }
 
-        if(gAux->auxmode == AuxMode_Pattern)
+        if(aux_panel->auxmode == AuxMode_Pattern)
         {
-            gAux->patt_height = AuxHeight;
+            aux_panel->patt_height = AuxHeight;
         }
-        else if(gAux->auxmode == AuxMode_Vols || gAux->auxmode == AuxMode_Pans)
+        else if(aux_panel->auxmode == AuxMode_Vols || aux_panel->auxmode == AuxMode_Pans)
         {
-            gAux->volpan_height = AuxHeight;
+            aux_panel->volpan_height = AuxHeight;
         }
-        else if(gAux->auxmode == AuxMode_Mixer)
+        else if(aux_panel->auxmode == AuxMode_Mixer)
         {
-            gAux->mix_height = AuxHeight;
+            aux_panel->mix_height = AuxHeight;
         }
     }
     else if(M.mmode & MOUSE_LOWAUXEDGE)
@@ -5181,10 +5110,10 @@ void MoveBorders(int mx, int my)
             mcy = GridYS1;
         }
 
-        gAux->eux = gAux->patty2 - mcy;
-        if(gAux->eux < 5)
+        aux_panel->eux = aux_panel->patty2 - mcy;
+        if(aux_panel->eux < 5)
         {
-            gAux->eux = 5;
+            aux_panel->eux = 5;
         }
     }
 	/*
@@ -5264,23 +5193,23 @@ void Grid2Main()
     PattY1 = AuxY1;
     PattY2 = AuxY2;
 
-    if(gAux != NULL)
+    if(aux_panel != NULL)
     {
-        if(gAux->auxmode == AuxMode_Pattern)
+        if(aux_panel->auxmode == AuxMode_Pattern)
         {
             AuxX2 = MainX2 + 21;
 
-            gAux->pattx1 = AuxX1 + 3;
-            gAux->pattx2 = AuxX2;
+            aux_panel->pattx1 = AuxX1 + 3;
+            aux_panel->pattx2 = AuxX2;
             
-            gAux->patty1 = AuxY1;
-            gAux->patty2 = AuxY2;
+            aux_panel->patty1 = AuxY1;
+            aux_panel->patty2 = AuxY2;
 
-            GridXS1 = gAux->pattx1 + gAux->keywidth;;
-            GridYS1 = gAux->patty1 + 33;
+            GridXS1 = aux_panel->pattx1 + aux_panel->keywidth;;
+            GridYS1 = aux_panel->patty1 + 33;
             
-            GridXS2 = gAux->pattx2 - 20;
-            GridYS2 = (GridYS1 >= AuxY2 - gAux->eux) ? GridYS1 : AuxY2 - gAux->eux;
+            GridXS2 = aux_panel->pattx2 - 20;
+            GridYS2 = (GridYS1 >= AuxY2 - aux_panel->eux) ? GridYS1 : AuxY2 - aux_panel->eux;
         }
 
         mixX = AuxX1;
@@ -5295,13 +5224,13 @@ void Grid2Main()
     if(lineHeight > 0)
         numFieldLines = (GridY2 - GridY1)/lineHeight;
 
-    if(gAux != NULL && gAux->lineHeight > 0)
-        numAuxLines = (GridYS2 - GridYS1)/gAux->lineHeight;
+    if(aux_panel != NULL && aux_panel->lineHeight > 0)
+        numAuxLines = (GridYS2 - GridYS1)/aux_panel->lineHeight;
 
     InstrPanelHeight = WindHeight - MainY1;
     GenBrowserHeight = WindHeight - MainY1;
 
-    if(field != NULL)
+    if(field_pattern != NULL)
     {
         C.PosUpdate();
     }
@@ -5314,7 +5243,7 @@ void Grid2Main()
 
 void MainPos2AuxPos()
 {
-    if(gAux->workPt->autopatt == false)
+    if(aux_panel->workPt->autopatt == false)
     {
         pbkMain->SetCurrFrame(pbkAux->currFrame);
         currPlayX_f = (double)pbkMain->currFrame/framesPerPixel;
@@ -5324,13 +5253,13 @@ void MainPos2AuxPos()
 
 void AuxPos2MainPos()
 {
-    if(gAux->workPt->autopatt == false)
+    if(aux_panel->workPt->autopatt == false)
     {
         pbkAux->SetCurrFrame(pbkMain->currFrame);
-        if(gAux->workPt != gAux->blankPt)
+        if(aux_panel->workPt != aux_panel->blankPt)
         {
-            gAux->curr_play_x_f = (double)(pbkAux->currFrame - gAux->workPt->frame)/gAux->frames_per_pixel;
-            gAux->curr_play_x = RoundDouble(gAux->curr_play_x_f);
+            aux_panel->curr_play_x_f = (double)(pbkAux->currFrame - aux_panel->workPt->frame)/aux_panel->frames_per_pixel;
+            aux_panel->curr_play_x = RoundDouble(aux_panel->curr_play_x_f);
         }
     }
 }
@@ -5489,7 +5418,7 @@ bool IsPasteAllowed(Element* el)
     }
     // Not allowed pasting patterns to patterns and only samples, gennotes and slidenotes are
     // allowed to paste to pianoroll
-    if(!(el->type == El_Pattern && C.patt != field) &&
+    if(!(el->type == El_Pattern && C.patt != field_pattern) &&
         !(el->type != El_Samplent && el->type != El_GenNote && el->type != El_SlideNote &&
          C.patt->ptype == Patt_Pianoroll))
     {
@@ -5525,9 +5454,9 @@ void PasteElements(bool mousepos)
         {
             if(IsPasteAllowed(el))
             {
-                if(M.patt == gAux->workPt &&  gAux->workPt == gAux->blankPt)
+                if(M.patt == aux_panel->workPt &&  aux_panel->workPt == aux_panel->blankPt)
                 {
-                    gAux->CreateNew();
+                    aux_panel->CreateNew();
                 }
                 nel = el->Clone(true);
                 if(mousepos)
@@ -5618,17 +5547,17 @@ void PasteElements(bool mousepos)
         }
     }
 
-    if(M.patt == gAux->workPt && gAux->workPt != gAux->blankPt)
+    if(M.patt == aux_panel->workPt && aux_panel->workPt != aux_panel->blankPt)
     {
-        gAux->RescanPatternBounds();
+        aux_panel->RescanPatternBounds();
         pbkAux->AlignRangeToPattern();
     }
 
     C.RestoreState();
 
-    if(M.loc == Loc_SmallGrid && !gAux->isBlank())
+    if(M.loc == Loc_SmallGrid && !aux_panel->isBlank())
     {
-        gAux->workPt->OrigPt->UpdateScaledImage();
+        aux_panel->workPt->OrigPt->UpdateScaledImage();
         R(Refresh_GridContent);
     }
 
@@ -5763,14 +5692,14 @@ void CutSelectedElements()
         Selection_ToggleElements();
         UpdateNavBarsData();
 
-        if(M.patt == gAux->workPt && gAux->workPt != gAux->blankPt)
+        if(M.patt == aux_panel->workPt && aux_panel->workPt != aux_panel->blankPt)
         {
-            gAux->RescanPatternBounds();
+            aux_panel->RescanPatternBounds();
         }
 
-        if(M.loc == Loc_SmallGrid && !gAux->isBlank())
+        if(M.loc == Loc_SmallGrid && !aux_panel->isBlank())
         {
-            gAux->workPt->OrigPt->UpdateScaledImage();
+            aux_panel->workPt->OrigPt->UpdateScaledImage();
             R(Refresh_GridContent);
         }
 
@@ -5796,8 +5725,8 @@ void SelectAll()
         if(el->IsPresent() && el->patt->IsElementTypeDisplayable(el->type))
         {
             el->Deselect();
-            if((M.loc == Loc_MainGrid && el->patt == field) || 
-               (M.loc == Loc_SmallGrid && el->patt == gAux->workPt->OrigPt))
+            if((M.loc == Loc_MainGrid && el->patt == field_pattern) || 
+               (M.loc == Loc_SmallGrid && el->patt == aux_panel->workPt->OrigPt))
             {
                 el->Select();
                 Num_Selected++;
@@ -5807,12 +5736,12 @@ void SelectAll()
     }
     
     R(Refresh_GridContent);
-    if(gAux->isVolsPansMode())
+    if(aux_panel->isVolsPansMode())
     {
         R(Refresh_Aux);
     }
 
-    if(gAux->auxmode == AuxMode_Pattern)
+    if(aux_panel->auxmode == AuxMode_Pattern)
     {
         R(Refresh_AuxContent);
         R(Refresh_SubAux);
@@ -5821,116 +5750,69 @@ void SelectAll()
 
 void SetMenuItemEffect(MItemType itype, MixChannel* mchan)
 {
-    if(M.mmode & MOUSE_MIXING && M.active_mixcell != NULL)
-    {
-        M.active_mixcell->Clean();
-        switch(itype)
-        {
-            case MItem_CleanMixCell:
-                M.active_mixcell->mixstr->SetString("");
-                break;
-            case MItem_SetMixCellToSend:
-                M.active_mixcell->mixstr->SetString("Send");
-                break;
-            case MItem_SetMixCellToGain:
-                M.active_mixcell->mixstr->SetString("Gain");
-                break;
-            case MItem_SetMixCellToEQ1:
-                M.active_mixcell->mixstr->SetString("EQ1");
-                break;
-            case MItem_SetMixCellToEQ3:
-                M.active_mixcell->mixstr->SetString("EQ3");
-                break;
-            case MItem_SetMixCellToGraphicEQ:
-                M.active_mixcell->mixstr->SetString("EQG");
-                break;
-            case MItem_SetMixCellToBlank:
-                M.active_mixcell->mixstr->SetString("Blank");
-                break;
-            case MItem_SetMixCellToDelay:
-                M.active_mixcell->mixstr->SetString("Delay");
-                break;
-            case MItem_SetMixCellToFilter:
-                M.active_mixcell->mixstr->SetString("Filter");
-                break;
-            case MItem_SetMixCellToTremolo:
-                M.active_mixcell->mixstr->SetString("Tremolo");
-                break;
-            case MItem_SetMixCellToCompressor:
-                M.active_mixcell->mixstr->SetString("Comp");
-                break;
-            case MItem_SetMixCellToReverb:
-                M.active_mixcell->mixstr->SetString("Reverb");
-                break;
-        }
-        M.active_mixcell->Update();
-
-        R(Refresh_GridContent);
-        R(Refresh_Aux);
-    }
-    else if(mchan != NULL)
+    if(mchan != NULL)
     {
         switch(itype)
         {
             case MItem_SetMixCellToSend:
-                gAux->AddEffectByType(EffType_Send, mchan);
+                aux_panel->AddEffectByType(EffType_Send, mchan);
                 break;
             case MItem_SetMixCellToGain:
-                gAux->AddEffectByType(EffType_Gain, mchan);
+                aux_panel->AddEffectByType(EffType_Gain, mchan);
                 break;
             case MItem_SetMixCellToEQ1:
-                gAux->AddEffectByType(EffType_Equalizer1, mchan);
+                aux_panel->AddEffectByType(EffType_Equalizer1, mchan);
                 break;
             case MItem_SetMixCellToEQ3:
-                gAux->AddEffectByType(EffType_Equalizer3, mchan);
+                aux_panel->AddEffectByType(EffType_Equalizer3, mchan);
                 break;
             case MItem_SetMixCellToGraphicEQ:
-                gAux->AddEffectByType(EffType_GraphicEQ, mchan);
+                aux_panel->AddEffectByType(EffType_GraphicEQ, mchan);
                 break;
             case MItem_SetMixCellToBlank:
-                gAux->AddEffectByType(EffType_Default, mchan);
+                aux_panel->AddEffectByType(EffType_Default, mchan);
                 break;
             case MItem_SetMixCellToDelay:
-                gAux->AddEffectByType(EffType_XDelay, mchan);
+                aux_panel->AddEffectByType(EffType_XDelay, mchan);
                 break;
             case MItem_SetMixCellToFilter:
-                gAux->AddEffectByType(EffType_CFilter3, mchan);
+                aux_panel->AddEffectByType(EffType_CFilter3, mchan);
                 break;
             case MItem_SetMixCellToTremolo:
-                gAux->AddEffectByType(EffType_Tremolo, mchan);
+                aux_panel->AddEffectByType(EffType_Tremolo, mchan);
                 break;
             case MItem_SetMixCellToCompressor:
-                gAux->AddEffectByType(EffType_Compressor, mchan);
+                aux_panel->AddEffectByType(EffType_Compressor, mchan);
                 break;
             case MItem_SetMixCellToReverb:
-                gAux->AddEffectByType(EffType_Reverb, mchan);
+                aux_panel->AddEffectByType(EffType_Reverb, mchan);
                 break;
             case MItem_SetMixCellToChorus:
-                gAux->AddEffectByType(EffType_Chorus, mchan);
+                aux_panel->AddEffectByType(EffType_Chorus, mchan);
                 break;
             case MItem_SetMixCellToFlanger:
-                gAux->AddEffectByType(EffType_Flanger, mchan);
+                aux_panel->AddEffectByType(EffType_Flanger, mchan);
                 break;
             case MItem_SetMixCellToPhaser:
-                gAux->AddEffectByType(EffType_Phaser, mchan);
+                aux_panel->AddEffectByType(EffType_Phaser, mchan);
                 break;
             case MItem_SetMixCellToWahWah:
-                gAux->AddEffectByType(EffType_WahWah, mchan);
+                aux_panel->AddEffectByType(EffType_WahWah, mchan);
                 break;
             case MItem_SetMixCellToDistortion:
-                gAux->AddEffectByType(EffType_Distortion, mchan);
+                aux_panel->AddEffectByType(EffType_Distortion, mchan);
                 break;
             case MItem_SetMixCellToBitCrusher:
-                gAux->AddEffectByType(EffType_BitCrusher, mchan);
+                aux_panel->AddEffectByType(EffType_BitCrusher, mchan);
                 break;
             case MItem_SetMixCellToStereoizer:
-                gAux->AddEffectByType(EffType_Stereo, mchan);
+                aux_panel->AddEffectByType(EffType_Stereo, mchan);
                 break;
             case MItem_SetMixCellToFilter2:
-                gAux->AddEffectByType(EffType_CFilter2, mchan);
+                aux_panel->AddEffectByType(EffType_CFilter2, mchan);
                 break;
             case MItem_SetMixCellToFilter3:
-                gAux->AddEffectByType(EffType_CFilter3, mchan);
+                aux_panel->AddEffectByType(EffType_CFilter3, mchan);
                 break;
         }
 
@@ -6024,7 +5906,7 @@ void DoLoadPreset(Eff* eff)
 {
     if(CP->view_mixer->pressed == false)
     {
-        gAux->last_mixcenterwidth = DefaultMixCenterWidth;
+        aux_panel->last_mixcenterwidth = DefaultMixCenterWidth;
         CP->HandleButtDown(CP->view_mixer);
     }
     else
@@ -6035,9 +5917,9 @@ void DoLoadPreset(Eff* eff)
         R(Refresh_Aux);
     }
 
-    if(gAux->current_eff != eff)
+    if(aux_panel->current_eff != eff)
     {
-        gAux->SetCurrentEffect(eff);
+        aux_panel->SetCurrentEffect(eff);
     }
 
     if(mixBrw->CurrButt != mixBrw->ShowPresets)
@@ -6073,16 +5955,16 @@ void RescanPlugins(bool full, bool brwupdate)
 void DeleteEffect(Eff* eff)
 {
     WaitForSingleObject(hAudioProcessMutex, INFINITE);
-    if(gAux->current_eff == eff && 
+    if(aux_panel->current_eff == eff && 
         (mixBrw->brwmode == Browse_Params || mixBrw->brwmode == Browse_Presets))
     {
         mixBrw->Clean();
         R(Refresh_MixCenter);
     }
 
-	if(eff == gAux->current_eff)
+	if(eff == aux_panel->current_eff)
 	{
-		gAux->current_eff = NULL;
+		aux_panel->current_eff = NULL;
 	}
 
     RemoveEff(eff);
@@ -6098,16 +5980,16 @@ void ActivateMenuItem(MenuItem* mitem, MItemType itype, Menu* menu)
     switch(itype)
     {
         case MItem_ShowVolumeLane:
-            ShowVolLane(menu->trk, field);
+            ShowVolLane(menu->trk, field_pattern);
             break;
         case MItem_ShowPanLane:
-            ShowPanLane(menu->trk, field);
+            ShowPanLane(menu->trk, field_pattern);
             break;
         case MItem_HideVolumeLane:
-            HideVolLane(menu->trk, field);
+            HideVolLane(menu->trk, field_pattern);
             break;
         case MItem_HidePanLane:
-            HidePanLane(menu->trk, field);
+            HidePanLane(menu->trk, field_pattern);
             break;
         case MItem_DeleteDefinition:
             menu->trk->defined_instr = NULL;
@@ -6122,9 +6004,9 @@ void ActivateMenuItem(MenuItem* mitem, MItemType itype, Menu* menu)
             break;
         case MItem_DeleteInstrument:
             IP->RemoveInstrument(menu->instr);
-            if(gAux->isPatternMode())
+            if(aux_panel->isPatternMode())
             {
-                if(gAux->workPt->ptype == Patt_StepSeq)
+                if(aux_panel->workPt->ptype == Patt_StepSeq)
                 {
                     R(Refresh_Aux);
                 }
@@ -6145,11 +6027,11 @@ void ActivateMenuItem(MenuItem* mitem, MItemType itype, Menu* menu)
                 pt->is_fat = false;
             BindPatternToInstrument(pt, menu->instr);
 
-            gAux->EditPattern(pt);
+            aux_panel->EditPattern(pt);
             R(Refresh_GridContent);
             break;
         case MItem_BindInstrumentToCurrentPattern:
-            BindPatternToInstrument(gAux->workPt, menu->instr);
+            BindPatternToInstrument(aux_panel->workPt, menu->instr);
             R(Refresh_GridContent);
             break;
         case MItem_CleanMixCell:
@@ -6190,12 +6072,6 @@ void ActivateMenuItem(MenuItem* mitem, MItemType itype, Menu* menu)
             break;
         case MItem_LoadPreset:
         {
-            if(M.mmode & MOUSE_MIXING)
-            {
-                //mix->current_mixcell = M.active_mixcell
-                //mixBrw->HandleButtDown(mixBrw->ShowPresets);
-            }
-            
 			if(menu->curreff != NULL)
             {
                 DoLoadPreset(menu->curreff);
@@ -6208,16 +6084,9 @@ void ActivateMenuItem(MenuItem* mitem, MItemType itype, Menu* menu)
         }break;
         case MItem_ViewParams:
         {
-            /*
-            if(M.mmode & MOUSE_MIXING)
-            {
-                mix->current_mixcell = M.active_mixcell;
-                mixBrw->HandleButtDown(mixBrw->ShowParams);
-                R(Refresh_MixHighlights);
-            }*/
             if(menu->curreff != NULL && menu->mchan != NULL)
             {
-                gAux->current_eff = menu->curreff;
+                aux_panel->current_eff = menu->curreff;
 				if(mixBrw->CurrButt != mixBrw->ShowParams)
 				{
 					mixBrw->HandleButtDown(mixBrw->ShowParams);
@@ -6239,20 +6108,20 @@ void ActivateMenuItem(MenuItem* mitem, MItemType itype, Menu* menu)
             if(menu->instr != NULL)
             {
                 // Place cursor at the previously edited pattern
-                if(C.loc == Loc_SmallGrid && gAux->workPt != gAux->blankPt)
+                if(C.loc == Loc_SmallGrid && aux_panel->workPt != aux_panel->blankPt)
                 {
-                    gAux->workPt->Activate();
+                    aux_panel->workPt->Activate();
                     C.loc = Loc_MainGrid;
-                    C.patt = field;
-                    CLine = gAux->workPt->track_line;
-                    CTick = gAux->workPt->start_tick;
+                    C.patt = field_pattern;
+                    CLine = aux_panel->workPt->track_line;
+                    CTick = aux_panel->workPt->start_tick;
                 }
 
                 if(menu->instr->autoPatt == NULL)
                 {
                     menu->instr->CreateAutoPattern();
                 }
-                gAux->EditPattern(menu->instr->autoPatt);
+                aux_panel->EditPattern(menu->instr->autoPatt);
                 UpdateElementsVisibility();
                 R(Refresh_Aux);
             }
@@ -6283,16 +6152,16 @@ void ActivateMenuItem(MenuItem* mitem, MItemType itype, Menu* menu)
         {
             if(menu->activectrl->scope != NULL && menu->activectrl->param->scope != NULL)
             {
-                if(C.loc == Loc_SmallGrid && gAux->isBlank())
+                if(C.loc == Loc_SmallGrid && aux_panel->isBlank())
                 {
-                    gAux->CreateNew();
+                    aux_panel->CreateNew();
                 }
 
                 CreateElement_EnvelopeCommon(menu->activectrl->param);
 
                 if(C.loc == Loc_SmallGrid)
                 {
-                    gAux->RescanPatternBounds();
+                    aux_panel->RescanPatternBounds();
                 }
 
                 /*
@@ -6311,9 +6180,9 @@ void ActivateMenuItem(MenuItem* mitem, MItemType itype, Menu* menu)
         {
             if(menu->activectrl->scope != NULL)
             {
-                if(C.loc == Loc_SmallGrid && gAux->isBlank())
+                if(C.loc == Loc_SmallGrid && aux_panel->isBlank())
                 {
-                    gAux->CreateNew();
+                    aux_panel->CreateNew();
                 }
 
                 Command* cmd = CreateCommandFromControl(menu->activectrl);
@@ -6321,7 +6190,7 @@ void ActivateMenuItem(MenuItem* mitem, MItemType itype, Menu* menu)
 
                 if(C.loc == Loc_SmallGrid)
                 {
-                    gAux->RescanPatternBounds();
+                    aux_panel->RescanPatternBounds();
                 }
 
             }
@@ -6352,22 +6221,22 @@ void ActivateMenuItem(MenuItem* mitem, MItemType itype, Menu* menu)
             break;
         case MItem_BindInstrument:
         {
-            if(gAux->workPt != gAux->blankPt && gAux->workPt->ptype != Patt_Pianoroll)
+            if(aux_panel->workPt != aux_panel->blankPt && aux_panel->workPt->ptype != Patt_Pianoroll)
             {
-                gAux->AuxReset();
+                aux_panel->AuxReset();
             }
 
-            if(gAux->workPt->ptype != Patt_Pianoroll)
+            if(aux_panel->workPt->ptype != Patt_Pianoroll)
             {
-                gAux->HandleButtDown(gAux->PtPianorol);
+                aux_panel->HandleButtDown(aux_panel->PtPianorol);
             }
 
-            if(gAux->workPt == gAux->blankPt)
+            if(aux_panel->workPt == aux_panel->blankPt)
             {
-                gAux->CreateNew();
+                aux_panel->CreateNew();
             }
 
-            BindPatternToInstrument(gAux->workPt, M.active_instr);
+            BindPatternToInstrument(aux_panel->workPt, M.active_instr);
 
             R(Refresh_GridContent);
         }break;
@@ -6479,7 +6348,7 @@ void ActivateMenuItem(MenuItem* mitem, MItemType itype, Menu* menu)
             R(Refresh_All);
             break;
         case MItem_LoadEffectPlugin:
-            if(gAux->auxmode != AuxMode_Mixer)
+            if(aux_panel->auxmode != AuxMode_Mixer)
             {
                 CP->HandleButtDown(CP->view_mixer);
             }
@@ -6501,7 +6370,7 @@ void ActivateMenuItem(MenuItem* mitem, MItemType itype, Menu* menu)
             break;
         case MItem_Unbind:
 		{
-            Pattern* pt = gAux->workPt;
+            Pattern* pt = aux_panel->workPt;
             pt->OrigPt->ibound = NULL;
             Pattern* ptc = pt->OrigPt->der_first;
             while(ptc != NULL)
@@ -6586,7 +6455,7 @@ void UpdatePerScale()
 
 void UpdateFrames()
 {
-    UpdateEventsFrames(field);
+    UpdateEventsFrames(field_pattern);
     Instrument* i = first_instr;
     while(i != NULL)
     {
@@ -6614,10 +6483,10 @@ void UpdatePerBPM()
     one_divided_per_frames_per_tick = 1/(seconds_in_tick*fSampleRate);
 
     framesPerPixel = seconds_in_tick*fSampleRate/tickWidth;
-    gAux->frames_per_pixel = seconds_in_tick*fSampleRate/gAux->tickWidth;
+    aux_panel->frames_per_pixel = seconds_in_tick*fSampleRate/aux_panel->tickWidth;
 
     UpdateFrames();
-    UpdateAllElements(field, true);
+    UpdateAllElements(field_pattern, true);
 
     UpdateScaledImages();
 
@@ -6662,7 +6531,7 @@ void SetScale(float scale)
     UpdatePerScale();
 
     R(Refresh_Grid);
-    if(gAux->isVolsPansMode())
+    if(aux_panel->isVolsPansMode())
     	R(Refresh_Aux);
 }
 
@@ -6731,7 +6600,7 @@ void IncreaseScale(bool mouse)
         UpdatePerScale();
 
         R(Refresh_Grid);
-        if(gAux->isVolsPansMode())
+        if(aux_panel->isVolsPansMode())
         {
             R(Refresh_Aux);
         }
@@ -6801,7 +6670,7 @@ void DecreaseScale(bool mouse)
         UpdatePerScale();
 
         R(Refresh_Grid);
-        if(gAux->isVolsPansMode())
+        if(aux_panel->isVolsPansMode())
         {
             R(Refresh_Aux);
         }
@@ -6810,45 +6679,12 @@ void DecreaseScale(bool mouse)
 
 void DragNDrop_Process(int mouse_x, int mouse_y)
 {
-	/*
-    if((M.mmode & MOUSE_MIXING && M.drag_data.drag_type == Drag_MixCell_Content) ||
-       (M.mmode & MOUSE_BROWSING && M.drag_data.drag_type == Drag_Effect_File)||
-       (M.mmode & MOUSE_INSTRUMENTING && M.drag_data.drag_type == Drag_Instrument_Alias))
-    {
-        if(mix->visible)
-        {
-            Mixcell* oadmc = M.active_dropmixcell;
-            Mixcell* mc1;
-            Mixcell* mc2 = (Mixcell*)M.drag_data.drag_stuff;
-            M.active_dropmixcell = NULL;
-            for(int mx = 0; mx < NUM_MIXER_COLUMNS; mx++)
-            {
-                for(int my = 0; my < NUM_MIXER_ROWS; my++)
-                {
-                    mc1 = &mix->r_cell[mx][my];
-                    if(mc1->visible && mouse_x >= mc1->x && mouse_x <= mc1->x1 && mouse_y >= mc1->y && mouse_y <= mc1->y1)
-                    {
-                        if(mc1 != mc2)
-                        {
-                            M.active_dropmixcell = mc1;
-                        }
-                    }
-                }
-            }
-
-            if(oadmc != M.active_dropmixcell)
-            {
-                R(Refresh_MixHighlights);
-            }
-        }
-    }*/
-
     if((M.mmode & MOUSE_AUXMIXING && M.drag_data.drag_type == Drag_MixChannel_Effect) ||
        (M.mmode & MOUSE_BROWSING && M.drag_data.drag_type == Drag_Effect_File)||
        (M.mmode & MOUSE_INSTRUMENTING && M.drag_data.drag_type == Drag_Instrument_Alias))
     {
         // Highlight corruption workaround
-        if(gAux->auxmode == AuxMode_Mixer)
+        if(aux_panel->auxmode == AuxMode_Mixer)
         {
             R(Refresh_AuxHighlights);
         }
@@ -6856,7 +6692,7 @@ void DragNDrop_Process(int mouse_x, int mouse_y)
         M.active_dropmixchannel = NULL;
         MixChannel* oadmc = M.active_dropmixchannel;
         MixChannel* mchan = NULL;
-        mchan = &gAux->masterchan;
+        mchan = &aux_panel->masterchan;
         if(mchan->visible && mouse_x >= mchan->x && mouse_x <= (mchan->x + mchan->width) && 
                              mouse_y >= mchan->y && mouse_y <= (mchan->y + mchan->height))
         {
@@ -6866,7 +6702,7 @@ void DragNDrop_Process(int mouse_x, int mouse_y)
         {
             for(int mc = 0; mc < NUM_MIXCHANNELS; mc++)
             {
-                mchan = &gAux->mchan[mc];
+                mchan = &aux_panel->mchan[mc];
                 if(mchan->visible)
                 {
                     if(mouse_x >= mchan->x && mouse_x <= (mchan->x + mchan->width) && 
@@ -6882,7 +6718,7 @@ void DragNDrop_Process(int mouse_x, int mouse_y)
             {
                 for(int mc = 0; mc < 3; mc++)
                 {
-                    mchan = &gAux->sendchan[mc];
+                    mchan = &aux_panel->sendchan[mc];
                     if(mchan->visible)
                     {
                         if(mouse_x >= mchan->x && mouse_x <= (mchan->x + mchan->width) && 
@@ -6909,14 +6745,14 @@ void DragNDrop_Process(int mouse_x, int mouse_y)
                 {
                     if(eff->visible)
                     {
-                        if(mouse_y >= eff->y + eff->h/2 && 
-                           (eff->cnext == NULL || mouse_y <= eff->cnext->y + eff->cnext->h/2))
+                        if(mouse_y >= eff->y + eff->height/2 && 
+                           (eff->cnext == NULL || mouse_y <= eff->cnext->y + eff->cnext->height/2))
                         {
                             M.dropeff1 = eff;
                         }
                         
-						if(mouse_y <= eff->y + eff->h/2 && 
-							(eff->cprev == NULL || mouse_y >= eff->cprev->y + eff->cprev->h/2))
+						if(mouse_y <= eff->y + eff->height/2 && 
+							(eff->cprev == NULL || mouse_y >= eff->cprev->y + eff->cprev->height/2))
                         {
                             M.dropeff2 = eff;
                             if(M.dropeff2 == M.dropeff1)
@@ -6935,7 +6771,7 @@ void DragNDrop_Process(int mouse_x, int mouse_y)
                 }
             }
 
-            if((gAux->auxmode == AuxMode_Mixer) && (oadeff1 != M.dropeff1 || oadeff2 != M.dropeff2))
+            if((aux_panel->auxmode == AuxMode_Mixer) && (oadeff1 != M.dropeff1 || oadeff2 != M.dropeff2))
             {
                 R(Refresh_AuxHighlights);
             }
@@ -6954,13 +6790,13 @@ void DragNDrop_Process(int mouse_x, int mouse_y)
             Instrument* i = first_instr;
             while(i != NULL)
             {
-                if(i->zisible && (mouse_x >= i->x && mouse_x <= i->x + i->width)&&
+                if(i->visible && (mouse_x >= i->x && mouse_x <= i->x + i->width)&&
                                  (mouse_y >= i->y + InstrUnfoldedHeight/2 && mouse_y <= i->y + InstrUnfoldedHeight/2 + i->height))
                 {
                     M.dropinstr1 = i;
                 }
 
-                if(i->zisible && (mouse_x >= i->x && mouse_x <= i->x + i->width)&&
+                if(i->visible && (mouse_x >= i->x && mouse_x <= i->x + i->width)&&
                                  (mouse_y >= i->y - InstrUnfoldedHeight/2 && mouse_y <= i->y - InstrUnfoldedHeight/2 + i->height))
                 {
                     M.dropinstr2 = i;
@@ -6985,8 +6821,8 @@ void DragNDrop_Process(int mouse_x, int mouse_y)
         }
     }
 
-    if(gAux->auxmode == AuxMode_Mixer && 
-        (M.drag_data.drag_type == Drag_MixChannel_Indeks || M.drag_data.drag_type == Drag_Command))
+    if(aux_panel->auxmode == AuxMode_Mixer && 
+        (M.drag_data.drag_type == Drag_MixChannel_Index || M.drag_data.drag_type == Drag_Command))
     {
         // Highlight corruption workaround
         R(Refresh_AuxHighlights);
@@ -7014,12 +6850,12 @@ bool DragNDrop_Check(int mouse_x, int mouse_y)
                 {
                     if(i->type == Instr_Sample)
                     {
-                        M.drag_data.instr_len = Calc_PixLength((long)((Sample*)i)->info.frames, ((Sample*)i)->info.samplerate, tickWidth);
+                        M.drag_data.instr_len = Calc_PixLength((long)((Sample*)i)->sample_info.frames, ((Sample*)i)->sample_info.samplerate, tickWidth);
                     }
                     else if((i->type == Instr_Generator) ||
                             (i->type == Instr_VSTPlugin))
                     {
-                        M.drag_data.instr_len = (int)(i->last_length*tickWidth);
+                        M.drag_data.instr_len = (int)(i->last_note_length*tickWidth);
                     }
                     M.mmode |= MOUSE_DRAG_N_DROPPING;
                 }
@@ -7042,7 +6878,7 @@ bool DragNDrop_Check(int mouse_x, int mouse_y)
             M.drag_data.drag_stuff = (void*)instr->alias;
             if(instr->type == Instr_Sample)
             {
-                M.drag_data.instr_len = Calc_PixLength((long)((Sample*)instr)->info.frames, ((Sample*)instr)->info.samplerate, tickWidth);
+                M.drag_data.instr_len = Calc_PixLength((long)((Sample*)instr)->sample_info.frames, ((Sample*)instr)->sample_info.samplerate, tickWidth);
             }
             else if((instr->type == Instr_Generator) ||
                     (instr->type == Instr_VSTPlugin))
@@ -7114,35 +6950,11 @@ bool DragNDrop_Check(int mouse_x, int mouse_y)
             }
         }
     }
-    else if(!(M.mmode & MOUSE_CONTROLLING) && (M.mmode & MOUSE_MIXING))
-    {
-        if(M.active_mixcell != NULL && M.mixcellindexing == true)
-        {
-            M.drag_data.drag_type = Drag_MixCell_Indeks;
-            M.drag_data.drag_stuff = (void*)M.active_mixcell;
-            M.mmode |= MOUSE_DRAG_N_DROPPING;
-        }
-        else if(M.active_mixcell != NULL)
-        {
-            if(M.drag_data.dragcount < 1)
-            {
-                M.drag_data.dragcount++;
-            }
-			else if(strlen(M.active_mixcell->mixstr->string) > 0)
-            {
-                M.drag_data.dragcount = 0;
-                M.drag_data.drag_type = Drag_MixCell_Content;
-                M.drag_data.drag_stuff = (void*)M.active_mixcell;
-                //M.drag_data.drag_len = instr_font.width(M.active_mixcell->mixstr->string);
-                M.mmode |= MOUSE_DRAG_N_DROPPING;
-            }
-        }
-    }
     else if(!(M.mmode & MOUSE_CONTROLLING) && (M.mmode & MOUSE_AUXMIXING) && M.active_mixchannel != NULL)
     {
         if(M.auxcellindexing == true)
         {
-            M.drag_data.drag_type = Drag_MixChannel_Indeks;
+            M.drag_data.drag_type = Drag_MixChannel_Index;
             M.drag_data.drag_stuff = (void*)M.active_mixchannel;
             M.mmode |= MOUSE_DRAG_N_DROPPING;
         }
@@ -7275,7 +7087,7 @@ void DragNDrop_PlaceInstrument()
     UpdateScaledImages();
 
     R(Refresh_InstrPanel);
-    if(gAux->auxmode == AuxMode_Pattern && gAux->workPt->ptype == Patt_StepSeq)
+    if(aux_panel->auxmode == AuxMode_Pattern && aux_panel->workPt->ptype == Patt_StepSeq)
     {
         R(Refresh_AuxGrid);
         R(Refresh_PianoKeys);
@@ -7296,10 +7108,10 @@ void DragNDrop_Drop(int mouse_x, int mouse_y, unsigned int flags)
         }
         else if(M.loc == Loc_MainGrid)
         {
-            if(M.snappedTick > 0 && M.snappedLine < field->num_lines)
+            if(M.snappedTick > 0 && M.snappedLine < field_pattern->num_lines)
             {
-                M.patt = field;
-                C.SetPattern(field, Loc_MainGrid);
+                M.patt = field_pattern;
+                C.SetPattern(field_pattern, Loc_MainGrid);
                 C.SetPos(M.snappedTick, M.snappedLine);
                 if(al->instr->type == Instr_Sample)
                 {
@@ -7309,23 +7121,23 @@ void DragNDrop_Drop(int mouse_x, int mouse_y, unsigned int flags)
                 C.curElem->Switch2Param(NULL);
 
                 R(Refresh_GridContent);
-                if(gAux->auxmode == AuxMode_Vols || 
-                   gAux->auxmode == AuxMode_Pans)
+                if(aux_panel->auxmode == AuxMode_Vols || 
+                   aux_panel->auxmode == AuxMode_Pans)
                 {
                     R(Refresh_Aux);
                 }
             }
         }
-        else if(M.loc == Loc_SmallGrid && gAux->workPt->ptype != Patt_StepSeq)
+        else if(M.loc == Loc_SmallGrid && aux_panel->workPt->ptype != Patt_StepSeq)
         {
-            if(gAux->workPt->ibound == NULL || gAux->workPt->ibound == al->instr)
+            if(aux_panel->workPt->ibound == NULL || aux_panel->workPt->ibound == al->instr)
             {
-                if(gAux->isBlank())
+                if(aux_panel->isBlank())
                 {
-                    gAux->CreateNew();
+                    aux_panel->CreateNew();
                 }
-                M.patt = gAux->workPt;
-                C.SetPattern(gAux->workPt, Loc_SmallGrid);
+                M.patt = aux_panel->workPt;
+                C.SetPattern(aux_panel->workPt, Loc_SmallGrid);
                 C.SetPos(M.snappedTick, M.snappedLine);
                 if(al->instr->type == Instr_Sample)
                 {
@@ -7334,44 +7146,33 @@ void DragNDrop_Drop(int mouse_x, int mouse_y, unsigned int flags)
                 C.curElem = CreateElement_Note(al->instr, true);
                 C.curElem->Switch2Param(NULL);
 
-                gAux->RescanPatternBounds();
+                aux_panel->RescanPatternBounds();
             }
 
             R(Refresh_GridContent);
         }
         else if(M.loc == Loc_UNKNOWN)
         {
-            if(gAux->CheckIfMouseOnBinder(mouse_x, mouse_y))
+            if(aux_panel->CheckIfMouseOnBinder(mouse_x, mouse_y))
             {
-                if(gAux->workPt == gAux->blankPt)
+                if(aux_panel->workPt == aux_panel->blankPt)
                 {
-                    gAux->CreateNew();
+                    aux_panel->CreateNew();
                 }
-                BindPatternToInstrument(gAux->workPt, al->instr);
+                BindPatternToInstrument(aux_panel->workPt, al->instr);
 
                 R(Refresh_GridContent);
             }
-			else if(M.active_dropmixcell != NULL)
-			{
-				Mixcell* mc = (Mixcell*)M.active_dropmixcell;
-				DigitStr* pfx = al->instr->dfxstr;
-				strcpy(pfx->digits, mc->indexstr);
-				mix->CheckFXString(pfx);
-				pfx->drawarea->Change();
-				mix->current_mixcell = M.active_dropmixcell;
-				M.active_dropmixcell = NULL;
-				R(Refresh_MixHighlights);
-			}
-			else if(M.active_dropmixchannel != NULL)
-			{
-				MixChannel* mchan = (MixChannel*)M.active_dropmixchannel;
-				DigitStr* pfx = al->instr->dfxstr;
-				strcpy(pfx->digits, mchan->indexstr);
-				gAux->CheckFXString(pfx);
-				pfx->drawarea->Change();
-				M.active_dropmixchannel = NULL;
-				R(Refresh_AuxHighlights);
-			}
+            else if(M.active_dropmixchannel != NULL)
+            {
+                MixChannel* mchan = (MixChannel*)M.active_dropmixchannel;
+                DigitStr* pfx = al->instr->dfxstr;
+                strcpy(pfx->digits, mchan->indexstr);
+                aux_panel->CheckFXString(pfx);
+                pfx->drawarea->Change();
+                M.active_dropmixchannel = NULL;
+                R(Refresh_AuxHighlights);
+            }
             else if((M.dropinstr1 != NULL || M.dropinstr2 != NULL) && 
                      M.dropinstr1 != current_instr && M.dropinstr2 != current_instr)
             {
@@ -7413,35 +7214,7 @@ void DragNDrop_Drop(int mouse_x, int mouse_y, unsigned int flags)
             }
         }
     }
-    else if(M.drag_data.drag_type == Drag_MixCell_Indeks)
-    {
-        if(M.active_paramfx != NULL)
-        {
-            Mixcell* mc = (Mixcell*)M.drag_data.drag_stuff;
-            DigitStr* pfx = (DigitStr*)M.active_paramfx;
-            //DigitStr* pfx = (DigitStr*)M.active_instr->dfxstr;
-            strcpy(pfx->digits, mc->indexstr);
-            if(pfx->panel != NULL)
-            {
-                pfx->panel->Update();
-            }
-            if(pfx->instr != NULL || pfx->trk != NULL)
-            {
-                mix->CheckFXString(pfx);
-                if(pfx->instr != NULL)
-                {
-                    ChangeCurrentInstrument(pfx->instr);
-                }
-            }
-            if(pfx->send != NULL)
-            {
-                pfx->send->UpdateSendMixcell();
-                R(Refresh_Mixer);
-            }
-            pfx->drawarea->Change();
-        }
-    }
-    else if(M.drag_data.drag_type == Drag_MixChannel_Indeks)
+    else if(M.drag_data.drag_type == Drag_MixChannel_Index)
     {
         if(M.active_paramfx != NULL)
         {
@@ -7455,7 +7228,7 @@ void DragNDrop_Drop(int mouse_x, int mouse_y, unsigned int flags)
             }
             if(pfx->instr != NULL || pfx->trk != NULL)
             {
-                gAux->CheckFXString(pfx);
+                aux_panel->CheckFXString(pfx);
                 if(pfx->instr != NULL)
                 {
                     ChangeCurrentInstrument(pfx->instr);
@@ -7464,130 +7237,20 @@ void DragNDrop_Drop(int mouse_x, int mouse_y, unsigned int flags)
             pfx->drawarea->Change();
         }
     }
-    else if(M.drag_data.drag_type == Drag_MixCell_Content)
+    if(M.drag_data.drag_type == Drag_Effect_File)
     {
-        if(M.active_dropmixcell != NULL)
+        if(M.active_dropmixchannel != NULL)
         {
-            WaitForSingleObject(mix->hMixMutex, INFINITE);
-            if(flags & kbd_ctrl)
-            {
-                // Copy
-                M.active_dropmixcell->Clean();
-                if(M.active_mixcell->effect != NULL)
-                {
-                    M.active_dropmixcell->effect = M.active_mixcell->effect->Clone(M.active_dropmixcell);
-                    AddEff(M.active_dropmixcell->effect);
-                }
-                M.active_dropmixcell->mixstr->SetString(M.active_mixcell->mixstr->string);
-                M.active_dropmixcell->folded = M.active_mixcell->folded;
-            }
-            else
-            {
-                // Exchange
-                Eff* effdst = M.active_dropmixcell->effect;
-                Eff* effsrc = M.active_mixcell->effect;
-                TString* strdst = M.active_dropmixcell->mixstr;
-                TString* strsrc = M.active_mixcell->mixstr;
-
-                M.active_mixcell->effect = effdst;
-                M.active_dropmixcell->effect = effsrc;
-
-                // From source to destination
-                if(effsrc != NULL)
-                {
-                    effsrc->scope.mixcell = M.active_dropmixcell;
-                    Control* ctrl = M.active_mixcell->first_ctrl;
-                    Control* ctrl_r;
-                    while(ctrl != NULL)
-                    {
-                        if(ctrl->scope != NULL && ctrl->scope->eff == effsrc)
-                        {
-                            ctrl_r = ctrl;
-                            ctrl = ctrl->pn_next;
-                            M.active_mixcell->RemoveControl(ctrl_r);
-                            M.active_dropmixcell->AddControl(ctrl_r);
-                            continue;
-                        }
-                        ctrl = ctrl->pn_next;
-                    }
-                }
-
-                // From destination to source
-                if(effdst != NULL)
-                {
-                    effdst->scope.mixcell = M.active_mixcell;
-                    Control* ctrl = M.active_dropmixcell->first_ctrl;
-                    Control* ctrl_r;
-                    while(ctrl != NULL)
-                    {
-                        if(ctrl->scope != NULL && ctrl->scope->eff == effdst)
-                        {
-                            ctrl_r = ctrl;
-                            ctrl = ctrl->pn_next;
-                            M.active_dropmixcell->RemoveControl(ctrl_r);
-                            M.active_mixcell->AddControl(ctrl_r);
-                            continue;
-                        }
-                        ctrl = ctrl->pn_next;
-                    }
-                }
-
-                M.active_dropmixcell->mixstr = strsrc;
-                M.active_mixcell->mixstr = strdst;
-                strsrc->panel = M.active_dropmixcell;
-                strdst->panel = M.active_mixcell;
-
-                bool foldtmp = M.active_dropmixcell->folded;
-                M.active_dropmixcell->folded = M.active_mixcell->folded;
-                M.active_mixcell->folded = foldtmp;
-
-                if(effdst != NULL)
-                {
-                    effdst->SetNewMixcell(M.active_mixcell);
-                }
-                else
-                {
-                    M.active_mixcell->Clean();
-                }
-
-                if(effsrc != NULL)
-                {
-                    effsrc->SetNewMixcell(M.active_dropmixcell);
-                }
-                else
-                {
-                    M.active_dropmixcell->Clean();
-                }
-            }
-            mix->current_mixcell = M.active_dropmixcell;
-            M.active_dropmixcell = NULL;
-
-            ReleaseMutex(mix->hMixMutex);
-        }
-
-        R(Refresh_Mixer);
-    }
-    else if(M.drag_data.drag_type == Drag_Effect_File)
-    {
-        if(M.active_dropmixcell != NULL)
-        {
+            WaitForSingleObject(aux_panel->hMixMutex, INFINITE);
             FileData* fd = (FileData*)M.drag_data.drag_stuff;
-            mix->AddEffectFromBrowser(fd, M.active_dropmixcell);
-            mix->current_mixcell = M.active_dropmixcell;
-            M.active_dropmixcell = NULL;
-        }
-        else if(M.active_dropmixchannel != NULL)
-        {
-            WaitForSingleObject(gAux->hMixMutex, INFINITE);
-            FileData* fd = (FileData*)M.drag_data.drag_stuff;
-            Eff* eff = gAux->AddEffectFromBrowser(fd, M.active_dropmixchannel);
+            Eff* eff = aux_panel->AddEffectFromBrowser(fd, M.active_dropmixchannel);
             M.lastclick = LastClicked_Effect;
             if(eff != NULL)
             {
                 DragNDrop_PlaceEffect(eff);
             }
             M.active_dropmixchannel = NULL;
-            ReleaseMutex(gAux->hMixMutex);
+            ReleaseMutex(aux_panel->hMixMutex);
 
             R(Refresh_Aux);
             R(Refresh_AuxHighlights);
@@ -7602,7 +7265,7 @@ void DragNDrop_Drop(int mouse_x, int mouse_y, unsigned int flags)
                mouse_y <= M.active_dropmixchannel->ry2 &&
                eff != M.dropeff1 && eff != M.dropeff2)
             {
-                WaitForSingleObject(gAux->hMixMutex, INFINITE);
+                WaitForSingleObject(aux_panel->hMixMutex, INFINITE);
                 if(flags & kbd_ctrl)
                 {
                     Eff* neff = eff->Clone(M.active_dropmixchannel->mc_main);
@@ -7618,7 +7281,7 @@ void DragNDrop_Drop(int mouse_x, int mouse_y, unsigned int flags)
                 }
                 M.active_dropmixchannel->AddEffect(eff);
     			DragNDrop_PlaceEffect(eff);
-                ReleaseMutex(gAux->hMixMutex);
+                ReleaseMutex(aux_panel->hMixMutex);
 
                 R(Refresh_Aux);
                 R(Refresh_AuxHighlights);
@@ -7629,34 +7292,34 @@ void DragNDrop_Drop(int mouse_x, int mouse_y, unsigned int flags)
     else if(M.drag_data.drag_type == Drag_Command)
     {
         Command* cmd = (Command*)M.drag_data.drag_stuff;
-        if(M.loc == Loc_MainGrid || (M.loc == Loc_SmallGrid && gAux->workPt->ptype == Patt_Grid))
+        if(M.loc == Loc_MainGrid || (M.loc == Loc_SmallGrid && aux_panel->workPt->ptype == Patt_Grid))
         {
             if(M.loc == Loc_MainGrid)
             {
-    			if(M.snappedTick >= 0 && M.snappedLine < field->num_lines)
+    			if(M.snappedTick >= 0 && M.snappedLine < field_pattern->num_lines)
     			{
-    				cmd->patt = field;
+    				cmd->patt = field_pattern;
     				cmd->start_tick = M.snappedTick;
     				cmd->track_line = M.snappedLine;
     				cmd->Update();
 
-    				C.patt = field;
+    				C.patt = field_pattern;
     				C.loc = Loc_MainGrid;
     			}
             }
-            else if(M.loc == Loc_SmallGrid && gAux->workPt->ptype == Patt_Grid)
+            else if(M.loc == Loc_SmallGrid && aux_panel->workPt->ptype == Patt_Grid)
             {
-                if(gAux->workPt == gAux->blankPt)
+                if(aux_panel->workPt == aux_panel->blankPt)
                 {
-                    gAux->CreateNew();
+                    aux_panel->CreateNew();
                 }
-                M.patt = gAux->workPt;
-                cmd->patt = gAux->workPt->OrigPt;
+                M.patt = aux_panel->workPt;
+                cmd->patt = aux_panel->workPt->OrigPt;
                 cmd->start_tick = M.snappedTick;
                 cmd->track_line = M.snappedLine;
                 cmd->Update();
 
-                C.patt = gAux->workPt;
+                C.patt = aux_panel->workPt;
                 C.loc = Loc_SmallGrid;
             }
 
@@ -7669,7 +7332,7 @@ void DragNDrop_Drop(int mouse_x, int mouse_y, unsigned int flags)
 			}
 			else if(M.loc == Loc_SmallGrid)
 			{
-				gAux->RescanPatternBounds();
+				aux_panel->RescanPatternBounds();
 				R(Refresh_AuxContent);
 			}
         }
@@ -7683,9 +7346,9 @@ void DragNDrop_Drop(int mouse_x, int mouse_y, unsigned int flags)
 
 void CheckStepSeqPos()
 {
-    if(C.loc == Loc_SmallGrid && gAux->workPt->ptype == Patt_StepSeq)
+    if(C.loc == Loc_SmallGrid && aux_panel->workPt->ptype == Patt_StepSeq)
     {
-        Element* el = gAux->workPt->OrigPt->IsElemExists(CTick, CLine);
+        Element* el = aux_panel->workPt->OrigPt->IsElemExists(CTick, CLine);
         if(el != NULL)
         {
             el->Activate();
@@ -7708,25 +7371,6 @@ void ChangeCurrentInstrument(Instrument* instr)
         current_instr = instr;
         //current_instr->alias->active = true;
         current_instr->instr_drawarea->Change();
-
-/* // cancelled to avoid odd behaviour
-        if(currvisible && !(M.mmode & MOUSE_CONTROLLING && (M.active_ctrl == current_instr->window || 
-                                                            M.active_ctrl == current_instr->pEditButton)))
-        {
-            ShowInstrumentWindow(current_instr);
-        }
-*/
-
-/*
-        if(gAux != NULL && gAux->auxmode == AuxMode_Pattern && gAux->CurrPt == gAux->PtAuto)
-        {
-            if(current_instr->autoPatt == NULL)
-            {
-                current_instr->CreateAutoPattern();
-            }
-            gAux->EditPattern(current_instr->autoPatt);
-        }
-*/
 
         if(genBrw->brwmode == Browse_Presets || 
            genBrw->brwmode == Browse_Params)
@@ -7879,8 +7523,8 @@ void Grid_ProcessBrush()
         float xtick = M.lpx;
         while(1)
         {
-            if((M.loc == Loc_MainGrid && IsElemExists(xtick, M.lpy, field) == NULL)||
-               (M.loc == Loc_SmallGrid && gAux->workPt->OrigPt->IsElemExists(xtick, M.lpy) == NULL))
+            if((M.loc == Loc_MainGrid && IsElemExists(xtick, M.lpy, field_pattern) == NULL)||
+               (M.loc == Loc_SmallGrid && aux_panel->workPt->OrigPt->IsElemExists(xtick, M.lpy) == NULL))
             {
                 Element* el;
                 if(M.active_elem != NULL)
@@ -7926,14 +7570,14 @@ void Grid_ProcessBrush()
                 if(M.loc == Loc_SmallGrid && el != NULL)
                 {
                     // stepseq specific
-                    if(gAux->workPt->ptype == Patt_StepSeq)
+                    if(aux_panel->workPt->ptype == Patt_StepSeq)
                     {
                         Instance* ii = (Instance*)el;
                         el->last_edited_param = ii->ed_note; //Switch2Param(ii->ed_note);
                     }
                     else
                     {
-                        gAux->RescanPatternBounds();
+                        aux_panel->RescanPatternBounds();
                     }
                 }
             }
@@ -7975,17 +7619,17 @@ void Grid_PutInstance(int mouse_x, int mouse_y, unsigned flags, bool slide)
     if(M.loc == Loc_SmallGrid)
     {
         // Change current instrument to the one defined at stepsequencer line
-        if(gAux->workPt->ptype == Patt_StepSeq)
+        if(aux_panel->workPt->ptype == Patt_StepSeq)
         {
             ChangeCurrentInstrument(M.current_trk->defined_instr);
         }
 
         // Create a new pattern if Aux grid is blank
-        if(gAux->workPt == gAux->blankPt)
+        if(aux_panel->workPt == aux_panel->blankPt)
         {
-            gAux->CreateNew();
+            aux_panel->CreateNew();
             creatednew = true;
-            M.patt = gAux->workPt;
+            M.patt = aux_panel->workPt;
         }
     }
 
@@ -7993,12 +7637,12 @@ void Grid_PutInstance(int mouse_x, int mouse_y, unsigned flags, bool slide)
     bool auxelemexists = false;
     if(M.loc == Loc_SmallGrid)
     {
-        auxelem = gAux->workPt->OrigPt->IsElemExists(M.snappedTick, M.snappedLine);
+        auxelem = aux_panel->workPt->OrigPt->IsElemExists(M.snappedTick, M.snappedLine);
         auxelemexists = (auxelem != NULL && auxelem->IsInstance());
     }
 
     // If there're no already an element on target position, then create it there
-    if((M.loc == Loc_MainGrid && IsElemExists(M.snappedTick, M.snappedLine, field) == NULL)||
+    if((M.loc == Loc_MainGrid && IsElemExists(M.snappedTick, M.snappedLine, field_pattern) == NULL)||
        (M.loc == Loc_SmallGrid && !auxelemexists))
     {
         Element* el = NULL;
@@ -8022,11 +7666,11 @@ void Grid_PutInstance(int mouse_x, int mouse_y, unsigned flags, bool slide)
         // adjust Aux pattern bounds if it's not a stepseq
         if(M.loc == Loc_SmallGrid)
         {
-            gAux->RescanPatternBounds();
+            aux_panel->RescanPatternBounds();
         }
 
         // stepseq specific
-        if(el != NULL && M.loc == Loc_SmallGrid && gAux->workPt->ptype == Patt_StepSeq)
+        if(el != NULL && M.loc == Loc_SmallGrid && aux_panel->workPt->ptype == Patt_StepSeq)
         {
             Instance* ii = (Instance*)el;
             el->last_edited_param = ii->ed_note; //Switch2Param(ii->ed_note);
@@ -8049,7 +7693,7 @@ void Grid_PutInstance(int mouse_x, int mouse_y, unsigned flags, bool slide)
             if(el->type != El_SlideNote &&
                     (CP->BrushMode->pressed == true || 
                      flags & kbd_alt ||
-                     gAux->workPt->ptype == Patt_StepSeq))
+                     aux_panel->workPt->ptype == Patt_StepSeq))
             {
                 // starts brushing if in brush mode
                 M.mmode |= MOUSE_BRUSHING;
@@ -8079,7 +7723,7 @@ void Grid_PutInstance(int mouse_x, int mouse_y, unsigned flags, bool slide)
                 M.pickloc = M.loc;
 				M.resize_loc = M.loc;
             }
-            else if(M.loc == Loc_SmallGrid && gAux->workPt->ptype == Patt_Pianoroll)
+            else if(M.loc == Loc_SmallGrid && aux_panel->workPt->ptype == Patt_Pianoroll)
             {
                 // pianorol or fast mode specific
                 el->x = el->StartTickX();
@@ -8098,19 +7742,19 @@ void Grid_PutInstance(int mouse_x, int mouse_y, unsigned flags, bool slide)
                 // Bind pianorol if needed
                 if(AutoBindPatterns && creatednew)
                 {
-                    BindPatternToInstrument(gAux->workPt, current_instr);
+                    BindPatternToInstrument(aux_panel->workPt, current_instr);
                 }
             }
 
 			// Since we don't call RescanPatternBounds for step sequencer, then update it's scaled image here
-            if(M.loc == Loc_SmallGrid && gAux->workPt->ptype == Patt_StepSeq && !gAux->isBlank())
+            if(M.loc == Loc_SmallGrid && aux_panel->workPt->ptype == Patt_StepSeq && !aux_panel->isBlank())
             {
-                gAux->workPt->OrigPt->UpdateScaledImage();
+                aux_panel->workPt->OrigPt->UpdateScaledImage();
                 R(Refresh_GridContent);
             }
         }
     }
-    else if(auxelemexists && gAux->workPt->ptype == Patt_StepSeq)
+    else if(auxelemexists && aux_panel->workPt->ptype == Patt_StepSeq)
     {
         Instance* ii = (Instance*)auxelem;
         auxelem->last_edited_param = ii->ed_note;
@@ -8129,7 +7773,7 @@ void Grid_PutInstance(int mouse_x, int mouse_y, unsigned flags, bool slide)
 
 void Grid_PutInstanceSpecific(Pattern* patt, Instrument *instr, int note, float vol, tframe start_frame, tframe end_frame)
 {
-    if(patt != gAux->blankPt)
+    if(patt != aux_panel->blankPt)
     {
         Instance* i = NULL;
         float starttick = Frame2Tick(start_frame);
@@ -8148,7 +7792,7 @@ void Grid_PutInstanceSpecific(Pattern* patt, Instrument *instr, int note, float 
 
         i = CreateElement_InstanceSpecific(patt, instr, note, vol, starttick, endtick, line);
 
-        if(i != NULL && patt == gAux->workPt)
+        if(i != NULL && patt == aux_panel->workPt)
         {
     		if(patt->ptype == Patt_StepSeq)
             {
@@ -8202,10 +7846,10 @@ void Grid_MouseClickDown(int mouse_x, int mouse_y, unsigned flags)
             M.patternbrush ||
             flags & kbd_shift || // For slidenotes
            (M.loc == Loc_SmallGrid &&
-           (gAux->workPt->ptype == Patt_Pianoroll || gAux->workPt->ptype == Patt_StepSeq))))
+           (aux_panel->workPt->ptype == Patt_Pianoroll || aux_panel->workPt->ptype == Patt_StepSeq))))
         {
             bool slide = false;
-            if(flags & kbd_shift && !(M.loc == Loc_SmallGrid && gAux->workPt->ptype == Patt_StepSeq))
+            if(flags & kbd_shift && !(M.loc == Loc_SmallGrid && aux_panel->workPt->ptype == Patt_StepSeq))
             {
                 slide = true;
                 // preserve cursor pos if sliding (postponed)
@@ -8225,7 +7869,7 @@ void Grid_MouseClickDown(int mouse_x, int mouse_y, unsigned flags)
             if(M.loc == Loc_MainGrid)
             {
                 R(Refresh_GridContent);
-                if(gAux->isVolsPansMode())
+                if(aux_panel->isVolsPansMode())
                 {
                     R(Refresh_Aux);
                 }
@@ -8299,7 +7943,7 @@ void Grid_MouseClickDown(int mouse_x, int mouse_y, unsigned flags)
         }
     }
     else if(Num_Selected <= 1 && 
-                (flags & kbd_ctrl || (M.loc == Loc_SmallGrid && gAux->workPt->ptype == Patt_Pianoroll)))
+                (flags & kbd_ctrl || (M.loc == Loc_SmallGrid && aux_panel->workPt->ptype == Patt_Pianoroll)))
     {
         if(M.active_elem != NULL)
         {
@@ -8307,7 +7951,7 @@ void Grid_MouseClickDown(int mouse_x, int mouse_y, unsigned flags)
             {
                 Instance* ii = (Instance*)M.active_elem;
                 ii->ed_note->Kreview(-1);
-                if(M.loc == Loc_SmallGrid && gAux->workPt->ptype == Patt_Pianoroll)
+                if(M.loc == Loc_SmallGrid && aux_panel->workPt->ptype == Patt_Pianoroll)
                     M.prepianorolling = true;
             }
             else if(M.active_elem->type == El_SlideNote)
@@ -8317,7 +7961,7 @@ void Grid_MouseClickDown(int mouse_x, int mouse_y, unsigned flags)
                 {
                     Instance* ii = (Instance*)(sn->parent);
                     Preview_Add(ii, NULL, -1, sn->ed_note->value, M.patt, NULL, NULL, true, sn->ed_note->relative);
-                    if(M.loc == Loc_SmallGrid && gAux->workPt->ptype == Patt_Pianoroll)
+                    if(M.loc == Loc_SmallGrid && aux_panel->workPt->ptype == Patt_Pianoroll)
                         M.prepianorolling = true;
                 }
                 else
@@ -8355,8 +7999,8 @@ void Grid_MouseDrag(int mouse_x, int mouse_y, unsigned flags)
                            (flags & kbd_alt) != 0);
 
             R(Refresh_GridContent);
-            if(gAux->auxmode == AuxMode_Pans || 
-               gAux->auxmode == AuxMode_Vols)
+            if(aux_panel->auxmode == AuxMode_Pans || 
+               aux_panel->auxmode == AuxMode_Vols)
             {
                 R(Refresh_Aux);
             }
@@ -8403,8 +8047,8 @@ void Grid_MouseDrag(int mouse_x, int mouse_y, unsigned flags)
             else
             {
                 R(Refresh_GridContent);
-                if(gAux->auxmode == AuxMode_Vols || 
-                   gAux->auxmode == AuxMode_Pans)
+                if(aux_panel->auxmode == AuxMode_Vols || 
+                   aux_panel->auxmode == AuxMode_Pans)
                 {
                     R(Refresh_Aux);
                 }
@@ -8447,7 +8091,7 @@ void Grid_MouseDrag(int mouse_x, int mouse_y, unsigned flags)
                 DeletePointedElement(M.prev_x, M.prev_y, mouse_x, mouse_y);
 
                 R(Refresh_GridContent);
-                if(gAux->isVolsPansMode())
+                if(aux_panel->isVolsPansMode())
                 {
                     R(Refresh_Aux);
                 }
@@ -8456,7 +8100,7 @@ void Grid_MouseDrag(int mouse_x, int mouse_y, unsigned flags)
             {
                 DeletePointedAuxElement(M.prev_x, M.prev_y, mouse_x, mouse_y);
 
-                gAux->RescanPatternBounds();
+                aux_panel->RescanPatternBounds();
 
                 R(Refresh_AuxContent);
                 R(Refresh_SubAux);
@@ -8487,9 +8131,9 @@ void Grid_MouseDrag(int mouse_x, int mouse_y, unsigned flags)
     {
         Grid_ProcessBrush();
 
-        if(M.loc == Loc_SmallGrid && !gAux->isBlank())
+        if(M.loc == Loc_SmallGrid && !aux_panel->isBlank())
         {
-            gAux->workPt->OrigPt->UpdateScaledImage();
+            aux_panel->workPt->OrigPt->UpdateScaledImage();
             R(Refresh_GridContent);
         }
 
@@ -8530,7 +8174,7 @@ void Selection_UpdateTicks()
 
         if(M.mmode & MOUSE_LINING)
         {
-            pbkAux->SetRanges(Tick2Frame(SelTick1) + gAux->workPt->frame, Tick2Frame(SelTick2) + gAux->workPt->frame);
+            pbkAux->SetRanges(Tick2Frame(SelTick1) + aux_panel->workPt->frame, Tick2Frame(SelTick2) + aux_panel->workPt->frame);
             pbkAux->SetLooped(true);
         }
     }
@@ -8557,7 +8201,7 @@ void Selection_UpdateCoords()
 
 			if(M.selmode == Sel_Fragment)
 			{
-				pbkAux->SetRanges(Tick2Frame(SelTick1) + gAux->workPt->frame, Tick2Frame(SelTick2) + gAux->workPt->frame);
+				pbkAux->SetRanges(Tick2Frame(SelTick1) + aux_panel->workPt->frame, Tick2Frame(SelTick2) + aux_panel->workPt->frame);
 			}
 		}
 		else if(M.selloc == Loc_StaticGrid)
@@ -8648,7 +8292,7 @@ void Selection_Promote(int mouse_x, int mouse_y, unsigned flags)
         if(M.selmode == Sel_Fragment)
         {
             SelY1 = 0;
-            SelY2 = lineHeight*field->num_lines;
+            SelY2 = lineHeight*field_pattern->num_lines;
         }
 
         if(M.selmode == Sel_Pattern)
@@ -8733,15 +8377,15 @@ void Selection_Promote(int mouse_x, int mouse_y, unsigned flags)
         if(M.selmode == Sel_Fragment)
         {
             SelY1 = 0;
-            SelY2 = lineHeight*gAux->workPt->OrigPt->num_lines;
+            SelY2 = lineHeight*aux_panel->workPt->OrigPt->num_lines;
         }
 
         if(M.selmode == Sel_Pattern)
         {
-            k = (SelX1 + RoundFloat(gAux->OffsTick*gAux->tickWidth))%int(gAux->tickWidth);
+            k = (SelX1 + RoundFloat(aux_panel->OffsTick*aux_panel->tickWidth))%int(aux_panel->tickWidth);
             SelX1 = SelX1 - k;
 
-            k = (SelX2 + RoundFloat(gAux->OffsTick*gAux->tickWidth))%int(gAux->tickWidth);
+            k = (SelX2 + RoundFloat(aux_panel->OffsTick*aux_panel->tickWidth))%int(aux_panel->tickWidth);
             SelX2 = SelX2 - k;
         }
         else if(M.selmode == Sel_Fragment)
@@ -8749,29 +8393,29 @@ void Selection_Promote(int mouse_x, int mouse_y, unsigned flags)
             // Align to quantization
             if(M.qsize > 0)
             {
-                k = (SelX1 + RoundFloat(gAux->OffsTick*gAux->tickWidth))%int(gAux->tickWidth*M.qsize);
+                k = (SelX1 + RoundFloat(aux_panel->OffsTick*aux_panel->tickWidth))%int(aux_panel->tickWidth*M.qsize);
                 SelX1 = SelX1 - k;
-                k = (SelX2 + RoundFloat(gAux->OffsTick*gAux->tickWidth))%int(gAux->tickWidth*M.qsize);
+                k = (SelX2 + RoundFloat(aux_panel->OffsTick*aux_panel->tickWidth))%int(aux_panel->tickWidth*M.qsize);
                 SelX2 = SelX2 - k;
             }
         }
 
         if(M.selmode == Sel_Tracks || M.selmode == Sel_Pattern)
         {
-            k = SelY1 % gAux->lineHeight;
-            if(k > gAux->lineHeight/2)
+            k = SelY1 % aux_panel->lineHeight;
+            if(k > aux_panel->lineHeight/2)
             {
-                SelY1 = SelY1 + (gAux->lineHeight - k);
+                SelY1 = SelY1 + (aux_panel->lineHeight - k);
             }
             else
             {
                 SelY1 = SelY1 - k;
             }
 
-            k = SelY2 % gAux->lineHeight;
-            if(k > gAux->lineHeight/2)
+            k = SelY2 % aux_panel->lineHeight;
+            if(k > aux_panel->lineHeight/2)
             {
-                SelY2 = SelY2 + (gAux->lineHeight - k);
+                SelY2 = SelY2 + (aux_panel->lineHeight - k);
             }
             else
             {
@@ -8882,13 +8526,13 @@ void Selection_Start(int mouse_x, int mouse_y, unsigned flags)
         {
             SX1 = mouse_x - GridX1;
             SY1 = 0;
-            SY2 = lineHeight*field->num_lines;
+            SY2 = lineHeight*field_pattern->num_lines;
         }
         else
         {
             SX1 = mouse_x - GridXS1;
             SY1 = 0;
-            SY2 = gAux->lineHeight*gAux->workPt->OrigPt->num_lines;
+            SY2 = aux_panel->lineHeight*aux_panel->workPt->OrigPt->num_lines;
         }
     }
     else if(M.mmode & MOUSE_TRACKING)
@@ -8995,8 +8639,8 @@ bool Selection_ToggleElements()
         if(M.selloc == Loc_MainGrid)
         {
             R(Refresh_GridContent);
-            if(gAux->auxmode == AuxMode_Vols || 
-               gAux->auxmode == AuxMode_Pans)
+            if(aux_panel->auxmode == AuxMode_Vols || 
+               aux_panel->auxmode == AuxMode_Pans)
             {
                 R(Refresh_Aux);
             }
@@ -9023,7 +8667,7 @@ void Selection_Check(int mouse_x, int mouse_y, unsigned flags)
                !(M.mmode & MOUSE_ENVELOPING) && 
                !(M.mmode & MOUSE_LANEAUXING) &&
                !(M.mmode & MOUSE_GRID_Y2) &&
-               !(M.mmode & MOUSE_AUXING && gAux->isVolsPansMode()) &&
+               !(M.mmode & MOUSE_AUXING && aux_panel->isVolsPansMode()) &&
                  ((M.loc == Loc_MainGrid && !(M.mmode & MOUSE_AUXING)) || (flags & kbd_ctrl))) // On small grid the selection is only via control
             {
                 skip_input = false;
@@ -9070,7 +8714,7 @@ void Looping_UpdateCoords()
 			LooX1 = Tick2X(LooTick1, Loc_SmallGrid) - GridXS1;
 			LooX2 = Tick2X(LooTick2, Loc_SmallGrid) - GridXS1 - 1;
 
-			pbkAux->SetRanges(Tick2Frame(LooTick1) + gAux->workPt->frame, Tick2Frame(LooTick2) + gAux->workPt->frame);
+			pbkAux->SetRanges(Tick2Frame(LooTick1) + aux_panel->workPt->frame, Tick2Frame(LooTick2) + aux_panel->workPt->frame);
 		}
 		else if(M.looloc == Loc_StaticGrid)
 		{
@@ -9106,7 +8750,7 @@ void Looping_UpdateTicks()
 
         if(LooTick1 != LooTick2 && M.mmode & MOUSE_LINING)
         {
-            pbkAux->SetRanges(gAux->workPt->frame + Tick2Frame(LooTick1), gAux->workPt->frame + Tick2Frame(LooTick2));
+            pbkAux->SetRanges(aux_panel->workPt->frame + Tick2Frame(LooTick1), aux_panel->workPt->frame + Tick2Frame(LooTick2));
             pbkAux->SetLooped(true);
         }
         else
@@ -9190,11 +8834,11 @@ void Looping_Drag(int mouse_x, int mouse_y, unsigned flags)
         }
 
         // Align to quantization
-        if(gAux->quantsize > 0)
+        if(aux_panel->quantsize > 0)
         {
-            k = (LooX1 + RoundFloat(gAux->OffsTick*gAux->tickWidth))%int(gAux->tickWidth*gAux->quantsize);
+            k = (LooX1 + RoundFloat(aux_panel->OffsTick*aux_panel->tickWidth))%int(aux_panel->tickWidth*aux_panel->quantsize);
             LooX1 = LooX1 - k;
-            k = (LooX2 + RoundFloat(gAux->OffsTick*gAux->tickWidth))%int(gAux->tickWidth*gAux->quantsize);
+            k = (LooX2 + RoundFloat(aux_panel->OffsTick*aux_panel->tickWidth))%int(aux_panel->tickWidth*aux_panel->quantsize);
             LooX2 = LooX2 - k;
         }
 
@@ -9266,7 +8910,7 @@ void Looping_Check(int mouse_x, int mouse_y, unsigned flags)
 void UpdateQuants()
 {
     quantsize = MapItem2Quant(CP->qMenu->main_item->itemtype);
-    gAux->quantsize = MapItem2Quant(gAux->qMenu->main_item->itemtype);
+    aux_panel->quantsize = MapItem2Quant(aux_panel->qMenu->main_item->itemtype);
 }
 
 bool Menu_MouseClick(int mouse_x, int mouse_y)
@@ -9288,7 +8932,7 @@ bool Menu_MouseClick(int mouse_x, int mouse_y)
                 }
                 else
                 {
-                    gAux->quantsize = qsize;
+                    aux_panel->quantsize = qsize;
                     R(Refresh_Aux);
                 }
                 M.quanting = false;
@@ -9338,7 +8982,7 @@ void Process_AutoAdvance()
     {
         C.ExitToCurrentMode();
         CTick += 1.0f*qsize;
-        if(!(C.loc == Loc_SmallGrid && gAux->workPt->ptype == Patt_StepSeq))
+        if(!(C.loc == Loc_SmallGrid && aux_panel->workPt->ptype == Patt_StepSeq))
         {
             CLine++;
         }
@@ -9399,7 +9043,7 @@ void ResizeSelectedElems(float dtick, Element* excludeel, Loc loc, unsigned flag
                         }
                         else if(loc == Loc_SmallGrid)
                         {
-                            el->end_tick = el->start_tick + gAux->quantsize;
+                            el->end_tick = el->start_tick + aux_panel->quantsize;
                         }
                     }
                 }
@@ -9440,7 +9084,7 @@ void Process_Resize(int mouse_x, int mouse_y, unsigned flags, Loc loc)
 {
     if(M.resize_object == Resize_Lane)
     {
-        if(M.patt == field || (M.patt != field && M.current_trk != NULL))
+        if(M.patt == field_pattern || (M.patt != field_pattern && M.current_trk != NULL))
         {
             if(M.active_lane == Lane_Vol)
             {
@@ -9638,7 +9282,7 @@ void Process_Resize(int mouse_x, int mouse_y, unsigned flags, Loc loc)
                 // Do rescan bounds after every element is resized
                 if(loc == Loc_SmallGrid)
                 {
-                    gAux->RescanPatternBounds();
+                    aux_panel->RescanPatternBounds();
                 }
 
                 M.movetick = M.snappedTick;
@@ -9677,21 +9321,21 @@ void Process_Resize(int mouse_x, int mouse_y, unsigned flags, Loc loc)
     }
     else if(M.resize_object == Resize_AuxPattRange)
     {
-        Pattern* pt = gAux->workPt;
+        Pattern* pt = aux_panel->workPt;
         float ptick = X2Tick(mouse_x, Loc_SmallGrid);
         float oldtick = pt->tick_length;
         float newtick = oldtick;
-        if(gAux->quantsize > 0)
-            newtick += int((ptick - newtick)/gAux->quantsize)*gAux->quantsize;
+        if(aux_panel->quantsize > 0)
+            newtick += int((ptick - newtick)/aux_panel->quantsize)*aux_panel->quantsize;
         else
             newtick += (ptick - newtick);
         if(newtick <= 0)
         {
-            newtick = gAux->quantsize > 0 ? gAux->quantsize : 0.01f;
+            newtick = aux_panel->quantsize > 0 ? aux_panel->quantsize : 0.01f;
         }
-        else if(newtick > gAux->h_sbar->visible_len + gAux->h_sbar->offset)
+        else if(newtick > aux_panel->h_sbar->visible_len + aux_panel->h_sbar->offset)
         {
-            newtick = gAux->h_sbar->visible_len + gAux->h_sbar->offset;
+            newtick = aux_panel->h_sbar->visible_len + aux_panel->h_sbar->offset;
         }
 
         undoMan->DoNewAction(Action_Resize, (void*)pt, oldtick, newtick, 0, 0);
@@ -9724,7 +9368,7 @@ void Process_Resize(int mouse_x, int mouse_y, unsigned flags, Loc loc)
 
             if(M.loc == Loc_SmallGrid)
             {
-                gAux->RescanPatternBounds();
+                aux_panel->RescanPatternBounds();
             }
         }
 
@@ -9756,16 +9400,16 @@ void Lining_ProcessWheel(Loc loc, int delta)
         UpdateTime(Loc_MainGrid);
         AuxPos2MainPos();
     }
-    else if(loc == Loc_SmallGrid && gAux->workPt != gAux->blankPt)
+    else if(loc == Loc_SmallGrid && aux_panel->workPt != aux_panel->blankPt)
     {
-        gAux->curr_play_x_f += delta;
-        if(gAux->curr_play_x_f < 0)
+        aux_panel->curr_play_x_f += delta;
+        if(aux_panel->curr_play_x_f < 0)
         {
-            gAux->curr_play_x_f = 0;
+            aux_panel->curr_play_x_f = 0;
         }
 
-        gAux->curr_play_x = RoundDouble(gAux->curr_play_x_f);
-        pbkAux->SetCurrFrame((long)(gAux->curr_play_x_f*gAux->frames_per_pixel) + gAux->workPt->frame);
+        aux_panel->curr_play_x = RoundDouble(aux_panel->curr_play_x_f);
+        pbkAux->SetCurrFrame((long)(aux_panel->curr_play_x_f*aux_panel->frames_per_pixel) + aux_panel->workPt->frame);
         UpdateTime(Loc_SmallGrid);
         MainPos2AuxPos();
     }
@@ -9781,13 +9425,13 @@ void SetPosX(double newX, Loc loc)
         UpdateTime(Loc_MainGrid);
         AuxPos2MainPos();
 
-        PreInitEnvelopes(pbkMain->currFrame, field, field->first_ev, Playing);
+        PreInitEnvelopes(pbkMain->currFrame, field_pattern, field_pattern->first_ev, Playing);
 
         if(Playing)
-            PreInitSamples(pbkMain->currFrame, field, field->first_ev);
+            PreInitSamples(pbkMain->currFrame, field_pattern, field_pattern->first_ev);
 
         // Switch to main playback if set pos outside the playing pattern
-        if(gAux->playing && 
+        if(aux_panel->playing && 
             (pbkMain->currFrame < pbkAux->rng_start_frame || pbkMain->currFrame > pbkAux->rng_end_frame))
         {
             CP->HandleButtDown(CP->play_butt);
@@ -9795,29 +9439,29 @@ void SetPosX(double newX, Loc loc)
     }
     else if(loc == Loc_SmallGrid)
     {
-        gAux->curr_play_x_f = (float)newX + (float)(gAux->OffsTick*gAux->tickWidth);
-        gAux->curr_play_x = int(gAux->curr_play_x_f);
-        pbkAux->SetCurrFrame((long)((gAux->curr_play_x*gAux->frames_per_pixel) + gAux->workPt->frame));
+        aux_panel->curr_play_x_f = (float)newX + (float)(aux_panel->OffsTick*aux_panel->tickWidth);
+        aux_panel->curr_play_x = int(aux_panel->curr_play_x_f);
+        pbkAux->SetCurrFrame((long)((aux_panel->curr_play_x*aux_panel->frames_per_pixel) + aux_panel->workPt->frame));
         UpdateTime(Loc_SmallGrid);
         MainPos2AuxPos();
 
         if(pbkAux->playPatt->autopatt == false)
         {
             if(Playing)
-                PreInitEnvelopes(pbkMain->currFrame, field, field->first_ev, Playing, false);
+                PreInitEnvelopes(pbkMain->currFrame, field_pattern, field_pattern->first_ev, Playing, false);
             else
-                PreInitEnvelopes(pbkMain->currFrame, pbkAux->playPatt, field->first_ev, gAux->playing, false);
+                PreInitEnvelopes(pbkMain->currFrame, pbkAux->playPatt, field_pattern->first_ev, aux_panel->playing, false);
 
             if(Playing)
-                PreInitSamples(pbkMain->currFrame, field, field->first_ev);
-            else if(gAux->playing)
-                PreInitSamples(pbkMain->currFrame, pbkAux->playPatt, field->first_ev);
+                PreInitSamples(pbkMain->currFrame, field_pattern, field_pattern->first_ev);
+            else if(aux_panel->playing)
+                PreInitSamples(pbkMain->currFrame, pbkAux->playPatt, field_pattern->first_ev);
         }
         else
         {
-            PreInitEnvelopes(pbkAux->currFrame, pbkAux->playPatt, pbkAux->playPatt->first_ev, gAux->playing, false);
+            PreInitEnvelopes(pbkAux->currFrame, pbkAux->playPatt, pbkAux->playPatt->first_ev, aux_panel->playing, false);
 
-            if(gAux->playing)
+            if(aux_panel->playing)
                 PreInitSamples(pbkAux->currFrame, pbkAux->playPatt, pbkAux->playPatt->first_ev);
         }
     }
@@ -9845,7 +9489,7 @@ void Lining_ProcessMouse(Loc loc, int mouse_x)
         }
         else if(loc == Loc_SmallGrid)
         {
-            if(gAux->workPt != gAux->blankPt)
+            if(aux_panel->workPt != aux_panel->blankPt)
             {
                 int newX = mouse_x + 1 - GridXS1;
                 if(newX > (GridXS2 - GridXS1))
@@ -9990,8 +9634,8 @@ void CreateContextMenu(int mouse_x, int mouse_y)
             {
                 m.addItem(MItem_CloneInstrument, T("Clone instrument"));
                 m.addItem(MItem_DeleteInstrument, T("Delete instrument"));
-                m.addItem(MItem_CreatePianorollPatternForInstrument, T("Create pianoroll at cursor pos."), C.patt == field);
-                m.addItem(MItem_BindInstrumentToCurrentPattern, T("Bind to current pattern"), (!gAux->isBlank() && gAux->workPt->ptype == Patt_Pianoroll));
+                m.addItem(MItem_CreatePianorollPatternForInstrument, T("Create pianoroll at cursor pos."), C.patt == field_pattern);
+                m.addItem(MItem_BindInstrumentToCurrentPattern, T("Bind to current pattern"), (!aux_panel->isBlank() && aux_panel->workPt->ptype == Patt_Pianoroll));
                 //m.addSeparator();
                 if(M.active_instr->type != Instr_Sample)
                 {
@@ -10037,29 +9681,8 @@ void CreateContextMenu(int mouse_x, int mouse_y)
         }
         */
     }
-    else if(M.mmode & MOUSE_MIXING && M.active_mixcell != NULL && !(M.mmode & MOUSE_DRAG_N_DROPPING))
-    {
-        menu = new Menu(mouse_x, mouse_y, Menu_Context);
-
-        if(M.active_mixcell->effect != NULL)
-        {
-            m.addItem(MItem_LoadPreset, T("View presets"));
-            m.addItem(MItem_SavePreset, T("Save preset"));
-            m.addItem(MItem_CleanMixCell, T("Clean"));
-            m.addSeparator();
-        }
-        m.addItem(MItem_SetMixCellToGain, T("Set Gain"));
-        m.addItem(MItem_SetMixCellToSend, T("Set Send"));
-        m.addItem(MItem_SetMixCellToEQ1, T("Set 1-band equalizer"));
-        m.addItem(MItem_SetMixCellToEQ3, T("Set 3-band equalizer"));
-        m.addItem(MItem_SetMixCellToGraphicEQ, T("Set Graphic equalizer"));
-        m.addItem(MItem_SetMixCellToDelay, T("Set Delay"));
-        m.addItem(MItem_SetMixCellToFilter, T("Set Filter"));
-        m.addItem(MItem_SetMixCellToCompressor, T("Set Compressor"));
-        m.addItem(MItem_SetMixCellToReverb, T("Set Reverb"));
-    }
     else if(M.mmode & MOUSE_AUXMIXING && M.active_mixchannel != NULL && 
-            !(M.mmode & MOUSE_DRAG_N_DROPPING) && M.active_ctrl == NULL)
+         !(M.mmode & MOUSE_DRAG_N_DROPPING) && M.active_ctrl == NULL)
     {
         menu = new Menu(mouse_x, mouse_y, Menu_Context);
         menu->curreff = M.active_effect;
@@ -10190,7 +9813,7 @@ void CreateContextMenu(int mouse_x, int mouse_y)
 			}
         }
     }
-    else if(gAux->CheckIfMouseOnBinder(mouse_x, mouse_y) && gAux->workPt->ibound != NULL)
+    else if(aux_panel->CheckIfMouseOnBinder(mouse_x, mouse_y) && aux_panel->workPt->ibound != NULL)
     {
 		menu = new Menu(mouse_x, mouse_y, Menu_Context);
 
@@ -10273,9 +9896,9 @@ void CreateContextMenu(int mouse_x, int mouse_y)
                             filedata->list_index = -1;
                             if(menu->curreff == NULL)
                             {
-                                WaitForSingleObject(gAux->hMixMutex, INFINITE);
-                                gAux->AddEffectFromBrowser(filedata, menu->mchan);
-                                ReleaseMutex(gAux->hMixMutex);
+                                WaitForSingleObject(aux_panel->hMixMutex, INFINITE);
+                                aux_panel->AddEffectFromBrowser(filedata, menu->mchan);
+                                ReleaseMutex(aux_panel->hMixMutex);
                             }
                             else
                             {
@@ -10283,13 +9906,13 @@ void CreateContextMenu(int mouse_x, int mouse_y)
                                 M.dropeff2 = menu->curreff->cnext;
                                 M.active_dropmixchannel = menu->mchan;
                                 DeleteEffect(menu->curreff);
-                                WaitForSingleObject(gAux->hMixMutex, INFINITE);
-                                Eff* eff = gAux->AddEffectFromBrowser(filedata, menu->mchan);
+                                WaitForSingleObject(aux_panel->hMixMutex, INFINITE);
+                                Eff* eff = aux_panel->AddEffectFromBrowser(filedata, menu->mchan);
                                 if(eff != NULL)
                                 {
                                     DragNDrop_PlaceEffect(eff);
                                 }
-                                ReleaseMutex(gAux->hMixMutex);
+                                ReleaseMutex(aux_panel->hMixMutex);
                             }
                             break;
                         }
@@ -10347,27 +9970,27 @@ void ShowHintIfApplicable()
             {
                 str = String("Toggle mixer");
             }
-            else if(M.active_ctrl == gAux->PtPianorol)
+            else if(M.active_ctrl == aux_panel->PtPianorol)
             {
                 str = String("Switch to pianoroll");
             }
-            else if(M.active_ctrl == gAux->PtStepseq)
+            else if(M.active_ctrl == aux_panel->PtStepseq)
             {
                 str = String("Switch to step sequencer");
             }
-            else if(M.active_ctrl == gAux->PtUsual)
+            else if(M.active_ctrl == aux_panel->PtUsual)
             {
                 str = String("Switch to text grid");
             }
-            else if(M.active_ctrl == gAux->Vols)
+            else if(M.active_ctrl == aux_panel->Vols)
             {
                 str = String("Switch to velocity mode");
             }
-            else if(M.active_ctrl == gAux->Pans)
+            else if(M.active_ctrl == aux_panel->Pans)
             {
                 str = String("Switch to panning mode");
             }
-            else if(M.active_ctrl == gAux->slzoom || M.active_ctrl == gAux->DecrScale || M.active_ctrl == gAux->IncrScale)
+            else if(M.active_ctrl == aux_panel->slzoom || M.active_ctrl == aux_panel->DecrScale || M.active_ctrl == aux_panel->IncrScale)
             {
                 str = String("Pattern area zooming");
             }
@@ -10478,7 +10101,7 @@ void Process_MouseWheel(int delta, int mouse_x, int mouse_y, unsigned flags)
 
         CP->bpmer->drawarea->Change();
         R(Refresh_GridContent);
-        if(gAux->auxmode == AuxMode_Pattern)
+        if(aux_panel->auxmode == AuxMode_Pattern)
         {
             R(Refresh_AuxContent);
         }
@@ -10516,11 +10139,11 @@ void Process_MouseWheel(int delta, int mouse_x, int mouse_y, unsigned flags)
         {
             mixBrw->sbar->TweakByWheel(delta*mixBrw->sbar->pixlen/mixBrw->current_num_entries*2, mouse_x, mouse_y);
         }
-        else if(M.active_ctrl == gAux->v_sbar)
+        else if(M.active_ctrl == aux_panel->v_sbar)
         {
-            if(gAux->v_sbar->full_len > gAux->v_sbar->visible_len)
+            if(aux_panel->v_sbar->full_len > aux_panel->v_sbar->visible_len)
             {
-                gAux->v_sbar->TweakByWheel(delta*2, mouse_x, mouse_y);
+                aux_panel->v_sbar->TweakByWheel(delta*2, mouse_x, mouse_y);
             }
         }
         else if(M.active_ctrl == main_v_bar)
@@ -10549,15 +10172,15 @@ void Process_MouseWheel(int delta, int mouse_x, int mouse_y, unsigned flags)
                 }
             }
         }
-        else if(M.active_ctrl == gAux->slzoom || 
-                M.active_ctrl == gAux->IncrScale || 
-                M.active_ctrl == gAux->DecrScale)
+        else if(M.active_ctrl == aux_panel->slzoom || 
+                M.active_ctrl == aux_panel->IncrScale || 
+                M.active_ctrl == aux_panel->DecrScale)
         {
             if(delta > 0)
             {
                 while(delta > 0)
                 {
-                    gAux->IncreaseScale(false);
+                    aux_panel->IncreaseScale(false);
                     delta--;
                 }
             }
@@ -10565,7 +10188,7 @@ void Process_MouseWheel(int delta, int mouse_x, int mouse_y, unsigned flags)
             {
                 while(delta < 0)
                 {
-                    gAux->DecreaseScale(false);
+                    aux_panel->DecreaseScale(false);
                     delta++;
                 }
             }
@@ -10623,16 +10246,6 @@ void Process_MouseWheel(int delta, int mouse_x, int mouse_y, unsigned flags)
             R(Refresh_MixCenter);
         }
     }
-    else if(M.mmode & MOUSE_MIXING)
-    {
-        mix->v_offs += delta*30;
-        if(mix->v_offs < 0)
-        {
-            mix->v_offs = 0;
-        }
-
-        R(Refresh_Mixer);
-    }
     else if(M.loc == Loc_MainGrid || M.mmode & MOUSE_TRACKING)
     {
         if(flags & kbd_ctrl)
@@ -10680,7 +10293,7 @@ void Process_MouseWheel(int delta, int mouse_x, int mouse_y, unsigned flags)
                 R(Refresh_MixCenter);
             }
 
-            if(gAux->isVolsPansMode())
+            if(aux_panel->isVolsPansMode())
             {
                 R(Refresh_Aux);
             }
@@ -10698,7 +10311,7 @@ void Process_MouseWheel(int delta, int mouse_x, int mouse_y, unsigned flags)
             {
                 while(delta > 0)
                 {
-                    gAux->IncreaseScale(true);
+                    aux_panel->IncreaseScale(true);
                     delta--;
                 }
             }
@@ -10706,7 +10319,7 @@ void Process_MouseWheel(int delta, int mouse_x, int mouse_y, unsigned flags)
             {
                 while(delta < 0)
                 {
-                    gAux->DecreaseScale(true);
+                    aux_panel->DecreaseScale(true);
                     delta++;
                 }
             }
@@ -10714,9 +10327,9 @@ void Process_MouseWheel(int delta, int mouse_x, int mouse_y, unsigned flags)
         }
         else
         {
-            if(gAux->v_sbar->full_len > gAux->v_sbar->visible_len)
+            if(aux_panel->v_sbar->full_len > aux_panel->v_sbar->visible_len)
             {
-                gAux->v_sbar->TweakByWheel(delta*2, mouse_x, mouse_y);
+                aux_panel->v_sbar->TweakByWheel(delta*2, mouse_x, mouse_y);
             }
 
             /*
@@ -10758,7 +10371,7 @@ bool CanClickOntoGrid()
     if((M.mmode & MOUSE_ON_GRID)&&
         !(M.mmode & MOUSE_LANEAUXING)&&
         !(M.mmode & MOUSE_RESIZE || M.mmode & MOUSE_LOWAUXEDGE)&&
-        !(M.loc == Loc_SmallGrid && gAux->workPt->ptype == Patt_StepSeq && M.current_trk->defined_instr == NULL)&&
+        !(M.loc == Loc_SmallGrid && aux_panel->workPt->ptype == Patt_StepSeq && M.current_trk->defined_instr == NULL)&&
         !(M.mmode & MOUSE_UPPER_TRACK_EDGE || M.mmode & MOUSE_LOWER_TRACK_EDGE)&&
         !(M.mmode & MOUSE_GRID_X1 || M.mmode & MOUSE_GRID_X2 || M.mmode & MOUSE_GRID_Y1 || M.mmode & MOUSE_GRID_Y2))
         return true;
@@ -10783,7 +10396,7 @@ void Process_LeftButtDown(int mouse_x, int mouse_y, bool dbclick, unsigned flags
     }
     else if(dbclick == true && JustClickedPattern == true)
     {
-        gAux->EditPattern(gAux->workPt, dbclick);
+        aux_panel->EditPattern(aux_panel->workPt, dbclick);
         skip_input = true;
     }
     JustClickedPattern = false;
@@ -10805,7 +10418,7 @@ void Process_LeftButtDown(int mouse_x, int mouse_y, bool dbclick, unsigned flags
             {
                 if(M.on_keys == true)
                 {
-                    gAux->ClickKeys();
+                    aux_panel->ClickKeys();
                 }
 
                 if(M.mmode & MOUSE_INSTRUMENTING)
@@ -10813,12 +10426,6 @@ void Process_LeftButtDown(int mouse_x, int mouse_y, bool dbclick, unsigned flags
                     M.lastclick = LastClicked_Instrument;
                     IP->Click(mouse_x, mouse_y, dbclick, flags);
                 }
-				/*
-                else if(M.mmode & MOUSE_MIXING)
-                {
-                    mix->Click(mouse_x, mouse_y, dbclick, flags);
-                }
-				*/
                 else if(M.mmode & MOUSE_AUXMIXING)
                 {
                     if(M.active_effect != NULL)
@@ -10831,7 +10438,7 @@ void Process_LeftButtDown(int mouse_x, int mouse_y, bool dbclick, unsigned flags
                     {
                         if(M.active_effect != NULL)
                         {
-                            gAux->SetCurrentEffect(M.active_effect);
+                            aux_panel->SetCurrentEffect(M.active_effect);
                         }
                         //else if(gAux->current_eff != NULL)
                         //{
@@ -10857,8 +10464,8 @@ void Process_LeftButtDown(int mouse_x, int mouse_y, bool dbclick, unsigned flags
                     M.active_ctrl->MouseClick(mouse_x, mouse_y);
 					if(M.active_ctrl != NULL && M.active_ctrl->type == Ctrl_Knob && dbclick)
                     {
-						gAux->mix_sbar->SetOffset(gAux->mix_sbar->full_len);
-						gAux->mix_sbar->SetDelta(-5);
+						aux_panel->mix_sbar->SetOffset(aux_panel->mix_sbar->full_len);
+						aux_panel->mix_sbar->SetDelta(-5);
                     }
                 }
         		else if(M.mmode & MOUSE_ON_GRID)
@@ -10897,16 +10504,16 @@ void Process_LeftButtDown(int mouse_x, int mouse_y, bool dbclick, unsigned flags
 
                     b->MouseClick(M.brwindex, dbclick, true);
                 }
-                else if(M.mmode & MOUSE_AUXING && (gAux->auxmode == AuxMode_Vols || gAux->auxmode == AuxMode_Pans))
+                else if(M.mmode & MOUSE_AUXING && (aux_panel->auxmode == AuxMode_Vols || aux_panel->auxmode == AuxMode_Pans))
                 {
-                    ParamType partype = (gAux->auxmode == AuxMode_Vols) ? Param_Vol : Param_Pan;
+                    ParamType partype = (aux_panel->auxmode == AuxMode_Vols) ? Param_Vol : Param_Pan;
                     ProcessColLane(mouse_x, mouse_y, partype, Loc_MainGrid, NULL, NULL, GridX1, AuxRY1, GridX2, AuxRY2, (flags & kbd_alt) != 0);
 
                     R(Refresh_Aux);
                 }
                 else if(M.mmode & MOUSE_AUXAUXING && !M.IsOnEdge())
                 {
-                    switch(gAux->ltype)
+                    switch(aux_panel->ltype)
                     {
                         case Lane_Vol:
                             ProcessColLane(mouse_x, mouse_y, Param_Vol, Loc_SmallGrid, NULL, NULL, GridXS1, GridYS2 + 4, GridXS2, WindHeight - 4, (flags & kbd_alt) != 0);
@@ -10916,7 +10523,7 @@ void Process_LeftButtDown(int mouse_x, int mouse_y, bool dbclick, unsigned flags
                             break;
                         case Lane_Pitch:
                         {
-                            Envelope* env = (Envelope*)gAux->workPt->OrigPt->pitch->paramedit;
+                            Envelope* env = (Envelope*)aux_panel->workPt->OrigPt->pitch->paramedit;
                             env->Click(mouse_x, mouse_y, flags);
                         }break;
                     }
@@ -10954,8 +10561,8 @@ void Process_LeftButtUp(int mouse_x, int mouse_y, bool dbclick, unsigned int fla
     {
         M.prev_x = -1;
         M.prev_y = -1;
-        gAux->prev_mouse_x = -1;
-        gAux->prev_mouse_y = -1;
+        aux_panel->prev_mouse_x = -1;
+        aux_panel->prev_mouse_y = -1;
         M.mousefix = false;
 
         DropPickedElements();
@@ -10973,7 +10580,7 @@ void Process_LeftButtUp(int mouse_x, int mouse_y, bool dbclick, unsigned int fla
                 Desktop::setMousePosition(mouse_x, CtrlPanelHeight - 12);
             UpdatePerBPM();
             R(Refresh_GridContent);
-            if(gAux->isPatternMode())
+            if(aux_panel->isPatternMode())
             {
                 R(Refresh_AuxContent);
             }
@@ -10988,7 +10595,7 @@ void Process_LeftButtUp(int mouse_x, int mouse_y, bool dbclick, unsigned int fla
                                       !(M.mmode & MOUSE_BRUSHING || M.mmode & MOUSE_ENVELOPING))
             {
                 // And if not on step sequencer
-                if(!(M.loc == Loc_SmallGrid && gAux->workPt->ptype == Patt_StepSeq))
+                if(!(M.loc == Loc_SmallGrid && aux_panel->workPt->ptype == Patt_StepSeq))
                 {
                     C.ExitPerClickInAnotherGridPlace();
                     C.PosAndCursor2Mouse(mouse_x, mouse_y);
@@ -10996,13 +10603,13 @@ void Process_LeftButtUp(int mouse_x, int mouse_y, bool dbclick, unsigned int fla
                     // Reset Aux patt mode if needed
                     if(C.loc == Loc_MainGrid && 
                         !(M.active_elem != NULL && M.active_elem->type == El_Pattern) &&
-        				gAux->workPt != gAux->blankPt &&
-        			   !gAux->workPt->autopatt)
+        				aux_panel->workPt != aux_panel->blankPt &&
+        			   !aux_panel->workPt->autopatt)
                     {
-                        gAux->AuxReset();
-                        if(gAux->auto_switch == true)
+                        aux_panel->AuxReset();
+                        if(aux_panel->auto_switch == true)
                         {
-                            gAux->HandleButtDown(gAux->Vols);
+                            aux_panel->HandleButtDown(aux_panel->Vols);
                         }
                     }
                     UpdateNavBarsData();
@@ -11084,7 +10691,7 @@ void Process_LeftButtUp(int mouse_x, int mouse_y, bool dbclick, unsigned int fla
             {
                 if((M.pianokey_pressed == true))
                 {
-                    if(gAux->workPt->ptype == Patt_Pianoroll)
+                    if(aux_panel->workPt->ptype == Patt_Pianoroll)
                     {
                         M.pianokey_pressed = false;
                     }
@@ -11103,7 +10710,7 @@ void Process_LeftButtUp(int mouse_x, int mouse_y, bool dbclick, unsigned int fla
                         C.ExitToDefaultMode();
                         M.active_paramedit->Activate();
                         C.mode = CMode_JustParamEdit;
-                        C.SetPattern(field, Loc_Other);
+                        C.SetPattern(field_pattern, Loc_Other);
                         C.curParam = M.active_paramedit;
 
                         R(Refresh_KeyCursor);
@@ -11170,7 +10777,7 @@ void Process_RightButtDown(int mouse_x, int mouse_y, unsigned flags)
                         DeleteElement(el, false, false);
                         if(M.loc == Loc_SmallGrid)
                         {
-                            gAux->RescanPatternBounds();
+                            aux_panel->RescanPatternBounds();
                         }
                         M.active_elem = NULL;
                         M.skip_menu = true;
@@ -11179,7 +10786,7 @@ void Process_RightButtDown(int mouse_x, int mouse_y, unsigned flags)
                         if(M.loc == Loc_MainGrid)
                         {
                             R(Refresh_GridContent);
-                            if(gAux->isVolsPansMode())
+                            if(aux_panel->isVolsPansMode())
                             {
                                 R(Refresh_Aux);
                             }
@@ -11252,18 +10859,8 @@ void Process_RightButtDown(int mouse_x, int mouse_y, unsigned flags)
                 }
                 if(pfx->instr != NULL || pfx->trk != NULL)
                 {
-                    gAux->CheckFXString(pfx);
+                    aux_panel->CheckFXString(pfx);
                 }
-                /*
-                if(pfx->instr != NULL || pfx->trk != NULL)
-                {
-                    mix->CheckFXString(pfx);
-                }
-                if(pfx->send != NULL)
-                {
-                    pfx->send->UpdateSendMixcell();
-                    R(Refresh_Mixer);
-                }*/
                 pfx->drawarea->Change();
                 M.skip_menu = true;
             }
@@ -11291,8 +10888,8 @@ void Process_RightButtUp(int mouse_x, int mouse_y, unsigned int flags)
     {
         M.prev_x = -1;
         M.prev_y = -1;
-        gAux->prev_mouse_x = -1;
-        gAux->prev_mouse_y = -1;
+        aux_panel->prev_mouse_x = -1;
+        aux_panel->prev_mouse_y = -1;
         M.mousefix = false;
 
         DropPickedElements();
@@ -11515,33 +11112,33 @@ void Process_MouseMove(int mouse_x, int mouse_y, unsigned flags, bool left, bool
             }
 			else if(M.mmode & MOUSE_AUXING)
             {
-                if((gAux->auxmode == AuxMode_Vols || gAux->auxmode == AuxMode_Pans) &&
+                if((aux_panel->auxmode == AuxMode_Vols || aux_panel->auxmode == AuxMode_Pans) &&
                     !M.pickedup &&
                     !(M.mmode & MOUSE_SELECTING))
                 {
-                    ParamType partype = (gAux->auxmode == AuxMode_Vols) ? Param_Vol : Param_Pan;
+                    ParamType partype = (aux_panel->auxmode == AuxMode_Vols) ? Param_Vol : Param_Pan;
                     ProcessColLane(mouse_x, mouse_y, partype, Loc_MainGrid, NULL, NULL, GridX1, AuxRY1, GridX2, AuxRY2, (flags & kbd_alt) != 0);
 
                     R(Refresh_Aux);
                 }
-                else if(gAux->auxmode == AuxMode_Pattern)
+                else if(aux_panel->auxmode == AuxMode_Pattern)
                 {
                     if(!M.RMB && !(M.mmode & MOUSE_AUXAUXING))
                     {
                         int keynum;
                         float vol;
-                        M.on_keys = gAux->CheckIfMouseOnKeys(mouse_x, mouse_y, &keynum, &vol);
+                        M.on_keys = aux_panel->CheckIfMouseOnKeys(mouse_x, mouse_y, &keynum, &vol);
                         if(M.on_keys && keynum != M.pianokey_num)
                         {
                             M.pianokey_num = keynum;
                             Preview_ReleaseAll();
-                            gAux->ClickKeys();
+                            aux_panel->ClickKeys();
                         }
                     }
 
                     if(M.mmode & MOUSE_AUXAUXING)
                     {
-                        switch(gAux->ltype)
+                        switch(aux_panel->ltype)
                         {
                             case Lane_Vol:
                                 ProcessColLane(mouse_x, mouse_y, Param_Vol, Loc_SmallGrid, NULL, NULL, GridXS1, GridYS2 + 4, GridXS2, WindHeight - 4, (flags & kbd_alt) != 0);
@@ -11551,7 +11148,7 @@ void Process_MouseMove(int mouse_x, int mouse_y, unsigned flags, bool left, bool
                                 break;
                             case Lane_Pitch:
                             {
-                                Envelope* env = (Envelope*)gAux->workPt->OrigPt->pitch->paramedit;
+                                Envelope* env = (Envelope*)aux_panel->workPt->OrigPt->pitch->paramedit;
                                 M.active_env = env;
                                 M.active_env->Drag(mouse_x, mouse_y, flags);
                             }break;
@@ -11570,18 +11167,18 @@ void Process_MouseMove(int mouse_x, int mouse_y, unsigned flags, bool left, bool
                !(M.mmode & MOUSE_SLIDING) /*&&
 			    !(M.loc == Loc_SmallGrid && flags & kbd_ctrl)*/)
             {
-                MovePickedElements(mouse_x, mouse_y, flags);
+                MovePickedUpElements(mouse_x, mouse_y, flags);
 
-                if(M.pickloc == Loc_SmallGrid && !gAux->isBlank())
+                if(M.pickloc == Loc_SmallGrid && !aux_panel->isBlank())
                 {
-                    gAux->workPt->OrigPt->UpdateScaledImage();
+                    aux_panel->workPt->OrigPt->UpdateScaledImage();
                     R(Refresh_GridContent);
                 }
 
                 if(M.pickloc == Loc_MainGrid)
                 {
                     R(Refresh_GridContent);
-                    if(gAux->isVolsPansMode())
+                    if(aux_panel->isVolsPansMode())
                     {
                         R(Refresh_Aux);
                     }
@@ -11591,9 +11188,9 @@ void Process_MouseMove(int mouse_x, int mouse_y, unsigned flags, bool left, bool
                     R(Refresh_AuxContent);
                     R(Refresh_SubAux);
 
-                    if(gAux->workPt->ptype != Patt_StepSeq)
+                    if(aux_panel->workPt->ptype != Patt_StepSeq)
                     {
-                        bool changed = gAux->RescanPatternBounds();
+                        bool changed = aux_panel->RescanPatternBounds();
                         if(changed)
                         {
                             R(Refresh_Aux);
@@ -11663,7 +11260,7 @@ void Process_KeyDown(unsigned key, unsigned flags)
             if(C.loc == Loc_MainGrid)
             {
                 R(Refresh_GridContent);
-                if(gAux->auxmode == AuxMode_Vols || gAux->auxmode == AuxMode_Pans)
+                if(aux_panel->auxmode == AuxMode_Vols || aux_panel->auxmode == AuxMode_Pans)
                 {
                     R(Refresh_Aux);
                 }
@@ -11850,7 +11447,7 @@ void Process_Key_Default(unsigned key, unsigned flags)
 		}break;
         case key_f1:
         {
-            if(!(C.loc == Loc_SmallGrid && gAux->workPt->ptype == Patt_Pianoroll))
+            if(!(C.loc == Loc_SmallGrid && aux_panel->workPt->ptype == Patt_Pianoroll))
             {
                 if(flags & kbd_shift)
                 {
@@ -11890,7 +11487,7 @@ void Process_Key_Default(unsigned key, unsigned flags)
         }break;
         case key_f2:
         {
-            if(!(C.loc == Loc_SmallGrid && gAux->workPt->ptype == Patt_Pianoroll))
+            if(!(C.loc == Loc_SmallGrid && aux_panel->workPt->ptype == Patt_Pianoroll))
             {
                 if(flags & kbd_shift)
                 {
@@ -11935,7 +11532,7 @@ void Process_Key_Default(unsigned key, unsigned flags)
                 CP->HandleButtDown(CP->view_mixer);
             }
 
-            if(flags & kbd_shift && C.patt != field)
+            if(flags & kbd_shift && C.patt != field_pattern)
             {
                 if(C.patt->vol_lane_main.visible == false)
                 {
@@ -11951,7 +11548,7 @@ void Process_Key_Default(unsigned key, unsigned flags)
         }break;
         case key_f4:
         {
-            if(flags & kbd_shift && C.patt != field)
+            if(flags & kbd_shift && C.patt != field_pattern)
             {
                 if(C.patt->pan_lane_main.visible == false)
                 {
@@ -11986,23 +11583,23 @@ void Process_Key_Default(unsigned key, unsigned flags)
                 if(M.selloc == Loc_MainGrid)
                 {
                     R(Refresh_GridContent);
-                    if(gAux->isVolsPansMode())
+                    if(aux_panel->isVolsPansMode())
                     {
                         R(Refresh_Aux);
                     }
                 }
                 else if(M.selloc == Loc_SmallGrid)
                 {
-                    gAux->RescanPatternBounds();
+                    aux_panel->RescanPatternBounds();
                 }
             }
             else if(M.lastclick == LastClicked_Instrument && current_instr != NULL)
             {
                 IP->RemoveInstrument(current_instr);
                 R(Refresh_InstrPanel);
-                if(gAux->isPatternMode())
+                if(aux_panel->isPatternMode())
                 {
-                    if(gAux->workPt->ptype == Patt_StepSeq)
+                    if(aux_panel->workPt->ptype == Patt_StepSeq)
                     {
                         R(Refresh_Aux);
                     }
@@ -12011,11 +11608,11 @@ void Process_Key_Default(unsigned key, unsigned flags)
                 }
                 R(Refresh_GridContent);
             }
-            else if(M.lastclick == LastClicked_Effect && gAux->current_eff != NULL)
+            else if(M.lastclick == LastClicked_Effect && aux_panel->current_eff != NULL)
             {
-                gAux->current_eff->mixcell->mchan->drawarea->Change();
-                DeleteEffect(gAux->current_eff);
-                if(gAux->auxmode == AuxMode_Mixer)
+                aux_panel->current_eff->mixcell->mchan->drawarea->Change();
+                DeleteEffect(aux_panel->current_eff);
+                if(aux_panel->auxmode == AuxMode_Mixer)
                 {
                     R(Refresh_Aux);
                 }
@@ -12044,7 +11641,7 @@ void Process_Key_Default(unsigned key, unsigned flags)
             }
             else if(C.loc == Loc_SmallGrid)
             {
-                gAux->v_sbar->TweakByWheel(-numAuxLines, M.mouse_x, M.mouse_y);
+                aux_panel->v_sbar->TweakByWheel(-numAuxLines, M.mouse_x, M.mouse_y);
             }
         }break;
         case key_page_up:
@@ -12055,7 +11652,7 @@ void Process_Key_Default(unsigned key, unsigned flags)
             }
             else if(C.loc == Loc_SmallGrid)
             {
-                gAux->v_sbar->TweakByWheel(numAuxLines, M.mouse_x, M.mouse_y);
+                aux_panel->v_sbar->TweakByWheel(numAuxLines, M.mouse_x, M.mouse_y);
             }
         }break;
         case key_f10:
@@ -12097,13 +11694,13 @@ void Process_Char(char character, unsigned flags)
             {
                 CP->HandleButtDown(CP->play_butt);
             }
-            gAux->HandleButtDown(gAux->playbt);
+            aux_panel->HandleButtDown(aux_panel->playbt);
         }
         else
         {
-            if(gAux->playing == true)
+            if(aux_panel->playing == true)
             {
-                gAux->HandleButtDown(gAux->playbt);
+                aux_panel->HandleButtDown(aux_panel->playbt);
             }
             CP->HandleButtDown(CP->play_butt);
         }
@@ -12166,7 +11763,7 @@ void Process_Char(char character, unsigned flags)
                 SaveProject(false);
         }
     }
-    else if(C.loc == Loc_SmallGrid && gAux->workPt->ptype == Patt_Pianoroll)
+    else if(C.loc == Loc_SmallGrid && aux_panel->workPt->ptype == Patt_Pianoroll)
     {
         int note = MapKeyToNote(character, false);
         int pnum = Preview_Add(NULL, current_instr, character, note, C.patt, NULL, NULL, false, false);
@@ -12185,9 +11782,9 @@ void Process_Char(char character, unsigned flags)
         {
             C.curElem->ProcessChar(character);
             ChangesIndicate();
-            if(C.loc == Loc_SmallGrid && gAux->workPt->ptype == Patt_Grid)
+            if(C.loc == Loc_SmallGrid && aux_panel->workPt->ptype == Patt_Grid)
             {
-                gAux->RescanPatternBounds();
+                aux_panel->RescanPatternBounds();
             }
 
             if(C.loc == Loc_MainGrid)
@@ -12231,13 +11828,13 @@ void Process_Char(char character, unsigned flags)
                 }
                 else */
 
-                if(gAux->workPt == gAux->blankPt)
+                if(aux_panel->workPt == aux_panel->blankPt)
                 {
-                    gAux->CreateNew();
+                    aux_panel->CreateNew();
                 }
             }
 
-            if(C.loc == Loc_MainGrid && C.patt == field && character == 0x2B || character == 0x5F)
+            if(C.loc == Loc_MainGrid && C.patt == field_pattern && character == 0x2B || character == 0x5F)
             {
                 if(character == 0x2B)
                     InsertTrack();
@@ -12255,7 +11852,7 @@ void Process_Char(char character, unsigned flags)
                     R(Refresh_GridContent);
                 }
             }
-            else if(C.mode == CMode_NotePlacing || (C.loc == Loc_SmallGrid && gAux->workPt->ptype == Patt_StepSeq))
+            else if(C.mode == CMode_NotePlacing || (C.loc == Loc_SmallGrid && aux_panel->workPt->ptype == Patt_StepSeq))
             {
                 if(MapKeyToNote(character, false) != -1000)
                 {
@@ -12280,9 +11877,9 @@ void Process_Char(char character, unsigned flags)
                 t->ProcessChar(character);
             }
 
-            if(C.loc == Loc_SmallGrid && gAux->workPt->ptype != Patt_StepSeq)
+            if(C.loc == Loc_SmallGrid && aux_panel->workPt->ptype != Patt_StepSeq)
             {
-                gAux->RescanPatternBounds();
+                aux_panel->RescanPatternBounds();
             }
 
             if(C.loc == Loc_MainGrid)
@@ -12312,7 +11909,7 @@ void Process_WndResize(int wx, int wh)
     InstrPanelHeight = WindHeight - 1 - MainY1;
     GenBrowserHeight = WindHeight - 1 - MainY1;
     
-	if(gAux != NULL && gAux->locked == true)
+	if(aux_panel != NULL && aux_panel->locked == true)
         AuxHeight = WindHeight - MainY1 - LinerHeight - 1;
 
 	if(WindHeight - AuxHeight < GridY1)
@@ -12382,7 +11979,7 @@ void Load_Default_Instruments()
 
     ChangeCurrentInstrument(first_instr);
 
-    gAux->PopulatePatternWithInstruments(gAux->workPt->OrigPt);
+    aux_panel->PopulatePatternWithInstruments(aux_panel->workPt->OrigPt);
 
 	/*
 	Add_SoundFont("basic.sf2", "basic.sf2", "sf");
@@ -12738,37 +12335,27 @@ void Init_WorkData()
     ev0->prev = NULL;
     ev0->next = NULL;
 
-    /////////////////////
-    // Mixer
-    //mix = new Mixer;
-    //mix->InitCells();
-
     //////////////////////////////////////
     // Main field init
-    field = new Pattern(NULL, 0, -1, -1, -1, false);
-    field->start_tick = 0;
-    field->end_tick = -1;
-    field->trknum = 0;
-    field->track_line = 0;
-    field->track_line_end = 999;
-    field->num_lines = 1000;
-    field->folded = false;
-    field->OrigPt = field;
-    field->CalcTiming();
-    field->bunch_first = bunch_first;
-    field->bunch_last = bunch_last;
-    field->der_first = field->der_last = field;
+    field_pattern = new Pattern(NULL, 0, -1, -1, -1, false);
+    field_pattern->start_tick = 0;
+    field_pattern->end_tick = -1;
+    field_pattern->trknum = 0;
+    field_pattern->track_line = 0;
+    field_pattern->track_line_end = 999;
+    field_pattern->num_lines = 1000;
+    field_pattern->folded = false;
+    field_pattern->OrigPt = field_pattern;
+    field_pattern->CalcTiming();
+    field_pattern->bunch_first = bunch_first;
+    field_pattern->bunch_last = bunch_last;
+    field_pattern->der_first = field_pattern->der_last = field_pattern;
 
     Trk* td;
     for(int tc = -1; tc <= 1000; tc++)
     {
         td = new Trk();
         td->Init(tc, true);
-        if(tc >= 0 && tc <= 999)
-        {
-            //mix->trkfxstr[tc]->trk = td;
-            //mix->trkfxcell[tc] = td->mcell = &(mix->m_cell);
-        }
         Add_trkdata(td);
     }
 
@@ -12781,16 +12368,16 @@ void Init_WorkData()
     first_trkdata = first_trkdata->next;
     last_trkdata = last_trkdata->prev;
 
-    field->first_trkdata = first_trkdata;
-    field->last_trkdata = last_trkdata;
+    field_pattern->first_trkdata = first_trkdata;
+    field_pattern->last_trkdata = last_trkdata;
     //st->patt->first_trkdata = first_trkdata;
     //st->patt->last_trkdata = last_trkdata;
 
     //pbMain = new Playback();
     //pbMain->SetPlayPatt(field);
     //field->pbk = pbMain;
-    field->AddPlayback();
-    pbkMain = field->pbk;
+    field_pattern->AddPlayback();
+    pbkMain = field_pattern->pbk;
 
     /* -- Postponed     */
     st = new StaticArea();
@@ -12881,7 +12468,7 @@ void Init_WorkData()
     if(!fsamples.exists())
         fsamples.createDirectory();
 
-    C.SetPattern(field, Loc_MainGrid);
+    C.SetPattern(field_pattern, Loc_MainGrid);
     C.SetPos(8, 4);
 
     //////////////////////////////////////////
@@ -12898,8 +12485,8 @@ void Init_WorkData()
 
     /////////////////////
     // Aux
-    gAux = new Aux();
-    auxPatternSet = NULL;
+    aux_panel = new Aux();
+    aux_Pattern = NULL;
     pbkAux = new Playback();
     pbkAux->SetLooped(true);
     AuxPos2MainPos();
@@ -12909,12 +12496,12 @@ void Init_WorkData()
     // Control panel
     CP = new CtrlPanel;
 
-	genBrw = new Browser(szWorkingDirectory, Brw_Generators);
+    genBrw = new Browser(szWorkingDirectory, Brw_Generators);
     genBrw->SetViewMask(FTYPE_UNKNOWN | FType_VST | FType_Native | FType_Wave | FType_Projects);
 
     mixBrw = new Browser(szWorkingDirectory, Brw_Effects);
     // Assign mixer buttons row to control panel for correct handling
-    mixBrw->ShowFiles->panel = mixBrw->ShowParams->panel = mixBrw->ShowPresets->panel = mixBrw->ShowExternalPlugs->panel = mixBrw->HideTrackControls->panel = gAux;
+    mixBrw->ShowFiles->panel = mixBrw->ShowParams->panel = mixBrw->ShowPresets->panel = mixBrw->ShowExternalPlugs->panel = mixBrw->HideTrackControls->panel = aux_panel;
     mixBrw->CurrButt = mixBrw->ShowExternalPlugs;
     //mixBrw->CurrButt->pressed = false;
     mixBrw->SetViewMask(FTYPE_UNKNOWN | FType_VST | FType_Native);
@@ -12967,6 +12554,8 @@ void Init_WorkData()
     Grid2Main();
 
     UpdateNavBarsData();
+
+    MakeCoolVUFallDownEffectYo();
 }
 
 //// Here interface graphical coordinates are initialized
@@ -13437,7 +13026,7 @@ void ReleaseDataOnExit()
     PortAudio_Deinit();
 #endif
 
-    gAux->current_eff = NULL;
+    aux_panel->current_eff = NULL;
     Eff* pEffect = first_eff;
     Eff* pTempEff = NULL;
     while (pEffect != NULL)
@@ -14055,41 +13644,6 @@ static void MakeASplash()
 }
 #endif /* SPLASH_SCREEN == TRUE */
 
-bool DelegateWndProc(HWND hWnd,UINT message, WPARAM wParam, LPARAM lParam)
-{
-    bool ret_val = false;
-
-    switch (message)
-    {
-        case WM_VST_PLUGEDITOR_CLOSED:
-        {
-            Instrument *pInstr = first_instr;
-
-            while (pInstr != NULL)
-            {
-                if (pInstr->type == Instr_VSTPlugin)
-                {
-                    VSTGenerator *pGen = (VSTGenerator*)pInstr;
-                    CVSTPlugin* pSentPlug = (CVSTPlugin*)lParam;
-
-                    if (pGen->pEff->pPlug == pSentPlug)
-                    {
-                        pGen->window->MouseClick();
-                        break;
-                    }
-                }
-                pInstr = pInstr->next;
-            }
-        }break;
-
-        default:
-        {
-            int a = 1;
-        }break;
-    }
-    return ret_val;
-}
-
 //==============================================================================
 /** This is the application object that is started up when Juce starts. It handles
     the initialisation and shutdown of the whole application.
@@ -14264,7 +13818,6 @@ public:
         MC->listen->UpdatePosData();
         MC->listen->UpdateRects();
         MC->resized();
-        awfulWindow->SetWindowDelegate((void*)DelegateWndProc);
 
         LookAndFeel& lkf = awfulWindow->getLookAndFeel();
         lkf.setUpDownImages(img_closew1, img_closew2);

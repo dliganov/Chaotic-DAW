@@ -90,10 +90,10 @@ void Trk::Init(int track_num, bool controls)
         mute->SetHint("Mute track\0");
         solo->SetHint("Solo track\0");
 
-        AddNewControl(pan, mix);
-        AddNewControl(vol, mix);
-        AddNewControl(mute, mix);
-        AddNewControl(solo, mix);
+        AddNewControl(pan, NULL);
+        AddNewControl(vol, NULL);
+        AddNewControl(mute, NULL);
+        AddNewControl(solo, NULL);
     }
 
     vol_lane = Lane(false, 3, Lane_Vol);
@@ -135,7 +135,7 @@ bool Lane::CheckMouse(int mouse_x, int mouse_y)
         M.active_lane = type;
         return true;
     }
-    else if(mouse_y <= y && mouse_y > (y - height*(M.loc != Loc_SmallGrid ? lineHeight : gAux->lineHeight)))
+    else if(mouse_y <= y && mouse_y > (y - height*(M.loc != Loc_SmallGrid ? lineHeight : aux_panel->lineHeight)))
     {
         M.mmode |= MOUSE_LANEAUXING;
         M.active_lane = type;
@@ -179,7 +179,7 @@ TrkBunch* CheckIfTrackBunched(int trk_num, Pattern* pt)
 
 int GetActualTrack(int trk_num)
 {
-    TrkBunch* tb = CheckIfTrackBunched(trk_num, field);
+    TrkBunch* tb = CheckIfTrackBunched(trk_num, field_pattern);
     if(tb != NULL)
     {
         return tb->start_track;
@@ -194,14 +194,14 @@ void InsertTrack()
     while(elem != NULL)
     {
         elemnext = elem->next;
-        if(elem->patt == field)
+        if(elem->patt == field_pattern)
         {
             if(elem->trknum == 999)
             {
                 elemnext = NextElementToDelete(elem);
                 DeleteElement(elem, true, true);
             }
-            else if(elem->trknum >= C.trknum && elem->patt == field)
+            else if(elem->trknum >= C.trknum && elem->patt == field_pattern)
             {
                 elem->Move(0, 1);
             }
@@ -220,7 +220,7 @@ void InsertTrack()
 
     if(trk->prev->buncho == true)
     {
-        Remove_Bunch(trk->trkbunch, field);
+        Remove_Bunch(trk->trkbunch, field_pattern);
     }
 
 	trk->trknum = C.trknum;
@@ -288,10 +288,10 @@ void InsertTrack()
 	}
     C.trk = trk;
 
-    field->first_trkdata = first_trkdata;
-    field->last_trkdata = last_trkdata;
+    field_pattern->first_trkdata = first_trkdata;
+    field_pattern->last_trkdata = last_trkdata;
 
-    UpdateAllElements(field);
+    UpdateAllElements(field_pattern);
 }
 
 void DeleteTrack()
@@ -301,7 +301,7 @@ void DeleteTrack()
     while(elem != NULL)
     {
 		elemnext = elem->next;
-        if(elem->patt == field)
+        if(elem->patt == field_pattern)
         {
             if(elem->trknum == C.trknum)
             {
@@ -321,7 +321,7 @@ void DeleteTrack()
     {
         if(trk->next->bunchito == true)
         {
-            Remove_Bunch(trk->trkbunch, field);
+            Remove_Bunch(trk->trkbunch, field_pattern);
         }
         else
         {
@@ -400,10 +400,10 @@ void DeleteTrack()
 		first_trkdata = C.trk;
 	}
 
-    field->first_trkdata = first_trkdata;
-    field->last_trkdata = last_trkdata;
+    field_pattern->first_trkdata = first_trkdata;
+    field_pattern->last_trkdata = last_trkdata;
 
-    UpdateAllElements(field);
+    UpdateAllElements(field_pattern);
 }
 
 int GetTrkNumForLine(int line, Pattern* pt)
@@ -567,12 +567,12 @@ void Bunch_Tracks(int y1, int y2)
 
 void AdvanceTracks(Trk* trkdata, int num, Pattern* pt)
 {
-    if(pt == field)
+    if(pt == field_pattern)
     {
         Element* elem = firstElem;
         while(elem != NULL)
         {
-            if(elem->patt == field && elem->trknum >= trkdata->trknum)
+            if(elem->patt == field_pattern && elem->trknum >= trkdata->trknum)
             {
                 if(elem->type == El_Pattern)
                 {

@@ -51,8 +51,6 @@ extern int      s_Tick2X(float tick);
 extern void     AuxCheck();
 extern bool     CheckPlaneCrossing(int x1, int y1, int x2, int y2, int a1, int b1, int a2, int b2);
 extern float    MapItem2Quant(MItemType itype);
-extern Mixcell* GetMixcellFromFXString(DigitStr* dfxstr);
-extern bool     CheckMixcellLoop(Mixcell* mc, Mixcell* outmc);
 extern void     GetOriginalInstrumentAlias(const char* name, char* alias);
 extern void     GetOriginalInstrumentName(const char* name, char* newname);
 extern bool     AuxCheckPosData(int* posX);

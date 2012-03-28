@@ -122,7 +122,7 @@ extern float	tickWidth;
 extern bool         mixbrowse;
 extern CtrlPanel*   CP;
 extern Browser*     mixBrw;
-extern Aux*         gAux;
+extern Aux*         aux_panel;
 
 extern int          CtrlPanelXRange;
 extern int		    NavHeight;

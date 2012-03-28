@@ -25,7 +25,7 @@ void EffWindowClick(Object* owner, Object* self);
 //=================================================================================================
 Eff::Eff(Mixcell* mc)
 {
-    x = y = w = h = 1;
+    x = y = width = height = 1;
     folded = true;
     bypass = false;
     off = false;
@@ -146,7 +146,7 @@ void Eff::SetNewMixcell(Mixcell* ncell)
 
 void Eff::EnqueueParamEnvelopeTrigger(Trigger* tg)
 {
-    tg->tworking = true;
+    tg->tgworking = true;
     if(envelopes != NULL)
     {
         envelopes->group_next = tg;
@@ -466,167 +466,6 @@ void Gain::ProcessData(float* in_buff, float* out_buff, int num_frames)
 void Gain::ParamUpdate(Parameter* param)
 {
     v_level->SetValue(this->level->outval);
-}
-
-//=================================================================================================
-//                             Send Class Implementation
-//=================================================================================================
-
-Send::Send(Mixcell* mc, AliasRecord* ar) : Eff(mc)
-{
-    type = EffType_Send;
-    strcpy(name, "Send");
-    strcpy(this->preset_path, ".\\Presets\\Send\\");
-    strcpy(this->path,"internal://send");
-    uniqueID = MAKE_FOURCC('S','E','N','D');
-
-    arec = ar;
-
-    amount = new Parameter(0.0f, 0.0f, 1.0f, Param_Default);
-    amount->SetName("amount");
-    AddParam(amount);
-
-    r_amount = new Knob(10, amount, NULL, &scope, Knob_XLarge);
-    amount->AddControl(r_amount);
-
-    vstr_amount = new ValueString(VStr_Default);
-    amount->vstring = vstr_amount;
-
-    AddNewControl(r_amount, NULL);
-
-    send_mixcell = NULL;
-
-    fxstr = new DigitStr("--");
-    fxstr->num_digits = 2;
-    fxstr->send = this;
-    fxstr->highlightable = false;
-    Add_PEdit(fxstr);
-
-    ParamUpdate();
-}
-
-Send::~Send()
-{
-    if(send_mixcell != NULL && (mixcell->num_active_inputs > 0 || mixcell->queued == true))
-    {
-        WaitForSingleObject(mix->hMixMutex, INFINITE);
-		if(send_mixcell != NULL && mixcell->ReceivingSignal())
-		{
-			send_mixcell->Unpromote();
-		}
-        ReleaseMutex(mix->hMixMutex);
-    }
-
-    delete vstr_amount;
-    Remove_PEdit(fxstr);
-}
-
-Send* Send::Clone(Mixcell* mc)
-{
-    Send* clone = new Send(mc, arec);
-    clone->amount->SetNormalValue(amount->val);
-    strcpy(clone->fxstr->digits, fxstr->digits);
-    clone->UpdateSendMixcell();
-    clone->ParamUpdate();
-
-	return clone;
-}
-
-void Send::ProcessData(float* in_buff, float* out_buff, int num_frames)
-{
-    memcpy(out_buff, in_buff, num_frames*sizeof(float)*2);
-
-    float* out_p = out_buff;
-    int i = 0;
-    while(i < num_frames)
-    {
-       *out_p = amount->outval*(*out_p++);
-       *out_p = amount->outval*(*out_p++);
-        i++;
-    }
-}
-
-void Send::ParamUpdate(Parameter* param)
-{
-	vstr_amount->SetValue(amount->outval);
-}
-
-void Send::UpdateSendMixcell()
-{
-    WaitForSingleObject(mix->hMixMutex, INFINITE);
-
-    Mixcell* oldmc = send_mixcell;
-    if(send_mixcell != NULL && mixcell->ReceivingSignal())
-    {
-        send_mixcell->Unpromote();
-    }
-    send_mixcell = GetMixcellFromFXString(fxstr);
-    if(CheckMixcellLoop(mixcell, send_mixcell) == true || send_mixcell == &mix->m_cell)
-    {
-        send_mixcell = NULL;
-    }
-    if(send_mixcell != NULL && mixcell->ReceivingSignal())
-    {
-        send_mixcell->Promote();
-    }
-
-    ReleaseMutex(mix->hMixMutex);
-}
-
-void Send::SetNewMixcell(Mixcell* ncell)
-{
-    WaitForSingleObject(mix->hMixMutex, INFINITE);
-
-    if(send_mixcell != NULL && mixcell->ReceivingSignal())
-    {
-        send_mixcell->Unpromote();
-    }
-    mixcell = ncell;
-    send_mixcell = GetMixcellFromFXString(fxstr);
-    if(CheckMixcellLoop(mixcell, send_mixcell) == true || send_mixcell == &mix->m_cell)
-    {
-        send_mixcell = NULL;
-    }
-    if(send_mixcell != NULL && mixcell->ReceivingSignal())
-    {
-        send_mixcell->Promote();
-    }
-
-    ReleaseMutex(mix->hMixMutex);
-}
-
-void Send::Disable()
-{
-    fxstr->Deactivate();
-}
-
-void Send::Enable()
-{
-    fxstr->Activate();
-}
-
-void Send::QueueDeletion()
-{
-    Eff::QueueDeletion();
-    fxstr->Deactivate();
-}
-
-void Send::SaveCustomStateData(XmlElement & xmlParentNode)
-{
-    XmlElement * xmlCustomData = new XmlElement(T("SendData"));
-    xmlCustomData->setAttribute(T("TargetCellIndex"),this->fxstr->digits);
-    xmlParentNode.addChildElement(xmlCustomData);
-}
-
-void Send::RestoreCustomStateData(XmlElement & xmlStateNode)
-{
-    if (xmlStateNode.hasTagName(T("SendData")))
-    {
-        String StrName = xmlStateNode.getStringAttribute(T("TargetCellIndex"));
-        StrName.copyToBuffer(this->fxstr->digits, min(StrName.length(), 3 - 1));
-        UpdateSendMixcell();
-        R(Refresh_Mixer);
-    }
 }
 
 //=================================================================================================
@@ -3310,7 +3149,7 @@ bool VSTEffect::OnUpdateDisplay()
     Preset* pNewPreset = NULL;
 
     UpdatePresets();
-    if ((this->category == EffCategory_Effect) && (gAux->current_eff == this))
+    if ((this->category == EffCategory_Effect) && (aux_panel->current_eff == this))
     {
         if(mixbrowse && mixBrw->brwmode == Browse_Presets)
         {
@@ -3341,7 +3180,7 @@ bool VSTEffect::OnUpdateDisplay()
         this->CurrentPreset = pNewPreset;
 
         // Find out what browser to re-fresh and whether we really need to refresh anything
-        if ((this->category == EffCategory_Effect) && (gAux->current_eff == this))
+        if ((this->category == EffCategory_Effect) && (aux_panel->current_eff == this))
         {
             mixBrw->UpdateCurrentHighlight();
         }

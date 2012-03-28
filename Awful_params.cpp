@@ -221,7 +221,7 @@ void Parameter::HandleRecordingFromControl(float ctrlval)
             }
             otherparam = otherparam->rec_next;
         }*/
-        C.SetPattern(field, Loc_MainGrid);
+        C.SetPattern(field_pattern, Loc_MainGrid);
         C.SetPos(float(Frame2Tick(pbkMain->currFrame_tsync)), cline);
 
         cmdenv = CreateCommandFromParam(this);
@@ -413,7 +413,7 @@ void Parameter::Reinit()
 
 void Parameter::EnqueueEnvelopeTrigger(Trigger* tg)
 {
-    tg->tworking = true;
+    tg->tgworking = true;
     if(envelopes != NULL)
     {
         envelopes->group_next = tg;

@@ -1473,7 +1473,7 @@ void ListeningComponent::Redraw(int redraw)
 
         if(redraw & Refresh_Aux)
         {
-            if(gAux->auxmode == AuxMode_Mixer)
+            if(aux_panel->auxmode == AuxMode_Mixer)
             {
                 repaint(mixX, mixY, mixW, mixH);
                 repaint(MainX2, mixY, MixCenterWidth + 2, mixH);
@@ -1675,7 +1675,7 @@ void ListeningComponent::CheckAndRedraw()
         {
             J_Aux(imG);
 
-            if(gAux->auxmode == AuxMode_Mixer)
+            if(aux_panel->auxmode == AuxMode_Mixer)
                 J_MixCenter(imG);
 
             if(maincomp->refresh & Refresh_AuxContent)
@@ -1685,7 +1685,7 @@ void ListeningComponent::CheckAndRedraw()
             if(maincomp->refresh & Refresh_AuxScale)
                 maincomp->refresh &= ~Refresh_AuxGrid;
         }
-        else if(gAux->auxmode == AuxMode_Pattern)
+        else if(aux_panel->auxmode == AuxMode_Pattern)
         {
             if(maincomp->refresh & Refresh_PianoKeys)
             {
@@ -1904,11 +1904,11 @@ void Posiator::initTimer(int interval)
     currPlayX_f = pbkMain->currFrame_tsync/framesPerPixel;
     //currPlayX_f = pbMain->currFrame/framesPerPixel;
     currPlayX = int(currPlayX_f);
-    if(gAux->workPt != gAux->blankPt)
+    if(aux_panel->workPt != aux_panel->blankPt)
     {
-        gAux->curr_play_x_f = (pbkAux->currFrame_tsync - gAux->workPt->frame)/gAux->frames_per_pixel;
+        aux_panel->curr_play_x_f = (pbkAux->currFrame_tsync - aux_panel->workPt->frame)/aux_panel->frames_per_pixel;
         //gAux->curr_play_x_f = (pbAux->currFrame - gAux->workPt->frame)/gAux->frames_per_pixel;
-        gAux->curr_play_x = int(gAux->curr_play_x_f);
+        aux_panel->curr_play_x = int(aux_panel->curr_play_x_f);
     }
 }
 
@@ -1919,7 +1919,7 @@ void Posiator::ScheduleRefresh()
 
 void Posiator::timerCallback()
 {
-    if((Playing || gAux->playing))
+    if((Playing || aux_panel->playing))
     {
         if(Playing)
         {
@@ -1930,13 +1930,13 @@ void Posiator::timerCallback()
                 pbkMain->currFrame_tsync = pbkMain->rng_start_frame;
             }
 
-            if(gAux->workPt != gAux->blankPt && gAux->workPt->autopatt == false)
+            if(aux_panel->workPt != aux_panel->blankPt && aux_panel->workPt->autopatt == false)
             {
                 pbkAux->currFrame_tsync = pbkMain->currFrame_tsync;
             }
         }
 
-        if(gAux->playing)
+        if(aux_panel->playing)
         {
             pbkAux->currFrame_tsync += add;
             if(pbkAux->tsync_block && pbkAux->currFrame_tsync > pbkAux->rng_end_frame)
@@ -1945,7 +1945,7 @@ void Posiator::timerCallback()
                 pbkAux->currFrame_tsync = pbkAux->rng_start_frame;
             }
 
-            if(gAux->workPt->autopatt == false)
+            if(aux_panel->workPt->autopatt == false)
             {
                 pbkMain->currFrame_tsync = pbkAux->currFrame_tsync;
             }
@@ -1955,11 +1955,11 @@ void Posiator::timerCallback()
         currPlayX_f = pbkMain->currFrame_tsync/framesPerPixel;
         //currPlayX_f = pbMain->currFrame/framesPerPixel;
         currPlayX = int(currPlayX_f);
-        if(gAux->workPt != gAux->blankPt)
+        if(aux_panel->workPt != aux_panel->blankPt)
         {
-            gAux->curr_play_x_f = (pbkAux->currFrame_tsync - gAux->workPt->frame)/gAux->frames_per_pixel;
+            aux_panel->curr_play_x_f = (pbkAux->currFrame_tsync - aux_panel->workPt->frame)/aux_panel->frames_per_pixel;
             //gAux->curr_play_x_f = (pbAux->currFrame - gAux->workPt->frame)/gAux->frames_per_pixel;
-            gAux->curr_play_x = int(gAux->curr_play_x_f);
+            aux_panel->curr_play_x = int(aux_panel->curr_play_x_f);
         }
 
         float currtick = Frame2Tick(pbkMain->currFrame_tsync);
@@ -2015,7 +2015,7 @@ void Posiator::timerCallback()
                     }
                     recparam->lastrecpnt = newpnt;
 
-                    if(recparam->cmdenv->patt == field)
+                    if(recparam->cmdenv->patt == field_pattern)
                     {
                         R(Refresh_GridContent);
                         refreshcontent = true;

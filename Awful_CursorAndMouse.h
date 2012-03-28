@@ -175,7 +175,6 @@ public:
     void PosCheck(int mx, int my);
     void CheckGridStuff(int mx, int my);
     void CheckGridElements(int mx, int my);
-    void CheckMixerStuff(int mx, int my);
     void CheckAuxMixerStuff(int mx, int my);
     void* IsMouseOnBunch(int mx, int my);
     bool IsMouseOnMixer(int mx, int my);

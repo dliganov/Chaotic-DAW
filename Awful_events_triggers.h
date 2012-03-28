@@ -9,12 +9,12 @@ public:
     Event*      ev;
     Element*    el;
     Pattern*    patt;
-    bool        activator;  // Whether this trigger activates or deactivates something
+    bool        activator;  // Whether this trigger activates or deactivates an element
     bool        muted;
-    bool        broken;     // Interrupted by break
+    bool        broken;     // Interrupted by break or other symbol
     int         voicenum;
 
-    // Antialiasing suite
+    // Antialiasing helper variables
     float       auxbuff[1024];
     bool        aaIN;
     bool        aaOUT;
@@ -31,18 +31,18 @@ public:
 
     Trigger*    tgact;  // reference to the activator if this is a deactivator, otherwise NULL
     bool        outsync;   // When this trigger is outsync'ed with playback (per lining for example)
-    bool        tworking;
+    bool        tgworking;
     bool        toberemoved;
     bool        globallisted;
-    Pattern*    ai;     // Autopattern instance for this trigga
+    Pattern*    apatt_instance;     // Autopattern instance for this trigga
     Trk*        trkdata;
     double      wt_pos;     // Wavetable position integer
-    long		frame_phase;
+    long        frame_phase;
 
-    double		sec_phase;
-    double		sec_phase1;
-    double		sec_phase2;
-    double		sec_phase3;
+    double      sec_phase;
+    double      sec_phase1;
+    double      sec_phase2;
+    double      sec_phase3;
     float       envVal1;
     float       envVal2;
     float       envVal3;
@@ -54,11 +54,11 @@ public:
     EnvPnt*     ep3;
     EnvPnt*     ep4;
     EnvPnt*     ep5;
-    double		env_phase1;
-    double		env_phase2;
-    double		env_phase3;
-    double		env_phase4;
-    double		env_phase5;
+    double      env_phase1;
+    double      env_phase2;
+    double      env_phase3;
+    double      env_phase4;
+    double      env_phase5;
 
     TgState     tgstate;
     float       vol_val;
@@ -79,10 +79,10 @@ public:
     Trigger*    first_tgslide;
     Trigger*    tgsactive;
     Trigger*    tgsparent;
-    Trigger*    tgvolloc;   // Local volume trigger reference
     int         tgsactnum;
+
     //////////////////////////////////////
-    // Clamps
+    // Linked list pointers
     //////////////////////////////////////
     Trigger*    act_prev; // Global active list
     Trigger*    act_next;
@@ -198,7 +198,7 @@ extern void             ActivateSymbolTrigger(Trigger* efftg);
 extern void             DeactivatePlayback(Playback* pbk);
 extern void             ActivatePlayback(Playback* pbk);
 extern void             DisableAllPlaybacks();
-extern void             AddAutoInstance(Trigger* tg, Instance* ii, bool add);
+extern void             AddAutopatternInstance(Trigger* tg, Instance* ii, bool add);
 extern void             SetMixcell4Trigger(Trigger* tg);
 extern void             SetMixChannel4Trigger(Trigger* tg);
 extern void             PreInitEnvelopes(tframe frame, Pattern* pt, Event* firstev, bool activate_env, bool paraminit = true);

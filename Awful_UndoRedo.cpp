@@ -177,10 +177,10 @@ void UndoManagerC::Unperform(Action* act)
             Element* el = (Element*)act->adata1;
             SoftUnDelete(el);
 
-            if(el->patt == field)
+            if(el->patt == field_pattern)
             {
                 R(Refresh_GridContent);
-                if(gAux->isVolsPansMode())
+                if(aux_panel->isVolsPansMode())
                 {
                     R(Refresh_Aux);
                 }
@@ -196,10 +196,10 @@ void UndoManagerC::Unperform(Action* act)
             Element* el = (Element*)act->adata1;
             SoftDelete(el, true);
 
-            if(el->patt == field)
+            if(el->patt == field_pattern)
             {
                 R(Refresh_GridContent);
-                if(gAux->isVolsPansMode())
+                if(aux_panel->isVolsPansMode())
                 {
                     R(Refresh_Aux);
                 }
@@ -221,7 +221,7 @@ void UndoManagerC::Unperform(Action* act)
             pt->OrigPt->UpdateScaledImage();
 
             R(Refresh_GridContent);
-            if(gAux->auxmode == AuxMode_Pattern)
+            if(aux_panel->auxmode == AuxMode_Pattern)
             {
                 R(Refresh_Aux);
             }
@@ -234,11 +234,11 @@ void UndoManagerC::Unperform(Action* act)
 
             el->Move(-dtick, -dline);
 
-            if(el->patt == field)
+            if(el->patt == field_pattern)
             {
                 R(Refresh_GridContent);
-                if(gAux->auxmode == AuxMode_Vols ||
-                   gAux->auxmode == AuxMode_Pans)
+                if(aux_panel->auxmode == AuxMode_Vols ||
+                   aux_panel->auxmode == AuxMode_Pans)
                 {
                     R(Refresh_Aux);
                 }
@@ -257,8 +257,8 @@ void UndoManagerC::Unperform(Action* act)
             param->SetNormalValue(val1);
 
             //R(Refresh_GridContent);
-            if(gAux->auxmode == AuxMode_Vols ||
-               gAux->auxmode == AuxMode_Pans)
+            if(aux_panel->auxmode == AuxMode_Vols ||
+               aux_panel->auxmode == AuxMode_Pans)
             {
                 R(Refresh_Aux);
             }
@@ -283,14 +283,14 @@ void UndoManagerC::Unperform(Action* act)
 
             el->Update();
 
-            if(el->patt == field)
+            if(el->patt == field_pattern)
             {
                 R(Refresh_GridContent);
-                if(gAux->workPt == el)
+                if(aux_panel->workPt == el)
                 {
                     pbkAux->AlignRangeToPattern();
                 }
-                if(gAux->auxmode != AuxMode_Pattern || gAux->workPt == el)
+                if(aux_panel->auxmode != AuxMode_Pattern || aux_panel->workPt == el)
                 {
                     R(Refresh_Aux);
                 }
@@ -314,10 +314,10 @@ void UndoManagerC::Perform(Action* act)
             jassert(el->deleted == false);
             SoftDelete(el, false);
 
-            if(el->patt == field)
+            if(el->patt == field_pattern)
             {
                 R(Refresh_GridContent);
-                if(gAux->auxmode == AuxMode_Vols || gAux->auxmode == AuxMode_Pans)
+                if(aux_panel->auxmode == AuxMode_Vols || aux_panel->auxmode == AuxMode_Pans)
                 {
                     R(Refresh_Aux);
                 }
@@ -333,11 +333,11 @@ void UndoManagerC::Perform(Action* act)
             Element* el = (Element*)act->adata1;
             SoftUnDelete(el);
 
-            if(el->patt == field)
+            if(el->patt == field_pattern)
             {
                 R(Refresh_GridContent);
-                if(gAux->auxmode == AuxMode_Vols ||
-                   gAux->auxmode == AuxMode_Pans)
+                if(aux_panel->auxmode == AuxMode_Vols ||
+                   aux_panel->auxmode == AuxMode_Pans)
                 {
                     R(Refresh_Aux);
                 }
@@ -360,7 +360,7 @@ void UndoManagerC::Perform(Action* act)
             pt->OrigPt->UpdateScaledImage();
 
             R(Refresh_GridContent);
-            if(gAux->auxmode == AuxMode_Pattern)
+            if(aux_panel->auxmode == AuxMode_Pattern)
             {
                 R(Refresh_Aux);
             }
@@ -373,11 +373,11 @@ void UndoManagerC::Perform(Action* act)
 
             el->Move(dtick, dline);
 
-            if(el->patt == field)
+            if(el->patt == field_pattern)
             {
                 R(Refresh_GridContent);
-                if(gAux->auxmode == AuxMode_Vols ||
-                   gAux->auxmode == AuxMode_Pans)
+                if(aux_panel->auxmode == AuxMode_Vols ||
+                   aux_panel->auxmode == AuxMode_Pans)
                 {
                     R(Refresh_Aux);
                 }
@@ -396,7 +396,7 @@ void UndoManagerC::Perform(Action* act)
             param->SetNormalValue(val2);
 
             //R(Refresh_GridContent);
-            if(gAux->isVolsPansMode())
+            if(aux_panel->isVolsPansMode())
             {
                 R(Refresh_Aux);
             }
@@ -421,16 +421,16 @@ void UndoManagerC::Perform(Action* act)
 
             el->Update();
 
-            if(el->patt == field)
+            if(el->patt == field_pattern)
             {
                 R(Refresh_GridContent);
-                if(gAux->workPt == el)
+                if(aux_panel->workPt == el)
                 {
 					if(!(Looping_Active == true && M.looloc == Loc_SmallGrid))
 						pbkAux->AlignRangeToPattern();
                     R(Refresh_AuxGrid);
 				}
-                if(gAux->isVolsPansMode() && el->type == El_SlideNote)
+                if(aux_panel->isVolsPansMode() && el->type == El_SlideNote)
                 {
                     R(Refresh_Aux);
                 }

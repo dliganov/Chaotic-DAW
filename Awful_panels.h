@@ -323,69 +323,10 @@ public:
     MixChannel* mchan;
 
     Mixcell();
-    void ConnectInputCell(Mixcell* mc);
-    void Disconnect();
-    void RenderIn2Out(int num_frames);
-    void Update();
     void UpdateIndexStr();
-    void Clean();
     void Enable();
     void Disable();
     void HandleToggle(Toggle* tg);
-    void Promote();
-    void Unpromote();
-    bool ReceivingSignal();
-};
-
-class Mixer : public Panel
-{
-public:
-    Mixcell         r_cell[NUM_MIXER_COLUMNS][NUM_MIXER_ROWS];
-    Mixcell         f_cell[NUM_MIXER_COLUMNS];
-    Mixcell         o_cell[NUM_MASTER_CELLS];
-    Mixcell         m_cell;
-    DigitStr*       trkfxstr[1000];
-    Mixcell*        trkfxcell[1000];
-    DigitStr*       first_mixstr;
-    DigitStr*       last_mixstr;
-    Mixcell*        first_initial_mix_cell;
-    Mixcell*        last_initial_mix_cell;
-    Mixcell*        first_working;
-    Mixcell*        last_working;
-    ScrollBard*     horiz_bar;
-    ScrollBard*     vert_bar;
-    int             v_offs;
-    int             full_height;
-    Scope           trkscope;
-    bool            visible;
-    Mixcell*        current_mixcell;
-    int             last_mainx2;
-    float           master_offset;
-    HANDLE          hMixMutex;
-
-    Mixer();
-    bool    CheckPos4Control(int mouse_x, int mouse_y);
-    void    Update();
-    void    UnpromoteMixcell(Mixcell* mc);
-    void    PromoteMixcell(Mixcell* mc);
-    void    PromotePaths();
-    void    UnpromotePaths();
-    void    UpdatePaths();
-    void    EnqueueMixcell(Mixcell* mc);
-    void    DequeueMixcell(Mixcell* mc);
-    void    MixCellsToMaster(int num_frames);
-    void    FadeOutCells(int num_frames, int fpb);
-    void    ProcessMasterCells(int num_frames);
-    void    InitCells();
-    //void    ResetTrackControls();
-    void    AddEffectFromBrowser(FileData * fdi, Mixcell* mcell);
-    void    AddEffectFromBrowser(FileData * fdi, MixChannel* mchan);
-    void    AddMixstr(DigitStr*);
-    void    RemoveMixstr(DigitStr*);
-    void    CheckFXString(DigitStr*);
-    void    PreInitialize();
-    void    AssignWorkingCellsToInitialCells();
-    void    Click(int mouse_x, int mouse_y, bool dbclick, unsigned flags);
 };
 
 class InstrPanel : public Panel
@@ -577,9 +518,6 @@ public:
     ButtFix*    PR12;
     ButtFix*    CurrPR;
     ButtFix*    PattExpand;
-    Butt*       AccCenter;
-    Butt*       AccGrid;
-    Butt*       AccMixer;
     bool        auto_switch;
     Toggle*     autoswitch;
     bool        relative_oct;

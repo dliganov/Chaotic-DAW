@@ -21,22 +21,19 @@ Instrument::Instrument()
 {
     dereferenced = false;
     buff2 = buff3 = false;
-    env_update = false;
     alias = NULL;
-    alimg = NULL;
+    alias_image = NULL;
     envelopes = NULL;
     tg_first = tg_last = NULL;
-    VLocEnv = NULL;
-    PLocEnv = NULL;
-    VEnv = NULL;
-    PEnv = NULL;
+    envVol = NULL;
+    envPan = NULL;
     memset(name, 0, MAX_NAME_STRING);
     memset(path, 0, MAX_PATH_STRING);
     index = -1;
 
     scope.instr = this;
 
-    last_length = 4;
+    last_note_length = 4;
     last_vol = 1;
     last_pan = 0;
 
@@ -52,14 +49,9 @@ Instrument::Instrument()
     cfsP = 0;
 
     folded = false;
-    fold = new Toggle(&folded, &scope);
-    fold->panel = IP;
-    layout_visible = true;
-    layout = NULL;
-    //layout = new Toggle(NULL, &layout_visible);
-    //AddNewControl(layout, NULL);
-    window_visible = false;
-    window = new Toggle(this, Toggle_Window);
+    fold_toggle = new Toggle(&folded, &scope);
+    fold_toggle->panel = IP;
+
     mpan = new SliderHPan(NULL, &scope);
     mpan->SetHint("Instrument panning");
     params->pan->AddControl(mpan);
@@ -72,36 +64,25 @@ Instrument::Instrument()
     mute->SetHint("Mute instrument");
     solo = new Toggle(this, Toggle_Solo);
     solo->SetHint("Solo instrument");
-    AddNewControl(fold, IP);
+    AddNewControl(fold_toggle, IP);
     AddNewControl(mpan, NULL);
     AddNewControl(mvol, NULL);
     AddNewControl(mute, NULL);
     AddNewControl(solo, NULL);
-    AddNewControl(window, NULL);
 
-    autopt = new  Butt(false);
-    autopt->SetOnClickHandler(&EditButtonClick);
-    autopt->owner = (Object*)(this);
-    autopt->instr = this;
-    autopt->SetHint("Edit autopattern");
-    AddNewControl(autopt, IP);
-
-    this->pEditButton = new ButtFix(false);
-    this->pEditButton->scope = &scope;
-    this->pEditButton->instr = this;
-    this->pEditButton->SetTitle("Edit");
-    this->pEditButton->SetHint("Show editor window");
-    this->pEditButton->SetOnClickHandler(&GenWindowToggleOnClick);
-    this->pEditButton->owner = (Object*)(this);
-    AddNewControl((Control*)(this->pEditButton), IP);
+    this->pEditorButton = new ButtFix(false);
+    this->pEditorButton->scope = &scope;
+    this->pEditorButton->instr = this;
+    this->pEditorButton->SetTitle("Edit");
+    this->pEditorButton->SetHint("Show editor window");
+    this->pEditorButton->SetOnClickHandler(&GenWindowToggleOnClick);
+    this->pEditorButton->owner = (Object*)(this);
+    AddNewControl((Control*)(this->pEditorButton), IP);
 
     solo->SetImages(NULL, img_solo1off);
     mute->SetImages(NULL, img_mute1off);
-    //autopt->SetImages(NULL, img_autooff_s);
-    //pEditButton->SetImages(NULL, img_btwnd_s);
 
-    fxcell = &(mix->m_cell);
-    fxchan = &(gAux->masterchan);
+    fx_channel = &(aux_panel->masterchan);
 
     dfxstr = new DigitStr("--");
     dfxstr->num_digits = 2;
@@ -128,6 +109,13 @@ Instrument::Instrument()
     stepvu = new VU(VU_StepLine);
     stepvu->instr = this;
 
+    // Make cool VU falldown effect on single instrument load
+    if(ProjectLoadingInProgress == false)
+    {
+        vu->SetLR(Random::getSystemRandom().nextFloat()*0.5f + 0.5f, 
+                  Random::getSystemRandom().nextFloat()*0.5f + 0.5f);
+    }
+
     rampCount = 512;
 
     instr_drawarea = new DrawArea((void*)this, Draw_Instrument);
@@ -146,14 +134,12 @@ Instrument::~Instrument()
     delete params;
     delete vu;
     delete stepvu;
-    RemoveControlCommon(fold);
-    RemoveControlCommon(window);
+    RemoveControlCommon(fold_toggle);
     RemoveControlCommon(mpan);
     RemoveControlCommon(mvol);
     RemoveControlCommon(mute);
     RemoveControlCommon(solo);
-    RemoveControlCommon(autopt);
-    RemoveControlCommon(pEditButton);
+    RemoveControlCommon(pEditorButton);
 
     Remove_PEdit(dfxstr);
     Remove_PEdit(alias);
@@ -166,11 +152,6 @@ Instrument::~Instrument()
     if(prevInst!= NULL)
     {
         delete prevInst;
-    }
-
-    //if(paramWin != NULL)
-    {
-    //    MainWnd->DeleteChild(paramWin);
     }
 
     undoMan->WipeInstrumentFromHistory(this);
@@ -215,6 +196,7 @@ Instrument* Instrument::Clone()
 
     ChangeCurrentInstrument(instr);
 
+    // Do we need to clone autopatter for the cloned instrument? Postponed for now
     /*
     if(autoPatt != NULL)
     {
@@ -226,6 +208,90 @@ Instrument* Instrument::Clone()
     */
 
     return instr;
+}
+
+// Autopattern creation
+void Instrument::CreateAutoPattern()
+{
+    if(autoPatt != NULL)
+    {
+        delete autoPatt;
+    }
+    autoPatt = new Pattern("auto", 0.0f, 16.0f, 0, 0, true);
+    autoPatt->instr_owner = this;
+    autoPatt->OrigPt = autoPatt;
+    autoPatt->autopatt = true;
+    autoPatt->patt = autoPatt;
+    autoPatt->trkdata = autoPatt->field_trkdata = ptrk;
+    autoPatt->der_first = autoPatt->der_last = autoPatt;
+    autoPatt->folded = true;
+    autoPatt->pbk = pbkAux;
+    autoPatt->Update();
+
+    AddOriginalPattern(autoPatt);
+
+    C.SaveState();
+
+    C.SetPattern(autoPatt, Loc_SmallGrid);
+
+    if(prevInst != NULL)
+    {
+        delete prevInst;
+    }
+
+    C.SetPos(0, 0);
+    prevInst = CreateElement_Note(this, false);
+    prevInst->patt = autoPatt;
+    prevInst->Update();
+    MakeTriggersForElement(prevInst, autoPatt);
+
+    prevInst->tg_first->apatt_instance = NULL;
+    autoPatt->parent_trigger = prevInst->tg_first;
+    prevInst->tg_first->vol_val = 1;
+    prevInst->tg_first->pan_val = 0;
+
+    C.RestoreState();
+
+    // Now populate all notes of this instruments with autopatterns on the main playback
+    {
+        Trigger* tg;
+        Instance* ii;
+        Event* ev = field_pattern->first_ev;
+        while(ev != NULL)
+        {
+            tg = ev->tg_first;
+            while(tg != NULL)
+            {
+                if(tg->el->IsInstance())
+                {
+                    ii = (Instance*)tg->el;
+                    if(ii->instr == this && tg->apatt_instance == NULL)
+                    {
+                        AddAutopatternInstance(tg, ii, true);
+                    }
+                }
+                tg = tg->ev_next;
+            }
+            ev = ev->next;
+        }
+    }
+}
+
+void Instrument::Update()
+{
+    instr_drawarea->Change();
+}
+
+void Instrument::ParamEditUpdate(PEdit* pe)
+{
+    if(pe == alias)
+    {
+        GetInstrAliasImage(this);
+        instr_drawarea->Change();
+
+        R(Refresh_GridContent);
+        R(Refresh_Aux);
+    }
 }
 
 bool Instrument::DereferenceElements()
@@ -248,7 +314,7 @@ bool Instrument::DereferenceElements()
             ii = (Instance*)el;
             if(ii->instr == this)
             {
-				elnext = NextElementToDelete(ii);
+                elnext = NextElementToDelete(ii);
                 harddeleted = DeleteElement(ii, true, true);
                 if(harddeleted == false)
                 {
@@ -285,7 +351,7 @@ bool Instrument::DereferenceElements()
         el = elnext;
     }
 
-    DereferencePattern(gAux->blankPt);
+    DereferencePattern(aux_panel->blankPt);
 
     dereferenced = alldone;
 
@@ -323,7 +389,7 @@ void Instrument::ActivateTrigger(Trigger* tg)
     tg->frame_phase = 0;
     tg->sec_phase = 0;
     tg->outsync = false;
-    tg->tworking = true;
+    tg->tgworking = true;
     tg->muted = false;
     tg->broken = false;
     tg->auCount = 0;
@@ -374,24 +440,7 @@ void Instrument::DeactivateTrigger(Trigger* tg)
             tg->loc_act_next->loc_act_prev = tg->loc_act_prev;
         }
     }
-    tg->tworking = false;
-}
-
-void Instrument::Update()
-{
-    instr_drawarea->Change();
-}
-
-void Instrument::ParamEditUpdate(PEdit* pe)
-{
-    if(pe == alias)
-    {
-        GetInstrAliasImage(this);
-        instr_drawarea->Change();
-
-        R(Refresh_GridContent);
-        R(Refresh_Aux);
-    }
+    tg->tgworking = false;
 }
 
 void Instrument::GenerateData(long num_frames, long mixbuffframe)
@@ -407,16 +456,6 @@ void Instrument::GenerateData(long num_frames, long mixbuffframe)
     Envelope* env;
     Parameter* param;
 
-    bool dofill = true;
-    /*
-    if(params->muted == false && (InstrSolo == NULL || InstrSolo == this))
-    {
-        dofill = true;
-    }
-    else
-    {
-        dofill = false;
-    }*/
 
     memset(out_buff, 0, num_frames*sizeof(float)*2);
 
@@ -436,7 +475,6 @@ void Instrument::GenerateData(long num_frames, long mixbuffframe)
         }
 
         // Process envelopes for this instrument
-        env_update = true;
         tgenv = envelopes;
         // Rewind to the very first, to provide correct envelopes overriding
         while(tgenv != NULL && tgenv->group_prev != NULL) tgenv = tgenv->group_prev;
@@ -451,7 +489,6 @@ void Instrument::GenerateData(long num_frames, long mixbuffframe)
             }
             tgenv = tgenv->group_next;
         }
-        env_update = false;
 
         // Process triggers for the current chunk
         tg = tg_first;
@@ -471,8 +508,8 @@ void Instrument::GenerateData(long num_frames, long mixbuffframe)
         mbframe += frames_to_process;
     }
 
-    //if(fill)
-        FillMixChannel(num_frames, 0, mixbuffframe);
+    // Send data to assigned mixer channel
+    FillMixChannel(num_frames, 0, mixbuffframe);
 }
 
 long Instrument::WorkTrigger(Trigger * tg, long num_frames, long remaining, long buffframe, long mixbuffframe)
@@ -497,101 +534,13 @@ long Instrument::WorkTrigger(Trigger * tg, long num_frames, long remaining, long
         }
     }
 
+    // If trigger was finished during processing, deactivate it here
     if(tg->tgstate == TgState_Finished)
     {
         tg->Deactivate();
     }
 
-	return actual_num_frames;
-}
-
-// Autopattern creation
-void Instrument::CreateAutoPattern()
-{
-    if(autoPatt != NULL)
-    {
-        delete autoPatt;
-    }
-    autoPatt = new Pattern("auto", 0.0f, 16.0f, 0, 0, true);
-    autoPatt->instr_owner = this;
-    autoPatt->OrigPt = autoPatt;
-    autoPatt->autopatt = true;
-    autoPatt->patt = autoPatt;
-    autoPatt->trkdata = autoPatt->field_trkdata = ptrk;
-    autoPatt->der_first = autoPatt->der_last = autoPatt;
-    autoPatt->folded = true;
-    autoPatt->pbk = pbkAux;
-    autoPatt->Update();
-
-    AddOriginalPattern(autoPatt);
-
-    C.SaveState();
-
-    C.SetPattern(autoPatt, Loc_SmallGrid);
-
-    if(prevInst != NULL)
-    {
-        delete prevInst;
-    }
-
-    C.SetPos(0, 0);
-    prevInst = CreateElement_Note(this, false);
-    prevInst->patt = autoPatt;
-    prevInst->Update();
-    MakeTriggersForElement(prevInst, autoPatt);
-	//DeleteElement(prevInst->tg_first->ai, true, true);
-	prevInst->tg_first->ai = NULL;
-    autoPatt->parent_trigger = prevInst->tg_first;
-    prevInst->tg_first->vol_val = 1;
-    prevInst->tg_first->pan_val = 0;
-
-    /* Volume envelope postponed
-    Command* cmdV = new Command(&scope, Cmd_LocVolEnv);
-    cmdV->patt = autoPatt;
-    cmdV->start_tick = 0;
-    cmdV->track_line = 0;
-    AddNewElement(cmdV, true);
-    VLocEnv = cmdV;
-    VEnv = (Envelope*)VLocEnv->paramedit;
-    */
-
-    /* Panning envelope postponed
-    Command* cmdP = new Command(scope, Cmd_LocPanEnv);
-    cmdP->patt = autoPatt;
-    cmdP->start_tick = 0;
-    cmdP->track_line = 5;
-    AddNewElement(cmdP, true);
-    PLocEnv = cmdP;
-    PEnv = (Envelope*)PLocEnv->paramedit;
-    */
-
-    C.RestoreState();
-
-    SpreadAutoPatterns();
-}
-
-void Instrument::SpreadAutoPatterns()
-{
-    Trigger* tg;
-    Instance* ii;
-    Event* ev = field->first_ev;
-    while(ev != NULL)
-    {
-        tg = ev->tg_first;
-        while(tg != NULL)
-        {
-            if(tg->el->IsInstance())
-            {
-                ii = (Instance*)tg->el;
-                if(ii->instr == this && tg->ai == NULL)
-                {
-                    AddAutoInstance(tg, ii, true);
-                }
-            }
-            tg = tg->ev_next;
-        }
-        ev = ev->next;
-    }
+    return actual_num_frames;
 }
 
 void Instrument::PreProcessTrigger(Trigger* tg, bool* skip, bool* fill, long num_frames, long buffframe)
@@ -605,10 +554,10 @@ void Instrument::PreProcessTrigger(Trigger* tg, bool* skip, bool* fill, long num
     Instance*   ii = (Instance*)tg->el;
 
     // fx2 stuff
-    if(tg->ai != NULL)
+    if(tg->apatt_instance != NULL)
     {
-        ai = tg->ai;
-        fx2 = &tg->ai->fxstate;
+        ai = tg->apatt_instance;
+        fx2 = &tg->apatt_instance->fxstate;
         aiframe = ai->parent_trigger->ev->frame;
     }
     else if(tg->patt->OrigPt->autopatt == true)
@@ -694,53 +643,11 @@ void Instrument::PreProcessTrigger(Trigger* tg, bool* skip, bool* fill, long num
     }
 
     float pv = 1; // Pitch value temporary workaround
-/* Pitch is fucking postponed
-    // Pitch processing. Pitch is a static envelope inside a pattern
-    float pv = 1;
-    if(tg->patt->OrigPt->pitch != NULL)
-    {
-        Envelope* env;
-        env = (Envelope*)tg->patt->OrigPt->pitch->paramedit;
-        env->ProcessBuffer1(tg->el->frame + tg->frame_phase,
-						   0, 
-                           num_frames, 
-                           num_frames, 
-                           tg->patt->OrigPt->pitch->frame);
-        if(env->buffov[0] >= 0.5f)
-        {
-            pv = 1 + (env->buffov[0] - 0.5f)*0.828427124f;
-        }
-        else
-        {
-            pv = 1 - (0.5f - env->buffov[0])*0.585786437f;
-        }
-    }
-
-    // Including autopattern's pitch
-    if(tg->ai != NULL && tg->ai->OrigPt->pitch != NULL)
-    {
-        Envelope* env;
-        env = (Envelope*)tg->ai->OrigPt->pitch->paramedit;
-        env->ProcessBuffer1(tg->el->frame + tg->frame_phase, 
-						   0,
-                           num_frames, 
-                           num_frames, 
-                           tg->el->frame + tg->ai->OrigPt->pitch->frame);
-        if(env->buffov[0] >= 0.5f)
-        {
-            pv *= (1 + (env->buffov[0] - 0.5f)*0.828427124f);
-        }
-        else
-        {
-            pv *= (1 - (0.5f - env->buffov[0])*0.585786437f);
-        }
-    }
-*/
     tg->freq_incr_active *= pv*fx1->t_freq_mult;
 
     // External frequencers. Frequencers are effect-elements that affect note frequency e.g. vibratos,
     // slides, slidenotes, etc.
-    SlideNote* sn;
+    SlideNote* slnote;
     long fphase;
     Trigger* tgfreq;
     if(tg->outsync == false && ii->preview == false) // Block this for preview notes
@@ -748,94 +655,52 @@ void Instrument::PreProcessTrigger(Trigger* tg, bool* skip, bool* fill, long num
         tgfreq = fx1->freqtrig;
         while(tgfreq != NULL)
         {
-            //if(tgfreq->ev->frame >= tg->ev->frame) //// commented as older frequencers do affect newer notes
+            // the phase, relative to the frequencer's start
+            fphase = (long)(tg->ev->frame + tg->frame_phase - tgfreq->ev->frame);
+            if(fphase > 0 && fphase <= tgfreq->el->frame_length) // to ensure it's the right case, when frequencer and note are in the single timeline
             {
-				// the phase, relative to the frequencer's start
-                fphase = (long)(tg->ev->frame + tg->frame_phase - tgfreq->ev->frame);
-				if(fphase > 0 && fphase <= tgfreq->el->frame_length) // to ensure it's the right case, when frequencer and note are in the single timeline
-				{
-					tg->freq_incr_active *= ((Frequencer*)tgfreq->el)->GetMult(tgfreq, tg, fphase, num_frames);
-					if(tgfreq->ev->frame >= tg->ev->frame && tgfreq->el->type == El_SlideNote)
-					{
-						sn = (SlideNote*)tgfreq->el;
-						tg->vol_val += sn->GetVolMult(tgfreq, tg, fphase, num_frames);
-						tg->pan_val += sn->GetPanMult(tgfreq, tg, fphase, num_frames);
-					}
-				}
+                tg->freq_incr_active *= ((Frequencer*)tgfreq->el)->GetMult(tgfreq, tg, fphase, num_frames);
+                if(tgfreq->ev->frame >= tg->ev->frame && tgfreq->el->type == El_SlideNote)
+                {
+                    slnote = (SlideNote*)tgfreq->el;
+                    tg->vol_val += slnote->GetVolMult(tgfreq, tg, fphase, num_frames);
+                    tg->pan_val += slnote->GetPanMult(tgfreq, tg, fphase, num_frames);
+                }
             }
             tgfreq = tgfreq->loc_act_prev;
         }
     }
 
-    // Internal autopattern frequencers
+    // Process internal autopattern frequencers
     if(fx2 != NULL)
     {
         tg->freq_incr_active *= fx2->t_freq_mult;
         tgfreq = fx2->freqtrig;
         while(tgfreq != NULL)
         {
-            //if(aiframe + tgfreq->ev->frame >= tg->ev->frame) //// commented as older frequencers do affect newer notes
+            fphase = (long)(tg->ev->frame + tg->frame_phase - (aiframe + tgfreq->ev->frame));
+            if(fphase > 0 && fphase <= tgfreq->el->frame_length) // to ensure it's the right case, when frequencer and note are in the single timeline
             {
-                fphase = (long)(tg->ev->frame + tg->frame_phase - (aiframe + tgfreq->ev->frame));
-				if(fphase > 0 && fphase <= tgfreq->el->frame_length) // to ensure it's the right case, when frequencer and note are in the single timeline
-				{
-					tg->freq_incr_active *= ((Frequencer*)tgfreq->el)->GetMult(tgfreq, tg, fphase, num_frames);
-					if(aiframe + tgfreq->ev->frame >= tg->ev->frame && tgfreq->el->type == El_SlideNote)
-					{
-						sn = (SlideNote*)tgfreq->el;
-						tg->vol_val += sn->GetVolMult(tgfreq, tg, fphase, num_frames);
-						tg->pan_val += sn->GetPanMult(tgfreq, tg, fphase, num_frames);
-					}
-				}
+                tg->freq_incr_active *= ((Frequencer*)tgfreq->el)->GetMult(tgfreq, tg, fphase, num_frames);
+                if(aiframe + tgfreq->ev->frame >= tg->ev->frame && tgfreq->el->type == El_SlideNote)
+                {
+                    slnote = (SlideNote*)tgfreq->el;
+                    tg->vol_val += slnote->GetVolMult(tgfreq, tg, fphase, num_frames);
+                    tg->pan_val += slnote->GetPanMult(tgfreq, tg, fphase, num_frames);
+                }
             }
             tgfreq = tgfreq->loc_act_prev;
         }
     }
 
-    //float increment;
-    //float decrement;
-    //Trigger* tg_other;
     Trigger* tgs = tg->tgsactive;
     while(tgs != NULL)
     {
-        sn = (SlideNote*)tgs->el;
-        tg->freq_incr_active *= sn->GetMult(tgs, tg, tgs->frame_phase, num_frames);
+        slnote = (SlideNote*)tgs->el;
+        tg->freq_incr_active *= slnote->GetMult(tgs, tg, tgs->frame_phase, num_frames);
 
-        tg->vol_val += sn->GetVolMult(tgs, tg, tgs->frame_phase, num_frames);
-        tg->pan_val += sn->GetPanMult(tgs, tg, tgs->frame_phase, num_frames);
-
-        // Adjust signal levels (postponed)
-        /*
-        increment = sn->GetSignalIncr(tgs, tg, tgs->frame_phase)/tg->tgsactnum;
-        decrement = increment/tg->tgsactnum;
-        tgs->signal += increment;
-        if(tgs->signal > 1)
-        {
-            tgs->signal = 1;
-        }
-
-        if(tg->signal > 0)
-        {
-            tg->signal -= decrement;
-            if(tg->signal < 0)
-            {
-                tg->signal = 0;
-            }
-        }
-
-        tg_other = tg->first_tgslide;
-        while(tg_other != NULL)
-        {
-            if((tg_other != tgs)&&(tg_other->signal > 0))
-            {
-                tg_other->signal -= decrement;
-                if(tg_other->signal < 0)
-                {
-                    tg_other->signal = 0;
-                }
-            }
-            tg_other = tg_other->group_next;
-        }*/
+        tg->vol_val += slnote->GetVolMult(tgs, tg, tgs->frame_phase, num_frames);
+        tg->pan_val += slnote->GetPanMult(tgs, tg, tgs->frame_phase, num_frames);
 
         tgs->frame_phase += num_frames;
 
@@ -861,41 +726,7 @@ void Instrument::StaticInit(Trigger* tg, long num_frames)
     pan0 = pan1 = pan2 = pan3 = pan4 = 0;
     volbase = 0;
     venvphase = 0;
-	end_frame = 0;
-
-    //SetMixcell4Trigger(tg);
-    //mcell = tg->mcell;
-
-    //SetMixChannel4Trigger(tg);
-    //mchan = tg->mchan;
-
-/*
-    if(VEnv != NULL)
-    {
-        venv0 = VEnv;
-    }
-
-    if(PEnv != NULL)
-    {
-        penv0 = PEnv;
-    }
-    if(venv0 != NULL)
-    {
-        if(tg->tgvolloc != NULL)
-        {
-            // We use separate phase variable for local volume because trigger's internal phase can go
-            // too far in pre-buffering
-            venvphase = tg->tgvolloc->frame_phase;
-        }
-        memset(venv0->buffov, 0, MAX_BUFF_SIZE*sizeof(float));
-        venv0->ProcessBuffer1(tg->frame_phase, 0, num_frames, 1, 0, tg->tgvolloc, tg);
-    }
-*/
-    if(penv0 != NULL && tg->frame_phase >= PLocEnv->frame)
-    {
-        // Postponed
-        //penv0->ProcessBuffer(tg->frame_phase, 0, num_frames, 32, PLocEnv->frame, tg->tgpanloc, tg);
-    }
+    end_frame = 0;
 
     
     // Get envelope from this trigger's pattern (currently for autopatterns only).
@@ -905,29 +736,6 @@ void Instrument::StaticInit(Trigger* tg, long num_frames)
         if(venv2->newbuff == false)
             venv2 = NULL;
     }
-
-    /* // Tracks stuff postponed
-    // If trigger is on field, then get third envelope from instace's track. If not - get 
-    // third envelope from pattern's track.
-    if(tg->patt == field)
-    {
-        if(ii->track_params->vol->envelopes != NULL)
-        {
-            venv3 = (Envelope*)((Command*)ii->track_params->vol->envelopes->el)->paramedit;
-            if(venv3->newbuff == false)
-                venv3 = NULL;
-        }
-    }
-    else
-    {
-        if(tg->patt->track_params->vol->envelopes != NULL)
-        {
-            venv3 = (Envelope*)((Command*)tg->patt->track_params->vol->envelopes->el)->paramedit;
-            if(venv3->newbuff == false)
-                venv3 = NULL;
-        }
-    }
-    */
 
     /// Init volume base. Volume base consist of volumes, that don't get changed during the whole fill session.
     /// it's then multiplied to dynamic tg->vol_val value in PostProcessTrigger.
@@ -953,27 +761,6 @@ void Instrument::StaticInit(Trigger* tg, long num_frames)
         }
     }
 
-    // Get envelope/value from this trigger's pattern.
-    //if(venv2 == NULL)
-    //{
-    //    volbase *= tg->patt->params->vol->outval; // Pattern dynamic params
-    //}
-
-    /* Tracks stuff postponed
-    // If trigger is on field, then get third envelope from instance's or pattern's track.
-    if(venv3 == NULL)
-    {
-        if(tg->patt == field)
-        {
-            volbase *= ii->track_params->vol->outval;
-        }
-        else
-        {
-            volbase *= tg->patt->track_params->vol->outval;
-        }
-    }
-    */
-
     ///// Panning envelopes
     if(tg->patt->params->pan->envelopes != NULL)
     {
@@ -989,43 +776,10 @@ void Instrument::StaticInit(Trigger* tg, long num_frames)
             penv2 = NULL;
     }
 
-    /* Tracks stuff is postponed
-    if(tg->patt == field)
-    {
-        if(ii->track_params->pan->envelopes != NULL)
-        {
-            penv3 = (Envelope*)((Command*)ii->track_params->pan->envelopes->el)->paramedit;
-            if(penv3->newbuff == false)
-                penv3 = NULL;
-        }
-    }
-    else
-    {
-        if(tg->patt->track_params->pan->envelopes != NULL)
-        {
-            penv3 = (Envelope*)((Command*)tg->patt->track_params->pan->envelopes->el)->paramedit;
-            if(penv3->newbuff == false)
-                penv3 = NULL;
-        }
-    }
-    */
-
     // Init pans
-    //pan1 = tg->patt->params->pan->outval;     // Pattern's params
     pan1 = 0;
     pan2 = tg->patt->loc_pan->outval;     // Pattern's local panning
     pan3 = params->pan->outval;     // Instrument's panning
-
-    /* Tracks stuff postponed
-    if(tg->patt == field)
-    {
-        pan4 = ii->track_params->pan->outval;
-    }
-    else
-    {
-        pan4 = tg->patt->track_params->pan->outval;
-    }
-    */
 }
 
 void Instrument::DeClick(Trigger* tg, 
@@ -1317,8 +1071,8 @@ void Instrument::FillMixChannel(long num_frames, long buffframe, long mixbufffra
         outL = out_buff[tc0++]*vol;
         outR = out_buff[tc0++]*vol;
 
-        fxchan->in_buff[tc++] += outL;
-        fxchan->in_buff[tc++] += outR;
+        fx_channel->in_buff[tc++] += outL;
+        fx_channel->in_buff[tc++] += outR;
         if(c_abs(outL) > lMax)
         {
             lMax = outL;
@@ -1343,7 +1097,7 @@ void Instrument::FillMixChannel(long num_frames, long buffframe, long mixbufffra
     lMax = pow(lMax, 0.4f);
     rMax = pow(rMax, 0.4f);
     vu->SetLR(lMax, rMax);
-    stepvu->SetLR(lMax, rMax);
+    //stepvu->SetLR(lMax, rMax);
 }
 
 void Instrument::ApplyDSP(Trigger* tg, long buffframe, long num_frames)
@@ -1371,7 +1125,7 @@ void Instrument::ApplyDSP(Trigger* tg, long buffframe, long num_frames)
 
 void Instrument::Disable()
 {
-    zisible = false;
+    visible = false;
     instr_drawarea->Disable();
     vu->drawarea->Disable();
     stepvu->drawarea->Disable();
@@ -1379,14 +1133,13 @@ void Instrument::Disable()
     mvol->Deactivate();
     solo->Deactivate();
     mute->Deactivate();
-    window->Deactivate();
     dfxstr->Deactivate();
     alias->Deactivate();
 }
 
 void Instrument::Enable()
 {
-    zisible = true;
+    visible = true;
 }
 
 void Instrument::SetAlias(char * al)
@@ -1400,7 +1153,7 @@ void Instrument::SetAlias(char * al)
 
 void Instrument::EnqueueParamEnvelopeTrigger(Trigger* tg)
 {
-    tg->tworking = true;
+    tg->tgworking = true;
     if(envelopes != NULL)
     {
         envelopes->group_next = tg;
@@ -1438,7 +1191,7 @@ void Instrument::DequeueParamEnvelope(Trigger* tg)
 
 void Instrument::SetLastLength(float lastlength)
 {
-    last_length = lastlength;
+    last_note_length = lastlength;
 }
 
 void Instrument::SetLastPan(float lastpan)
@@ -1451,6 +1204,9 @@ void Instrument::SetLastVol(float lastvol)
     last_vol = lastvol;
 }
 
+// This function helps to declick when we're forcing note removal due to lack of free 
+// voice slots
+//
 void Instrument::FlowTriggers(Trigger* tgfrom, Trigger* tgto)
 {
     memset(out_buff, 0, rampCount*sizeof(float)*2);
@@ -1481,29 +1237,6 @@ void Instrument::Save(XmlElement * instrNode)
 
     instrNode->setAttribute(T("Mute"), int(params->muted));
     instrNode->setAttribute(T("Solo"), int(params->solo));
-
-    /*
-    if(autoPatt != NULL)
-    {
-        XmlElement* xmlPatt = new XmlElement(T("AutoPattern"));
-
-        Element* el = autoPatt->first_elem;
-        while(el != NULL)
-        {
-            if(el->IsPresent() && el->type != El_Pattern)
-            {
-                XmlElement* xmlElem = new XmlElement(T("Element"));
-                el->Save(xmlElem);
-                xmlPatt->addChildElement(xmlElem);
-            }
-            el = el->patt_next;
-        }
-
-        instrNode->addChildElement(xmlPatt);
-    }
-    */
-
-    //SaveStateData(*instrNode, "Current");
 }
 
 void Instrument::Load(XmlElement * instrNode)
@@ -1538,63 +1271,51 @@ void Instrument::Load(XmlElement * instrNode)
     {
         Solo_Instr = this;
     }
-
-    /*
-    XmlElement* xmlPatt = instrNode->getChildByName(T("AutoPattern"));
-    if(xmlPatt != NULL)
-    {
-        if(autoPatt == NULL)
-        {
-            CreateAutoPattern();
-            //if(autoPatt != NULL)
-            //{
-            //    LoadElementsFromNode(xmlPatt, autoPatt);
-            //}
-        }
-    }*/
-
-    //XmlElement* stateNode = instrNode->getChildByName(T("Module"));
-    //if(stateNode != NULL)
-    //{
-    //    RestoreStateData(*stateNode);
-    //}
 }
 
-Sample::Sample(float* data, char* pth, char* nm, SF_INFO sfinfo)
+Sample::Sample(float* data, char* smp_path, char* smp_name, SF_INFO sfinfo)
 {
     type = Instr_Sample;
     sample_data = data;
-	if(pth != NULL)
-		strcpy(path, pth);
-	if(nm != NULL)
-		strcpy(name, nm);
-    strcpy(this->preset_path, "");
-    info = sfinfo;
-    rateDown = (float)info.samplerate/fSampleRate;
-    rateUp = fSampleRate/info.samplerate;
-    //smpwindow = NULL;
-    last_length = 2.0f;
-    normalized = false;
-    touchresized = false;
-    norm_factor = 1.0f;
-    looptype = LoopType_NoLoop;
-    SetLoopPoints(0, long(info.frames - 1));
-    UpdateNormFactor();
 
-    // Built-in delay for the sample
+    if(smp_path != NULL)
+        strcpy(path, smp_path);
+
+    if(smp_name != NULL)
+        strcpy(name, smp_name);
+
+    strcpy(this->preset_path, "");
+    sample_info = sfinfo;
+
+    rateDown = (float)sample_info.samplerate/fSampleRate;
+    rateUp = fSampleRate/sample_info.samplerate;
+
+    last_note_length = 2.0f;
+    touchresized = false;
+
+    // Init sample loop
+    looptype = LoopType_NoLoop;
+    SetLoopPoints(0, long(sample_info.frames - 1));
+
+    // Init normalizing
+    normalized = false;
+    norm_factor = 1.0f;
+    UpdateNormalizeFactor();
+
+    // Built-in delay, postponed
     //delay = new XDelay(NULL, NULL);
     //delay->scope.instr = this;
     //delayOn = new BoolParam(false);
 
-    timelen = info.frames/fSampleRate;
-    VEnv = new Envelope(Cmd_ParamEnv);
-    VEnv->len = jmax(timelen, 2.f);
-    VEnv->timebased = true;
+    timelen = sample_info.frames/fSampleRate;
+    envVol = new Envelope(Cmd_ParamEnv);
+    envVol->len = jmax(timelen, 2.f);
+    envVol->timebased = true;
 
     // Add some default breakpoints to sample envelope
-    VEnv->SetSustainPoint(VEnv->AddPoint(0.0f, 1.0f));
-    //VEnv->AddPoint(0.3f, 0.5f);
-    //VEnv->AddPoint(0.6f, 0.0f);
+    envVol->SetSustainPoint(envVol->AddPoint(0.0f, 1.0f));
+    //envVol->AddPoint(0.3f, 0.5f);
+    //envVol->AddPoint(0.6f, 0.0f);
 }
 
 Sample::~Sample()
@@ -1611,7 +1332,7 @@ void Sample::Save(XmlElement * instrNode)
     instrNode->setAttribute(T("LoopEnd"), String(lp_end));
     instrNode->setAttribute(T("LoopType"), int(looptype));
 
-    XmlElement * envX = VEnv->Save("SmpEnv");
+    XmlElement * envX = envVol->Save("SmpEnv");
     instrNode->addChildElement(envX);
 }
 
@@ -1629,7 +1350,7 @@ void Sample::Load(XmlElement * instrNode)
     XmlElement * envX = instrNode->getChildByName(T("SmpEnv"));
 	if(envX != NULL)
 	{
-		VEnv->Load(envX);
+		envVol->Load(envX);
 	}
 }
 
@@ -1640,7 +1361,7 @@ void Sample::ActivateTrigger(Trigger* tg)
     if(skip == false)
     {
         tg->outsync = false;
-        tg->tworking = true;
+        tg->tgworking = true;
         tg->muted = false;
         tg->broken = false;
         tg->auCount = 0;
@@ -1654,7 +1375,7 @@ void Sample::ActivateTrigger(Trigger* tg)
         tg->freq_incr_base = samplent->freq_incr_base;
         tg->freq = samplent->ed_note->freq;
         tg->note_val = samplent->ed_note->value;
-        tg->ep1 = VEnv->p_first;
+        tg->ep1 = envVol->p_first;
         tg->envVal1 = tg->ep1->y_norm;
         tg->env_phase1 = 0;
         if(samplent->ed_note->relative == true)
@@ -1718,7 +1439,7 @@ bool Sample::CheckBounds(Samplent* samplent, Trigger* tg, long num_frames)
 
     if(tg->tgstate == TgState_Release)
     {
-        if(VEnv != NULL)
+        if(envVol != NULL)
         {
             /*
             bool finished = false;
@@ -1780,13 +1501,13 @@ long Sample::ProcessTrigger(Trigger * tg, long num_frames, long buffframe)
 
             if(fill)
             {
-                if(1 == samplent->sample->info.channels) // Mono sample
+                if(1 == samplent->sample->sample_info.channels) // Mono sample
                 {
                     GetMonoSampleData(samplent->sample, tg->wt_pos, &sd1);
                     in_buff[tc0++] = sd1*tg->envVal1;
                     in_buff[tc0++] = sd1*tg->envVal1;
                 }
-                else if(2 == samplent->sample->info.channels) // Stereo sample
+                else if(2 == samplent->sample->sample_info.channels) // Stereo sample
                 {
                     GeStereoSampleData(samplent->sample, tg->wt_pos, &sd1, &sd2);
                     in_buff[tc0++] = sd1*tg->envVal1;
@@ -1794,7 +1515,7 @@ long Sample::ProcessTrigger(Trigger * tg, long num_frames, long buffframe)
                 }
             }
 
-            if(tg->tgstate == TgState_Sustain && VEnv->sustainable && tg->ep1->suspoint == true)
+            if(tg->tgstate == TgState_Sustain && envVol->sustainable && tg->ep1->suspoint == true)
             {
                 tg->env_phase1 = tg->ep1->x;
                 tg->envVal1 = tg->ep1->y_norm;
@@ -1868,12 +1589,12 @@ void Sample::CloseWindow()
 {
 }
 
-void Sample::UpdateNormFactor()
+void Sample::UpdateNormalizeFactor()
 {
     float dmax = 0;
     float dcurr;
     long dc = 0;
-    long total = long(info.frames*info.channels);
+    long total = long(sample_info.frames*sample_info.channels);
     while(dc < total)
     {
         dcurr = fabs(sample_data[dc]);
@@ -1906,7 +1627,7 @@ void Sample::ToggleNormalize()
         }
 
         long dc = 0;
-        long total = long(info.frames*info.channels);
+        long total = long(sample_info.frames*sample_info.channels);
         while(dc < total)
         {
             sample_data[dc] *= mult;
@@ -1948,8 +1669,8 @@ void Sample::CopyDataToClonedInstrument(Instrument * instr)
     Instrument::CopyDataToClonedInstrument(instr);
 
     Sample* nsample = (Sample*)instr;
-    delete nsample->VEnv;
-    nsample->VEnv = VEnv->Clone();
+    delete nsample->envVol;
+    nsample->envVol = envVol->Clone();
 
     if(normalized != nsample->normalized)
     {
@@ -1965,7 +1686,7 @@ void Sample::DumpData()
     File f("sampledump.bin");
     f.create();
     FileOutputStream* os = f.createOutputStream();
-    os->write(sample_data, int(info.frames*info.channels*sizeof(float)));
+    os->write(sample_data, int(sample_info.frames*sample_info.channels*sizeof(float)));
     delete os;
 }
 
@@ -1988,7 +1709,7 @@ void Gen::ActivateTrigger(Trigger* tg)
     Gennote* gnote = (Gennote*)tg->el;
 
     tg->outsync = false;
-    tg->tworking = true;
+    tg->tgworking = true;
     tg->muted = false;
     tg->broken = false;
     tg->auCount = 0;
@@ -2038,19 +1759,11 @@ void Gen::CheckBounds(Gennote* gnote, Trigger* tg, long num_frames)
 
     // Finishing can happen both when envelope is out of bounds and when the note length is longer than envelope 
     // length and the note is finished (frame phase exceeds note frame length)
-	if(tg->tgstate == TgState_Release && VEnv != NULL)
+	if(tg->tgstate == TgState_Release && envVol != NULL)
     {
         bool finished = false;
-        if(tg->tgvolloc != NULL)
-        {
-			finished = VEnv->IsOutOfBounds(venvphase);
-            end_frame = num_frames - (venvphase - VEnv->frame_length);
-        }
-		else
-        {
-			finished = VEnv->IsOutOfBounds(tg->frame_phase);
-            end_frame = num_frames - (tg->frame_phase - VEnv->frame_length);
-        }
+        finished = envVol->IsOutOfBounds(tg->frame_phase);
+        end_frame = num_frames - (tg->frame_phase - envVol->frame_length);
 
         if(finished)
             tg->tgstate = TgState_Finished;
@@ -2522,17 +2235,17 @@ void Synth::ActivateTrigger(Trigger* tg)
     else
     {
         // Check and loop until first unused number is found
-    	Trigger* tgc = tg_first;
-    	while(tgc != NULL)
-    	{
-    		if(tgc->voicenum == vnum)
-    		{
-    			vnum++;
+        Trigger* tgc = tg_first;
+        while(tgc != NULL)
+        {
+            if(tgc->voicenum == vnum)
+            {
+                vnum++;
                 tgc = tg_first;
                 continue;
-    		}
-    		tgc = tgc->loc_act_next;
-    	}
+            }
+            tgc = tgc->loc_act_next;
+        }
     }
     tg->voicenum = vnum;
     numUsedVoices++;
@@ -3316,24 +3029,13 @@ void Synth::CheckBounds(Gennote* gnote, Trigger* tg, long num_frames)
 
 void Synth::ParamUpdate(Parameter* param)
 {
-    //if(!env_update)
-    //{
-    //    param->SetDirectValueFromControl((float)aslider->getValue(), true);
-    //}
-
     if(param == delayON)
     {
-        //if(delayON->outval == false)
-        {
-            delay->Reset();
-        }
+        delay->Reset();
     }
     else if(param == reverbON)
     {
-        //if(reverbON->outval == false)
-        {
-            reverb->Reset();
-        }
+        reverb->Reset();
     }
     else if(param == osc1Level)
     {
@@ -4212,7 +3914,7 @@ void VSTGenerator::Reset()
 
 void ShowInstrumentWindow(Instrument* i)
 {
-    i->pEditButton->Press();
+    i->pEditorButton->Press();
     i->instr_drawarea->Change();
 
     if(i->type == Instr_VSTPlugin)
@@ -4231,7 +3933,7 @@ void ShowInstrumentWindow(Instrument* i)
                 {
                     pGen->pEff->ShowEditor(false);
                     pGen->wnd = NULL;
-                    i->pEditButton->Release();
+                    i->pEditorButton->Release();
                 }
             }
             else
@@ -4253,7 +3955,7 @@ void ShowInstrumentWindow(Instrument* i)
                         else
                         {
                             pGen->pEff->VSTParamWnd->Hide();
-                            i->pEditButton->Release();
+                            i->pEditorButton->Release();
                         }
                     }
                 }
@@ -4262,7 +3964,7 @@ void ShowInstrumentWindow(Instrument* i)
                     if(pGen->pEff->VSTParamWnd != NULL)
                     {
                         pGen->pEff->VSTParamWnd->Hide();
-                        i->pEditButton->Release();
+                        i->pEditorButton->Release();
                     }
                 }
             }
@@ -4291,7 +3993,7 @@ void ShowInstrumentWindow(Instrument* i)
 				else
                 {
                     SmpWnd->Hide();
-                    i->pEditButton->Release();
+                    i->pEditorButton->Release();
                 }
 			}
 		}
@@ -4309,7 +4011,7 @@ void ShowInstrumentWindow(Instrument* i)
         else
         {
             syn->synthWin->Hide();
-            i->pEditButton->Release();
+            i->pEditorButton->Release();
 
             // This is a workaround shit because sometimes synthwindow becomes hidden somehow
             //if(syn->synthWin->isVisible() == false)
@@ -4323,7 +4025,7 @@ void ShowInstrumentWindow(Instrument* i)
 
 bool SwitchCurrentInstrumentWindowOFFIfNeeded(Instrument* newinstr)
 {
-    current_instr->pEditButton->Release();
+    current_instr->pEditorButton->Release();
     current_instr->instr_drawarea->Change();
 
 	// Hide previous instrument's window

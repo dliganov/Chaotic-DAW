@@ -298,13 +298,7 @@ void DigitStr::DoUpdate()
 
     //if(instr != NULL || trk != NULL)
     {
-        gAux->CheckFXString(this);
-    }
-
-    if(send != NULL)
-    {
-        send->UpdateSendMixcell();
-        R(Refresh_Mixer);
+        aux_panel->CheckFXString(this);
     }
 
     drawarea->Change();
@@ -467,27 +461,27 @@ void DigitStr::Click(int mouse_x, int mouse_y, bool dbclick, unsigned flags)
         oldval = 0;
     if(dbclick == true)
     {
-        if(gAux->auxmode != AuxMode_Mixer)
+        if(aux_panel->auxmode != AuxMode_Mixer)
         {
             CP->HandleButtDown(CP->view_mixer);
         }
 
-        if(mchanout != NULL && mchanout != &gAux->masterchan)
+        if(mchanout != NULL && mchanout != &aux_panel->masterchan)
         {
-            gAux->mix_sbar->full_len = float(NUM_MIXCHANNELS*(MixChanWidth + 1) + 14 + 3*(MixChanWidth + 1));
-            gAux->mix_sbar->visible_len = float(mixW - MixChanWidth - 10 - 1);
+            aux_panel->mix_sbar->full_len = float(NUM_MIXCHANNELS*(MixChanWidth + 1) + 14 + 3*(MixChanWidth + 1));
+            aux_panel->mix_sbar->visible_len = float(mixW - MixChanWidth - 10 - 1);
 
-            gAux->mix_sbar->offset = float(mchanout->col*MixChanWidth) - (gAux->mix_sbar->visible_len/2 - MixChanWidth/2);
-            if(gAux->mix_sbar->offset < 0)
+            aux_panel->mix_sbar->offset = float(mchanout->col*MixChanWidth) - (aux_panel->mix_sbar->visible_len/2 - MixChanWidth/2);
+            if(aux_panel->mix_sbar->offset < 0)
             {
-                gAux->mix_sbar->offset = 0;
+                aux_panel->mix_sbar->offset = 0;
             }
-            else if(gAux->mix_sbar->offset + gAux->mix_sbar->visible_len > gAux->mix_sbar->full_len)
+            else if(aux_panel->mix_sbar->offset + aux_panel->mix_sbar->visible_len > aux_panel->mix_sbar->full_len)
             {
-                gAux->mix_sbar->offset = gAux->mix_sbar->full_len - gAux->mix_sbar->visible_len;
+                aux_panel->mix_sbar->offset = aux_panel->mix_sbar->full_len - aux_panel->mix_sbar->visible_len;
             }
-            gAux->mix_sbar->actual_offset = gAux->mix_sbar->offset;
-            UpdateScrollbarOutput(gAux->mix_sbar);
+            aux_panel->mix_sbar->actual_offset = aux_panel->mix_sbar->offset;
+            UpdateScrollbarOutput(aux_panel->mix_sbar);
         }
 
         // Old mixer stuff
@@ -1464,7 +1458,7 @@ float Envelope::GetScale(Loc loc)
             }
             else if(loc == Loc_SmallGrid)
             {
-                return (float)gAux->tickWidth;
+                return (float)aux_panel->tickWidth;
             }
             else if(loc == Loc_StaticGrid)
             {

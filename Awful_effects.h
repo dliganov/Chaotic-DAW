@@ -76,15 +76,7 @@ public:
     Eff(Mixcell* mc);
     virtual ~Eff();
 
-    int         x;
-    int         y;
-    int         w;
-    int         h;
-
-    int         index;
-
     bool        folded;
-    bool        visible;
     Toggle*     fold_toggle;
 
     bool        bypass;
@@ -237,29 +229,6 @@ public:
     void ProcessData(float* in_buff, float* out_buff, int num_frames);
     void ParamUpdate(Parameter* param = NULL);
     Gain* Clone(Mixcell* mc);
-};
-
-class Send : public Eff
-{
-public:
-    Mixcell*    send_mixcell;
-    Parameter*  amount;
-    Knob*       r_amount;
-    ValueString*    vstr_amount;
-    DigitStr*   fxstr;
-
-    Send(Mixcell* mc, AliasRecord* ar);
-    virtual ~Send();
-    void ProcessData(float* in_buff, float* out_buff, int num_frames);
-    void ParamUpdate(Parameter* param = NULL);
-    void UpdateSendMixcell();
-    Send* Clone(Mixcell* mc);
-    void Disable();
-    void Enable();
-    void QueueDeletion();
-    void SaveCustomStateData(XmlElement & xmlParentNode);
-    void RestoreCustomStateData(XmlElement & xmlStateNode);
-    void SetNewMixcell(Mixcell* ncell);
 };
 
 class Filter : public Eff
