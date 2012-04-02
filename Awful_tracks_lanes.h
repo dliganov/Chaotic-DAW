@@ -59,7 +59,6 @@ public:
     bool        bunchito;
     Command*    envelopes;
     Instrument* defined_instr;
-    Pianoroll*  proll;
     Lane        vol_lane;
     Lane        pan_lane;
     SliderHVol* vol;
@@ -78,29 +77,6 @@ public:
     ~Trk();
     void Init(int track_num, bool controls);
     void UpdateLaneBases();
-};
-
-class Pianoroll
-{
-public:
-    int     trknum;
-    int     start_line;
-    int     end_line;
-    int     proll_width;
-    int     keypixwidth;
-
-    int     startpix;
-    int     endpix;
-
-    int         start_note;
-    ScrollBard*  sbar;
-    Toggle*     scale;
-    bool        scaled;
-    Trk*        trk;
-
-    bool        view;
-    Pianoroll*   next;
-    Pianoroll(Pattern* pt, int trknum, int pixwidth);
 };
 
 extern void             Bunch_Tracks(int y1, int y2);

@@ -12,15 +12,245 @@
 #include "awful_cursorandmouse.h"
 #include "awful_undoredo.h"
 #include "math.h"
+#include "Data sources/metronome_waves.h"
 
 
 void GenWindowToggleOnClick(Object* owner, Object* self);
 void EditButtonClick(Object* owner, Object* self);
 
+
+Instrument* GetInstrumentByIndex(int index)
+{
+    Instrument* instr = first_instr;
+    while(instr != NULL)
+    {
+        if(instr->index == index)
+        {
+            return instr;
+        }
+        instr = instr->next;
+    }
+
+    return NULL;
+}
+
+void UpdateInstrumentIndex()
+{
+    instrIndex = 0;
+    Instrument* instr = first_instr;
+    while(instr != NULL)
+    {
+        if(instr->index >= instrIndex)
+            instrIndex = instr->index + 1;
+        instr = instr->next;
+    }
+}
+
+void UpdateInstrumentIndices()
+{
+    int index = 0;
+    Instrument* instr = first_instr;
+    while(instr != NULL)
+    {
+        instr->index = index++;
+        instr = instr->next;
+    }
+}
+
+void AddInstrument(Instrument* i)
+{
+    GetOriginalInstrumentName(i->name, i->name);
+
+    i->alias->active = true;
+
+    strcpy(&C.last_char, "q");
+    C.last_note = 60;
+
+    num_instrs++;
+
+    if(first_instr == NULL && last_instr == NULL)
+    {
+        i->prev = NULL;
+        i->next = NULL;
+        first_instr = i;
+    }
+    else
+    {
+        last_instr->next = i;
+        i->prev = last_instr;
+        i->next = NULL;
+    }
+    last_instr = i;
+
+    if(ProjectLoadingInProgress == false)
+        IP->UpdateIndices();
+
+    if(i->temp == false)
+    {
+        ChangesIndicate();
+    }
+}
+
+////////////////////////////////////////////////////////
+// Load a sample from a file and give it an alias
+void LoadMetronomeSamples()
+{
+    SF_INFO         sf_info;
+    memset(&sf_info, 0, sizeof(SF_INFO));
+
+    sf_info.frames = 2316;
+    sf_info.samplerate = 44100;
+    sf_info.channels = 1;
+    sf_info.format = SF_FORMAT_WAV;
+    Sample* sample = new Sample((float*)MetroWavs::beatwav, NULL, NULL, sf_info);
+    barsample = sample;
+    barsample->CreateAutoPattern();
+    barsample->prevInst->ed_note->SetValue(baseNote + 4);
+    barsample->prevInst->UpdateNote();
+
+    sf_info.frames = 2316;
+    sf_info.samplerate = 44100;
+    sf_info.channels = 1;
+    sf_info.format = SF_FORMAT_WAV;
+    sample = new Sample((float*)MetroWavs::beatwav, NULL, NULL, sf_info);
+    beatsample = sample;
+    beatsample->CreateAutoPattern();
+}
+
+////////////////////////////////////////////////////////
+// Load a sample from a file and give it an alias
+Sample* AddSample(const char* path, const char* named, const char* alias, bool temp)
+{
+    SF_INFO         sf_info;
+    SNDFILE*        soundfile = NULL;
+    unsigned int    memsize;
+
+    char* name = (char*)path;
+    while(strchr(name, '\\') != NULL)
+        name = strchr(name, '\\') + 1;
+
+    memset(&sf_info, 0, sizeof(SF_INFO));
+    soundfile = sf_open(path, SFM_READ, &sf_info);
+
+    if(sf_error(soundfile) != 0)
+    {
+        return NULL;
+    }
+
+    memsize = sf_info.channels*(unsigned int)sf_info.frames;
+    float* data = new float[memsize*sizeof(float)];
+    sf_readf_float(soundfile, data, sf_info.frames);
+
+    if(sf_error(soundfile) != 0)
+    {
+        return NULL;
+    }
+    else
+    {
+        sf_close(soundfile);
+
+        Sample* sample = new Sample(data, (char*)path, (char*)name, sf_info);
+        if(alias == NULL)
+        {
+            char nalias[MAX_ALIAS_STRING];
+            GetOriginalInstrumentAlias((char*)name, nalias);
+            sample->SetAlias(nalias);
+        }
+        else
+            sample->SetAlias((char*)alias);
+
+        sample->temp = temp;
+        AddInstrument(sample);
+
+        return sample;
+    }
+}
+
+CGenerator* AddInternalGenerator(const char* path, const char* alias)
+{
+    CGenerator* pGen = NULL;
+    ModListEntry* mlentry = pModulesList->SearchEntryByPath(path);
+
+    // TODO: this is a backward-compatibility workaround, to be removed in future:
+    if(mlentry == NULL)
+    {
+        if(strcmp(path, "internal://chaotic") == 0)
+        {
+            strcpy((char*)path, "internal://synth1");
+            mlentry = pModulesList->SearchEntryByPath(path);
+        }
+    }
+    // TODO: end of backward-compatibility workaround
+
+    switch(mlentry->subtype)
+    {
+        case ModSubType_Synth1:
+            pGen = new Synth;
+            pGen->SetAlias((char*)alias);
+            pGen->SetName("Chaosynth");
+            pGen->SetPresetPath(".\\Presets\\Chaotic\\");
+            pGen->SetPath("internal://synth1");
+            break;
+        default:
+            pGen = NULL;
+            break;
+    }
+
+    jassert(pGen != NULL);
+
+    AddInstrument(pGen);
+
+    return pGen;
+}
+
+VSTGenerator* AddVSTGenerator(const char* path, const char* name, const char* alias)
+{
+    VSTGenerator* vstgen  = NULL;
+
+    VSTGenerator* gen = new VSTGenerator((char*)path, (char*)alias);
+
+    if ((gen->pEff != NULL) && (gen->pEff->category == ModuleType_Generator))
+    {
+        strcpy(gen->path, path);
+        strcpy(gen->name, name);
+        gen->SetAlias((char*)alias);
+        AddInstrument(gen);
+        vstgen = gen;
+    }
+    else
+    {
+        delete gen;
+        vstgen = NULL;
+    }
+    return vstgen;
+}
+
+VSTGenerator* AddVSTGenerator(VSTGenerator* vst, char* alias)
+{
+    VSTGenerator* vstgen  = NULL;
+
+    VSTGenerator* gen = new VSTGenerator(vst, alias);
+
+    if ((gen->pEff != NULL) && (gen->pEff->category == ModuleType_Generator))
+    {
+        strcpy(gen->path, vst->path);
+        strcpy(gen->name, vst->name);
+        gen->SetAlias((char*)alias);
+        AddInstrument(gen);
+        vstgen = gen;
+    }
+    else
+    {
+        delete gen;
+        vstgen = NULL;
+    }
+    return vstgen;
+}
+
+
 Instrument::Instrument()
 {
     dereferenced = false;
-    buff2 = buff3 = false;
     alias = NULL;
     alias_image = NULL;
     envelopes = NULL;
@@ -48,10 +278,6 @@ Instrument::Instrument()
     rampCounterP = 0;
     cfsP = 0;
 
-    folded = false;
-    fold_toggle = new Toggle(&folded, &scope);
-    fold_toggle->panel = IP;
-
     mpan = new SliderHPan(NULL, &scope);
     mpan->SetHint("Instrument panning");
     params->pan->AddControl(mpan);
@@ -64,7 +290,6 @@ Instrument::Instrument()
     mute->SetHint("Mute instrument");
     solo = new Toggle(this, Toggle_Solo);
     solo->SetHint("Solo instrument");
-    AddNewControl(fold_toggle, IP);
     AddNewControl(mpan, NULL);
     AddNewControl(mvol, NULL);
     AddNewControl(mute, NULL);
@@ -128,13 +353,12 @@ Instrument::~Instrument()
 
     MC->RemoveDrawArea(instr_drawarea);
 
-    if(this == Solo_Instr)
-        Solo_Instr = NULL;
+    if(this == solo_Instr)
+        solo_Instr = NULL;
 
     delete params;
     delete vu;
     delete stepvu;
-    RemoveControlCommon(fold_toggle);
     RemoveControlCommon(mpan);
     RemoveControlCommon(mvol);
     RemoveControlCommon(mute);
@@ -146,7 +370,7 @@ Instrument::~Instrument()
 
     if(autoPatt != NULL)
     {
-        RemoveOriginalPattern(autoPatt);
+        RemoveBasePattern(autoPatt);
     }
 
     if(prevInst!= NULL)
@@ -182,13 +406,13 @@ Instrument* Instrument::Clone()
     {
         case Instr_Sample:
             // TODO: rework sample cloning to copy from internal memory
-            instr = (Instrument*)Add_Sample(path, name, nalias);
+            instr = (Instrument*)AddSample(path, name, nalias);
             break;
         case Instr_VSTPlugin:
-            instr = (Instrument*)Add_VSTGenerator((VSTGenerator*)this, nalias);
+            instr = (Instrument*)AddVSTGenerator((VSTGenerator*)this, nalias);
             break;
         case Instr_Generator:
-            instr = (Instrument*)Add_Synth(nalias);
+            instr = (Instrument*)AddInternalGenerator(path, nalias);
             break;
     }
 
@@ -219,7 +443,7 @@ void Instrument::CreateAutoPattern()
     }
     autoPatt = new Pattern("auto", 0.0f, 16.0f, 0, 0, true);
     autoPatt->instr_owner = this;
-    autoPatt->OrigPt = autoPatt;
+    autoPatt->basePattern = autoPatt;
     autoPatt->autopatt = true;
     autoPatt->patt = autoPatt;
     autoPatt->trkdata = autoPatt->field_trkdata = ptrk;
@@ -345,26 +569,26 @@ bool Instrument::DereferenceElements()
         }
         else if(el->type == El_Pattern)
         {
-            DereferencePattern((Pattern*)el);
+            DereferenceBoundPattern((Pattern*)el);
         }
 
         el = elnext;
     }
 
-    DereferencePattern(aux_panel->blankPt);
+    DereferenceBoundPattern(aux_panel->blankPt);
 
     dereferenced = alldone;
 
     return alldone;
 }
 
-void Instrument::DereferencePattern(Pattern* pt)
+void Instrument::DereferenceBoundPattern(Pattern* pt)
 {
     if(pt->ibound != NULL && pt->ibound == this)
     {
         pt->ibound = NULL;
-        if(pt->OrigPt != NULL && pt->OrigPt->ibound == this)
-            pt->OrigPt->ibound = NULL;
+        if(pt->basePattern != NULL && pt->basePattern->ibound == this)
+            pt->basePattern->ibound = NULL;
     }
 }
 
@@ -386,16 +610,20 @@ void Instrument::ForceDeactivate()
 
 void Instrument::ActivateTrigger(Trigger* tg)
 {
-    tg->frame_phase = 0;
-    tg->sec_phase = 0;
-    tg->outsync = false;
+    Instance* ii = (Instance*)tg->el;
+
     tg->tgworking = true;
     tg->muted = false;
     tg->broken = false;
+    tg->outsync = false;
+    tg->frame_phase = 0;
+    tg->sec_phase = 0;
     tg->auCount = 0;
-	tg->frames_remaining = 0;
-	tg->tgstate = TgState_Sustain;
-    tg->signal = 1;
+    tg->tgstate = TgState_Sustain;
+    tg->vol_base = ii->loc_vol->outval;
+    tg->pan_base = ii->loc_pan->outval;
+    tg->note_val = ii->ed_note->value;
+    tg->freq = ii->ed_note->freq;
 
     if(tg_last == NULL)
     {
@@ -475,19 +703,23 @@ void Instrument::GenerateData(long num_frames, long mixbuffframe)
         }
 
         // Process envelopes for this instrument
-        tgenv = envelopes;
-        // Rewind to the very first, to provide correct envelopes overriding
-        while(tgenv != NULL && tgenv->group_prev != NULL) tgenv = tgenv->group_prev;
-        // Now process them all
-        while(tgenv != NULL)
         {
-            env = (Envelope*)((Command*)tgenv->el)->paramedit;
-            if(env->newbuff && buffframe >= env->last_buffframe)
+            tgenv = envelopes;
+
+            // Rewind to the very first, to provide correct envelopes override
+            while(tgenv != NULL && tgenv->group_prev != NULL) tgenv = tgenv->group_prev;
+
+            // Now process them all
+            while(tgenv != NULL)
             {
-                param = ((Command*)tgenv->el)->param;
-                param->SetValueFromEnvelope(env->buff[mixbuffframe + buffframe], env);
+                env = (Envelope*)((Command*)tgenv->el)->paramedit;
+                if(env->newbuff && buffframe >= env->last_buffframe)
+                {
+                    param = ((Command*)tgenv->el)->param;
+                    param->SetValueFromEnvelope(env->buff[mixbuffframe + buffframe], env);
+                }
+                tgenv = tgenv->group_next;
             }
-            tgenv = tgenv->group_next;
         }
 
         // Process triggers for the current chunk
@@ -496,7 +728,7 @@ void Instrument::GenerateData(long num_frames, long mixbuffframe)
         {
             tgnext = tg->loc_act_next;
 
-            // Clean inbuff to ensure obsolete data won't be used
+            // Clean in_buff to ensure obsolete data won't be used
             memset(in_buff, 0, num_frames*sizeof(float)*2);
             actual = WorkTrigger(tg, frames_to_process, frames_remaining, buffframe, mbframe);
 
@@ -560,7 +792,7 @@ void Instrument::PreProcessTrigger(Trigger* tg, bool* skip, bool* fill, long num
         fx2 = &tg->apatt_instance->fxstate;
         aiframe = ai->parent_trigger->ev->frame;
     }
-    else if(tg->patt->OrigPt->autopatt == true)
+    else if(tg->patt->basePattern->autopatt == true)
     {
         ai = tg->patt;
         fx2 = &tg->patt->fxstate;
@@ -596,7 +828,7 @@ void Instrument::PreProcessTrigger(Trigger* tg, bool* skip, bool* fill, long num
     // Check conditions for muting
     if(ii->instr->params->muted == true || 
        /* tg->trkdata->params->muted == true || !(TrkSolo == NULL || TrkSolo == tg->trkdata)|| */
-      !(Solo_Instr == NULL || Solo_Instr == ii->instr)||
+      !(solo_Instr == NULL || solo_Instr == ii->instr)||
        (fx1->t_mutecount > 0 || (fx2 != NULL && fx2->t_mutecount)))
     {
         // If note just begun then there's nothing to declick. Set aaFilledCount to full for immediate muting
@@ -713,16 +945,14 @@ void Instrument::StaticInit(Trigger* tg, long num_frames)
 {
     ii = (Instance*)tg->el;
 
-    venvA = NULL;
-    venv0 = NULL;
     venv1 = NULL;
     venv2 = NULL;
     venv3 = NULL;
-    penv0 = NULL;
-    penv2 = NULL;
+
     penv1 = NULL;
+    penv2 = NULL;
     penv3 = NULL;
-    mcell = NULL;
+
     pan0 = pan1 = pan2 = pan3 = pan4 = 0;
     volbase = 0;
     venvphase = 0;
@@ -746,7 +976,7 @@ void Instrument::StaticInit(Trigger* tg, long num_frames)
         volbase *= InvVolRange;
     }
 
-    if(tg->patt->OrigPt->autopatt == true)
+    if(tg->patt->basePattern->autopatt == true)
     {
         // Apply external autopattern stuff
         if(tg->patt->parent_trigger != NULL)
@@ -755,9 +985,9 @@ void Instrument::StaticInit(Trigger* tg, long num_frames)
             volbase *= tg->patt->parent_trigger->patt->loc_vol->outval;
         }
     
-        if(tg->patt->OrigPt->instr_owner != NULL)
+        if(tg->patt->basePattern->instr_owner != NULL)
         {
-            volbase *= tg->patt->OrigPt->instr_owner->params->vol->outval;
+            volbase *= tg->patt->basePattern->instr_owner->params->vol->outval;
         }
     }
 
@@ -926,15 +1156,6 @@ void Instrument::PostProcessTrigger(Trigger* tg,
     tc0 = buffframe*2;
     for(long cc = 0; cc < num_frames; cc++)
     {
-/*      // Slidenote mixing postponed
-        Trigger* stg = tg->first_tgslide;
-        while(stg != NULL)
-        {
-            stg->mcell->in_buff[tc] += data_buff[tc0]*vol*volL*stg->signal;
-            stg->mcell->in_buff[tc + 1] += data_buff[tc0 + 1]*vol*volR*stg->signal;
-            stg = stg->group_next;
-        }*/
-
         // pan0 is unchanged
 
         // then to pattern/env
@@ -946,12 +1167,6 @@ void Instrument::PostProcessTrigger(Trigger* tg,
         // then to instrument/env
         if(penv2 != NULL)
             pan3 = penv2->buffoutval[mixbuffframe + cc];
-
-        /* Track stuff postponed
-        // then to track/env
-        if(penv3 != NULL)
-            pan4 = penv3->buffov[mixbuffframe + cc];
-        */
 
         pan = (((pan0*(1 - c_abs(pan1)) + pan1)*(1 - c_abs(pan2)) + pan2)*(1 - c_abs(pan3)) + pan3);
 
@@ -969,41 +1184,14 @@ void Instrument::PostProcessTrigger(Trigger* tg,
         volR = wt_sine[ai];
 
         envV = 1;
-/*      if(venv0 != NULL)
-        {
-            envV *= venv0->buffov[buffframe + cc];
-        }*/
 
         if(venv2 != NULL)
         {
             envV *= venv2->buffoutval[mixbuffframe + cc];
         }
 
-        /* Track stuff postponed
-        if(venv3 != NULL)
-        {
-            data_buff[tc0] *= venv3->buffov[mixbuffframe + cc];
-            data_buff[tc0 + 1] *= venv3->buffov[mixbuffframe + cc];
-            if(buff2)
-            {
-                data_buff2[tc0] *= venv3->buffov[mixbuffframe + cc];
-                data_buff2[tc0 + 1] *= venv3->buffov[mixbuffframe + cc];
-            }
-            if(buff3)
-            {
-                data_buff3[tc0] *= venv3->buffov[mixbuffframe + cc];
-                data_buff3[tc0 + 1] *= venv3->buffov[mixbuffframe + cc];
-            }
-        }
-        */
-
         out_buff[tc0] += in_buff[tc0]*envV*vol*volL;
         out_buff[tc0 + 1] += in_buff[tc0 + 1]*envV*vol*volR;
-
-        //float d = c_abs(out_buff[tc0] - tg->prevAAval);
-        //if(d > 0.04f)
-        //    int a = 1;
-        //tg->prevAAval = out_buff[tc0];
 
         tc0++;
         tc0++;
@@ -1082,16 +1270,6 @@ void Instrument::FillMixChannel(long num_frames, long buffframe, long mixbufffra
         {
             rMax = outR;
         }
-
-        /*
-        vucount--;
-        if(vucount == 0)
-        {
-            vucount = 55;
-            vu->SetLR(lMax, rMax);
-            stepvu->SetLR(lMax, rMax);
-            lMax = rMax = 0;
-        }*/
     }
 
     lMax = pow(lMax, 0.4f);
@@ -1107,16 +1285,6 @@ void Instrument::ApplyDSP(Trigger* tg, long buffframe, long num_frames)
     {
         in_buff[tc0] = data_buff[tc0];
         in_buff[tc0 + 1] = data_buff[tc0 + 1];
-        if(buff2)
-        {
-            in_buff[tc0] += data_buff2[tc0];
-            in_buff[tc0 + 1] += data_buff2[tc0 + 1];
-        }
-        if(buff3)
-        {
-            in_buff[tc0] += data_buff3[tc0];
-            in_buff[tc0 + 1] += data_buff3[tc0 + 1];
-        }
 
         tc0++;
         tc0++;
@@ -1151,44 +1319,6 @@ void Instrument::SetAlias(char * al)
     }
 }
 
-void Instrument::EnqueueParamEnvelopeTrigger(Trigger* tg)
-{
-    tg->tgworking = true;
-    if(envelopes != NULL)
-    {
-        envelopes->group_next = tg;
-    }
-    tg->group_prev = envelopes;
-    tg->group_next = NULL;
-    envelopes = tg;
-
-    Parameter* param = ((Command*)tg->el)->param;
-    {
-        tg->prev_value = (param->val - param->offset)/param->range;
-    }
-    // New envelopes unblock the param ability to be changed by envelope
-    param->UnblockEnvAffect();
-}
-
-void Instrument::DequeueParamEnvelope(Trigger* tg)
-{
-    if(envelopes == tg)
-    {
-        envelopes = tg->group_prev;
-    }
-
-    if(tg->group_prev != NULL)
-    {
-        tg->group_prev->group_next = tg->group_next;
-    }
-    if(tg->group_next != NULL)
-    {
-        tg->group_next->group_prev = tg->group_prev;
-    }
-    tg->group_prev = NULL;
-    tg->group_next = NULL;
-}
-
 void Instrument::SetLastLength(float lastlength)
 {
     last_note_length = lastlength;
@@ -1205,14 +1335,15 @@ void Instrument::SetLastVol(float lastvol)
 }
 
 // This function helps to declick when we're forcing note removal due to lack of free 
-// voice slots
-//
+// voices (free voice slots)
 void Instrument::FlowTriggers(Trigger* tgfrom, Trigger* tgto)
 {
     memset(out_buff, 0, rampCount*sizeof(float)*2);
     memset(in_buff, 0, rampCount*sizeof(float)*2);
     memset(tgto->auxbuff, 0, rampCount*sizeof(float)*2);
+
     long actual = WorkTrigger(tgfrom, rampCount, rampCount, 0, 0);
+
     for(int ic = 0; ic < actual; ic++)
     {
         out_buff[ic*2] *= float(actual - ic)/actual;
@@ -1269,7 +1400,7 @@ void Instrument::Load(XmlElement * instrNode)
     params->solo = solo;
     if(solo)
     {
-        Solo_Instr = this;
+        solo_Instr = this;
     }
 }
 
@@ -1279,12 +1410,15 @@ Sample::Sample(float* data, char* smp_path, char* smp_name, SF_INFO sfinfo)
     sample_data = data;
 
     if(smp_path != NULL)
+    {
         strcpy(path, smp_path);
+    }
 
     if(smp_name != NULL)
+    {
         strcpy(name, smp_name);
+    }
 
-    strcpy(this->preset_path, "");
     sample_info = sfinfo;
 
     rateDown = (float)sample_info.samplerate/fSampleRate;
@@ -1360,21 +1494,9 @@ void Sample::ActivateTrigger(Trigger* tg)
     bool skip = !(samplent->InitCursor(&tg->wt_pos));
     if(skip == false)
     {
-        tg->outsync = false;
-        tg->tgworking = true;
-        tg->muted = false;
-        tg->broken = false;
-        tg->auCount = 0;
-        tg->frames_remaining = 0;
-        tg->tgstate = TgState_Sustain;
-        tg->frame_phase = 0;
-        tg->sec_phase = 0;
-        tg->signal = 1;
-        tg->vol_base = samplent->loc_vol->outval;
-        tg->pan_base = samplent->loc_pan->outval;
+        Instrument::ActivateTrigger(tg);
+
         tg->freq_incr_base = samplent->freq_incr_base;
-        tg->freq = samplent->ed_note->freq;
-        tg->note_val = samplent->ed_note->value;
         tg->ep1 = envVol->p_first;
         tg->envVal1 = tg->ep1->y_norm;
         tg->env_phase1 = 0;
@@ -1388,27 +1510,6 @@ void Sample::ActivateTrigger(Trigger* tg)
             tg->freq = NoteToFreq(pi->ed_note->value + samplent->ed_note->value);
         }
         tg->freq_incr_sgn = !samplent->revB ? 1 : -1;
-
-        Trigger* tgs = tg->first_tgslide;
-        while(tgs != NULL)
-        {
-            tgs->signal = 0;
-            tgs = tgs->group_next;
-        }
-
-        if(tg_last == NULL)
-        {
-            tg->loc_act_prev = NULL;
-            tg->loc_act_next = NULL;
-            tg_first = tg;
-        }
-        else
-        {
-            tg_last->loc_act_next = tg;
-            tg->loc_act_prev = tg_last;
-            tg->loc_act_next = NULL;
-        }
-        tg_last = tg;
     }
 }
 
@@ -1575,20 +1676,6 @@ long Sample::ProcessTrigger(Trigger * tg, long num_frames, long buffframe)
     }
 }
 
-void Sample::ShowWindow()
-{
-    //if(smpwindow == NULL)
-    //{
-        //smpwindow = new InstrWindow(sample_name);
-    //}
-
-    //smpwindow->Show();
-}
-
-void Sample::CloseWindow()
-{
-}
-
 void Sample::UpdateNormalizeFactor()
 {
     float dmax = 0;
@@ -1690,7 +1777,7 @@ void Sample::DumpData()
     delete os;
 }
 
-Gen::Gen()
+CGenerator::CGenerator()
 {
     type = Instr_Generator;
 
@@ -1700,56 +1787,30 @@ Gen::Gen()
     //pEditButton->SetImages(NULL, img_btwnd_g);
 }
 
-Gen::~Gen()
+CGenerator::~CGenerator()
 {
 }
 
-void Gen::ActivateTrigger(Trigger* tg)
+void CGenerator::ActivateTrigger(Trigger* tg)
 {
-    Gennote* gnote = (Gennote*)tg->el;
+    Instance* ii = (Instance*)tg->el;
 
-    tg->outsync = false;
-    tg->tgworking = true;
-    tg->muted = false;
-    tg->broken = false;
-    tg->auCount = 0;
-    tg->frames_remaining = 0;
-    tg->tgstate = TgState_Sustain;
-    tg->frame_phase = 0;
-    tg->sec_phase = 0;
-    tg->vol_base = gnote->loc_vol->outval;
-    tg->pan_base = gnote->loc_pan->outval;
-    tg->freq = gnote->freq;
-    tg->note_val = gnote->ed_note->value;
-    if(gnote->ed_note->relative == true)
+    Instrument::ActivateTrigger(tg);
+
+    if(ii->ed_note->relative == true)
     {
+        jassert(tg->patt->parent_trigger != NULL);
         Instance* pi = (Instance*)tg->patt->parent_trigger->el;
         if(pi->freq_ratio > 0)
             tg->freq /= pi->freq_ratio;
         tg->note_val += pi->ed_note->value;
-        tg->freq = NoteToFreq(pi->ed_note->value + gnote->ed_note->value);
+        tg->freq = NoteToFreq(pi->ed_note->value + ii->ed_note->value);
     }
 
     tg->wt_pos = 0;
-    tg->signal = 1;
-    tg->prevAAval = tg->prevAAval1 = 0;
-
-    if(tg_last == NULL)
-    {
-        tg->loc_act_prev = NULL;
-        tg->loc_act_next = NULL;
-        tg_first = tg;
-    }
-    else
-    {
-        tg_last->loc_act_next = tg;
-        tg->loc_act_prev = tg_last;
-        tg->loc_act_next = NULL;
-    }
-    tg_last = tg;
 }
 
-void Gen::CheckBounds(Gennote* gnote, Trigger* tg, long num_frames)
+void CGenerator::CheckBounds(Gennote* gnote, Trigger* tg, long num_frames)
 {
 	if(tg->tgstate == TgState_Sustain && gnote->preview == false && tg->frame_phase >= gnote->frame_length)
     {
@@ -1775,12 +1836,22 @@ void Gen::CheckBounds(Gennote* gnote, Trigger* tg, long num_frames)
     }
 }
 
+
+SineNoise::SineNoise()
+{
+    SetName("SineNoise");   // Name, displayed on instrument panel
+
+    strcpy(this->preset_path, ".\\Presets\\SineNoise\\");   // Preset path
+    strcpy(this->path,"internal://sinenoise");    // Internal path
+    uniqueID = MAKE_FOURCC('S','N','O','I');    // unique ID
+}
+
+SineNoise::~SineNoise()
+{
+}
+
 Synth::Synth()
 {
-    SetName("Chaosynth");
-
-    strcpy(this->preset_path, ".\\Presets\\Chaotic\\");
-    strcpy(this->path,"internal://chaotic");
     uniqueID = MAKE_FOURCC('C','S','Y','N');
 
     fp = 0;
@@ -2008,7 +2079,6 @@ Synth::Synth()
     AddChild(delay);
     AddChild(reverb);
 
-    buff2 = buff3 = true;
     osc1fmulStatic = osc2fmulStatic = osc3fmulStatic = 1;
 
     synthWin = NULL;
@@ -2215,21 +2285,24 @@ void Synth::ResetValues()
 void Synth::ActivateTrigger(Trigger* tg)
 {
     int vnum = 0;
+
+    CGenerator::ActivateTrigger(tg);
+
     if(numUsedVoices == maxVoices)
     {
-		vnum = tg_first->voicenum;
+        vnum = tg_first->voicenum;
         if(tg_first->frame_phase > 0)
         {
             FlowTriggers(tg_first, tg);
         }
         else if(tg_first->lcount > 0)
-		{
+        {
             memcpy(tg->auxbuff, tg_first->auxbuff, (int)(tg_first->lcount*sizeof(float)*2));
-			tg->lcount = tg_first->lcount;
-			tg_first->lcount = 0;
-		}
+            tg->lcount = tg_first->lcount;
+            tg_first->lcount = 0;
+        }
 
-		if(tg_first != NULL)
+        if(tg_first != NULL)
             tg_first->Deactivate();
     }
     else
@@ -2249,8 +2322,9 @@ void Synth::ActivateTrigger(Trigger* tg)
     }
     tg->voicenum = vnum;
     numUsedVoices++;
+
+    // Need to ensure we're not exceeding maximum allowed voices
     jassert(numUsedVoices <= maxVoices + 1);
-    Gen::ActivateTrigger(tg);
 
     tg->sec_phase1 = 0;
     tg->sec_phase2 = 0;
@@ -2264,6 +2338,7 @@ void Synth::ActivateTrigger(Trigger* tg)
     tg->ep3 = env3->p_first;
     tg->ep4 = env4->p_first;
     tg->ep5 = env5->p_first;
+
     tg->envVal1 = tg->ep1->y_norm;
     tg->envVal2 = tg->ep2->y_norm;
     tg->envVal3 = tg->ep3->y_norm;
@@ -2275,9 +2350,6 @@ void Synth::ActivateTrigger(Trigger* tg)
     tg->env_phase3 = 0;
     tg->env_phase4 = 0;
     tg->env_phase5 = 0;
-
-    //filt1[vnum]->Reset();
-    //filt2[vnum]->Reset();
 }
 
 void Synth::DeactivateTrigger(Trigger* tg)
@@ -3377,7 +3449,7 @@ VSTGenerator::VSTGenerator(char* fullpath, char* alias)
     AliasRecord ar;
     memset(&ar, 0, sizeof(AliasRecord));
     strcpy(ar.alias, alias);
-    ar.type = EffType_VSTPlugin;
+    ar.type = ModSubType_VSTPlugin;
     this->type = Instr_VSTPlugin;
     this->NumMidiEvents = 0;
     this->pEff = new VSTEffect(NULL, &ar, fullpath);
@@ -3401,13 +3473,14 @@ VSTGenerator::VSTGenerator(VSTGenerator* vst, char* alias)
     AliasRecord ar;
     memset(&ar, 0, sizeof(AliasRecord));
     strcpy(ar.alias, alias);
-    ar.type = EffType_VSTPlugin;
+    ar.type = ModSubType_VSTPlugin;
     this->type = Instr_VSTPlugin;
     this->NumMidiEvents = 0;
     this->pEff = vst->pEff->Clone(NULL);
     scope.eff = this->pEff;
     this->pEff->scope = scope;
     muteCount = 0;
+
     if (this->pEff != NULL)
     {
         /* Unable to initialize FX - nullify the pointer then */
@@ -3543,7 +3616,7 @@ void VSTGenerator::DeactivateTrigger(Trigger* tg)
 {
     Gennote* gnote = (Gennote*)tg->el;
     this->PostNoteOFF(gnote->ed_note->value, 127);
-    ((Instrument*)this)->Instrument::DeactivateTrigger(tg);
+   ((Instrument*)this)->Instrument::DeactivateTrigger(tg);
 }
 
 void VSTGenerator::VSTProcess(long num_frames, long buffframe)
@@ -3600,7 +3673,7 @@ void VSTGenerator::VSTProcess(long num_frames, long buffframe)
 void VSTGenerator::GenerateData(long num_frames, long mixbuffframe)
 {
     bool off;
-    if(params->muted == false && (Solo_Instr == NULL || Solo_Instr == this))
+    if(params->muted == false && (solo_Instr == NULL || solo_Instr == this))
     {
         off = false;
     }
@@ -3615,10 +3688,7 @@ void VSTGenerator::GenerateData(long num_frames, long mixbuffframe)
     while(tg != NULL)
     {
         tgnext = tg->loc_act_next;
-        //if(tg->patt->IsPresent() && tg->el->IsPresent())
-        {
-            ProcessTrigger(tg, num_frames);
-        }
+        ProcessTrigger(tg, num_frames);
         tg = tgnext;
     }
 
@@ -3854,24 +3924,6 @@ void VSTGenerator::Load(XmlElement * instrNode)
     {
        pEff->Load(effModule);
     }
-
-    //XmlElement* stateNode = instrNode->getChildByName(T("Module"));
-    //if(stateNode != NULL)
-    //{
-    //    pEff->RestoreStateData(*stateNode);
-    //}
-
-/*
-    const XmlElement* const state = instrNode->getChildByName (T("STATE"));
-
-    if(state != 0)
-    {
-        MemoryBlock m;
-        m.fromBase64Encoding (state->getAllSubText());
-
-        pEff->SetStateInformation (m.getData(), m.getSize());
-    }
-*/
 }
 
 /*
@@ -4028,7 +4080,7 @@ bool SwitchCurrentInstrumentWindowOFFIfNeeded(Instrument* newinstr)
     current_instr->pEditorButton->Release();
     current_instr->instr_drawarea->Change();
 
-	// Hide previous instrument's window
+    // Hide previous instrument's window
     if(current_instr->type == Instr_VSTPlugin)
     {
         VSTGenerator* pGen = (VSTGenerator*)current_instr;
@@ -4051,15 +4103,14 @@ bool SwitchCurrentInstrumentWindowOFFIfNeeded(Instrument* newinstr)
     }
     else if(current_instr->type == Instr_Sample)
     {
-		if(SmpWnd != NULL && SmpWnd->Showing() == true)
-		{
-			//if(newinstr->type != Instr_Sample)
-			{
-				SmpWnd->Hide();
-			}
-			return true;
-		}
-
+        if(SmpWnd != NULL && SmpWnd->Showing() == true)
+        {
+            //if(newinstr->type != Instr_Sample)
+            {
+                SmpWnd->Hide();
+            }
+            return true;
+        }
     }
     else if(current_instr->type == Instr_Generator)
     {

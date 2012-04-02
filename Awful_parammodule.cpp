@@ -22,6 +22,7 @@ ParamModule::ParamModule()
 
     memset(&scope, 0, sizeof(Scope));
     strcpy(current_preset_name, "Untitled");
+    strcpy(this->preset_path, "");
 
     first_param = last_param = NULL;
     first_pcell = last_pcell = NULL;
@@ -898,6 +899,71 @@ void ParamModule::ToggleParamWindow()
         {
             paramWnd->Show();
         }
+    }
+}
+
+void ParamModule::EnqueueParamEnvelopeTrigger(Trigger* tg)
+{
+    tg->tgworking = true;
+    if(envelopes != NULL)
+    {
+        envelopes->group_next = tg;
+    }
+    tg->group_prev = envelopes;
+    tg->group_next = NULL;
+    envelopes = tg;
+
+    Parameter* param = ((Command*)tg->el)->param;
+    {
+        tg->prev_value = (param->val - param->offset)/param->range;
+    }
+    // New envelopes unblock the param ability to be changed by envelope
+    param->UnblockEnvAffect();
+}
+
+void ParamModule::DequeueParamEnvelopeTrigger(Trigger* tg)
+{
+    if(envelopes == tg)
+    {
+        envelopes = tg->group_prev;
+    }
+
+    if(tg->group_prev != NULL)
+    {
+        tg->group_prev->group_next = tg->group_next;
+    }
+    if(tg->group_next != NULL)
+    {
+        tg->group_next->group_prev = tg->group_prev;
+    }
+    tg->group_prev = NULL;
+    tg->group_next = NULL;
+}
+
+void ParamModule::SetName(char* name)
+{
+    if (NULL != name)
+    {
+        memset(this->name, 0, MAX_NAME_STRING * sizeof(char));
+        strncpy(this->name, name, min(MAX_NAME_STRING - 1, strlen(name)));
+    }
+}
+
+void ParamModule::SetPath(char* path)
+{
+    if (NULL != name)
+    {
+        memset(this->path, 0, MAX_PATH_STRING * sizeof(char));
+        strncpy(this->path, path, min(MAX_PATH_STRING - 1, strlen(path)));
+    }
+}
+
+void ParamModule::SetPresetPath(char* presetpath)
+{
+    if (NULL != name)
+    {
+        memset(this->preset_path, 0, MAX_PATH_STRING * sizeof(char));
+        strncpy(this->preset_path, presetpath, min(MAX_PATH_STRING - 1, strlen(presetpath)));
     }
 }
 

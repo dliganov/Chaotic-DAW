@@ -1824,12 +1824,12 @@ int J_ScopeWidth(Scope* scope)
 
         if(scope->eff != NULL)
         {
-    		if(scope->eff->category == EffCategory_Effect)
+    		if(scope->eff->category == ModuleType_Effect)
     		{
     			w += J_TextInstrWidth(scope->eff->name);
     			w += J_TextInstrWidth(".");
     		}
-    		else if(scope->eff->category == EffCategory_Generator)
+    		else if(scope->eff->category == ModuleType_Generator)
     		{
     			w += J_TextInstrWidth(scope->eff->arec->alias);
     			w += J_TextInstrWidth(".");
@@ -1888,13 +1888,13 @@ void J_Scope_type(Graphics& g, Scope* scope)
 
         if(scope->eff != NULL && scope->eff->to_be_deleted == false)
         {
-    		if(scope->eff->category == EffCategory_Effect)
+    		if(scope->eff->category == ModuleType_Effect)
     		{
                 g.setColour(Colour(0xffFFFFFF));
     			J_TextSmall_type(g, scope->eff->name);
     			J_TextSmall_type(g, ".");
     		}
-    		else if(scope->eff->category == EffCategory_Generator)
+    		else if(scope->eff->category == ModuleType_Generator)
     		{
                 g.setColour(Colour(0xff6496FF));
     			J_TextSmall_type(g, scope->eff->arec->alias);
@@ -4087,21 +4087,21 @@ void J_Pattern(Graphics& g, Pattern* pt, Loc loc)
 
         if(pt->is_fat)
         {
-            if(pt->OrigPt->limg != NULL)
+            if(pt->basePattern->limg != NULL)
             {
                 g.setColour(Colours::black);
                 g.saveState();
                 g.reduceClipRegion(gx1, gy1 - tH + 1, pl, tH + 5);
-                g.drawImageAt(pt->OrigPt->limg, gx1, gy1 - tH + 2 - 1);
+                g.drawImageAt(pt->basePattern->limg, gx1, gy1 - tH + 2 - 1);
                 g.restoreState();
             }
         }
-        else if(pt->OrigPt->smallimg != NULL)
+        else if(pt->basePattern->smallimg != NULL)
         {
             g.setColour(Colours::black);
             g.saveState();
             g.reduceClipRegion(gx1, gy1 - tH + 1, pl, tH + 5);
-            g.drawImageAt(pt->OrigPt->smallimg, gx1, gy1 - tH + 2 - 1);
+            g.drawImageAt(pt->basePattern->smallimg, gx1, gy1 - tH + 2 - 1);
             g.restoreState();
         }
 
@@ -4112,7 +4112,7 @@ void J_Pattern(Graphics& g, Pattern* pt, Loc loc)
         }
 
         // Pattern editing highlight
-        if(pt == aux_panel->workPt || pt == C.patt || pt->OrigPt == C.patt)
+        if(pt == aux_panel->workPt || pt == C.patt || pt->basePattern == C.patt)
         {
             g.setColour(Colours::red);
             J_LineRect(g, gx1, gy1 - tH + 1, gx1 + pl - 1, gy1 - 1);
@@ -4325,7 +4325,7 @@ void J_Pattern(Graphics& g, Pattern* pt, Loc loc)
         g.setColour(Colour(0x9fFFFFFF)); // Darken muted pattern names
     else
         g.setColour(Colour(0xffFFFFFF));
-    if(pt->OrigPt != NULL)
+    if(pt->basePattern != NULL)
     {
         //J_TString_Small_type(g, pt->name, pt->OrigPt->nmimg);
         pt->name->x = CursX;
@@ -8047,7 +8047,7 @@ void J_VolLane(Graphics& g, Loc loc, Trk* trk, Pattern* pt, int lx1, int ly1, in
     Element* el;
     if(loc == Loc_SmallGrid)
     {
-        el = aux_panel->workPt->OrigPt->first_elem;
+        el = aux_panel->workPt->basePattern->first_elem;
     }
     else
     {
@@ -8167,7 +8167,7 @@ void J_VolLane(Graphics& g, Loc loc, Trk* trk, Pattern* pt, int lx1, int ly1, in
     // Draw selected elements, if any
     if(loc == Loc_SmallGrid)
     {
-        el = aux_panel->workPt->OrigPt->first_elem;
+        el = aux_panel->workPt->basePattern->first_elem;
     }
     else
     {
@@ -8317,7 +8317,7 @@ void J_PanLane(Graphics& g, Loc loc, Trk* trk, Pattern* pt, int lx1, int ly1, in
     Element* el;
     if(loc == Loc_SmallGrid)
     {
-        el = aux_panel->workPt->OrigPt->first_elem;
+        el = aux_panel->workPt->basePattern->first_elem;
     }
     else
     {
@@ -8457,7 +8457,7 @@ void J_PanLane(Graphics& g, Loc loc, Trk* trk, Pattern* pt, int lx1, int ly1, in
     // Draw selected elements, if any
     if(loc == Loc_SmallGrid)
     {
-        el = aux_panel->workPt->OrigPt->first_elem;
+        el = aux_panel->workPt->basePattern->first_elem;
     }
     else
     {
@@ -8604,7 +8604,7 @@ void J_AuxLanes(Graphics& g)
     {
         for(int tnum = 0; tnum < 90; tnum ++)
         {
-            trk = GetTrkDataForTrkNum(tnum, pt->OrigPt);
+            trk = GetTrkDataForTrkNum(tnum, pt->basePattern);
 			if(trk != NULL)
 			{
 				if(trk->vol_lane.visible == true)
@@ -8710,7 +8710,7 @@ void J_Content_Main(Graphics& g)
             {
                 el = tg->el;
                 if(el->IsPresent() && el->visible && el->type == El_Pattern && tg->activator && 
-                   el->patt == field_pattern && !((Pattern*)el)->OrigPt->autopatt)
+                   el->patt == field_pattern && !((Pattern*)el)->basePattern->autopatt)
                 {
                     J_Pattern(g, (Pattern*)el, Loc_MainGrid);
                     J_HighlightElement(g, el);
@@ -8735,7 +8735,7 @@ void J_Content_Main(Graphics& g)
             {
                 el = tg->el;
                 if(el->IsPresent() && el->visible && el->type == El_Pattern && tg->activator && 
-                   el->patt == field_pattern && !((Pattern*)el)->OrigPt->autopatt)
+                   el->patt == field_pattern && !((Pattern*)el)->basePattern->autopatt)
                 {
                     J_Pattern(g, (Pattern*)el, Loc_MainGrid);
                     J_HighlightElement(g, el);
@@ -8929,9 +8929,9 @@ void J_Auxaux(Graphics& g)
         }
         else if(aux_panel->ltype == Lane_Pitch)
         {
-            if(aux_panel->workPt->OrigPt->pitch != NULL && GridXS2 > GridXS1)
+            if(aux_panel->workPt->basePattern->pitch != NULL && GridXS2 > GridXS1)
             {
-                Envelope* env = (Envelope*)aux_panel->workPt->OrigPt->pitch->paramedit;
+                Envelope* env = (Envelope*)aux_panel->workPt->basePattern->pitch->paramedit;
                 J_EnvLane(g, env, Loc_SmallGrid, NULL, NULL, GridXS1, GridYS2 + 3, GridXS2, WindHeight - 4);
             }
         }
@@ -9478,7 +9478,7 @@ void J_Aux_PianoKeys(Graphics& g)
             {
                 line = aux_panel->OffsLine + absline;
             }
-            trk = GetTrkDataForLine(line, pt->OrigPt);
+            trk = GetTrkDataForLine(line, pt->basePattern);
 
             if(pt->ptype == Patt_Pianoroll)
             {
@@ -9526,7 +9526,7 @@ void J_Aux_PianoKeys(Graphics& g)
             ytt += aux_panel->lineHeight;
         }
     }
-    else if(aux_panel->workPt->OrigPt->autopatt == false)
+    else if(aux_panel->workPt->basePattern->autopatt == false)
     {
         J_PanelRect(g, AuxX1, AuxY1 + 2, AuxX1 + aux_panel->keywidth + 2, WindHeight);
         J_LRect(g, AuxX1, AuxY1 + 2, AuxX1 + aux_panel->keywidth + 2, WindHeight);
@@ -9583,7 +9583,7 @@ void J_RefreshAuxGridImage()
         col21 = Colour(0xff2A2A4A);
         col31 = Colour(0xff20202A);
     }
-    else if(pt->OrigPt && pt->OrigPt->autopatt)
+    else if(pt->basePattern && pt->basePattern->autopatt)
     {
         col1 = Colour(0xff7F5050);
         col2 = Colour(0xff6F3535);
@@ -9719,7 +9719,7 @@ void J_RefreshAuxGridImage()
                 imageContext1.setColour(Colour(0xff20204F));
                 imageContext2.setColour(Colour(0xff141432));
             }
-            else if(pt->OrigPt && pt->OrigPt->autopatt)
+            else if(pt->basePattern && pt->basePattern->autopatt)
             {
                 imageContext1.setColour(Colour(0xff3A1414));
                 imageContext2.setColour(Colour(0xff301010));
@@ -9981,7 +9981,7 @@ void J_Aux_Grid(Graphics& g)
 */
 
     // Draw pattern range line
-    if(pt->OrigPt && pt->OrigPt->autopatt)
+    if(pt->basePattern && pt->basePattern->autopatt)
     {
         g.setColour(Colour(0xafDC2A2A));
         J_VLine(g, px1 + xrange, py1, py2);
@@ -10034,7 +10034,7 @@ void J_Aux_Grid(Graphics& g)
             line = aux_panel->OffsLine + absline;
         }
 
-        trk = GetTrkDataForLine(line, pt->OrigPt);
+        trk = GetTrkDataForLine(line, pt->basePattern);
 
         if(trk != NULL)
         {
@@ -10351,14 +10351,14 @@ void J_Aux_PattMode(Graphics& g)
         //g.setColour(Colour(0xffFF0000));
         //J_LineRect(g, gAux->pattx1 - 1, gAux->patty1 + 2, gAux->pattx1 + gAux->keywidth - 1, gAux->patty1 + 13);
 
-        if(aux_panel->workPt->OrigPt->autopatt == false)
+        if(aux_panel->workPt->basePattern->autopatt == false)
         {
             g.setColour(Colour(0xffEFEFEF));
             J_String_Instr_Ranged(g, aux_panel->pattx1, aux_panel->patty1 + 1 + 10, aux_panel->workPt->name->string, aux_panel->keywidth + 2);
         }
         else
         {
-            if(aux_panel->workPt->OrigPt->instr_owner->type == Instr_Sample)
+            if(aux_panel->workPt->basePattern->instr_owner->type == Instr_Sample)
             {
                 g.setColour(smpcolour);
             }
@@ -10366,7 +10366,7 @@ void J_Aux_PattMode(Graphics& g)
             {
                 g.setColour(gencolour);
             }
-            J_String_Instr_Ranged(g, aux_panel->pattx1, aux_panel->patty1 + 1 + 10, aux_panel->workPt->OrigPt->instr_owner->name, aux_panel->keywidth + 2);
+            J_String_Instr_Ranged(g, aux_panel->pattx1, aux_panel->patty1 + 1 + 10, aux_panel->workPt->basePattern->instr_owner->name, aux_panel->keywidth + 2);
         }
     }
     else
@@ -11009,7 +11009,7 @@ void J_Aux(Graphics& g)
         }
     }
 
-    if(!(aux_panel->auxmode == AuxMode_Pattern && aux_panel->workPt->OrigPt->autopatt == true))
+    if(!(aux_panel->auxmode == AuxMode_Pattern && aux_panel->workPt->basePattern->autopatt == true))
     {
         aux_panel->relswitch->Deactivate();
         aux_panel->reloctaver->btdn->Deactivate();
@@ -11069,7 +11069,7 @@ void J_Aux(Graphics& g)
                 {
                     g.saveState();
                     g.reduceClipRegion(AuxX1, GridYS1, aux_panel->keywidth, GridYS2 - GridYS1);
-                    if(aux_panel->workPt->OrigPt->autopatt == true)
+                    if(aux_panel->workPt->basePattern->autopatt == true)
                     {
                         /* //Postponed
                         gAux->relswitch->Activate();
@@ -12094,19 +12094,12 @@ int J_Instr(Graphics& g, int x, int y, Instrument* instr)
 {
     int height;
     g.setColour(Colour(0xffFFFFFF));
-    if(instr->folded == true)
-    {
-        height = InstrFoldedHeight;
-        g.drawImageAt(img_instrclosed, x + 2, y + 2, false);
-    }
+
+    height = InstrUnfoldedHeight;
+    if(instr->type == Instr_Sample)
+        g.drawImageAt(img_instropened1, x + 2, y + 2, false);
     else
-    {
-        height = InstrUnfoldedHeight;
-        if(instr->type == Instr_Sample)
-            g.drawImageAt(img_instropened1, x + 2, y + 2, false);
-        else
-            g.drawImageAt(img_instropened, x + 2, y + 2, false);
-    }
+        g.drawImageAt(img_instropened, x + 2, y + 2, false);
 
     instr->x = x;
     instr->y = y;
@@ -12207,7 +12200,7 @@ int J_Instr(Graphics& g, int x, int y, Instrument* instr)
         }
     }
 
-    if(instr->folded == false)
+    // Draw all subcontrols
     {
         J_InstrVU(g, x + 3, y + InstrUnfoldedHeight + 2, instr->vu);
         J_SliderInstrPan(g, instr->mpan, instr, x + 94, y + 27 + 1, false);
@@ -12216,7 +12209,6 @@ int J_Instr(Graphics& g, int x, int y, Instrument* instr)
         g.fillRect(x + instr->width - 114, y + 21, 26, 15);
         J_MuteToggle(g, instr->mute, x + instr->width - 114, y + 22);
         J_SoloToggle(g, instr->solo, x + instr->width - 101, y + 22);
-        //J_AutoToggle(g, instr->autopt, x + instr->width - 92, y + 20);
         g.setColour(Colour(38, 38, 38));
         g.fillRect(x + 29, y + 19, 26, 17);
         J_WindowToggle(g, instr->pEditorButton, x + 30, y + InstrFoldedHeight + 4);
@@ -12234,10 +12226,6 @@ int J_Instr(Graphics& g, int x, int y, Instrument* instr)
                               bx1, by1, bx2, by2);
         instr->pEditorButton->Activate(instr->pEditorButton->x, instr->pEditorButton->y, instr->pEditorButton->width, instr->pEditorButton->height,
                               bx1, by1, bx2, by2);
-    }
-    else
-    {
-        instr->Disable();
     }
 
     instr->instr_drawarea->SetBounds(instr->x, instr->y, instr->width + 1, instr->height + 2,
@@ -12294,14 +12282,7 @@ void J_InstrPanel(Graphics& g, int x, int y)
     {
         if(i->to_be_deleted == false && i->temp == false)
         {
-            if(i->folded == true)
-            {
-                instroffs = InstrFoldedHeight;
-            }
-            else
-            {
-                instroffs = InstrUnfoldedHeight;
-            }
+            instroffs = InstrUnfoldedHeight;
 
             if(((yoffs + instroffs) > 0 && (yoffs + instroffs) < InstrPanelHeight)||(yoffs > 0 && yoffs < InstrPanelHeight))
             {
@@ -13358,100 +13339,100 @@ int J_DrawMixChannelContent(Graphics& g, int x, int y, MixChannel* mchan)
 		effh = 0; // Insurance
         switch(eff->type)
         {
-            case EffType_Tremolo:
+            case ModSubType_Tremolo:
             {
                 //ret_val = J_Tremolo(g, x, y, (CTremolo*)(mcell->effect), mcell);
             }break;
-            case EffType_Default:
+            case ModSubType_Default:
             {
                 //ret_val = J_BlankEffect(g, x, y, (BlankEffect*)(mcell->effect), mcell);
             }break;
-            case EffType_VSTPlugin:
+            case ModSubType_VSTPlugin:
             {
                 effh = J_VSTPlugin(g, x, y + h, (VSTEffect*)eff, mchan);
                 //mcell->mixstr->active = false;
             }
             break;
-            case EffType_Gain:
+            case ModSubType_Gain:
             {
                 //J_GainFolded(g, x, y, (Gain*)eff, mchan);
             }break;
-            case EffType_Send:
+            case ModSubType_Send:
             {
                 //J_SendFolded(g, x, y, (Send*)eff, mchan);
             }break;
-            case EffType_Filter:
+            case ModSubType_Filter:
             {
                 //ret_val = J_Filter(g, x, y, (Filter*)(mcell->effect), mcell);
             }break;
-            case EffType_Equalizer1:
+            case ModSubType_Equalizer1:
             {
                 effh = J_FXNative(g, x, y + h, eff, mchan);
                 //effh = J_Equalizer1(g, x, y + h, (EQ1*)eff, mchan);
             }break;
-            case EffType_Equalizer3:
+            case ModSubType_Equalizer3:
             {
                 effh = J_FXNative(g, x, y + h, eff, mchan);
                 //effh = J_Equalizer3(g, x, y + h, (EQ3*)eff, mchan);
             }break;
-            case EffType_GraphicEQ:
+            case ModSubType_GraphicEQ:
             {
                 effh = J_FXNative(g, x, y + h, eff, mchan);
                 //effh = J_GraphicEQ(g, x, y + h, (GraphicEQ*)eff, mchan);
             }break;
-            case EffType_CFilter:
+            case ModSubType_CFilter:
             {
                 effh = J_FXNative(g, x, y + h, eff, mchan);
                 //effh = J_CFilter(g, x, y + h, (CFilter*)eff, mchan);
             }break;
-            case EffType_XDelay:
+            case ModSubType_XDelay:
             {
                 effh = J_FXNative(g, x, y + h, eff, mchan);
                 //effh = J_XDelay(g, x, y + h, (XDelay*)eff, mchan);
             }break;
-            case EffType_Compressor:
+            case ModSubType_Compressor:
             {
                 effh = J_FXNative(g, x, y + h, eff, mchan);
                 //effh = J_Compressor(g, x, y + h, (Compressor*)eff, mchan);
             }break;
-            case EffType_Reverb:
+            case ModSubType_Reverb:
             {
                 effh = J_FXNative(g, x, y + h, eff, mchan);
                 //effh = J_Reverb(g, x, y + h, (CReverb*)eff, mchan);
             }break;
-            case EffType_Chorus:
+            case ModSubType_Chorus:
             {
                 effh = J_FXNative(g, x, y + h, eff, mchan);
             }break;
-            case EffType_Flanger:
+            case ModSubType_Flanger:
             {
                 effh = J_FXNative(g, x, y + h, eff, mchan);
             }break;
-            case EffType_Phaser:
+            case ModSubType_Phaser:
             {
                 effh = J_FXNative(g, x, y + h, eff, mchan);
             }break;
-            case EffType_WahWah:
+            case ModSubType_WahWah:
             {
                 effh = J_FXNative(g, x, y + h, eff, mchan);
             }break;
-            case EffType_Distortion:
+            case ModSubType_Distortion:
             {
                 effh = J_FXNative(g, x, y + h, eff, mchan);
             }break;
-            case EffType_BitCrusher:
+            case ModSubType_BitCrusher:
             {
                 effh = J_FXNative(g, x, y + h, eff, mchan);
             }break;
-            case EffType_Stereo:
+            case ModSubType_Stereo:
             {
                 effh = J_FXNative(g, x, y + h, eff, mchan);
             }break;
-            case EffType_CFilter2:
+            case ModSubType_CFilter2:
             {
                 effh = J_FXNative(g, x, y + h, eff, mchan);
             }break;
-            case EffType_CFilter3:
+            case ModSubType_CFilter3:
             {
                 effh = J_FXNative(g, x, y + h, eff, mchan);
             }break;

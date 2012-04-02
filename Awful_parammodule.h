@@ -20,8 +20,6 @@ public:
     long        NumNativePresets;
     long        NumPresets;
     Preset*     CurrentPreset;
-    char        preset_path[MAX_PATH_STRING];
-    char        current_preset_name[MAX_NAME_STRING]; // we use this string to identify current present on scanning
 
     Paramcell*  first_pcell;
     Paramcell*  last_pcell;
@@ -35,6 +33,8 @@ public:
     char        originalname[MAX_NAME_STRING];
     char        name[MAX_NAME_STRING];
     char        path[MAX_PATH_STRING];
+    char        preset_path[MAX_PATH_STRING];
+    char        current_preset_name[MAX_NAME_STRING]; // we use this string to identify current present on scanning
 
     Scope       scope;
 
@@ -51,16 +51,14 @@ public:
 
     ParamWindow* paramWnd;
 
+    Trigger*    envelopes;
+
+
     ParamModule();
     virtual ~ParamModule();
-    virtual void    SetName(char* name)
-        {
-            if (NULL != name)
-            {
-                memset(this->name, 0, MAX_NAME_STRING * sizeof(char));
-                strncpy(this->name, name, min(MAX_NAME_STRING - 1, strlen(name)));
-            }
-        }
+    virtual void SetName(char* name);
+    virtual void SetPath(char* path);
+    virtual void SetPresetPath(char* presetpath);
 //=================================================================================================
 //                This is our approach to hierarchical effect composition
 
@@ -118,6 +116,8 @@ public:
             void    DeleteControls();
     virtual void    ForceDeactivate() {};
     virtual void    ToggleParamWindow();
+    void EnqueueParamEnvelopeTrigger(Trigger* tg);
+    void DequeueParamEnvelopeTrigger(Trigger* tg);
 
 private:
     bool    m_ParamLocked;

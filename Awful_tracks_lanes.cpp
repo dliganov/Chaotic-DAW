@@ -52,7 +52,6 @@ void Trk::Init(int track_num, bool controls)
     end_line = track_num;
     trk_start_line = track_num;
     trk_end_line = track_num;
-    proll = NULL;
     trkbunch = NULL;
     defined_instr = NULL;
     params = new ParamSet(100, 50, &scope);
@@ -264,13 +263,6 @@ void InsertTrack()
             }
         }
         
-        if(trk->proll != NULL)
-        {
-            trk->proll->start_line++;
-            trk->proll->end_line++;
-            trk->proll->startpix += lineHeight;
-            trk->proll->endpix += lineHeight;
-        }
         trk->UpdateLaneBases();
         trk = trk->next;
     }
@@ -603,13 +595,6 @@ void AdvanceTracks(Trk* trkdata, int num, Pattern* pt)
                 trk->trkbunch->endpix += num*lineHeight;
             }
 
-            if(trk->proll != NULL)
-            {
-                trk->proll->start_line += num;
-                trk->proll->end_line += num;
-                trk->proll->startpix += num*lineHeight;
-                trk->proll->endpix += num*lineHeight;
-            }
             trk->UpdateLaneBases();
             trk = trk->next;
         }
@@ -630,13 +615,6 @@ void AdvanceTracks(Trk* trkdata, int num, Pattern* pt)
                 trk->trkbunch->endpix += num*lineHeight;
             }
 
-            if(trk->proll != NULL)
-            {
-                trk->proll->start_line += num;
-                trk->proll->end_line += num;
-                trk->proll->startpix += num*lineHeight;
-                trk->proll->endpix += num*lineHeight;
-            }
             trk->UpdateLaneBases();
             trk = trk->next;
         }

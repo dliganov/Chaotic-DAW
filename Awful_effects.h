@@ -87,18 +87,16 @@ public:
     bool        wndvisible;
     Toggle*     wnd_toggle;
 
-    EffType     type;
+    ModuleSubType     type;
     Mixcell*    mixcell;
 
     AliasRecord*    arec;
 
-    EFFECT_CATEGORY_T category;
+    ModuleType category;
     Eff*        prev;
     Eff*        next;
     Eff*        cprev;
     Eff*        cnext;
-    Trigger*    envelopes;
-
 
     virtual void    Process(float* in_buff, float* out_buff, int num_frames);
     virtual void    ProcessData(float* in_buff, float* out_buff, int num_frames) {};
@@ -113,8 +111,6 @@ public:
     virtual void    SetBPM(float bpm) {};
     virtual void    SetBufferSize(unsigned int uiBufferSize) {};
     virtual void    SetSampleRate(float fSampleRate) {};
-            void    EnqueueParamEnvelopeTrigger(Trigger* tgenv);
-            void    DequeueParamEnvelope(Trigger* tgenv);
     virtual void    Save(XmlElement* xmlEff);
     virtual void    Load(XmlElement* xmlEff);
 };
@@ -627,12 +623,13 @@ class CPluginList : public Object
 public:
     CPluginList(Object* owner);
     virtual ~CPluginList();
-    EffListEntry_t*   pFirst;
-    EffListEntry_t*   pLast;
+    ModListEntry*   pFirst;
+    ModListEntry*   pLast;
     unsigned long     num_items;
-    void              AddEntry(EffListEntry_t* pEntry);
-    void              RemoveEntry(EffListEntry_t* pEntry);
-    EffListEntry_t*   SearchEntryByPath(char* path);
+    void              AddEntry(ModListEntry* pEntry);
+    void              AddEntry(ModuleType mtype, ModuleSubType mstype, const char* name, const char* path);
+    void              RemoveEntry(ModListEntry* pEntry);
+    ModListEntry*   SearchEntryByPath(const char* path);
 };
 
 #endif

@@ -62,7 +62,7 @@ void UndoManagerC::FlushFurtherActions()
         fact = fnext;
     }
     AdjustClipboardOffsets();
-	current_action->next = NULL;
+    current_action->next = NULL;
 }
 
 bool UndoManagerC::IsOK(ActionType atype, void* adata)
@@ -105,8 +105,10 @@ void UndoManagerC::DoNewAction(ActionType atype, void* adata1, void* adata2, voi
 
         Perform(current_action);
 
-		if(atype != Action_Empty)
-			ChangesIndicate();
+        if(atype != Action_Empty)
+        {
+            ChangesIndicate();
+        }
     }
 }
 
@@ -217,8 +219,8 @@ void UndoManagerC::Unperform(Action* act)
             Instrument* i2 = (Instrument*)act->adata3;
 
             pt->ibound = i1;
-            pt->OrigPt->ibound = i1;
-            pt->OrigPt->UpdateScaledImage();
+            pt->basePattern->ibound = i1;
+            pt->basePattern->UpdateScaledImage();
 
             R(Refresh_GridContent);
             if(aux_panel->auxmode == AuxMode_Pattern)
@@ -356,8 +358,8 @@ void UndoManagerC::Perform(Action* act)
             Instrument* i2 = (Instrument*)act->adata3;
 
             pt->ibound = i2;
-            pt->OrigPt->ibound = i2;
-            pt->OrigPt->UpdateScaledImage();
+            pt->basePattern->ibound = i2;
+            pt->basePattern->UpdateScaledImage();
 
             R(Refresh_GridContent);
             if(aux_panel->auxmode == AuxMode_Pattern)
@@ -416,20 +418,24 @@ void UndoManagerC::Perform(Action* act)
                 sn->sample->touchresized = act->i2 == 1;
             }
 
-			el->tick_length = act->f2;
-    		el->end_tick = el->start_tick + el->tick_length;
+            el->tick_length = act->f2;
+            el->end_tick = el->start_tick + el->tick_length;
 
             el->Update();
 
             if(el->patt == field_pattern)
             {
                 R(Refresh_GridContent);
+
                 if(aux_panel->workPt == el)
                 {
-					if(!(Looping_Active == true && M.looloc == Loc_SmallGrid))
-						pbkAux->AlignRangeToPattern();
+                    if(!(Looping_Active == true && M.looloc == Loc_SmallGrid))
+                    {
+                        pbkAux->AlignRangeToPattern();
+                    }
                     R(Refresh_AuxGrid);
-				}
+                }
+
                 if(aux_panel->isVolsPansMode() && el->type == El_SlideNote)
                 {
                     R(Refresh_Aux);
@@ -565,32 +571,32 @@ void UndoManagerC::RemoveAction(Action* a)
         current_action = current_action->prev;
     }
 
-	if((a == first_action)&&(a == last_action))
-	{
-		first_action = NULL;
-		last_action = NULL;
-	}
-	else if(a == first_action)
-	{
-		first_action = a->next;
-		first_action->prev = NULL;
-	}
-	else if(a == last_action)
-	{
-		last_action = a->prev;
-		last_action->next = NULL;
-	}
-	else
-	{
-		if(a->prev != NULL)
-		{
-		    a->prev->next = a->next;
+    if((a == first_action)&&(a == last_action))
+    {
+        first_action = NULL;
+        last_action = NULL;
+    }
+    else if(a == first_action)
+    {
+        first_action = a->next;
+        first_action->prev = NULL;
+    }
+    else if(a == last_action)
+    {
+        last_action = a->prev;
+        last_action->next = NULL;
+    }
+    else
+    {
+        if(a->prev != NULL)
+        {
+            a->prev->next = a->next;
         }
-		if(a->next != NULL)
-		{
-		    a->next->prev = a->prev;
+        if(a->next != NULL)
+        {
+            a->next->prev = a->prev;
         }
-	}
+    }
     delete a;
 }
 

@@ -3,8 +3,8 @@
 -BlankEffect contains basic control set and simple data processing by multiplying it to some value.
 - After you create a new effect, perform the following steps to integrate it into the program:
 
-1. Add its type to EffType enum (Awful.h);
-2. Register its alias in Init_Aliases() function (Awful.cpp) similar to how other effects are registered (BlankEffect has the "blank" alias);
+1. Add its type to ModuleSubType enum (Awful.h);
+2. Register its alias in Init_InternalPlugins() function (Awful.cpp) similar to how other effects are registered (BlankEffect has the "blank" alias);
 3. Perform its creation in Browser::ActivateEntry() and Mixcell::Update() functions (Awful_panels.cpp) similar to other effects;
 4. Create effect drawing routine and add it in J_DrawMixcellContent() function (Awful_graphJuce.cpp) similar to others (you can just copy and 
    rename J_BlankEffect() function providing it with your new class).

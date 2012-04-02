@@ -1018,7 +1018,9 @@ Browser::Browser(const char* dirpath, BrwType t)
         CurrButt = ShowFiles;
 
     if(t == Brw_Generators)
+    {
         ShowFiles->freeset = ShowSamples->freeset = ShowProjects->freeset = ShowExternalPlugs->freeset = ShowParams->freeset = ShowPresets->freeset = false;
+    }
 
     sortstr = new TString("", true);
     sortstr->panel = this;
@@ -1030,7 +1032,9 @@ Browser::Browser(const char* dirpath, BrwType t)
     dirtype = Dir_Files;
 
     if(!(btype == Brw_Effects && mixbrowse == false))
-		Update();
+    {
+        Update();
+    }
 }
 
 Browser::~Browser()
@@ -1492,14 +1496,14 @@ void Browser::UpdateFileData()
             }
         }
 
-        EffListEntry_t *pEntry = pPluginList->pFirst;
+        ModListEntry *pEntry = pModulesList->pFirst;
         while (pEntry != NULL)
         {
-            if( ((pEntry->category == EffCategory_Generator)&& (btype == Brw_Generators)) ||
-                ((pEntry->category == EffCategory_Effect)&& (btype == Brw_Effects)) )
+            if( ((pEntry->modtype == ModuleType_Generator)&& (btype == Brw_Generators)) ||
+                ((pEntry->modtype == ModuleType_Effect)&& (btype == Brw_Effects)) )
             {
                 filedata = new FileData;
-                if(pEntry->type == EffType_VSTPlugin) // temp hack
+                if(pEntry->subtype == ModSubType_VSTPlugin) // temp hack
                 {
                     filedata->ftype = FType_VST;
                 }
@@ -1680,7 +1684,7 @@ void Browser::UpdatePresetData()
         if(aux_panel->current_eff != NULL)
         {
             module = aux_panel->current_eff;
-			if(aux_panel->current_eff->type != EffType_VSTPlugin)
+			if(aux_panel->current_eff->type != ModSubType_VSTPlugin)
 			{
                 // Rescan presets list since it can be changed outside of this module
 				module->DeletePresets();
@@ -2122,7 +2126,7 @@ void Browser::PreviewSample(FileData* fdi)
         strcpy(name, fdi->name);
         ToLowerCase(name);
         GetOriginalInstrumentAlias(name, alias);
-        prevInstr = (Instrument*)Add_Sample(fullpath, fdi->name, alias, true);
+        prevInstr = (Instrument*)AddSample(fullpath, fdi->name, alias, true);
 		if(prevInstr != NULL)
 		{
 			// Play preview then
@@ -2514,29 +2518,7 @@ void InstrPanel::EditInstrumentAutopattern(Instrument * instr)
 
 void InstrPanel::HandleButtDown(Butt* bt)
 {
-    if(bt == fold_all)
-    {
-        main_offs = 0;
-        Instrument* i = first_instr;
-        while(i != NULL)
-        {
-            i->folded = true;
-            i = i->next;
-        }
-        R(Refresh_InstrPanel);
-    }
-    else if(bt == expand_all)
-    {
-        main_offs = 0;
-        Instrument* i = first_instr;
-        while(i != NULL)
-        {
-            i->folded = false;
-            i = i->next;
-        }
-        R(Refresh_InstrPanel);
-    }
-    else if(bt == edit_autopattern)
+    if(bt == edit_autopattern)
     {
         if(current_instr != NULL)
         {
@@ -2640,14 +2622,7 @@ int InstrPanel::GetFullLHeight()
     {
         if(i->temp == false)
         {
-            if(i->folded == true)
-            {
-                instroffs = InstrFoldedHeight;
-            }
-            else
-            {
-                instroffs = InstrUnfoldedHeight;
-            }
+            instroffs = InstrUnfoldedHeight;
 
             fulllen += instroffs;
             fulllen += 1;
@@ -2825,7 +2800,7 @@ Instrument* InstrPanel::AddInstrumentFromBrowser(FileData * fdi, bool bottom)
         strcpy(name, fdi->name);
         ToLowerCase(name);
         GetOriginalInstrumentAlias(name, alias);
-        ni = (Instrument*)Add_Sample(fullpath, fdi->name, alias);
+        ni = (Instrument*)AddSample(fullpath, fdi->name, alias);
 
         if(bottom)
             IP->GoDown();
@@ -2842,7 +2817,7 @@ Instrument* InstrPanel::AddInstrumentFromBrowser(FileData * fdi, bool bottom)
         strcpy(name, fdi->name);
         ToLowerCase(name);
         GetOriginalInstrumentAlias(name, alias);
-        VSTGenerator* vstgen = Add_VSTGenerator(fullpath, fdi->name, alias);
+        VSTGenerator* vstgen = AddVSTGenerator(fullpath, fdi->name, alias);
         ni = (Instrument*)vstgen;
         if(vstgen == NULL)
         {
@@ -2863,11 +2838,13 @@ Instrument* InstrPanel::AddInstrumentFromBrowser(FileData * fdi, bool bottom)
         if(strcmp(fdi->name, "Chaotic Synthesizer") == 0)
         {
             GetOriginalInstrumentAlias("synthesizer", alias);
-            ni = Add_Synth(alias);
+            ni = AddInternalGenerator(fdi->path, alias);
         }
 
         if(bottom && ni != NULL)
+        {
             IP->GoDown();
+        }
     }
 
     if(ni != NULL)
@@ -3081,7 +3058,7 @@ void MixChannel::Disable()
         eff->fold_toggle->Deactivate();
         eff->bypass_toggle->Deactivate();
         eff->wnd_toggle->Deactivate();
-        if(eff->type == EffType_VSTPlugin)
+        if(eff->type == ModSubType_VSTPlugin)
             ((VSTEffect*)eff)->pEditButton->Deactivate();
         eff->Disable();
         eff = eff->cnext;
@@ -3113,7 +3090,7 @@ void MixChannel::Enable()
         eff->fold_toggle->Activate();
         eff->bypass_toggle->Activate();
         eff->wnd_toggle->Activate();
-        if(eff->type == EffType_VSTPlugin)
+        if(eff->type == ModSubType_VSTPlugin)
             ((VSTEffect*)eff)->pEditButton->Activate();
         eff->Enable();
         eff = eff->cnext;
@@ -3261,7 +3238,7 @@ void MixChannel::Process(int num_frames, float* outbuff)
         float panv, volv, volL, volR;
         bool off = false;
         {
-            if(mc_main->params->muted == true || (Solo_MixChannel != NULL && Solo_MixChannel != this))
+            if(mc_main->params->muted == true || (solo_MixChannel != NULL && solo_MixChannel != this))
             {
                 off = true;
             }
@@ -3480,7 +3457,7 @@ void MixChannel::Load(XmlElement * xmlNode)
     params->solo = bval;
     if(params->solo)
     {
-        Solo_MixChannel = this;
+        solo_MixChannel = this;
     }
 
     String mchan = xmlNode->getStringAttribute(T("OutMixChannel"));
@@ -3873,7 +3850,7 @@ void Aux::Play()
             }
             pbkAux->UpdateQueuedEv();
             pbkAux->SetActive();
-			if(workPt->OrigPt->autopatt == false)
+			if(workPt->basePattern->autopatt == false)
 			{
 				pbkMain->SetInactive();
 			}
@@ -3909,7 +3886,7 @@ void Aux::Play()
             MC->poso->stopTimer();
             pbkAux->SetInactive();
             pbkAux->SetCurrFrame((long)pbkAux->currFrame_tsync);
-			if(workPt->OrigPt->autopatt == false)
+			if(workPt->basePattern->autopatt == false)
 			{
 				//pbMain->pactive = false;
                 pbkMain->SetCurrFrame((long)pbkMain->currFrame_tsync);
@@ -3938,7 +3915,7 @@ void Aux::Stop()
     MC->poso->stopTimer();
 
     pbkAux->SetInactive();
-    if(workPt->OrigPt->autopatt == false)
+    if(workPt->basePattern->autopatt == false)
     {
         pbkMain->SetInactive();
     }
@@ -4407,7 +4384,7 @@ void Aux::HandleButtDown(Butt* bt)
             }
             else if(workPt->ptype != blankPt->ptype)
             {
-                ConvertPatternType(workPt->OrigPt, blankPt->ptype);
+                ConvertPatternType(workPt->basePattern, blankPt->ptype);
             }
             else if(C.curElem != NULL && C.curElem->type == El_Pattern)
             {
@@ -4587,8 +4564,8 @@ void Aux::HandleButtDown(Butt* bt)
             ltype = Lane_Pitch;
 			if(MC->listen->comboCC != NULL)
 				MC->listen->comboCC->setSelectedId(Lane_Pitch);
-            if(aux_panel->workPt->OrigPt->pitch == NULL)
-                aux_panel->workPt->OrigPt->AddEnvelope(Param_Pitch);
+            if(aux_panel->workPt->basePattern->pitch == NULL)
+                aux_panel->workPt->basePattern->AddEnvelope(Param_Pitch);
 
             R(Refresh_SubAux);
         }
@@ -4638,22 +4615,22 @@ void Aux::UpdateBlankType()
 {
     if(CurrPt == PtUsual)
     {
-        blankPt->ptype = blankPt->OrigPt->ptype = Patt_Grid;
+        blankPt->ptype = blankPt->basePattern->ptype = Patt_Grid;
         blankPt->offs_line = 0;
         last_ptype = Patt_Grid;
     }
     else if(CurrPt == PtPianorol)
     {
-        blankPt->ptype = blankPt->OrigPt->ptype = Patt_Pianoroll;
+        blankPt->ptype = blankPt->basePattern->ptype = Patt_Pianoroll;
         blankPt->offs_line = NUM_PIANOROLL_LINES - 74;
         last_ptype = Patt_Pianoroll;
     }
     else if(CurrPt == PtStepseq)
     {
-        blankPt->ptype = blankPt->OrigPt->ptype = Patt_StepSeq;
+        blankPt->ptype = blankPt->basePattern->ptype = Patt_StepSeq;
         blankPt->offs_line = 0;
         last_ptype = Patt_StepSeq;
-        PopulatePatternWithInstruments(blankPt->OrigPt);
+        PopulatePatternWithInstruments(blankPt->basePattern);
     }
 }
 
@@ -4724,8 +4701,8 @@ void Aux::EditPattern(Pattern* pt, bool dbclick)
             break;
     }
 
-    if(pt != blankPt && pt->OrigPt->tick_width > 0)
-        tickWidth = pt->OrigPt->tick_width;
+    if(pt != blankPt && pt->basePattern->tick_width > 0)
+        tickWidth = pt->basePattern->tick_width;
 
     slzoom->SetTickWidth(tickWidth);
     tickWidthBack = tickWidth;
@@ -4736,9 +4713,9 @@ void Aux::EditPattern(Pattern* pt, bool dbclick)
         ChangeCurrentInstrument(pt->ibound);
     }
 
-    if(ltype == Lane_Pitch && pt->OrigPt->pitch == NULL)
+    if(ltype == Lane_Pitch && pt->basePattern->pitch == NULL)
     {
-        pt->OrigPt->AddEnvelope(Param_Pitch);
+        pt->basePattern->AddEnvelope(Param_Pitch);
     }
 
     UpdateAuxNavBarOnly();
@@ -4807,7 +4784,7 @@ bool Aux::RescanPatternBounds()
 		//workPt->num_lines = 1;
 		workPt->end_tick = workPt->start_tick + workPt->tick_length;
 
-		Element* el = workPt->OrigPt->first_elem;
+		Element* el = workPt->basePattern->first_elem;
 		while(el != NULL)
 		{
 			if(el->IsPresent())
@@ -4843,9 +4820,9 @@ bool Aux::RescanPatternBounds()
 		}
 	}
 
-    if((workPt->OrigPt != NULL && workPt->OrigPt->autopatt == false))
+    if((workPt->basePattern != NULL && workPt->basePattern->autopatt == false))
     {
-		workPt->OrigPt->UpdateScaledImage();
+		workPt->basePattern->UpdateScaledImage();
 		R(Refresh_GridContent);
 	}
 
@@ -4854,7 +4831,7 @@ bool Aux::RescanPatternBounds()
         undoMan->DoNewAction(Action_Resize, (void*)workPt, ticklength, workPt->tick_length, 0, 0);
         workPt->touchresized = false;
         workPt->Update();
-        Pattern* pt = workPt->OrigPt->der_first;
+        Pattern* pt = workPt->basePattern->der_first;
         while(pt != NULL)
         {
             if(pt != workPt && pt->touchresized == false)
@@ -4904,7 +4881,7 @@ void Aux::UpdatePerScale()
     }
 
     // Assign new scale to the edited pattern
-    workPt->OrigPt->tick_width = tickWidth;
+    workPt->basePattern->tick_width = tickWidth;
 
     J_RefreshAuxGridImage();
 }
@@ -5061,11 +5038,11 @@ void Aux::CreateNew()
     C.patt = field_pattern;
     char* pname = GetOriginalPatternName();
     workPt->name->SetString(pname);
-    workPt->OrigPt->name->SetString(pname);
-    GetPatternNameImage(workPt->OrigPt);
+    workPt->basePattern->name->SetString(pname);
+    GetPatternNameImage(workPt->basePattern);
     delete pname;
 
-    AddOriginalPattern(workPt->OrigPt);
+    AddOriginalPattern(workPt->basePattern);
     if(MakePatternsFat && C.fieldposy > 0)
         workPt->is_fat = true;
     else
@@ -5163,7 +5140,7 @@ void Aux::AuxReset()
             C.ExitToCurrentMode();
             C.loc = Loc_MainGrid;
             C.patt = field_pattern;
-            if(workPt->OrigPt->autopatt == false)
+            if(workPt->basePattern->autopatt == false)
             {
                 CLine = workPt->track_line;
                 CTick = workPt->start_tick;
@@ -5491,72 +5468,72 @@ void Aux::HandleTweak(Control* ct, int mouse_x, int mouse_y)
     }
 }
 
-Eff* Aux::AddEffectByType(EffType etype, MixChannel* mchan)
+Eff* Aux::AddEffectByType(ModuleSubType etype, MixChannel* mchan)
 {
-    Eff* pEff;
+    Eff* pEff = NULL;
     switch(etype)
     {
-        case EffType_Gain:
+        case ModSubType_Gain:
             //pEff = new Gain(mchan->mc_main, NULL);
             break;
-        case EffType_Send:
+        case ModSubType_Send:
             //pEff = new Send(mchan->mc_main, NULL);
             break;
-        case EffType_Filter:
+        case ModSubType_Filter:
             pEff = new Filter(mchan->mc_main, NULL);
             break;
-        case EffType_CFilter:
+        case ModSubType_CFilter:
             pEff = new CFilter(mchan->mc_main, NULL);
             break;
-        case EffType_Equalizer1:
+        case ModSubType_Equalizer1:
             pEff = new EQ1(mchan->mc_main, NULL);
             break;
-        case EffType_Equalizer3:
+        case ModSubType_Equalizer3:
             pEff = new EQ3(mchan->mc_main, NULL);
             break;
-        case EffType_GraphicEQ:
+        case ModSubType_GraphicEQ:
             pEff = new GraphicEQ(mchan->mc_main, NULL);
             break;
-        case EffType_XDelay:
+        case ModSubType_XDelay:
             pEff = new XDelay(mchan->mc_main, NULL);
             break;
-        case EffType_Reverb:
+        case ModSubType_Reverb:
             pEff = new CReverb(mchan->mc_main, NULL);
             break;
-        case EffType_Tremolo:
+        case ModSubType_Tremolo:
             pEff = new CTremolo(mchan->mc_main, NULL);
             break;
-        case EffType_Compressor:
+        case ModSubType_Compressor:
             pEff = new Compressor(mchan->mc_main, NULL);
             break;
-        case EffType_Chorus:
+        case ModSubType_Chorus:
             pEff = new CChorus(mchan->mc_main, NULL);
             break;
-        case EffType_Flanger:
+        case ModSubType_Flanger:
             pEff = new CFlanger(mchan->mc_main, NULL);
             break;
-        case EffType_Phaser:
+        case ModSubType_Phaser:
             pEff = new CPhaser(mchan->mc_main, NULL);
             break;
-        case EffType_WahWah:
+        case ModSubType_WahWah:
             pEff = new CWahWah(mchan->mc_main, NULL);
             break;
-        case EffType_Distortion:
+        case ModSubType_Distortion:
             pEff = new CDistort(mchan->mc_main, NULL);
             break;
-        case EffType_BitCrusher:
+        case ModSubType_BitCrusher:
             pEff = new CBitCrusher(mchan->mc_main, NULL);
             break;
-        case EffType_Stereo:
+        case ModSubType_Stereo:
             pEff = new CStereo(mchan->mc_main, NULL);
             break;
-        case EffType_CFilter2:
+        case ModSubType_CFilter2:
             pEff = new CFilter2(mchan->mc_main, NULL);
             break;
-        case EffType_CFilter3:
+        case ModSubType_CFilter3:
             pEff = new CFilter3(mchan->mc_main, NULL);
             break;
-        case EffType_Default:
+        case ModSubType_Default:
             pEff = new BlankEffect(mchan->mc_main, NULL);
             break;
         default:
@@ -5583,7 +5560,7 @@ Eff* Aux::AddVSTEffectByPath(const char * fullpath, MixChannel * mchan)
     VSTEffect* pEffect = NULL;
 
     AliasRecord ar;
-    ar.type = EffType_VSTPlugin;
+    ar.type = ModSubType_VSTPlugin;
     strcpy(ar.alias, "plugins");
 
     pEffect = new VSTEffect(mchan->mc_main, &ar, (char*)fullpath);
@@ -5639,66 +5616,70 @@ Eff* Aux::AddEffectFromBrowser(FileData * fdi, MixChannel* mchan)
     {
         AliasRecord* ar = NULL;
         Eff* pEff = NULL;
+        ModListEntry* mlentry = pModulesList->SearchEntryByPath(fullpath);
+
         pAlias += strlen("internal://");
         ar = GetAliasRecordFromString(pAlias);
 
-        switch(ar->type)
+        jassert(mlentry != NULL && ar != NULL);
+
+        switch(mlentry->subtype)
         {
-            case EffType_Gain:
+            case ModSubType_Gain:
                 pEff = new Gain(mchan->mc_main, ar);
                 break;
-            case EffType_Filter:
+            case ModSubType_Filter:
                 pEff = new Filter(mchan->mc_main, ar);
                 break;
-            case EffType_CFilter:
+            case ModSubType_CFilter:
                 pEff = new CFilter(mchan->mc_main, ar);
                 break;
-            case EffType_CFilter3:
+            case ModSubType_CFilter3:
                 pEff = new CFilter3(mchan->mc_main, ar);
                 break;
-            case EffType_Equalizer1:
+            case ModSubType_Equalizer1:
                 pEff = new EQ1(mchan->mc_main, ar);
                 break;
-            case EffType_Equalizer3:
+            case ModSubType_Equalizer3:
                 pEff = new EQ3(mchan->mc_main, ar);
                 break;
-            case EffType_GraphicEQ:
+            case ModSubType_GraphicEQ:
                 pEff = new GraphicEQ(mchan->mc_main, ar);
                 break;
-            case EffType_XDelay:
+            case ModSubType_XDelay:
                 pEff = new XDelay(mchan->mc_main, ar);
                 break;
-            case EffType_Reverb:
+            case ModSubType_Reverb:
                 pEff = new CReverb(mchan->mc_main, ar);
                 break;
-            case EffType_Tremolo:
+            case ModSubType_Tremolo:
                 pEff = new CTremolo(mchan->mc_main, ar);
                 break;
-            case EffType_Compressor:
+            case ModSubType_Compressor:
                 pEff = new Compressor(mchan->mc_main, ar);
                 break;
-            case EffType_Chorus:
+            case ModSubType_Chorus:
                 pEff = new CChorus(mchan->mc_main, ar);
                 break;
-            case EffType_Flanger:
+            case ModSubType_Flanger:
                 pEff = new CFlanger(mchan->mc_main, ar);
                 break;
-            case EffType_Phaser:
+            case ModSubType_Phaser:
                 pEff = new CPhaser(mchan->mc_main, ar);
                 break;
-            case EffType_WahWah:
+            case ModSubType_WahWah:
                 pEff = new CWahWah(mchan->mc_main, ar);
                 break;
-            case EffType_Distortion:
+            case ModSubType_Distortion:
                 pEff = new CDistort(mchan->mc_main, ar);
                 break;
-            case EffType_BitCrusher:
+            case ModSubType_BitCrusher:
                 pEff = new CBitCrusher(mchan->mc_main, ar);
                 break;
-            case EffType_Stereo:
+            case ModSubType_Stereo:
                 pEff = new CStereo(mchan->mc_main, ar);
                 break;
-            case EffType_Default:
+            case ModSubType_Default:
                 pEff = new BlankEffect(mchan->mc_main, ar);
                 break;
             default:
@@ -5771,8 +5752,8 @@ void Aux::UpdateDrawInfo()
     }
     else if(workPt->ptype != Patt_StepSeq)
     {
-        Trk* trk = workPt->OrigPt->first_trkdata;
-        while(trk != workPt->OrigPt->bottom_trk)
+        Trk* trk = workPt->basePattern->first_trkdata;
+        while(trk != workPt->basePattern->bottom_trk)
         {
             flen++;
             if(trk->vol_lane.visible == true)
@@ -5789,7 +5770,7 @@ void Aux::UpdateDrawInfo()
     }
     else if(workPt->ptype == Patt_StepSeq)
     {
-        Trk* trk = workPt->OrigPt->first_trkdata;
+        Trk* trk = workPt->basePattern->first_trkdata;
         while(trk->defined_instr != NULL)
         {
             flen++;
@@ -5906,7 +5887,7 @@ void ChangeAuxLane(LaneType lt)
     {
         aux_panel->Vols1->Release();
         aux_panel->Pans1->Release();
-        aux_panel->workPt->OrigPt->AddEnvelope(Param_Pitch);
+        aux_panel->workPt->basePattern->AddEnvelope(Param_Pitch);
 
         R(Refresh_Buttons);
         R(Refresh_Aux);

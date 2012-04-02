@@ -22,21 +22,18 @@ public:
     int         aaCount;
     int         auCount;
     float       prev_value;
-    float       prevAAval;
-    float       prevAAval1;
     float       aaBaseVal;
     float       cf1;
     float       cf2;
-    long        frames_remaining;
 
-    Trigger*    tgact;  // reference to the activator if this is a deactivator, otherwise NULL
+    Trigger*    tgact;  // reference to the activator trigger if this one is a deactivator, otherwise NULL
     bool        outsync;   // When this trigger is outsync'ed with playback (per lining for example)
     bool        tgworking;
     bool        toberemoved;
-    bool        globallisted;
-    Pattern*    apatt_instance;     // Autopattern instance for this trigga
+    bool        listed_globally;
+    Pattern*    apatt_instance;   // Autopattern instance for this trigga
     Trk*        trkdata;
-    double      wt_pos;     // Wavetable position integer
+    double      wt_pos;    // Wavetable position integer
     long        frame_phase;
 
     double      sec_phase;
@@ -70,7 +67,6 @@ public:
     double      freq_incr_active;
     int         freq_incr_sgn;
     float       freq;   // Constant part of the frequency
-    float       signal;
     bool        rev;
     bool        skip;
     Mixcell*    mcell;

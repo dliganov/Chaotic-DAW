@@ -2028,9 +2028,9 @@ void Posiator::timerCallback()
         if(scheduled_pattern_refresh)
         {
             int time = Time::getMillisecondCounter();
-            if(time - lasttime > 111 && C.patt->OrigPt != NULL)
+            if(time - lasttime > 111 && C.patt->basePattern != NULL)
             {
-                C.patt->OrigPt->UpdateScaledImage();
+                C.patt->basePattern->UpdateScaledImage();
                 lasttime = time;
             }
         }

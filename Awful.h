@@ -241,7 +241,7 @@ class Event;
 
 class Instrument;
 class Sample;
-class Gen;
+class CGenerator;
 class Sine;
 class Osc;
 class Saw;
@@ -249,7 +249,6 @@ class Synth;
 
 class Trk;
 class Lane;
-class Pianoroll;
 class StaticArea;
 
 class VSTGenerator;
@@ -518,36 +517,36 @@ typedef enum Symbol
     SYMBOL_UNKNOWN = 0xFFFF
 }Symbol;
 
-typedef enum EffType
+typedef enum ModuleSubType
 {
-    EffType_Default = 1,
-    EffType_Gain,
-    EffType_Send,
-    EffType_Filter,
-    EffType_CFilter,
-    EffType_CFilter2,
-    EffType_CFilter3,
-    EffType_Equalizer1,
-    EffType_Equalizer3,
-    EffType_GraphicEQ,
-    EffType_XDelay,
-    EffType_Reverb,
-    EffType_Tremolo,
-    EffType_Compressor,
-    EffType_Chorus,
-    EffType_Flanger,
-    EffType_Phaser,
-    EffType_WahWah,
-    EffType_BitCrusher,
-    EffType_Distortion,
-    EffType_Synth1,
-    EffType_Stereo,
-    EffType_VSTPlugin = 100
-}EffType;
+    ModSubType_Default = 1,
+    ModSubType_Gain,
+    ModSubType_Send,
+    ModSubType_Filter,
+    ModSubType_CFilter,
+    ModSubType_CFilter2,
+    ModSubType_CFilter3,
+    ModSubType_Equalizer1,
+    ModSubType_Equalizer3,
+    ModSubType_GraphicEQ,
+    ModSubType_XDelay,
+    ModSubType_Reverb,
+    ModSubType_Tremolo,
+    ModSubType_Compressor,
+    ModSubType_Chorus,
+    ModSubType_Flanger,
+    ModSubType_Phaser,
+    ModSubType_WahWah,
+    ModSubType_BitCrusher,
+    ModSubType_Distortion,
+    ModSubType_Synth1,
+    ModSubType_Stereo,
+    ModSubType_VSTPlugin = 100
+}ModuleSubType;
 
 typedef struct AliasRecord
 {
-    EffType        type;
+    ModuleSubType   type;
     char            alias[MAX_NAME_STRING];
 
     AliasRecord*    prev;
@@ -1111,28 +1110,28 @@ typedef enum Interpol_method
 
 typedef void (*CLICK_HANDLER_FUNC)(Object*, Object*);
 
-typedef enum EFFECT_CATEGORY_T
+typedef enum ModuleType
 {
-    EffCategory_Generator,
-    EffCategory_Synth,
-    EffCategory_Effect,
-    EffCategory_Invalid
-}EFFECT_CATEGORY_T;
+    ModuleType_Generator,
+    ModuleType_Synth,
+    ModuleType_Effect,
+    ModuleType_Invalid
+}ModuleType;
 
-typedef struct EffListEntry_t
+typedef struct ModListEntry
 {
-    char              name[MAX_NAME_STRING];
-    char              path[MAX_PATH_STRING];
-    EFFECT_CATEGORY_T category;
-    EffType           type;
-    EffListEntry_t*   Prev;
-    EffListEntry_t*   Next;
-}EffListEntry_t;
+    char            name[MAX_NAME_STRING];
+    char            path[MAX_PATH_STRING];
+    ModuleType      modtype;
+    ModuleSubType   subtype;
+    ModListEntry*   Prev;
+    ModListEntry*   Next;
+}ModListEntry;
 
 typedef struct EffPresetHeader_t
 {
     char      magic_string[32];
-    EffType   effect_type;
+    ModuleSubType   effect_type;
     long      uniqueID;
     char      name[MAX_NAME_STRING];
     char      fx_name[MAX_NAME_STRING];
@@ -1343,8 +1342,6 @@ extern int              InstrFoldedHeight;
 extern int              InstrUnfoldedHeight;
 
 extern InstrPanel*      IP;
-extern Pianoroll*       proll_first;
-extern Pianoroll*       proll_last;
 
 extern int              NavHeight;
 extern int              LinerHeight;
@@ -1391,7 +1388,7 @@ extern Playback*        pbkAux;
 
 //Pointer to list of all found plugins of any kind (including internal FXes or generators)
 //The list keeps plugin DLL path, name, type...
-extern CPluginList*     pPluginList;
+extern CPluginList*     pModulesList;
 
 //Pointer to a kind of VST plugin factory. This class is responsible for instantinating of VST plugin objects
 extern VSTCollection*   pVSTCollector;
@@ -1438,10 +1435,10 @@ extern Trigger*         last_active_effect_trigger;
 extern Trigger*         first_global_active_trigger;
 extern Trigger*         last_global_active_trigger;
 
-extern Instrument*      Solo_Instr;
-extern Trk*             Solo_Trk;
-extern Mixcell*         Solo_Mixcell;
-extern MixChannel*      Solo_MixChannel;
+extern Instrument*      solo_Instr;
+extern Trk*             solo_Trk;
+extern Mixcell*         solo_Mixcell;
+extern MixChannel*      solo_MixChannel;
 
 extern bool             scrolling;
 extern Butt*            scrollbt;
@@ -1643,10 +1640,6 @@ extern void                 ToLowerCase(char* data);
 extern void                 Add_Panel(Panel* p);
 extern void                 Add_VU(VU* vu);
 extern void                 Remove_VU(VU* vu);
-extern Sample*              Add_Sample(const char* path, const char* name, const char* alias, bool temp = false);
-extern VSTGenerator*        Add_VSTGenerator(const char* path, const char* name, const char* alias);
-extern VSTGenerator*        Add_VSTGenerator(VSTGenerator* vst, char* alias);
-extern Synth*               Add_Synth(const char* alias);
 extern void                 AddEff(Eff* eff);
 extern void                 RemoveEff(Eff* eff);
 extern Transpose*           CreateElement_Transpose(int semitones);
@@ -1706,14 +1699,13 @@ extern void                 UpdateQuants();
 extern void                 UpdateAuxNavBarOnly();
 extern void                 RescanPlugins(bool full, bool brwupdate = true);
 extern void                 AddOriginalPattern(Pattern* pattern);
-extern void                 RemoveOriginalPattern(Pattern* pattern);
+extern void                 RemoveBasePattern(Pattern* pattern);
 extern Eff*                 GetEffByIndex(int index);
 extern Pattern*             GetPatternByIndex(int index);
 extern Parameter*           GetParamByGlobalIndex(int index);
 extern void                 LoadElementsFromNode(XmlElement* xmlMainNode, Pattern* pttarget);
 extern void                 LoadProject(File* f);
 extern void                 UpdateScaledImages();
-extern Instrument*          GetInstrumentByIndex(int index);
 extern void                 AdjustTick();
 extern void                 ChangesIndicate();
 extern bool                 CheckSave();

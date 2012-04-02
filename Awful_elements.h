@@ -210,12 +210,6 @@ class Gennote : public Instance
 {
 public:
 
-    bool        finishing;
-
-    long        process_frame_first;
-    long        process_frame_last;
-    long        num_frames;
-
     Gennote(Instrument* instr);
 	virtual ~Gennote();
     Gennote* Clone(bool add);
@@ -240,13 +234,13 @@ public:
     bool            touchresized;
 
     Samplent(Sample* sample);
-	virtual ~Samplent();
+    virtual ~Samplent();
     Samplent*   Clone(bool add);
-    void	ProcessKey(unsigned int key, unsigned int flags);
-    void	ProcessChar(char character);
-    void	UpdateNote();
-    bool	IsOutOfBounds(double* cursor);
-    void	Reset();
+    void    ProcessKey(unsigned int key, unsigned int flags);
+    void    ProcessChar(char character);
+    void    UpdateNote();
+    bool    IsOutOfBounds(double* cursor);
+    void    Reset();
     void    UpdateSampleBounds();
     bool    InitCursor(double* cursor);
     void    Update(bool tonly = false);
@@ -541,10 +535,10 @@ public:
     Command*    pitch;
     Lane        vol_lane_main;
     Lane        pan_lane_main;
-    Pattern*    OrigPt;
-    int         origindex;
-    Pattern*    orig_prev;
-    Pattern*    orig_next;
+    Pattern*    basePattern;
+    int         baseindex;
+    Pattern*    base_prev;
+    Pattern*    base_next;
     Playback*   pbk;
     Instrument* ibound;
     FXState     fxstate;

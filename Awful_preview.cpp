@@ -137,7 +137,7 @@ extern int Preview_Add(Instance* ii, Instrument* i, int key, int note, Pattern* 
 
             // Apply pattern to the instance
             if(pt != NULL)
-                pslot->ii->patt = pt->OrigPt;
+                pslot->ii->patt = pt->basePattern;
             else
                 pslot->ii->patt = field_pattern;
 

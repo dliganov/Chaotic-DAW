@@ -117,7 +117,6 @@ public:
     int			current_pt_line;
     float		current_pt_tick;
     TrkBunch*   track_bunch;
-    Pianoroll*  proll;
     DragData    drag_data;
     int         dragcount;
     bool        selstarted;

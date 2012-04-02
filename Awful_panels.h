@@ -574,7 +574,7 @@ public:
     void Mix(int num_frames);
     Eff* AddVSTEffectByPath(const char* fullpath, MixChannel* mchan);
     Eff* AddEffectFromBrowser(FileData * fdi, MixChannel* mchan);
-    Eff* AddEffectByType(EffType etype, MixChannel* mchan);
+    Eff* AddEffectByType(ModuleSubType etype, MixChannel* mchan);
     MixChannel* CheckFXString(DigitStr * mixstr);
     MixChannel* GetMixChannelByIndexStr(char * indexstr);
     void SetCurrentEffect(Eff* eff);

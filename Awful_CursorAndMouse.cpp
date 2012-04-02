@@ -142,7 +142,7 @@ void Cursor::AdvanceView(float dtick, int dline)
             OffsLine += dline;
             if(OffsLine < 0)
                 OffsLine = 0;
-            else if(OffsLine >= patt->OrigPt->num_lines)
+            else if(OffsLine >= patt->basePattern->num_lines)
             {
                 OffsLine -= dline;
             }
@@ -273,7 +273,7 @@ void Cursor::PatternUpdate()
 
 void Cursor::PosUpdate()
 {
-    trk = GetTrkDataForLine(CLine, patt->OrigPt);
+    trk = GetTrkDataForLine(CLine, patt->basePattern);
     if(trk != NULL)
     {
 		if(CLine > trk->trk_end_line)
@@ -304,7 +304,7 @@ void Cursor::PosUpdate()
     {
         CursX = Tick2X(CTick, loc);
         CursY = Line2Y(CLine, loc) - aux_panel->bottomincr;
-        existel = aux_panel->workPt->OrigPt->IsElemExists(CTick, CLine);
+        existel = aux_panel->workPt->basePattern->IsElemExists(CTick, CLine);
     }
     CursX0 = CursX;
 
@@ -464,7 +464,7 @@ void Cursor::ExitToNoteMode(Instrument* instr, int note_num)
     jassert(curElem != NULL);
     if(loc == Loc_MainGrid)
     {
-        if(!(aux_panel->auxmode == AuxMode_Pattern && aux_panel->workPt->OrigPt->autopatt))
+        if(!(aux_panel->auxmode == AuxMode_Pattern && aux_panel->workPt->basePattern->autopatt))
         {
             ChangeCurrentInstrument(instr);
         }
@@ -480,7 +480,7 @@ void Cursor::ExitToNoteMode(Instrument* instr, int note_num)
     }
     else if(loc == Loc_SmallGrid)
     {
-        if(!(aux_panel->auxmode == AuxMode_Pattern && aux_panel->workPt->OrigPt->autopatt))
+        if(!(aux_panel->auxmode == AuxMode_Pattern && aux_panel->workPt->basePattern->autopatt))
         {
             ChangeCurrentInstrument(instr);
         }
@@ -633,7 +633,6 @@ Mouse::Mouse()
     current_pt_line = 0;
     current_pt_tick = 0;
     track_bunch = NULL;
-    proll = NULL;
     dragcount = 0;
     selstarted = false;
     loostarted = false;
@@ -762,7 +761,7 @@ void Mouse::CalcPosition(int mx, int my)
         loc = Loc_SmallGrid;
         patt = aux_panel->workPt;
         current_line = Y2Line(my + aux_panel->bottomincr, Loc_SmallGrid);
-        current_trk = GetTrkDataForLine(current_line, aux_panel->workPt->OrigPt);
+        current_trk = GetTrkDataForLine(current_line, aux_panel->workPt->basePattern);
     }
 
     if(loc == Loc_MainGrid || loc == Loc_SmallGrid)
@@ -829,7 +828,7 @@ void Mouse::PosCheck(int mx, int my)
                 if(M.on_keys == true)
                 {
                     M.current_line = Y2Line(my + aux_panel->bottomincr, Loc_SmallGrid);
-                    M.current_trk = GetTrkDataForLine(M.current_line, aux_panel->workPt->OrigPt);
+                    M.current_trk = GetTrkDataForLine(M.current_line, aux_panel->workPt->basePattern);
                 }
 
                 if(mx >= GridXS1 && mx <= GridXS2 && 
@@ -846,7 +845,7 @@ void Mouse::PosCheck(int mx, int my)
 
                 if(aux_panel->ltype == Lane_Pitch)
                 {
-                    Envelope* env = (Envelope*)aux_panel->workPt->OrigPt->pitch->paramedit;
+                    Envelope* env = (Envelope*)aux_panel->workPt->basePattern->pitch->paramedit;
                     env->Check(mx, my);
                 }
             }
@@ -1403,7 +1402,7 @@ void Mouse::CheckGridElements(int mx, int my)
     }
     else if(loc == Loc_SmallGrid)
     {
-        el = aux_panel->workPt->OrigPt->first_elem;
+        el = aux_panel->workPt->basePattern->first_elem;
         lH = aux_panel->lineHeight;
     }
 
@@ -1448,7 +1447,7 @@ void Mouse::CheckGridElements(int mx, int my)
             }
             else if(loc == Loc_SmallGrid)
             {
-                el = aux_panel->workPt->OrigPt->first_elem;
+                el = aux_panel->workPt->basePattern->first_elem;
                 lH = aux_panel->lineHeight;
             }
 
@@ -1560,7 +1559,7 @@ void Mouse::CheckGridElements(int mx, int my)
         {
             tc = aux_panel->OffsLine;
             last = (GridYS2 - GridYS1)/aux_panel->lineHeight + aux_panel->OffsLine;
-            patt = aux_panel->workPt->OrigPt;
+            patt = aux_panel->workPt->basePattern;
         }
 
         while(tc <= last)
@@ -1658,7 +1657,7 @@ void Mouse::CheckGridStuff(int mx, int my)
     {
         M.current_line = Y2Line(my + aux_panel->bottomincr, Loc_SmallGrid);
         M.current_tick = X2Tick(mx, Loc_SmallGrid);
-        M.current_trk = GetTrkDataForLine(M.current_line, aux_panel->workPt->OrigPt);
+        M.current_trk = GetTrkDataForLine(M.current_line, aux_panel->workPt->basePattern);
     }
 
     if((M.loc == Loc_MainGrid || M.loc == Loc_SmallGrid))

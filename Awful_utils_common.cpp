@@ -1073,7 +1073,7 @@ void AuxCheck()
     if(aux_panel->auxmode == AuxMode_Pattern)
     {
         right_tick_margin1 = (GridXS2 - GridXS1)/aux_panel->tickWidth + aux_panel->OffsTick - 1;
-        el = aux_panel->workPt->OrigPt->first_elem;
+        el = aux_panel->workPt->basePattern->first_elem;
         while(el != NULL)
         {
             if(el->IsPresent() && el->displayable == true)

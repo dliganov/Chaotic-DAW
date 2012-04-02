@@ -3,72 +3,72 @@
 
 <ChaoticProject CMMVersion="101" BPM="136" TPB="4" BPB="4" Octave="5">
   <Parameter GlobalIndex="0" name="MasterVolume" index="0" val="0.3240906"/>
-  <Instrument InstrIndex="0" InstrType="1" InstrName="Chaosynth" InstrPath="internal://chaotic"
+  <Instrument InstrIndex="0" InstrType="1" InstrName="Chaosynth" InstrPath="internal://synth1"
               InstrAlias="sy" MixChannel="03" Mute="0" Solo="0">
-    <Parameter GlobalIndex="371" name="Vol" index="0" val="0.966379285"/>
-    <Parameter GlobalIndex="372" name="Pan" index="1" val="-0.399999976"/>
+    <Parameter GlobalIndex="311" name="Vol" index="0" val="0.966379285"/>
+    <Parameter GlobalIndex="312" name="Pan" index="1" val="-0.399999976"/>
     <Module Name="Chaosynth" ID="1129535822" Preset="Current">
-      <Parameter GlobalIndex="373" name="Osc1.3x" index="2" val="0" bval="0"/>
-      <Parameter GlobalIndex="374" name="Osc2.3x" index="3" val="0" bval="0"/>
-      <Parameter GlobalIndex="375" name="Osc3.3x" index="4" val="0" bval="0"/>
-      <Parameter GlobalIndex="376" name="Osc1.saw" index="5" val="0" bval="0"/>
-      <Parameter GlobalIndex="377" name="Osc1.sine" index="6" val="0" bval="1"/>
-      <Parameter GlobalIndex="378" name="Osc1.triangle" index="7" val="0" bval="0"/>
-      <Parameter GlobalIndex="379" name="Osc1.pulse" index="8" val="0" bval="0"/>
-      <Parameter GlobalIndex="380" name="Osc1.noise" index="9" val="0" bval="0"/>
-      <Parameter GlobalIndex="381" name="Osc2.saw" index="10" val="0" bval="0"/>
-      <Parameter GlobalIndex="382" name="Osc2.sine" index="11" val="0" bval="1"/>
-      <Parameter GlobalIndex="383" name="Osc2.triangle" index="12" val="0" bval="0"/>
-      <Parameter GlobalIndex="384" name="Osc2.pulse" index="13" val="0" bval="0"/>
-      <Parameter GlobalIndex="385" name="Osc2.noise" index="14" val="0" bval="0"/>
-      <Parameter GlobalIndex="386" name="Osc3.saw" index="15" val="0" bval="1"/>
-      <Parameter GlobalIndex="387" name="Osc3.sine" index="16" val="0" bval="0"/>
-      <Parameter GlobalIndex="388" name="Osc3.triangle" index="17" val="0" bval="0"/>
-      <Parameter GlobalIndex="389" name="Osc3.pulse" index="18" val="0" bval="0"/>
-      <Parameter GlobalIndex="390" name="Osc3.noise" index="19" val="0" bval="0"/>
-      <Parameter GlobalIndex="391" name="Osc1.level" index="20" val="1"/>
-      <Parameter GlobalIndex="392" name="Osc1.detune" index="21" val="-0.0036257985"/>
-      <Parameter GlobalIndex="393" name="Osc1.octave" index="22" val="0"/>
-      <Parameter GlobalIndex="394" name="Osc1.pwidth" index="23" val="0.295121968"/>
-      <Parameter GlobalIndex="395" name="Osc2.level" index="24" val="1"/>
-      <Parameter GlobalIndex="396" name="Osc2.detune" index="25" val="0.0036257985"/>
-      <Parameter GlobalIndex="397" name="Osc2.octave" index="26" val="0"/>
-      <Parameter GlobalIndex="398" name="Osc2.pwidth" index="27" val="0.5"/>
-      <Parameter GlobalIndex="399" name="Osc3.level" index="28" val="1"/>
-      <Parameter GlobalIndex="400" name="Osc3.detune" index="29" val="0"/>
-      <Parameter GlobalIndex="401" name="Osc3.octave" index="30" val="1"/>
-      <Parameter GlobalIndex="402" name="Osc3.pwidth" index="31" val="0.202439025"/>
-      <Parameter GlobalIndex="403" name="Flt1.Osc1" index="32" val="0" bval="0"/>
-      <Parameter GlobalIndex="404" name="Flt1.Osc2" index="33" val="0" bval="1"/>
-      <Parameter GlobalIndex="405" name="Flt1.Osc3" index="34" val="0" bval="0"/>
-      <Parameter GlobalIndex="406" name="Flt2.Osc1" index="35" val="0" bval="0"/>
-      <Parameter GlobalIndex="407" name="Flt2.Osc2" index="36" val="0" bval="0"/>
-      <Parameter GlobalIndex="408" name="Flt2.Osc3" index="37" val="0" bval="0"/>
-      <Parameter GlobalIndex="409" name="Chorus ON" index="38" val="0" bval="1"/>
-      <Parameter GlobalIndex="410" name="Delay ON" index="39" val="0" bval="1"/>
-      <Parameter GlobalIndex="411" name="Reverb ON" index="40" val="0" bval="0"/>
-      <Parameter GlobalIndex="412" name="LFOAmp.Osc1.level" index="41" val="0.555555582"/>
-      <Parameter GlobalIndex="413" name="LFORate.Osc1.level" index="42" val="3.94736838"/>
-      <Parameter GlobalIndex="414" name="LFOAmp.Osc2.level" index="43" val="0"/>
-      <Parameter GlobalIndex="415" name="LFORate.Osc2.level" index="44" val="4.73684216"/>
-      <Parameter GlobalIndex="416" name="LFOAmp.Osc3.level" index="45" val="0"/>
-      <Parameter GlobalIndex="417" name="LFORate.Osc3.level" index="46" val="3"/>
-      <Parameter GlobalIndex="418" name="LFOAmp.Osc1.pitch" index="47" val="0"/>
-      <Parameter GlobalIndex="419" name="LFORate.Osc1.pitch" index="48" val="3"/>
-      <Parameter GlobalIndex="420" name="LFOAmp.Osc2.pitch" index="49" val="0.00440467382"/>
-      <Parameter GlobalIndex="421" name="LFORate.Osc2.pitch" index="50" val="3"/>
-      <Parameter GlobalIndex="422" name="LFOAmp.Osc3.pitch" index="51" val="0"/>
-      <Parameter GlobalIndex="423" name="LFORate.Osc3.pitch" index="52" val="3"/>
-      <Parameter GlobalIndex="424" name="LFOAmp.Flt1.freq" index="53" val="0.172839507"/>
-      <Parameter GlobalIndex="425" name="LFORate.Flt1.freq" index="54" val="1.31578946"/>
-      <Parameter GlobalIndex="426" name="LFOAmp.Flt2.freq" index="55" val="0"/>
-      <Parameter GlobalIndex="427" name="LFORate.Flt2.freq" index="56" val="1.18421054"/>
-      <Parameter GlobalIndex="428" name="Osc1.FM.Osc2" index="57" val="0.353658527"/>
-      <Parameter GlobalIndex="429" name="Osc2.FM.Osc3" index="58" val="0"/>
-      <Parameter GlobalIndex="430" name="Osc1.FM.Osc3" index="59" val="0"/>
-      <Parameter GlobalIndex="431" name="Osc1.RM.Osc2" index="60" val="0"/>
-      <Parameter GlobalIndex="432" name="Osc2.RM.Osc3" index="61" val="0"/>
-      <Parameter GlobalIndex="433" name="Osc1.RM.Osc3" index="62" val="0"/>
+      <Parameter GlobalIndex="313" name="Osc1.3x" index="2" val="0" bval="0"/>
+      <Parameter GlobalIndex="314" name="Osc2.3x" index="3" val="0" bval="0"/>
+      <Parameter GlobalIndex="315" name="Osc3.3x" index="4" val="0" bval="0"/>
+      <Parameter GlobalIndex="316" name="Osc1.saw" index="5" val="0" bval="0"/>
+      <Parameter GlobalIndex="317" name="Osc1.sine" index="6" val="0" bval="1"/>
+      <Parameter GlobalIndex="318" name="Osc1.triangle" index="7" val="0" bval="0"/>
+      <Parameter GlobalIndex="319" name="Osc1.pulse" index="8" val="0" bval="0"/>
+      <Parameter GlobalIndex="320" name="Osc1.noise" index="9" val="0" bval="0"/>
+      <Parameter GlobalIndex="321" name="Osc2.saw" index="10" val="0" bval="0"/>
+      <Parameter GlobalIndex="322" name="Osc2.sine" index="11" val="0" bval="1"/>
+      <Parameter GlobalIndex="323" name="Osc2.triangle" index="12" val="0" bval="0"/>
+      <Parameter GlobalIndex="324" name="Osc2.pulse" index="13" val="0" bval="0"/>
+      <Parameter GlobalIndex="325" name="Osc2.noise" index="14" val="0" bval="0"/>
+      <Parameter GlobalIndex="326" name="Osc3.saw" index="15" val="0" bval="1"/>
+      <Parameter GlobalIndex="327" name="Osc3.sine" index="16" val="0" bval="0"/>
+      <Parameter GlobalIndex="328" name="Osc3.triangle" index="17" val="0" bval="0"/>
+      <Parameter GlobalIndex="329" name="Osc3.pulse" index="18" val="0" bval="0"/>
+      <Parameter GlobalIndex="330" name="Osc3.noise" index="19" val="0" bval="0"/>
+      <Parameter GlobalIndex="331" name="Osc1.level" index="20" val="1"/>
+      <Parameter GlobalIndex="332" name="Osc1.detune" index="21" val="-0.0036257985"/>
+      <Parameter GlobalIndex="333" name="Osc1.octave" index="22" val="0"/>
+      <Parameter GlobalIndex="334" name="Osc1.pwidth" index="23" val="0.295121968"/>
+      <Parameter GlobalIndex="335" name="Osc2.level" index="24" val="1"/>
+      <Parameter GlobalIndex="336" name="Osc2.detune" index="25" val="0.0036257985"/>
+      <Parameter GlobalIndex="337" name="Osc2.octave" index="26" val="0"/>
+      <Parameter GlobalIndex="338" name="Osc2.pwidth" index="27" val="0.5"/>
+      <Parameter GlobalIndex="339" name="Osc3.level" index="28" val="1"/>
+      <Parameter GlobalIndex="340" name="Osc3.detune" index="29" val="0"/>
+      <Parameter GlobalIndex="341" name="Osc3.octave" index="30" val="1"/>
+      <Parameter GlobalIndex="342" name="Osc3.pwidth" index="31" val="0.202439025"/>
+      <Parameter GlobalIndex="343" name="Flt1.Osc1" index="32" val="0" bval="0"/>
+      <Parameter GlobalIndex="344" name="Flt1.Osc2" index="33" val="0" bval="1"/>
+      <Parameter GlobalIndex="345" name="Flt1.Osc3" index="34" val="0" bval="0"/>
+      <Parameter GlobalIndex="346" name="Flt2.Osc1" index="35" val="0" bval="0"/>
+      <Parameter GlobalIndex="347" name="Flt2.Osc2" index="36" val="0" bval="0"/>
+      <Parameter GlobalIndex="348" name="Flt2.Osc3" index="37" val="0" bval="0"/>
+      <Parameter GlobalIndex="349" name="Chorus ON" index="38" val="0" bval="1"/>
+      <Parameter GlobalIndex="350" name="Delay ON" index="39" val="0" bval="1"/>
+      <Parameter GlobalIndex="351" name="Reverb ON" index="40" val="0" bval="0"/>
+      <Parameter GlobalIndex="352" name="LFOAmp.Osc1.level" index="41" val="0.555555582"/>
+      <Parameter GlobalIndex="353" name="LFORate.Osc1.level" index="42" val="3.94736838"/>
+      <Parameter GlobalIndex="354" name="LFOAmp.Osc2.level" index="43" val="0"/>
+      <Parameter GlobalIndex="355" name="LFORate.Osc2.level" index="44" val="4.73684216"/>
+      <Parameter GlobalIndex="356" name="LFOAmp.Osc3.level" index="45" val="0"/>
+      <Parameter GlobalIndex="357" name="LFORate.Osc3.level" index="46" val="3"/>
+      <Parameter GlobalIndex="358" name="LFOAmp.Osc1.pitch" index="47" val="0"/>
+      <Parameter GlobalIndex="359" name="LFORate.Osc1.pitch" index="48" val="3"/>
+      <Parameter GlobalIndex="360" name="LFOAmp.Osc2.pitch" index="49" val="0.00440467382"/>
+      <Parameter GlobalIndex="361" name="LFORate.Osc2.pitch" index="50" val="3"/>
+      <Parameter GlobalIndex="362" name="LFOAmp.Osc3.pitch" index="51" val="0"/>
+      <Parameter GlobalIndex="363" name="LFORate.Osc3.pitch" index="52" val="3"/>
+      <Parameter GlobalIndex="364" name="LFOAmp.Flt1.freq" index="53" val="0.172839507"/>
+      <Parameter GlobalIndex="365" name="LFORate.Flt1.freq" index="54" val="1.31578946"/>
+      <Parameter GlobalIndex="366" name="LFOAmp.Flt2.freq" index="55" val="0"/>
+      <Parameter GlobalIndex="367" name="LFORate.Flt2.freq" index="56" val="1.18421054"/>
+      <Parameter GlobalIndex="368" name="Osc1.FM.Osc2" index="57" val="0.353658527"/>
+      <Parameter GlobalIndex="369" name="Osc2.FM.Osc3" index="58" val="0"/>
+      <Parameter GlobalIndex="370" name="Osc1.FM.Osc3" index="59" val="0"/>
+      <Parameter GlobalIndex="371" name="Osc1.RM.Osc2" index="60" val="0"/>
+      <Parameter GlobalIndex="372" name="Osc2.RM.Osc3" index="61" val="0"/>
+      <Parameter GlobalIndex="373" name="Osc1.RM.Osc3" index="62" val="0"/>
       <EnvIndex Osc1="1" Osc2="2" Osc3="2" Filt1="3" Filt2="3"/>
       <Envelope1 Len="3" Hgt="49" sustainable="1" folded="0">
         <EnvPoint xval="0" yval="0.489795923" sustainpoint="0" big="0"/>
@@ -97,53 +97,53 @@
         <EnvPoint xval="0" yval="1" sustainpoint="1" big="0"/>
       </Envelope5>
       <Module Name="Reverb" ID="1380275794" Preset="default">
-        <Parameter GlobalIndex="517" name="PreDelay" index="0" val="15"/>
-        <Parameter GlobalIndex="518" name="Roomsize" index="1" val="77"/>
-        <Parameter GlobalIndex="519" name="Decay" index="2" val="6"/>
-        <Parameter GlobalIndex="520" name="HighCut" index="3" val="0.200000003"/>
-        <Parameter GlobalIndex="521" name="LowCut" index="4" val="1"/>
-        <Parameter GlobalIndex="522" name="DryWet" index="5" val="40"/>
-        <Parameter GlobalIndex="523" name="LowDecScale" index="6" val="0.5"/>
-        <Parameter GlobalIndex="524" name="HighDecScale" index="7" val="0.239999995"/>
+        <Parameter GlobalIndex="457" name="PreDelay" index="0" val="15"/>
+        <Parameter GlobalIndex="458" name="Roomsize" index="1" val="77"/>
+        <Parameter GlobalIndex="459" name="Decay" index="2" val="6"/>
+        <Parameter GlobalIndex="460" name="HighCut" index="3" val="0.200000003"/>
+        <Parameter GlobalIndex="461" name="LowCut" index="4" val="1"/>
+        <Parameter GlobalIndex="462" name="DryWet" index="5" val="40"/>
+        <Parameter GlobalIndex="463" name="LowDecScale" index="6" val="0.5"/>
+        <Parameter GlobalIndex="464" name="HighDecScale" index="7" val="0.239999995"/>
       </Module>
       <Module Name="Delay" ID="1347437644" Preset="default">
-        <Parameter GlobalIndex="510" name="Mode" index="0" val="0" bval="1"/>
-        <Parameter GlobalIndex="511" name="Delay" index="1" val="3"/>
-        <Parameter GlobalIndex="512" name="Amount" index="2" val="1"/>
-        <Parameter GlobalIndex="513" name="Feedback" index="3" val="55"/>
-        <Parameter GlobalIndex="514" name="Pan" index="4" val="0"/>
-        <Parameter GlobalIndex="515" name="LowCut" index="5" val="0.899999976"/>
-        <Parameter GlobalIndex="516" name="DryWet" index="6" val="20"/>
+        <Parameter GlobalIndex="450" name="Mode" index="0" val="0" bval="1"/>
+        <Parameter GlobalIndex="451" name="Delay" index="1" val="3"/>
+        <Parameter GlobalIndex="452" name="Amount" index="2" val="1"/>
+        <Parameter GlobalIndex="453" name="Feedback" index="3" val="55"/>
+        <Parameter GlobalIndex="454" name="Pan" index="4" val="0"/>
+        <Parameter GlobalIndex="455" name="LowCut" index="5" val="0.899999976"/>
+        <Parameter GlobalIndex="456" name="DryWet" index="6" val="20"/>
       </Module>
       <Module Name="Chorus" ID="1128812370" Preset="default">
-        <Parameter GlobalIndex="506" name="Delay" index="0" val="5"/>
-        <Parameter GlobalIndex="507" name="Mod. Freq" index="1" val="2"/>
-        <Parameter GlobalIndex="508" name="Depth" index="2" val="0.25"/>
-        <Parameter GlobalIndex="509" name="DryWet" index="3" val="0.524390221"/>
+        <Parameter GlobalIndex="446" name="Delay" index="0" val="5"/>
+        <Parameter GlobalIndex="447" name="Mod. Freq" index="1" val="2"/>
+        <Parameter GlobalIndex="448" name="Depth" index="2" val="0.25"/>
+        <Parameter GlobalIndex="449" name="DryWet" index="3" val="0.524390221"/>
       </Module>
       <Module Name="Filter2" ID="1128680532" Preset="default">
-        <Parameter GlobalIndex="440" name="Cutoff" index="0" val="0.542553186"/>
-        <Parameter GlobalIndex="441" name="Resonance" index="1" val="0"/>
-        <Parameter GlobalIndex="442" name="LP12" index="2" val="0" bval="1"/>
-        <Parameter GlobalIndex="443" name="HP12" index="3" val="0" bval="0"/>
-        <Parameter GlobalIndex="444" name="BP" index="4" val="0" bval="0"/>
-        <Parameter GlobalIndex="445" name="Mode" index="5" val="0" bval="0"/>
+        <Parameter GlobalIndex="380" name="Cutoff" index="0" val="0.542553186"/>
+        <Parameter GlobalIndex="381" name="Resonance" index="1" val="0"/>
+        <Parameter GlobalIndex="382" name="LP12" index="2" val="0" bval="1"/>
+        <Parameter GlobalIndex="383" name="HP12" index="3" val="0" bval="0"/>
+        <Parameter GlobalIndex="384" name="BP" index="4" val="0" bval="0"/>
+        <Parameter GlobalIndex="385" name="Mode" index="5" val="0" bval="0"/>
       </Module>
       <Module Name="Filter" ID="1128680532" Preset="default">
-        <Parameter GlobalIndex="434" name="Cutoff" index="0" val="1"/>
-        <Parameter GlobalIndex="435" name="Resonance" index="1" val="0"/>
-        <Parameter GlobalIndex="436" name="LP12" index="2" val="0" bval="1"/>
-        <Parameter GlobalIndex="437" name="HP12" index="3" val="0" bval="0"/>
-        <Parameter GlobalIndex="438" name="BP" index="4" val="0" bval="0"/>
-        <Parameter GlobalIndex="439" name="Mode" index="5" val="0" bval="1"/>
+        <Parameter GlobalIndex="374" name="Cutoff" index="0" val="1"/>
+        <Parameter GlobalIndex="375" name="Resonance" index="1" val="0"/>
+        <Parameter GlobalIndex="376" name="LP12" index="2" val="0" bval="1"/>
+        <Parameter GlobalIndex="377" name="HP12" index="3" val="0" bval="0"/>
+        <Parameter GlobalIndex="378" name="BP" index="4" val="0" bval="0"/>
+        <Parameter GlobalIndex="379" name="Mode" index="5" val="0" bval="1"/>
       </Module>
     </Module>
   </Instrument>
   <Instrument InstrIndex="1" InstrType="0" InstrName="Zheng_64.wav" InstrPath=".\Samples\Zheng_64.wav"
               InstrAlias="zh" MixChannel="02" Mute="0" Solo="0" Normalized="0"
               LoopStart="0" LoopEnd="12518" LoopType="0">
-    <Parameter GlobalIndex="525" name="Vol" index="0" val="1"/>
-    <Parameter GlobalIndex="526" name="Pan" index="1" val="0"/>
+    <Parameter GlobalIndex="465" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="466" name="Pan" index="1" val="0"/>
     <SmpEnv Len="2" Hgt="88" sustainable="0" folded="0">
       <EnvPoint xval="0" yval="1" sustainpoint="1" big="1"/>
     </SmpEnv>
@@ -151,8 +151,8 @@
   <Instrument InstrIndex="2" InstrType="0" InstrName="Closed Hat.wav" InstrPath=".\Samples\Closed Hat.wav"
               InstrAlias="cl" MixChannel="--" Mute="0" Solo="0" Normalized="0"
               LoopStart="0" LoopEnd="2802" LoopType="0">
-    <Parameter GlobalIndex="527" name="Vol" index="0" val="1"/>
-    <Parameter GlobalIndex="528" name="Pan" index="1" val="0.514285684"/>
+    <Parameter GlobalIndex="467" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="468" name="Pan" index="1" val="0.514285684"/>
     <SmpEnv Len="2" Hgt="40" sustainable="0" folded="0">
       <EnvPoint xval="0" yval="1" sustainpoint="1" big="1"/>
     </SmpEnv>
@@ -161,8 +161,8 @@
               InstrPath=".\Samples\Long OpnClsd Hat.wav" InstrAlias="lo" MixChannel="--"
               Mute="0" Solo="0" Normalized="0" LoopStart="0" LoopEnd="22573"
               LoopType="0">
-    <Parameter GlobalIndex="529" name="Vol" index="0" val="1"/>
-    <Parameter GlobalIndex="530" name="Pan" index="1" val="-0.485714257"/>
+    <Parameter GlobalIndex="469" name="Vol" index="0" val="1"/>
+    <Parameter GlobalIndex="470" name="Pan" index="1" val="-0.485714257"/>
     <SmpEnv Len="2" Hgt="40" sustainable="0" folded="0">
       <EnvPoint xval="0" yval="1" sustainpoint="1" big="1"/>
     </SmpEnv>
@@ -183,25 +183,25 @@
     <Effect EffIndex="0" EffType="14" EffName="Compressor" EffPath="internal://compressor"
             Folded="1" Bypass="0">
       <Module Name="Compressor" ID="1129270608" Preset="Current">
-        <Parameter GlobalIndex="531" name="Mode" index="0" val="0" bval="0"/>
-        <Parameter GlobalIndex="532" name="Threshold" index="1" val="-18"/>
-        <Parameter GlobalIndex="533" name="Ratio" index="2" val="6.33333349"/>
-        <Parameter GlobalIndex="534" name="Knee" index="3" val="0"/>
-        <Parameter GlobalIndex="535" name="Attack" index="4" val="10"/>
-        <Parameter GlobalIndex="536" name="Release" index="5" val="100"/>
-        <Parameter GlobalIndex="537" name="Gain" index="6" val="4.66666698"/>
+        <Parameter GlobalIndex="471" name="Mode" index="0" val="0" bval="0"/>
+        <Parameter GlobalIndex="472" name="Threshold" index="1" val="-18"/>
+        <Parameter GlobalIndex="473" name="Ratio" index="2" val="6.33333349"/>
+        <Parameter GlobalIndex="474" name="Knee" index="3" val="0"/>
+        <Parameter GlobalIndex="475" name="Attack" index="4" val="10"/>
+        <Parameter GlobalIndex="476" name="Release" index="5" val="100"/>
+        <Parameter GlobalIndex="477" name="Gain" index="6" val="4.66666698"/>
       </Module>
     </Effect>
-    <Effect EffIndex="3" EffType="11" EffName="Delay" EffPath="internal://ppd"
+    <Effect EffIndex="1" EffType="11" EffName="Delay" EffPath="internal://ppd"
             Folded="1" Bypass="0">
       <Module Name="Delay" ID="1347437644" Preset="Current">
-        <Parameter GlobalIndex="552" name="Mode" index="0" val="0" bval="1"/>
-        <Parameter GlobalIndex="553" name="Delay" index="1" val="3"/>
-        <Parameter GlobalIndex="554" name="Amount" index="2" val="1"/>
-        <Parameter GlobalIndex="555" name="Feedback" index="3" val="50"/>
-        <Parameter GlobalIndex="556" name="Pan" index="4" val="0.466666698"/>
-        <Parameter GlobalIndex="557" name="LowCut" index="5" val="1"/>
-        <Parameter GlobalIndex="558" name="DryWet" index="6" val="35.5555573"/>
+        <Parameter GlobalIndex="478" name="Mode" index="0" val="0" bval="1"/>
+        <Parameter GlobalIndex="479" name="Delay" index="1" val="3"/>
+        <Parameter GlobalIndex="480" name="Amount" index="2" val="1"/>
+        <Parameter GlobalIndex="481" name="Feedback" index="3" val="50"/>
+        <Parameter GlobalIndex="482" name="Pan" index="4" val="0.466666698"/>
+        <Parameter GlobalIndex="483" name="LowCut" index="5" val="1"/>
+        <Parameter GlobalIndex="484" name="DryWet" index="6" val="35.5555573"/>
       </Module>
     </Effect>
   </MixChannel>
@@ -211,28 +211,28 @@
     <Parameter GlobalIndex="14" name="send1.amount" index="0" val="0"/>
     <Parameter GlobalIndex="15" name="send2.amount" index="0" val="0"/>
     <Parameter GlobalIndex="16" name="send3.amount" index="0" val="0"/>
-    <Effect EffIndex="1" EffType="11" EffName="Delay" EffPath="internal://ppd"
-            Folded="1" Bypass="0">
-      <Module Name="Delay" ID="1347437644" Preset="Current">
-        <Parameter GlobalIndex="538" name="Mode" index="0" val="0" bval="1"/>
-        <Parameter GlobalIndex="539" name="Delay" index="1" val="3"/>
-        <Parameter GlobalIndex="540" name="Amount" index="2" val="1"/>
-        <Parameter GlobalIndex="541" name="Feedback" index="3" val="55"/>
-        <Parameter GlobalIndex="542" name="Pan" index="4" val="0"/>
-        <Parameter GlobalIndex="543" name="LowCut" index="5" val="0.899999976"/>
-        <Parameter GlobalIndex="544" name="DryWet" index="6" val="20"/>
-      </Module>
-    </Effect>
     <Effect EffIndex="2" EffType="11" EffName="Delay" EffPath="internal://ppd"
             Folded="1" Bypass="0">
       <Module Name="Delay" ID="1347437644" Preset="Current">
-        <Parameter GlobalIndex="545" name="Mode" index="0" val="0" bval="1"/>
-        <Parameter GlobalIndex="546" name="Delay" index="1" val="5"/>
-        <Parameter GlobalIndex="547" name="Amount" index="2" val="0.577777803"/>
-        <Parameter GlobalIndex="548" name="Feedback" index="3" val="55"/>
-        <Parameter GlobalIndex="549" name="Pan" index="4" val="0.555555582"/>
-        <Parameter GlobalIndex="550" name="LowCut" index="5" val="0.899999976"/>
-        <Parameter GlobalIndex="551" name="DryWet" index="6" val="31.1111126"/>
+        <Parameter GlobalIndex="485" name="Mode" index="0" val="0" bval="1"/>
+        <Parameter GlobalIndex="486" name="Delay" index="1" val="3"/>
+        <Parameter GlobalIndex="487" name="Amount" index="2" val="1"/>
+        <Parameter GlobalIndex="488" name="Feedback" index="3" val="55"/>
+        <Parameter GlobalIndex="489" name="Pan" index="4" val="0"/>
+        <Parameter GlobalIndex="490" name="LowCut" index="5" val="0.899999976"/>
+        <Parameter GlobalIndex="491" name="DryWet" index="6" val="20"/>
+      </Module>
+    </Effect>
+    <Effect EffIndex="3" EffType="11" EffName="Delay" EffPath="internal://ppd"
+            Folded="1" Bypass="0">
+      <Module Name="Delay" ID="1347437644" Preset="Current">
+        <Parameter GlobalIndex="492" name="Mode" index="0" val="0" bval="1"/>
+        <Parameter GlobalIndex="493" name="Delay" index="1" val="5"/>
+        <Parameter GlobalIndex="494" name="Amount" index="2" val="0.577777803"/>
+        <Parameter GlobalIndex="495" name="Feedback" index="3" val="55"/>
+        <Parameter GlobalIndex="496" name="Pan" index="4" val="0.555555582"/>
+        <Parameter GlobalIndex="497" name="LowCut" index="5" val="0.899999976"/>
+        <Parameter GlobalIndex="498" name="DryWet" index="6" val="31.1111126"/>
       </Module>
     </Effect>
   </MixChannel>

@@ -219,7 +219,7 @@ void Locate_Trigger(Trigger* tg)
     Pattern* evpatt;
     Event** firstEv;
     Event** lastEv;
-    if(tg->patt->OrigPt== NULL || tg->patt->OrigPt->autopatt == false)
+    if(tg->patt->basePattern== NULL || tg->patt->basePattern->autopatt == false)
     {
         firstEv = &field_pattern->first_ev;
         lastEv = &field_pattern->last_ev;
@@ -362,8 +362,8 @@ OUTPUT: N/A
 void CreateElementTriggersPerPattern(Pattern* pt, Element* el, bool skipaddtoelement)
 {
     // if this is not autopattern inside autopattern (excluding original pattern case when pt == pt->OrigPt)
-    if(el->IsInstance() && pt != pt->OrigPt && pt->patt != NULL && pt->patt->OrigPt != NULL &&
-							pt->patt->OrigPt->autopatt == true)
+    if(el->IsInstance() && pt != pt->basePattern && pt->patt != NULL && pt->patt->basePattern != NULL &&
+							pt->patt->basePattern->autopatt == true)
 	{
 		return;
 	}
@@ -398,7 +398,7 @@ void CreateElementTriggersPerPattern(Pattern* pt, Element* el, bool skipaddtoele
             Locate_Trigger(tg_end);
         }
 
-        if(el->IsInstance() && pt->OrigPt->autopatt == false)
+        if(el->IsInstance() && pt->basePattern->autopatt == false)
         {
             AddAutopatternInstance(tg_start, (Instance*)el, true);
         }
@@ -473,7 +473,7 @@ void RemoveTriggerFromEvent(Trigger* tg)
 {
     Event** firstEv;
     Event** lastEv;
-    if(tg->patt->OrigPt== NULL || tg->patt->OrigPt->autopatt == false)
+    if(tg->patt->basePattern== NULL || tg->patt->basePattern->autopatt == false)
     {
         firstEv = &field_pattern->first_ev;
         lastEv = &field_pattern->last_ev;
@@ -530,7 +530,7 @@ void GlobalAddActiveTrigger(Trigger* tg)
         tgg = tgg->act_next;
     }
 
-    tg->globallisted = true;
+    tg->listed_globally = true;
     if(last_global_active_trigger == NULL)
     {
         tg->act_prev = NULL;
@@ -574,7 +574,7 @@ void GlobalRemoveActiveTrigger(Trigger* tg)
             tg->act_next->act_prev = tg->act_prev;
         }
     }
-    tg->globallisted = false;
+    tg->listed_globally = false;
 }
 
 void ActivateCommandTrigger(Trigger* tg)
@@ -633,7 +633,7 @@ inline void ActivateSymbolTrigger(Trigger* stg)
     stg->tgworking = true;
     stg->frame_phase = 0;
     FXState* fxstate;
-    if(stg->patt->OrigPt->autopatt)
+    if(stg->patt->basePattern->autopatt)
     {
         fxstate = &stg->patt->fxstate;
     }
@@ -686,7 +686,6 @@ inline void ActivateSymbolTrigger(Trigger* stg)
 
             if(stg->tgsparent != NULL)
             {
-                stg->signal = 0;
                 stg->tgsparent->tgsactnum++;
 
                 if(stg->tgsparent->tgsactive != NULL)
@@ -714,7 +713,7 @@ inline void ActivateSymbolTrigger(Trigger* stg)
 inline void DeactivateSymbolTrigger(Trigger* stg)
 {
     FXState* fxstate;
-    if(stg->patt->OrigPt->autopatt)
+    if(stg->patt->basePattern->autopatt)
     {
         fxstate = &stg->patt->fxstate;
     }
@@ -862,7 +861,7 @@ Trigger::Trigger()
 
 void Trigger::Initialize()
 {
-    tgworking = activator = rev = skip = muted = broken = toberemoved = globallisted = outsync = false;
+    tgworking = activator = rev = skip = muted = broken = toberemoved = listed_globally = outsync = false;
     loc_act_prev = loc_act_next = ev_prev = ev_next = el_prev = el_next = group_prev = group_next = act_prev = act_next = NULL;
     aaIN = aaOUT = false;
     pslot = NULL;
@@ -887,7 +886,6 @@ void Trigger::Initialize()
     frame_phase = 0;
     freq_incr_base = freq_incr_active = 0;
     wt_pos = 0;
-    signal = 1;
 
     apatt_instance = NULL;
 
@@ -900,7 +898,7 @@ void Trigger::Activate()
 {
     // reset remove flag
     toberemoved = false;
-    if(tgworking == false && globallisted == false)
+    if(tgworking == false && listed_globally == false)
     {
         switch(el->type)
         {
@@ -969,7 +967,7 @@ void Trigger::Activate()
 
 void Trigger::Deactivate()
 {
-    if(globallisted)
+    if(listed_globally)
     {
         GlobalRemoveActiveTrigger(this);
     }
@@ -999,11 +997,11 @@ void Trigger::Deactivate()
                     {
                         if(cmd->scope->instr != NULL)
                         {
-                            cmd->scope->instr->DequeueParamEnvelope(this);
+                            cmd->scope->instr->DequeueParamEnvelopeTrigger(this);
                         }
                         else if(cmd->scope->eff != NULL)
                         {
-                            cmd->scope->eff->DequeueParamEnvelope(this);
+                            cmd->scope->eff->DequeueParamEnvelopeTrigger(this);
                         }
                         else
                         {
@@ -1393,7 +1391,7 @@ void Playback::ResetPos()
 void Playback::UnqueueAll()
 {
     Event* ev;
-    if(playPatt->OrigPt == NULL || playPatt->OrigPt->autopatt == false)
+    if(playPatt->basePattern == NULL || playPatt->basePattern->autopatt == false)
         ev = field_pattern->first_ev;
     else
         ev = playPatt->first_ev;
@@ -1424,7 +1422,7 @@ void Playback::UpdateQueuedEv()
         UnqueueAll();
 
         Event* ev;
-        if(playPatt->OrigPt == NULL || playPatt->OrigPt->autopatt == false)
+        if(playPatt->basePattern == NULL || playPatt->basePattern->autopatt == false)
             ev = field_pattern->first_ev;
         else
             ev = playPatt->first_ev;

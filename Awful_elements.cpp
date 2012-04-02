@@ -26,9 +26,9 @@ Element::Element()
     }
     else
     {
-        if(C.patt->OrigPt != NULL)
+        if(C.patt->basePattern != NULL)
         {
-            patt = C.patt->OrigPt;
+            patt = C.patt->basePattern;
         }
         else
         {
@@ -283,7 +283,7 @@ bool Element::IsPointed(int mx, int my)
 {
     if(IsPresent() == true)
     {
-        if(M.loc == Loc_SmallGrid && auxvisible && patt == aux_panel->workPt->OrigPt)
+        if(M.loc == Loc_SmallGrid && auxvisible && patt == aux_panel->workPt->basePattern)
         {
             if((mx >= abs_area.x1)&&(mx <= abs_area.x2)&&(my >= abs_area.y1)&&(my <= abs_area.y2))
             {
@@ -294,7 +294,7 @@ bool Element::IsPointed(int mx, int my)
                 return false;
             }
         }
-        else if(M.loc == Loc_MainGrid && visible && !(patt == aux_panel->workPt->OrigPt && aux_panel->auxmode == AuxMode_Pattern)
+        else if(M.loc == Loc_MainGrid && visible && !(patt == aux_panel->workPt->basePattern && aux_panel->auxmode == AuxMode_Pattern)
                 && base == field_pattern && patt->folded == false)
         {
             if((mx >= abs_area.x1)&&(mx <= abs_area.x2)&&(my >= abs_area.y1)&&(my <= abs_area.y2))
@@ -342,7 +342,7 @@ bool Element::CheckSelected()
                 }
             }
         }
-    	else if(M.selloc == Loc_SmallGrid && patt == aux_panel->workPt->OrigPt)
+    	else if(M.selloc == Loc_SmallGrid && patt == aux_panel->workPt->basePattern)
         {
             if(CheckPlaneCrossing(abs_area.x1 - GridXS1, abs_area.y1 - GridYS1, abs_area.x2 - GridXS1, abs_area.y2 - GridYS1, SelX1, SelY1, SelX2, SelY2))
             {
@@ -377,7 +377,7 @@ void Element::CheckVisibility()
 				}
     		}
 		}
-		else if(patt == aux_panel->workPt->OrigPt && aux_panel->auxmode == AuxMode_Pattern)
+		else if(patt == aux_panel->workPt->basePattern && aux_panel->auxmode == AuxMode_Pattern)
 		{
 		    int x1, x2, y1, y2;
 		    if(patt->ptype == Patt_StepSeq)
@@ -571,10 +571,9 @@ void Element::ForceResetTriggers()
     while(tg != NULL)
     {
         tg->wt_pos = 0;
-        tg->signal = 1;
         tg->frame_phase = 0;
         tg->tgworking = false;
-        tg->globallisted = false;
+        tg->listed_globally = false;
         tg->tgsactive = false;
         if(tg->apatt_instance != NULL && tg->apatt_instance->pbk != NULL)
         {
@@ -592,7 +591,7 @@ bool Element::IsPlaying()
     while(tg != NULL)
     {
         // Check per pattern triggers
-        if(tg->tgworking == true || tg->globallisted == true)
+        if(tg->tgworking == true || tg->listed_globally == true)
         {
             return true;
         }
@@ -602,7 +601,7 @@ bool Element::IsPlaying()
             tgs = tg->first_tgslide;
             while(tgs != NULL)
             {
-                if(tgs->tgworking == true || tg->globallisted == true)
+                if(tgs->tgworking == true || tg->listed_globally == true)
                 {
                     return true;
                 }
@@ -755,7 +754,7 @@ void Element::Save(XmlElement * xmlNode)
 
     if(type != El_Pattern)
     {
-        xmlNode->setAttribute(T("PattIndex"), patt->origindex);
+        xmlNode->setAttribute(T("PattIndex"), patt->baseindex);
     }
 }
 
@@ -785,7 +784,7 @@ Loc Element::GetElemLoc()
 {
     if(patt == field_pattern)
         return Loc_MainGrid;
-    else if(patt == aux_panel->workPt->OrigPt)
+    else if(patt == aux_panel->workPt->basePattern)
         return Loc_SmallGrid;
     else
         return Loc_Other;
@@ -968,7 +967,7 @@ void Txt::ParseString()
 
             if(instr != NULL)
             {
-                if(!(aux_panel->auxmode == AuxMode_Pattern && aux_panel->workPt->OrigPt->autopatt))
+                if(!(aux_panel->auxmode == AuxMode_Pattern && aux_panel->workPt->basePattern->autopatt))
                 {
                     ChangeCurrentInstrument(instr);
                 }
@@ -989,7 +988,7 @@ void Txt::ParseString()
                     //// Reset some stuff to initial
                     //ptn->muted = false;
                     //ptn->SetEndTick(ptn->StartTick() + ticks_per_beat);
-                    Pattern* ptn = CreateElement_DerivedPattern(p->OrigPt, CTick, CTick + p->tick_length, CLine, CLine);
+                    Pattern* ptn = CreateElement_DerivedPattern(p->basePattern, CTick, CTick + p->tick_length, CLine, CLine);
                     if(MakePatternsFat && CLine > 0)
                         ptn->is_fat = true;
                     else
@@ -3343,7 +3342,7 @@ void Command::CheckVisibility()
                 }
             }
 
-            if(patt == aux_panel->workPt->OrigPt && aux_panel->auxmode == AuxMode_Pattern)
+            if(patt == aux_panel->workPt->basePattern && aux_panel->auxmode == AuxMode_Pattern)
             {
                 int x1 = s_StartTickX();
                 int x2 = s_EndTickX();
@@ -3418,7 +3417,7 @@ void Command::Save(XmlElement * xmlNode)
     {
         if(scope->pt != NULL)
         {
-            xmlNode->setAttribute(T("CmdPattIndex"), scope->pt->origindex);
+            xmlNode->setAttribute(T("CmdPattIndex"), scope->pt->baseindex);
         }
 
         if(scope->instr != NULL)
@@ -4115,9 +4114,9 @@ void Pattern::Init(char* nm, bool tracks)
     offs_line = 0;
     last_pianooffs = 0;
     tick_width = -1;
-    origindex = 0;
+    baseindex = 0;
 
-    OrigPt = NULL;
+    basePattern = NULL;
     first_elem = NULL;
     last_elem = NULL;
     symtrig = NULL;
@@ -4129,7 +4128,7 @@ void Pattern::Init(char* nm, bool tracks)
     last_trkdata = bottom_trk = NULL;
     der_first = der_last = der_prev = der_next = NULL;
     der_num = 0;
-    orig_prev = orig_next = NULL;
+    base_prev = base_next = NULL;
     tg_internal_first = tg_internal_last = NULL;
     parent_instance = NULL;
     parent_trigger = NULL;
@@ -4233,7 +4232,7 @@ void Pattern::CopyElementsTo(Pattern * dst, bool add)
 {
     C.SaveState();
     C.SetPattern(dst, Loc_SmallGrid);
-    Element* el = OrigPt->first_elem;
+    Element* el = basePattern->first_elem;
     while(el != NULL)
     {
         el->skip_cloning = false;
@@ -4248,7 +4247,7 @@ void Pattern::CopyElementsTo(Pattern * dst, bool add)
         el = el->patt_next;
     }
 
-    el = OrigPt->first_elem;
+    el = basePattern->first_elem;
     Element* nel;
     while(el != NULL)
     {
@@ -4276,9 +4275,9 @@ Pattern* Pattern::Copy(bool add)
     AddOriginalPattern(ptmain);
     ptmain->AddDerivedPattern(copy);
 
-    Trk* trk = OrigPt->first_trkdata;
+    Trk* trk = basePattern->first_trkdata;
     Trk* trk1 = ptmain->first_trkdata;
-    while(trk != OrigPt->bottom_trk)
+    while(trk != basePattern->bottom_trk)
     {
         trk1->defined_instr = trk->defined_instr;
         trk1 = trk1->next;
@@ -4312,7 +4311,7 @@ Pattern* Pattern::Copy(bool add)
        AddNewElement(copy, false);
     }
 
-    ptmain->autopatt = OrigPt->autopatt;
+    ptmain->autopatt = basePattern->autopatt;
 
     return copy;
 }
@@ -4351,7 +4350,7 @@ Pattern* Pattern::Clone(bool add, float new_tick, int new_trackline)
     clone->first_elem = first_elem;
     clone->last_elem = last_elem;
     clone->ptype = ptype;
-    clone->OrigPt = OrigPt;
+    clone->basePattern = basePattern;
     clone->last_edited_param = clone->name;
     clone->ibound = ibound;
     clone->offs_line = offs_line;
@@ -4362,7 +4361,7 @@ Pattern* Pattern::Clone(bool add, float new_tick, int new_trackline)
 
     clone->Update();
 
-    OrigPt->AddDerivedPattern(clone);
+    basePattern->AddDerivedPattern(clone);
     AddNewElement(clone, false);
     return clone;
 }
@@ -4395,7 +4394,7 @@ Pattern* Pattern::Clone(bool add)
     clone->first_elem = first_elem;
     clone->last_elem = last_elem;
     clone->ptype = ptype;
-    clone->OrigPt = OrigPt;
+    clone->basePattern = basePattern;
     clone->last_edited_param = clone->name;
     clone->ibound = ibound;
     clone->offs_line = offs_line;
@@ -4406,7 +4405,7 @@ Pattern* Pattern::Clone(bool add)
 
     clone->Update();
 
-    OrigPt->AddDerivedPattern(clone);
+    basePattern->AddDerivedPattern(clone);
     AddNewElement(clone, false);
     return clone;
 }
@@ -4740,13 +4739,13 @@ void Pattern::CheckVisibility()
 
 void Pattern::ParameditUpdate(PEdit* pe)
 {
-    if(pe == name && OrigPt != NULL)
+    if(pe == name && basePattern != NULL)
     {
         if(aliasModeName) // if renaming
         {
-            OrigPt->name->SetString(name->string);
-            GetPatternNameImage(OrigPt);
-            Pattern* pt = OrigPt->der_first;
+            basePattern->name->SetString(name->string);
+            GetPatternNameImage(basePattern);
+            Pattern* pt = basePattern->der_first;
             while(pt != NULL)
             {
                 if(pt != this)
@@ -4755,7 +4754,7 @@ void Pattern::ParameditUpdate(PEdit* pe)
                 }
                 pt = pt->der_next;
             }
-            OrigPt->UpdateScaledImage();
+            basePattern->UpdateScaledImage();
         }
         else // if aliasing
         {
@@ -4840,7 +4839,7 @@ void Pattern::Update(bool tonly)
         CalcTiming();
 
         // If this is the main pattern
-        if(OrigPt == NULL)
+        if(basePattern == NULL)
         {
             Element* el = first_elem;
             while(el != NULL)
@@ -4862,7 +4861,7 @@ void Pattern::Update(bool tonly)
         CheckVisibility();
 
         // If this is the main pattern
-        if(OrigPt == NULL)
+        if(basePattern == NULL)
         {
             Element* el = first_elem;
             while(el != NULL)
@@ -4901,7 +4900,7 @@ void Pattern::AddDerivedPattern(Pattern * pt, bool skipadd)
         der_num++;
     }
 
-    pt->OrigPt = this;
+    pt->basePattern = this;
     pt->ibound = ibound;
 
     Element* el = first_elem;
@@ -4926,7 +4925,7 @@ void Pattern::AddDerivedPattern(Pattern * pt, bool skipadd)
 
 void Pattern::RemoveDerivedPattern(Pattern* pt)
 {
-    if(pt->OrigPt == this)
+    if(pt->basePattern == this)
     {
         if((pt == der_first)&&(pt == der_last))
         {
@@ -4995,7 +4994,7 @@ void Pattern::RemoveInternalTrigger(Trigger* tg)
 
 bool Pattern::IsLastChild()
 {
-    if(OrigPt != NULL && OrigPt->der_first == this && OrigPt->der_last == this)
+    if(basePattern != NULL && basePattern->der_first == this && basePattern->der_last == this)
     {
         return true;
     }
@@ -5007,9 +5006,9 @@ bool Pattern::IsLastChild()
 
 bool Pattern::isTheOnlyPresentChild()
 {
-    if(OrigPt != NULL)
+    if(basePattern != NULL)
     {
-        Pattern* pt = OrigPt->der_first;
+        Pattern* pt = basePattern->der_first;
         while(pt != NULL)
         {
             if(pt != this && pt->IsPresent())
@@ -5063,7 +5062,7 @@ bool Pattern::IsPlaying()
     while(tg != NULL)
     {
         if(tg->tgworking == true || 
-           tg->globallisted == true || 
+           tg->listed_globally == true || 
            (tg->apatt_instance != NULL && tg->apatt_instance->IsPlaying() == true))
         {
             return true;
@@ -6019,8 +6018,8 @@ void BindPatternToInstrument(Pattern* pt, Instrument* instr)
 {
     undoMan->DoNewAction(Action_Bind, (void*)pt, (void*)pt->ibound, (void*)instr);
 
-    pt->OrigPt->ibound = instr;
-    Pattern* ptc = pt->OrigPt->der_first;
+    pt->basePattern->ibound = instr;
+    Pattern* ptc = pt->basePattern->der_first;
     while(ptc != NULL)
     {
         ptc->ibound = instr;
@@ -6030,7 +6029,7 @@ void BindPatternToInstrument(Pattern* pt, Instrument* instr)
     //Pattern* cpt = C.patt;
     //C.patt = pt;
     Instance* ii;
-    Element* el = pt->OrigPt->first_elem;
+    Element* el = pt->basePattern->first_elem;
     while(el != NULL)
     {
         if(el->IsPresent() && (el->type == El_Samplent || el->type == El_GenNote))
@@ -6047,7 +6046,7 @@ void BindPatternToInstrument(Pattern* pt, Instrument* instr)
     }
     //C.patt = cpt;
 
-    pt->OrigPt->UpdateScaledImage();
+    pt->basePattern->UpdateScaledImage();
 }
 
 void UpdateStepSeqPatt(Pattern* pt)
@@ -6055,16 +6054,16 @@ void UpdateStepSeqPatt(Pattern* pt)
     if(pt->ptype == Patt_StepSeq)
     {
         // Define instrument for tracks
-        aux_panel->PopulatePatternWithInstruments(pt->OrigPt);
+        aux_panel->PopulatePatternWithInstruments(pt->basePattern);
 
         // Update instances
         Instance* ii;
-        Trk* trk = pt->OrigPt->first_trkdata;
-        while(trk != pt->OrigPt->bottom_trk)
+        Trk* trk = pt->basePattern->first_trkdata;
+        while(trk != pt->basePattern->bottom_trk)
         {
             if(trk->defined_instr != NULL)
             {
-                Element* el = pt->OrigPt->first_elem;
+                Element* el = pt->basePattern->first_elem;
                 while(el != NULL)
                 {
                     if(el->IsInstance())
@@ -6107,7 +6106,7 @@ void UpdateStepSequencers()
                 ptcheck = ptfirst;
                 while(ptcheck != NULL)
                 {
-                    if(ptcheck == pt->OrigPt)
+                    if(ptcheck == pt->basePattern)
                     {
                         doupdate = false;
                         break;
@@ -6120,13 +6119,13 @@ void UpdateStepSequencers()
                     UpdateStepSeqPatt(pt);
                     if(ptlast != NULL)
                     {
-                        ptlast->next = pt->OrigPt;
+                        ptlast->next = pt->basePattern;
                     }
                     else // first pattern
                     {
-                        ptfirst = pt->OrigPt;
+                        ptfirst = pt->basePattern;
                     }
-                    ptlast = pt->OrigPt;
+                    ptlast = pt->basePattern;
                     ptlast->next = NULL;
                 }
             }

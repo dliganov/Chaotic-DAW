@@ -61,7 +61,7 @@ Eff::Eff(Mixcell* mc)
     memset(this->name, 0, MAX_NAME_STRING*sizeof(char));
     memset(this->preset_path, 0, MAX_PATH_STRING*sizeof(char));
     memset(this->path, 0, MAX_PATH_STRING*sizeof(char));
-    this->category = EffCategory_Effect;
+    this->category = ModuleType_Effect;
 }
 
 Eff::~Eff()
@@ -142,45 +142,6 @@ void Eff::SetNewMixcell(Mixcell* ncell)
 {
     mixcell = ncell;
     scope.mixcell = ncell;
-}
-
-void Eff::EnqueueParamEnvelopeTrigger(Trigger* tg)
-{
-    tg->tgworking = true;
-    if(envelopes != NULL)
-    {
-        envelopes->group_next = tg;
-    }
-    tg->group_prev = envelopes;
-    tg->group_next = NULL;
-    envelopes = tg;
-
-    Parameter* param = ((Command*)tg->el)->param;
-    {
-        tg->prev_value = (param->val - param->offset)/param->range;
-    }
-
-    // New envelopes unblock the param ability to be changed by envelope
-    param->UnblockEnvAffect();
-}
-
-void Eff::DequeueParamEnvelope(Trigger* tg)
-{
-    if(envelopes == tg)
-    {
-        envelopes = tg->group_prev;
-    }
-
-    if(tg->group_prev != NULL)
-    {
-        tg->group_prev->group_next = tg->group_next;
-    }
-    if(tg->group_next != NULL)
-    {
-        tg->group_next->group_prev = tg->group_prev;
-    }
-    tg->group_prev = NULL;
-    tg->group_next = NULL;
 }
 
 void Eff::Process(float* in_buff, float* out_buff, int num_frames)
@@ -276,7 +237,7 @@ void Eff::Load(XmlElement * xmlEff)
 
 BlankEffect::BlankEffect(Mixcell* mc, AliasRecord* ar) : Eff(mc)
 {
-    type = EffType_Default;
+    type = ModSubType_Default;
     strcpy(this->name, "Blank effect");
     strcpy(this->preset_path, ".\\Presets\\Blank Effect\\");
     strcpy(this->path,"internal://blank");
@@ -412,7 +373,7 @@ void BlankEffect::ProcessData(float* in_buff, float* out_buff, int num_frames)
 
 Gain::Gain(Mixcell* mc, AliasRecord* ar) : Eff(mc)
 {
-    type = EffType_Gain;
+    type = ModSubType_Gain;
 
     strcpy(this->name, "Gain");
     strcpy(this->preset_path, ".\\Data\\Presets\\Effects\\Native\\Gain\\");
@@ -474,7 +435,7 @@ void Gain::ParamUpdate(Parameter* param)
 
 Filter::Filter(Mixcell* mc, AliasRecord* ar) : Eff(mc)
 {
-    type = EffType_Filter;
+    type = ModSubType_Filter;
     strcpy(this->name, "Simple Filter");
     strcpy(this->preset_path, ".\\Presets\\Simple Filter\\");
     strcpy(this->path,"internal://lp");
@@ -587,7 +548,7 @@ void Filter::ProcessData(float* in_buff, float* out_buff, int num_frames)
 
 CFilter3::CFilter3(Mixcell* mc, AliasRecord* ar) : Eff(mc)
 {
-    type = EffType_CFilter3;
+    type = ModSubType_CFilter3;
     strcpy(this->name, "Filter");
     strcpy(this->preset_path, ".\\Presets\\Filter\\");
     strcpy(this->path,"internal://filter3");
@@ -775,7 +736,7 @@ void CFilter3::ProcessData(float* in_buff, float* out_buff, int num_frames)
 
 CFilter2::CFilter2(Mixcell* mc, AliasRecord* ar) : Eff(mc)
 {
-    type = EffType_CFilter2;
+    type = ModSubType_CFilter2;
     strcpy(this->name, "Filter");
     strcpy(this->preset_path, ".\\Presets\\Filter\\");
     strcpy(this->path,"internal://filter2");
@@ -928,7 +889,7 @@ void CFilter2::ProcessData(float* in_buff, float* out_buff, int num_frames)
 
 CFilter::CFilter(Mixcell* mc, AliasRecord* ar) : Eff(mc)
 {
-    type = EffType_CFilter;
+    type = ModSubType_CFilter;
     strcpy(this->name, "Filter");
     strcpy(this->preset_path, ".\\Presets\\Filter\\");
     strcpy(this->path,"internal://filter");
@@ -1161,7 +1122,7 @@ void CFilter::ProcessData(float* in_buff, float* out_buff, int num_frames)
 
 CChorus::CChorus(Mixcell* mc, AliasRecord* ar) : Eff(mc)
 {
-    type = EffType_Chorus;
+    type = ModSubType_Chorus;
     strcpy(this->name, "Chorus");
     strcpy(this->preset_path, ".\\Presets\\Chorus\\");
     strcpy(this->path,"internal://chorus");
@@ -1262,7 +1223,7 @@ void CChorus::ProcessData(float* in_buff, float* out_buff, int num_frames)
 
 CFlanger::CFlanger(Mixcell* mc, AliasRecord* ar) : Eff(mc)
 {
-    type = EffType_Flanger;
+    type = ModSubType_Flanger;
     strcpy(this->name, "Flanger");
     strcpy(this->preset_path, ".\\Presets\\Flanger\\");
     strcpy(this->path,"internal://flanger");
@@ -1393,7 +1354,7 @@ void CFlanger::ProcessData(float* in_buff, float* out_buff, int num_frames)
 
 CPhaser::CPhaser(Mixcell* mc, AliasRecord* ar) : Eff(mc)
 {
-    type = EffType_Phaser;
+    type = ModSubType_Phaser;
     strcpy(this->name, "Phaser");
     strcpy(this->preset_path, ".\\Presets\\Phaser\\");
     strcpy(this->path,"internal://phaser");
@@ -1539,7 +1500,7 @@ void CPhaser::ProcessData(float* in_buff, float* out_buff, int num_frames)
 
 EQ1::EQ1(Mixcell* mc, AliasRecord* ar) : Eff(mc)
 {
-    type = EffType_Equalizer1;
+    type = ModSubType_Equalizer1;
     strcpy(this->name, "EQ1");
     strcpy(this->preset_path, ".\\Presets\\EQ1\\");
     strcpy(this->path,"internal://eq1");
@@ -1627,10 +1588,10 @@ void EQ1::ProcessData(float* in_buff, float* out_buff, int num_frames)
 
 GraphicEQ::GraphicEQ(Mixcell* mc, AliasRecord* ar) : Eff(mc)
 {
-    type = EffType_GraphicEQ;
+    type = ModSubType_GraphicEQ;
     strcpy(this->name, "GraphicEQ");
     strcpy(this->preset_path, ".\\Presets\\GraphicEQ\\");
-    strcpy(this->path,"internal://graphiceq");
+    strcpy(this->path,"internal://eqg");
     uniqueID = MAKE_FOURCC('G','R','E','Q');
 
     arec = ar;
@@ -1780,7 +1741,7 @@ void GraphicEQ::ProcessData(float* in_buff, float* out_buff, int num_frames)
 
 EQ3::EQ3(Mixcell* mc, AliasRecord* ar) : Eff(mc)
 {
-    type = EffType_Equalizer3;
+    type = ModSubType_Equalizer3;
     strcpy(this->name, "EQ3");
     strcpy(this->preset_path, ".\\Presets\\EQ3\\");
     strcpy(this->path,"internal://eq3");
@@ -1926,7 +1887,7 @@ void EQ3::ProcessData(float* in_buff, float* out_buff, int num_frames)
 
 CTremolo::CTremolo(Mixcell* mc, AliasRecord* ar) : Eff(mc)
 {
-    type = EffType_Tremolo;
+    type = ModSubType_Tremolo;
     strcpy(this->name, "Tremolo");
     strcpy(this->preset_path, ".\\Presets\\Tremolo\\");
     strcpy(this->path,"internal://tremolo");
@@ -2001,7 +1962,7 @@ void CTremolo::ProcessData(float* in_buff, float* out_buff, int num_frames)
 
 XDelay::XDelay(Mixcell* mc, AliasRecord* ar) : Eff(mc), dspCorePingPongDelay()
 {
-    type = EffType_XDelay;
+    type = ModSubType_XDelay;
     strcpy(this->name, "Delay");
     strcpy(this->preset_path, ".\\Presets\\Delay\\");
     strcpy(this->path,"internal://ppd");
@@ -2154,7 +2115,7 @@ void XDelay::ProcessData(float* in_buff, float* out_buff, int num_frames)
 
 CReverb::CReverb(Mixcell* mc, AliasRecord* ar) : Eff(mc), dspCoreReverb()
 {
-    type = EffType_Reverb;
+    type = ModSubType_Reverb;
     strcpy(this->name, "Reverb");
     strcpy(this->preset_path, ".\\Presets\\Reverb\\");
     strcpy(this->path,"internal://reverb");
@@ -2299,7 +2260,7 @@ void CReverb::ProcessData(float* in_buff, float* out_buff, int num_frames)
 
 Compressor::Compressor(Mixcell* mc, AliasRecord* ar) : Eff(mc)
 {
-    type = EffType_Compressor;
+    type = ModSubType_Compressor;
     strcpy(this->name, "Compressor");
     strcpy(this->preset_path, ".\\Presets\\Compressor\\");
     strcpy(this->path,"internal://compressor");
@@ -2453,7 +2414,7 @@ void Compressor::ProcessData(float* in_buff, float* out_buff, int num_frames)
 
 CWahWah::CWahWah(Mixcell* mc, AliasRecord* ar) : Eff(mc)
 {
-    type = EffType_WahWah;
+    type = ModSubType_WahWah;
     strcpy(this->name, "WahWah");
     strcpy(this->preset_path, ".\\Presets\\WahWah\\");
     strcpy(this->path,"internal://wahwah");
@@ -2544,7 +2505,7 @@ void CWahWah::ProcessData(float* in_buff, float* out_buff, int num_frames)
 
 CDistort::CDistort(Mixcell* mc, AliasRecord* ar) : Eff(mc)
 {
-    type = EffType_Distortion;
+    type = ModSubType_Distortion;
     strcpy(this->name, "Distortion");
     strcpy(this->preset_path, ".\\Presets\\Distortion\\");
     strcpy(this->path,"internal://distortion");
@@ -2626,7 +2587,7 @@ void CDistort::ProcessData(float* in_buff, float* out_buff, int num_frames)
 
 CBitCrusher::CBitCrusher(Mixcell* mc, AliasRecord* ar) : Eff(mc)
 {
-    type = EffType_BitCrusher;
+    type = ModSubType_BitCrusher;
     strcpy(this->name, "BitCrusher");
     strcpy(this->preset_path, ".\\Presets\\BitCrusher\\");
     strcpy(this->path,"internal://bitcrusher");
@@ -2693,7 +2654,7 @@ void CBitCrusher::ProcessData(float* in_buff, float* out_buff, int num_frames)
 
 CStereo::CStereo(Mixcell* mc, AliasRecord* ar) : Eff(mc)
 {
-    type = EffType_Stereo;
+    type = ModSubType_Stereo;
     strcpy(this->name, "Stereoizer");
     strcpy(this->preset_path, ".\\Presets\\Stereoizer\\");
     strcpy(this->path,"internal://stereoizer");
@@ -2807,7 +2768,7 @@ VSTEffect::VSTEffect(Mixcell * mc, AliasRecord * ar, char* path) : Eff(mc)
 {
     internalModule = false;
     this->bLoading = true;
-    this->type = EffType_VSTPlugin;
+    this->type = ModSubType_VSTPlugin;
     memset(this->preset_path, 0, MAX_PATH_STRING * sizeof(char));
     strcpy(this->preset_path, ".\\Data\\Presets\\");
     this->arec = new AliasRecord();
@@ -2865,12 +2826,12 @@ VSTEffect::VSTEffect(Mixcell * mc, AliasRecord * ar, char* path) : Eff(mc)
 
         if (this->pPlug->isGenerator == true)
         {
-            this->category = EffCategory_Generator;
+            this->category = ModuleType_Generator;
             strcat(this->preset_path, "Generators\\VST\\");
         }
         else
         {
-            this->category = EffCategory_Effect;
+            this->category = ModuleType_Effect;
             strcat(this->preset_path, "Effects\\VST\\");
         }
 
@@ -3149,7 +3110,7 @@ bool VSTEffect::OnUpdateDisplay()
     Preset* pNewPreset = NULL;
 
     UpdatePresets();
-    if ((this->category == EffCategory_Effect) && (aux_panel->current_eff == this))
+    if ((this->category == ModuleType_Effect) && (aux_panel->current_eff == this))
     {
         if(mixbrowse && mixBrw->brwmode == Browse_Presets)
         {
@@ -3180,7 +3141,7 @@ bool VSTEffect::OnUpdateDisplay()
         this->CurrentPreset = pNewPreset;
 
         // Find out what browser to re-fresh and whether we really need to refresh anything
-        if ((this->category == EffCategory_Effect) && (aux_panel->current_eff == this))
+        if ((this->category == ModuleType_Effect) && (aux_panel->current_eff == this))
         {
             mixBrw->UpdateCurrentHighlight();
         }
@@ -3849,7 +3810,7 @@ CPluginList::CPluginList(Object* owner)
 
 CPluginList::~CPluginList()
 {
-    EffListEntry_t *pEntry, *pEntry1;
+    ModListEntry *pEntry, *pEntry1;
 
     pEntry = this->pFirst;
 
@@ -3861,7 +3822,7 @@ CPluginList::~CPluginList()
     }
 }
 
-void CPluginList::AddEntry(EffListEntry_t* pEntry)
+void CPluginList::AddEntry(ModListEntry* pEntry)
 {
     if (pEntry != NULL)
     {
@@ -3883,7 +3844,21 @@ void CPluginList::AddEntry(EffListEntry_t* pEntry)
     }
 }
 
-void CPluginList::RemoveEntry(EffListEntry_t * pEntry)
+void CPluginList::AddEntry(ModuleType mtype, ModuleSubType mstype, const char * name, const char * path)
+{
+    ModListEntry* pEntry = NULL;
+
+    pEntry = new ModListEntry;
+    memset(pEntry, 0, sizeof(ModListEntry));
+    pEntry->modtype = mtype;
+    pEntry->subtype = mstype;
+    strcpy(pEntry->name, name);
+    strcpy(pEntry->path, path);
+
+    AddEntry(pEntry);
+}
+
+void CPluginList::RemoveEntry(ModListEntry * pEntry)
 {
     if((pEntry == pFirst)&&(pEntry == pLast))
     {
@@ -3913,9 +3888,9 @@ void CPluginList::RemoveEntry(EffListEntry_t * pEntry)
     }
 }
 
-EffListEntry_t* CPluginList::SearchEntryByPath(char* path)
+ModListEntry* CPluginList::SearchEntryByPath(const char* path)
 {
-    EffListEntry_t* pEntry = this->pFirst;
+    ModListEntry* pEntry = this->pFirst;
 
     while (pEntry != NULL)
     {

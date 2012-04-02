@@ -382,7 +382,7 @@ void PlayMain()
         }
         pbkMain->UpdateQueuedEv();
         pbkMain->SetActive();
-		if(aux_panel->workPt->OrigPt->autopatt == false)
+		if(aux_panel->workPt->basePattern->autopatt == false)
 		{
             pbkAux->SetInactive();
         }
@@ -407,7 +407,7 @@ void PlayMain()
 
         // Align current frame to the last *seen* pos, not the last played.
         pbkMain->SetCurrFrame((long)pbkMain->currFrame_tsync);
-		if(aux_panel->workPt->OrigPt->autopatt == false)
+		if(aux_panel->workPt->basePattern->autopatt == false)
 		{
             pbkAux->SetCurrFrame((long)pbkAux->currFrame_tsync);
         }

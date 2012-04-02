@@ -11,8 +11,17 @@
 
 #define BUFF_CHUNK_SIZE                  (64)
 
-extern bool SwitchCurrentInstrumentWindowOFFIfNeeded(Instrument* newinstr);
-extern void ShowInstrumentWindow(Instrument* i);
+extern bool                 SwitchCurrentInstrumentWindowOFFIfNeeded(Instrument* newinstr);
+extern void                 ShowInstrumentWindow(Instrument* i);
+extern Instrument*          GetInstrumentByIndex(int index);
+extern void                 UpdateInstrumentIndex();
+extern void                 UpdateInstrumentIndices();
+extern void                 AddInstrument(Instrument* i);
+extern void                 LoadMetronomeSamples();
+extern Sample*              AddSample(const char* path, const char* name, const char* alias, bool temp = false);
+extern CGenerator*          AddInternalGenerator(const char* path, const char* alias);
+extern VSTGenerator*        AddVSTGenerator(const char* path, const char* name, const char* alias);
+extern VSTGenerator*        AddVSTGenerator(VSTGenerator* vst, char* alias);
 
 
 typedef enum LoopType
@@ -29,10 +38,6 @@ public:
 
     // Basic parameters set (volume, panning, etc)
     ParamSet*   params;
-
-    // Graphic controls and other GUI stuff for instrument
-    bool        folded;
-    Toggle*     fold_toggle;
 
     // GUI button
     ButtFix*    pEditorButton;
@@ -66,15 +71,9 @@ public:
 
     DrawArea*   instr_drawarea;
 
-
     float       data_buff[MAX_BUFF_SIZE*2];     // Initial data
-    float       data_buff2[MAX_BUFF_SIZE*2];
-    float       data_buff3[MAX_BUFF_SIZE*2];
     float       in_buff[MAX_BUFF_SIZE*2];       // Data after separate DSP
     float       out_buff[MAX_BUFF_SIZE*2];      // Output after postprocessing
-    float       aux_buff[MAX_BUFF_SIZE*2];      // Additional mix stuff
-    bool        buff2;
-    bool        buff3;
 
     // Volume and panning envelopes (common for the whole instrument)
     Envelope*   envVol;
@@ -102,24 +101,21 @@ public:
 
     int         rampCount;
 
-    // Filling helpers
+    // Helpers for data generation
     Instance*   ii;
-    Envelope*   venvA;
-    Envelope*   venv0;
     Envelope*   venv1;
     Envelope*   venv2;
     Envelope*   venv3;
-    Envelope*   penv0;
-    Envelope*   penv2;
+
     Envelope*   penv1;
+    Envelope*   penv2;
     Envelope*   penv3;
-    Mixcell*    mcell;
+
     MixChannel* mchan;
     float       volbase;    // Base environmental volume
     long        venvphase;
     long        end_frame;  // last frame to fill
     float       pan0, pan1, pan2, pan3, pan4, pan5;
-    Trigger*    envelopes;
     bool        fill;
     bool        skip;
     float       rampCounterV;
@@ -137,6 +133,11 @@ public:
     virtual Instrument* Clone();
     void ParamEditUpdate(PEdit* pe);
     void SetAlias(char* al);
+    virtual void CreateAutoPattern();
+    void DereferenceBoundPattern(Pattern* pt);
+    bool DereferenceElements();
+    virtual void Disable();
+    virtual void Enable();
     virtual void ActivateTrigger(Trigger* tg);
     virtual void DeactivateTrigger(Trigger* tg);
     virtual void GenerateData(long num_frames = 0, long buffframe = 0);
@@ -148,15 +149,6 @@ public:
     virtual void ApplyDSP(Trigger* tg, long buffframe, long num_frames = 0);
     virtual void FillMixChannel(long num_frames, long buffframe, long mixbuffframe);
     virtual void DeClick(Trigger* tg, long num_frames = 0, long buffframe = 0, long mixbuffframe = 0, long remaining = 0);
-    virtual void ShowWindow() {};
-    virtual void CloseWindow() {};
-    virtual void Disable();
-    virtual void Enable();
-    virtual void CreateAutoPattern();
-    void DereferencePattern(Pattern* pt);
-    bool DereferenceElements();
-    void EnqueueParamEnvelopeTrigger(Trigger* tg);
-    void DequeueParamEnvelope(Trigger* tg);
     virtual void Mute(Trigger* tg) {};
     void    SetLastLength(float lastlength);
     void    SetLastVol(float lastvol);
@@ -198,8 +190,6 @@ public:
    virtual ~Sample();
     void ActivateTrigger(Trigger * tg);
     long ProcessTrigger(Trigger* tg, long num_frames = 0, long buffframe = 0);
-    void ShowWindow();
-    void CloseWindow();
     virtual bool CheckBounds(Samplent* samplent, Trigger* tg, long num_frames);
     void UpdateNormalizeFactor();
     void ToggleNormalize();
@@ -213,18 +203,28 @@ public:
     void DumpData();
 };
 
-class Gen : public Instrument
+class CGenerator : public Instrument
 {
 public:
 
-    Gen();
-    virtual ~Gen();
-    void ActivateTrigger(Trigger * tg);
+    CGenerator();
+    virtual ~CGenerator();
+    void ActivateTrigger(Trigger* tg);
     virtual void CheckBounds(Gennote* gnote, Trigger* tg, long num_frames);
 };
 
+
+class SineNoise : public CGenerator
+{
+public:
+
+    SineNoise();
+    virtual ~SineNoise();
+};
+
+
 /*
-class SoundFont : public Gen
+class SoundFont : public CGenerator
 {
 public:
 
@@ -236,7 +236,7 @@ public:
 };
 */
 
-class VSTGenerator: public Gen
+class VSTGenerator: public CGenerator
 {
 public:
     VSTEffect* pEff;
@@ -294,7 +294,7 @@ public:
     void GetData(double wt_pos, float freq, long frame_phase, float* od1, float* od2);
 };
 
-class Synth : public Gen
+class Synth : public CGenerator
 {
     typedef struct sVoice
     {
@@ -413,6 +413,8 @@ public:
     BoolParam*  reverbON;
 
     sVoice      voice[12];
+    float       data_buff2[MAX_BUFF_SIZE*2];
+    float       data_buff3[MAX_BUFF_SIZE*2];
 
     SynthWindow*    synthWin;
     SynthComponent* SynthComp;
