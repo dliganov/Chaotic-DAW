@@ -1,5 +1,7 @@
 WARNING! To compile the project, you need to download ASIO and VST 3 SDK from Steinberg (http://www.steinberg.net/en/company/developer.html) and unpack them in ASIOSDK2 and VSTSDK3 folders correspodingly.
 
+---------------------------
+
 The basic purpose of Chaotic is to be handy music composing tool, allowing to achieve complex results with minimal interface losses. Currently, the main program features are:
 
 - Universal composition arranger, utilizing keyboard input and allowing to sequence wide variety of elements — from text notes and bookmarks to instruments' notes, automation envelopes and patterns in a single field;
@@ -10,7 +12,7 @@ The basic purpose of Chaotic is to be handy music composing tool, allowing to ac
 
 - Various effect symbols support: slide, vibrato, mute, reverse (for samples), transpose and so on;
 
-- Autopatterns feature. Autopattern is the pattern, that you can define for any instrument to be triggered with every note of the instrument. For example, you can place some envelope into some instrument's autopattern and easily implement sidechaining;
+- Autopatterns. Autopattern is instrument-bound pattern, triggered with every note of its instrument. For example, you can place some envelope into some instrument's autopattern and easily implement sidechaining;
 
 - Support for samples as usual instruments — basic sampler functionality integrated (looping, volume envelope, etc);
 
