@@ -15,88 +15,31 @@ const int defaultMaxSizeMB = 64;
 const int fxbVersionNum = 1;
 
 
-// copied from Juce for working with VST programs
-struct fxProgram
-{
-    long chunkMagic;        // 'CcnK'
-    long byteSize;          // of this chunk, excl. magic + byteSize
-    long fxMagic;           // 'FxCk'
-    long version;
-    long fxID;              // fx unique id
-    long fxVersion;
-    long numParams;
-    char prgName[28];
-    float params[1];        // variable no. of parameters
-};
-
-struct fxSet
-{
-    long chunkMagic;        // 'CcnK'
-    long byteSize;          // of this chunk, excl. magic + byteSize
-    long fxMagic;           // 'FxBk'
-    long version;
-    long fxID;              // fx unique id
-    long fxVersion;
-    long numPrograms;
-    char future[128];
-    fxProgram programs[1];  // variable no. of programs
-};
-
-struct fxChunkSet
-{
-    long chunkMagic;        // 'CcnK'
-    long byteSize;          // of this chunk, excl. magic + byteSize
-    long fxMagic;           // 'FxCh', 'FPCh', or 'FBCh'
-    long version;
-    long fxID;              // fx unique id
-    long fxVersion;
-    long numPrograms;
-    char future[128];
-    long chunkSize;
-    char chunk[8];          // variable
-};
-
-struct fxProgramSet
-{
-    long chunkMagic;        // 'CcnK'
-    long byteSize;          // of this chunk, excl. magic + byteSize
-    long fxMagic;           // 'FxCh', 'FPCh', or 'FBCh'
-    long version;
-    long fxID;              // fx unique id
-    long fxVersion;
-    long numPrograms;
-    char name[28];
-    long chunkSize;
-    char chunk[8];          // variable
-};
-
 class Eff : public ParamModule
 {
 public:
     Eff(Mixcell* mc);
     virtual ~Eff();
 
-    bool        folded;
-    Toggle*     fold_toggle;
+    bool            folded;
+    Toggle*         fold_toggle;
 
-    bool        bypass;
-    Toggle*     bypass_toggle;
-    bool        off;
-    int         muteCount;
+    bool            bypass;
+    Toggle*         bypass_toggle;
+    bool            off;
+    int             muteCount;
 
-    bool        wndvisible;
-    Toggle*     wnd_toggle;
+    bool            wndvisible;
+    Toggle*         wnd_toggle;
 
-    ModuleSubType     type;
-    Mixcell*    mixcell;
+    Mixcell*        mixcell;
 
     AliasRecord*    arec;
 
-    ModuleType category;
-    Eff*        prev;
-    Eff*        next;
-    Eff*        cprev;
-    Eff*        cnext;
+    Eff*            prev;
+    Eff*            next;
+    Eff*            cprev;
+    Eff*            cnext;
 
     virtual void    Process(float* in_buff, float* out_buff, int num_frames);
     virtual void    ProcessData(float* in_buff, float* out_buff, int num_frames) {};
@@ -109,74 +52,8 @@ public:
             void    DereferenceElements();
     virtual void    SetNewMixcell(Mixcell* ncell);
     virtual void    SetBPM(float bpm) {};
-    virtual void    SetBufferSize(unsigned int uiBufferSize) {};
-    virtual void    SetSampleRate(float fSampleRate) {};
     virtual void    Save(XmlElement* xmlEff);
     virtual void    Load(XmlElement* xmlEff);
-};
-
-class VSTEffect : public Eff
-{
-public:
-    Butt*   pEditButton;
-    CVSTPlugin* pPlug;
-
-    VSTParamWindow* VSTParamWnd;
-
-    VSTEffect(Mixcell* mc, AliasRecord* ar, char* path = NULL);
-    virtual ~VSTEffect();
-    VSTEffect* Clone(Mixcell* mc);
-    void    ProcessData(float* in_buff, float* out_buff, int num_frames);
-    void    ProcessEvents(VstEvents *pEvents);
-    long    GetNumPresets();
-    void    GetPresetName(long index, char *ppName);
-    long    GetPresetIndex(char* name);
-    bool    SetPresetByName(char* name);
-    bool    SetPresetByIndex(long index);
-    void    RenamePreset(long index, char* new_name);
-    void    RenamePreset(char* old_name, char* new_name);
-//    void    SavePresetAs(char *preset_name);
-    long    GetNumStoredPresets(){ return 0; };
-    long    GetNumNativePresets(){ return 0; };
-    long    GetCurrentPreset();
-    void    SetPresetName(char *new_name);
-    Preset* GetPreset(long index);
-    Preset* GetPreset(char* name);
-    bool    SetUserPreset(Preset* pPreset);
-
-    void    AddParameters();
-    void    UpdatePresets();
-    void    ParamUpdate(Parameter* param = NULL);
-    void    UpdateVString(Parameter* param);
-    bool    OnSetParameterAutomated(int nEffect, long index, float value);
-    bool    OnUpdateDisplay();
-    void    Reset();
-    void    SetBPM(float bpm);
-    void    SetBufferSize(unsigned int uiBufferSize);
-    void    SetSampleRate(float fSampleRate);
-    void    ShowEditor(bool show);
-
-    const String GetCurrentPresetName();
-    void    setChunkData(const char* data, int size, bool isPreset);
-    void    getChunkData(MemoryBlock& mb, bool isPreset, int maxSizeMB) const;
-    void    SetStateInformation (const void* data, int sizeInBytes);
-    void    GetStateInformation (MemoryBlock& destData);
-    bool    saveToFXBFile (MemoryBlock& dest, bool isFXB, int maxSizeMB);
-    bool    loadFromFXBFile (const void* const data, const int dataSize);
-    void    setParamsInProgramBlock (fxProgram* const prog);
-    void    restoreFromTempParameterStore (const MemoryBlock& m);
-    void    createTempParameterStore (MemoryBlock& dest);
-    bool    restoreProgramSettings (const fxProgram* const prog);
-    void    updateStoredProgramNames();
-    void    ToggleParamWindow();
-
-    void    Save(XmlElement* xmlEff);
-    void    Load(XmlElement* xmlEff);
-
-
-private:
-    bool    bLoading;
-    void   *m_WndHandle;
 };
 
 class BlankEffect : public Eff
@@ -630,6 +507,125 @@ public:
     void              AddEntry(ModuleType mtype, ModuleSubType mstype, const char* name, const char* path);
     void              RemoveEntry(ModListEntry* pEntry);
     ModListEntry*   SearchEntryByPath(const char* path);
+};
+
+// copied from Juce to work with VST programs
+struct fxProgram
+{
+    long chunkMagic;        // 'CcnK'
+    long byteSize;          // of this chunk, excl. magic + byteSize
+    long fxMagic;           // 'FxCk'
+    long version;
+    long fxID;              // fx unique id
+    long fxVersion;
+    long numParams;
+    char prgName[28];
+    float params[1];        // variable no. of parameters
+};
+
+struct fxSet
+{
+    long chunkMagic;        // 'CcnK'
+    long byteSize;          // of this chunk, excl. magic + byteSize
+    long fxMagic;           // 'FxBk'
+    long version;
+    long fxID;              // fx unique id
+    long fxVersion;
+    long numPrograms;
+    char future[128];
+    fxProgram programs[1];  // variable no. of programs
+};
+
+struct fxChunkSet
+{
+    long chunkMagic;        // 'CcnK'
+    long byteSize;          // of this chunk, excl. magic + byteSize
+    long fxMagic;           // 'FxCh', 'FPCh', or 'FBCh'
+    long version;
+    long fxID;              // fx unique id
+    long fxVersion;
+    long numPrograms;
+    char future[128];
+    long chunkSize;
+    char chunk[8];          // variable
+};
+
+struct fxProgramSet
+{
+    long chunkMagic;        // 'CcnK'
+    long byteSize;          // of this chunk, excl. magic + byteSize
+    long fxMagic;           // 'FxCh', 'FPCh', or 'FBCh'
+    long version;
+    long fxID;              // fx unique id
+    long fxVersion;
+    long numPrograms;
+    char name[28];
+    long chunkSize;
+    char chunk[8];          // variable
+};
+
+class VSTEffect : public Eff
+{
+public:
+    Butt*   pEditButton;
+    CVSTPlugin* pPlug;
+
+    VSTParamWindow* VSTParamWnd;
+
+    VSTEffect(Mixcell* mc, AliasRecord* ar, char* path = NULL);
+    virtual ~VSTEffect();
+    VSTEffect* Clone(Mixcell* mc);
+    void    ProcessData(float* in_buff, float* out_buff, int num_frames);
+    void    ProcessEvents(VstEvents *pEvents);
+    long    GetNumPresets();
+    void    GetPresetName(long index, char *ppName);
+    long    GetPresetIndex(char* name);
+    bool    SetPresetByName(char* name);
+    bool    SetPresetByIndex(long index);
+    void    RenamePreset(long index, char* new_name);
+    void    RenamePreset(char* old_name, char* new_name);
+//    void    SavePresetAs(char *preset_name);
+    long    GetNumStoredPresets(){ return 0; };
+    long    GetNumNativePresets(){ return 0; };
+    long    GetCurrentPreset();
+    void    SetPresetName(char *new_name);
+    Preset* GetPreset(long index);
+    Preset* GetPreset(char* name);
+    bool    SetUserPreset(Preset* pPreset);
+
+    void    AddParameters();
+    void    UpdatePresets();
+    void    ParamUpdate(Parameter* param = NULL);
+    void    UpdateVString(Parameter* param);
+    bool    OnSetParameterAutomated(int nEffect, long index, float value);
+    bool    OnUpdateDisplay();
+    void    Reset();
+    void    SetBPM(float bpm);
+    void    SetBufferSize(unsigned int uiBufferSize);
+    void    SetSampleRate(float fSampleRate);
+    void    ShowEditor(bool show);
+
+    const String GetCurrentPresetName();
+    void    setChunkData(const char* data, int size, bool isPreset);
+    void    getChunkData(MemoryBlock& mb, bool isPreset, int maxSizeMB) const;
+    void    SetStateInformation (const void* data, int sizeInBytes);
+    void    GetStateInformation (MemoryBlock& destData);
+    bool    saveToFXBFile (MemoryBlock& dest, bool isFXB, int maxSizeMB);
+    bool    loadFromFXBFile (const void* const data, const int dataSize);
+    void    setParamsInProgramBlock (fxProgram* const prog);
+    void    restoreFromTempParameterStore (const MemoryBlock& m);
+    void    createTempParameterStore (MemoryBlock& dest);
+    bool    restoreProgramSettings (const fxProgram* const prog);
+    void    updateStoredProgramNames();
+    void    ToggleParamWindow();
+
+    void    Save(XmlElement* xmlEff);
+    void    Load(XmlElement* xmlEff);
+
+
+private:
+    bool    bLoading;
+    void   *m_WndHandle;
 };
 
 #endif

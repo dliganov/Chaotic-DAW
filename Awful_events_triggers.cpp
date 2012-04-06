@@ -15,7 +15,7 @@ void                    PreInitEnvelopes(tframe frame, Pattern* pt, Event* first
 void                    ProcessPlacedEnvelopes(Pattern* pt, long buffframe, long num_frames, long curr_frame);
 extern void             SetMixcell4Trigger(Trigger* tg);
 extern void             SetMixChannel4Trigger(Trigger* tg);
-extern void             AddAutopatternInstance(Trigger* tg, Instance* ii, bool add);
+extern void             AddAutopatternInstance(Trigger* tg, NoteInstance* ii, bool add);
 extern void             DisableAllPlaybacks();
 extern void             GlobalAddActiveTrigger(Trigger* tg);
 extern void             GlobalRemoveActiveTrigger(Trigger* tg);
@@ -207,7 +207,7 @@ void SetMixChannel4Trigger(Trigger* tg)
 
     if((tg->el->IsInstance()) && (tg->mchan == NULL || tg->mchan == &aux_panel->masterchan))
     {
-        tg->mchan = ((Instance*)tg->el)->instr->fx_channel;
+        tg->mchan = ((NoteInstance*)tg->el)->instr->fx_channel;
     }
 }
 
@@ -319,7 +319,7 @@ void Locate_Trigger(Trigger* tg)
     }
 }
 
-void AddAutopatternInstance(Trigger* tg, Instance* ii, bool add)
+void AddAutopatternInstance(Trigger* tg, NoteInstance* ii, bool add)
 {
     if(ii->instr->autoPatt != NULL)
     {
@@ -379,7 +379,7 @@ void CreateElementTriggersPerPattern(Pattern* pt, Element* el, bool skipaddtoele
         pt->AddInternalTrigger(tg_start);
 
         Locate_Trigger(tg_start);
-        if(((el->type == El_GenNote) && ((Instance*)el)->instr->type == Instr_VSTPlugin)||
+        if(((el->type == El_GenNote) && ((NoteInstance*)el)->instr->instrtype == Instr_VSTPlugin)||
              (el->type == El_Mute)||
              (el->type == El_SlideNote)||
              (el->type == El_Slider)||
@@ -400,7 +400,7 @@ void CreateElementTriggersPerPattern(Pattern* pt, Element* el, bool skipaddtoele
 
         if(el->IsInstance() && pt->basePattern->autopatt == false)
         {
-            AddAutopatternInstance(tg_start, (Instance*)el, true);
+            AddAutopatternInstance(tg_start, (NoteInstance*)el, true);
         }
     }
 }
@@ -680,7 +680,7 @@ inline void ActivateSymbolTrigger(Trigger* stg)
             stg->freq = sn->ed_note->freq;
             if(sn->ed_note->relative == true)
             {
-                Instance* pi = (Instance*)stg->patt->parent_trigger->el;
+                NoteInstance* pi = (NoteInstance*)stg->patt->parent_trigger->el;
                 stg->freq = NoteToFreq(pi->ed_note->value + sn->ed_note->value);
             }
 
@@ -904,7 +904,7 @@ void Trigger::Activate()
         {
             case El_Samplent:
             case El_GenNote:
-               ((Instance*)el)->instr->ActivateTrigger(this);
+               ((NoteInstance*)el)->instr->ActivateTrigger(this);
                 break;
             case El_Command:
             {
@@ -978,13 +978,13 @@ void Trigger::Deactivate()
         {
             case El_Samplent:
             case El_GenNote:
-                if(((Instance*)el)->preview == true)
+                if(((NoteInstance*)el)->preview == true)
                 {
                     pslot->state = PState_Stopped;
                 }
 
-                if(((Instance*)el)->instr != NULL)
-                    ((Instance*)el)->instr->DeactivateTrigger(this);
+                if(((NoteInstance*)el)->instr != NULL)
+                    ((NoteInstance*)el)->instr->DeactivateTrigger(this);
                 break;
             case El_Command:
             {
@@ -1249,7 +1249,7 @@ void ProcessTriggers(Event* queued_ev, Pattern* pt, bool deactonly = false)
                 {
                     if(tg->activator == true)
                     {
-                        Instance* ii = (Instance*)tg->el;
+                        NoteInstance* ii = (NoteInstance*)tg->el;
                         if(tg->tgworking == true)
                         {
                             ii->instr->FlowTriggers(tg, tg);

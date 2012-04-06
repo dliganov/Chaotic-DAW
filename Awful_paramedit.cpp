@@ -773,15 +773,15 @@ void Note::ProcessChar(char character)
 
 void Note::Kreview(int key)
 {
-    Instance* ii = NULL;
+    NoteInstance* ii = NULL;
     if(element->type == El_Samplent || 
        element->type == El_GenNote)
     {
-        ii = (Instance*)element;
+        ii = (NoteInstance*)element;
     }
     else if(element->type == El_SlideNote)
     {
-        ii = (Instance*)((SlideNote*)element)->parent;
+        ii = (NoteInstance*)((SlideNote*)element)->parent;
     }
 
     if(ii != NULL)

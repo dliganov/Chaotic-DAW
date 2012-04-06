@@ -13,7 +13,11 @@
 #include "awful_undoredo.h"
 #include "math.h"
 #include "Data sources/metronome_waves.h"
-
+#ifdef USE_OLD_JUCE
+#include "juce_amalgamated.h"
+#else
+#include "juce_amalgamated_NewestMerged.h"
+#endif
 
 void GenWindowToggleOnClick(Object* owner, Object* self);
 void EditButtonClick(Object* owner, Object* self);
@@ -184,7 +188,7 @@ CGenerator* AddInternalGenerator(const char* path, const char* alias)
 
     switch(mlentry->subtype)
     {
-        case ModSubType_Synth1:
+        case ModSubtype_Synth1:
             pGen = new Synth;
             pGen->SetAlias((char*)alias);
             pGen->SetName("Chaosynth");
@@ -209,7 +213,7 @@ VSTGenerator* AddVSTGenerator(const char* path, const char* name, const char* al
 
     VSTGenerator* gen = new VSTGenerator((char*)path, (char*)alias);
 
-    if ((gen->pEff != NULL) && (gen->pEff->category == ModuleType_Generator))
+    if ((gen->pEff != NULL) && (gen->pEff->modtype == ModuleType_Instrument))
     {
         strcpy(gen->path, path);
         strcpy(gen->name, name);
@@ -231,7 +235,7 @@ VSTGenerator* AddVSTGenerator(VSTGenerator* vst, char* alias)
 
     VSTGenerator* gen = new VSTGenerator(vst, alias);
 
-    if ((gen->pEff != NULL) && (gen->pEff->category == ModuleType_Generator))
+    if ((gen->pEff != NULL) && (gen->pEff->modtype == ModuleType_Instrument))
     {
         strcpy(gen->path, vst->path);
         strcpy(gen->name, vst->name);
@@ -250,6 +254,8 @@ VSTGenerator* AddVSTGenerator(VSTGenerator* vst, char* alias)
 
 Instrument::Instrument()
 {
+    modtype = ModuleType_Instrument;
+
     dereferenced = false;
     alias = NULL;
     alias_image = NULL;
@@ -261,6 +267,7 @@ Instrument::Instrument()
     memset(path, 0, MAX_PATH_STRING);
     index = -1;
 
+    resizetouched = false;
     scope.instr = this;
 
     last_note_length = 4;
@@ -345,6 +352,9 @@ Instrument::Instrument()
 
     instr_drawarea = new DrawArea((void*)this, Draw_Instrument);
     MC->AddDrawArea(instr_drawarea);
+
+    // Init graphic stuff for this instrument
+    InitGraphics();
 }
 
 Instrument::~Instrument()
@@ -396,44 +406,6 @@ void Instrument::CopyDataToClonedInstrument(Instrument * instr)
     instr->dfxstr->SetString(dfxstr->digits);
 }
 
-Instrument* Instrument::Clone()
-{
-    Instrument* instr = NULL;
-    char nalias[MAX_ALIAS_STRING];
-    GetOriginalInstrumentAlias(name, nalias);
-    ToLowerCase(nalias);
-    switch(type)
-    {
-        case Instr_Sample:
-            // TODO: rework sample cloning to copy from internal memory
-            instr = (Instrument*)AddSample(path, name, nalias);
-            break;
-        case Instr_VSTPlugin:
-            instr = (Instrument*)AddVSTGenerator((VSTGenerator*)this, nalias);
-            break;
-        case Instr_Generator:
-            instr = (Instrument*)AddInternalGenerator(path, nalias);
-            break;
-    }
-
-    CopyDataToClonedInstrument(instr);
-
-    ChangeCurrentInstrument(instr);
-
-    // Do we need to clone autopatter for the cloned instrument? Postponed for now
-    /*
-    if(autoPatt != NULL)
-    {
-        if(instr->autoPatt == NULL)
-            instr->CreateAutoPattern();
-
-        autoPatt->CopyElementsTo(instr->autoPatt, true);
-    }
-    */
-
-    return instr;
-}
-
 // Autopattern creation
 void Instrument::CreateAutoPattern()
 {
@@ -479,7 +451,7 @@ void Instrument::CreateAutoPattern()
     // Now populate all notes of this instruments with autopatterns on the main playback
     {
         Trigger* tg;
-        Instance* ii;
+        NoteInstance* ii;
         Event* ev = field_pattern->first_ev;
         while(ev != NULL)
         {
@@ -488,7 +460,7 @@ void Instrument::CreateAutoPattern()
             {
                 if(tg->el->IsInstance())
                 {
-                    ii = (Instance*)tg->el;
+                    ii = (NoteInstance*)tg->el;
                     if(ii->instr == this && tg->apatt_instance == NULL)
                     {
                         AddAutopatternInstance(tg, ii, true);
@@ -510,7 +482,7 @@ void Instrument::ParamEditUpdate(PEdit* pe)
 {
     if(pe == alias)
     {
-        GetInstrAliasImage(this);
+        UpdateAliasImage();
         instr_drawarea->Change();
 
         R(Refresh_GridContent);
@@ -527,7 +499,7 @@ bool Instrument::DereferenceElements()
     Preview_ForceCleanForInstrument(this);
 
     /// Dereference and delete instances
-    Instance* ii;
+    NoteInstance* ii;
     Element* elnext;
     Element* el = firstElem;
     while(el != NULL)
@@ -535,7 +507,7 @@ bool Instrument::DereferenceElements()
         elnext = el->next;
         if(el->IsInstance())
         {
-            ii = (Instance*)el;
+            ii = (NoteInstance*)el;
             if(ii->instr == this)
             {
                 elnext = NextElementToDelete(ii);
@@ -610,7 +582,7 @@ void Instrument::ForceDeactivate()
 
 void Instrument::ActivateTrigger(Trigger* tg)
 {
-    Instance* ii = (Instance*)tg->el;
+    NoteInstance* ii = (NoteInstance*)tg->el;
 
     tg->tgworking = true;
     tg->muted = false;
@@ -783,7 +755,7 @@ void Instrument::PreProcessTrigger(Trigger* tg, bool* skip, bool* fill, long num
     FXState*    fx2 = NULL;
     Pattern*    ai;
     long        aiframe;
-    Instance*   ii = (Instance*)tg->el;
+    NoteInstance*   ii = (NoteInstance*)tg->el;
 
     // fx2 stuff
     if(tg->apatt_instance != NULL)
@@ -943,7 +915,7 @@ void Instrument::PreProcessTrigger(Trigger* tg, bool* skip, bool* fill, long num
 // Here initialized the stuff that does not change throughout the whole session
 void Instrument::StaticInit(Trigger* tg, long num_frames)
 {
-    ii = (Instance*)tg->el;
+    ii = (NoteInstance*)tg->el;
 
     venv1 = NULL;
     venv2 = NULL;
@@ -969,9 +941,9 @@ void Instrument::StaticInit(Trigger* tg, long num_frames)
 
     /// Init volume base. Volume base consist of volumes, that don't get changed during the whole fill session.
     /// it's then multiplied to dynamic tg->vol_val value in PostProcessTrigger.
-    volbase = tg->patt->loc_vol->outval; // Pattern static params
+    volbase = tg->patt->vol_local->outval; // Pattern static params
     volbase *= InvVolRange;
-    if(type == Instr_Generator)
+    if(instrtype == Instr_Generator)
     {
         volbase *= InvVolRange;
     }
@@ -982,7 +954,7 @@ void Instrument::StaticInit(Trigger* tg, long num_frames)
         if(tg->patt->parent_trigger != NULL)
         {
             volbase *= tg->patt->parent_trigger->vol_val;
-            volbase *= tg->patt->parent_trigger->patt->loc_vol->outval;
+            volbase *= tg->patt->parent_trigger->patt->vol_local->outval;
         }
     
         if(tg->patt->basePattern->instr_owner != NULL)
@@ -1008,7 +980,7 @@ void Instrument::StaticInit(Trigger* tg, long num_frames)
 
     // Init pans
     pan1 = 0;
-    pan2 = tg->patt->loc_pan->outval;     // Pattern's local panning
+    pan2 = tg->patt->pan_local->outval;     // Pattern's local panning
     pan3 = params->pan->outval;     // Instrument's panning
 }
 
@@ -1315,7 +1287,7 @@ void Instrument::SetAlias(char * al)
     if(alias != NULL)
     {
         alias->SetString(al);
-        GetInstrAliasImage(this);
+        UpdateAliasImage();
     }
 }
 
@@ -1357,7 +1329,7 @@ void Instrument::FlowTriggers(Trigger* tgfrom, Trigger* tgto)
 void Instrument::Save(XmlElement * instrNode)
 {
     instrNode->setAttribute(T("InstrIndex"), index);
-    instrNode->setAttribute(T("InstrType"), int(type));
+    instrNode->setAttribute(T("InstrType"), int(instrtype));
     instrNode->setAttribute(T("InstrName"), String(name));
     instrNode->setAttribute(T("InstrPath"), String(path));
     instrNode->setAttribute(T("InstrAlias"), String(alias->string));
@@ -1404,9 +1376,49 @@ void Instrument::Load(XmlElement * instrNode)
     }
 }
 
+void Instrument::ResizeTouch(bool touch)
+{
+    resizetouched = touch;
+}
+
+bool Instrument::IsResizeTouched()
+{
+    return resizetouched;
+}
+
+void Instrument::InitGraphics()
+{
+    img_volbkg = img_genvolback;
+    img_panbkg = img_genpanback;
+    img_instrsmall = img_instrsmall2;
+    clr_stepseq_name = Colour(0xff8FBFFF);
+    clr_fxdigits = Colour(36, 61, 89);
+    clr_base = Colour(150, 150, 255);
+}
+
+void Instrument::UpdateAliasImage()
+{
+    if(alias_image != NULL)
+    {
+       delete alias_image;
+       alias_image = NULL;
+    }
+
+    int aw = ins->getStringWidth(alias->string);
+    if(aw > 0)
+    {
+        alias_image = new Image(Image::ARGB, aw, (int)(ins->getHeight() + 3), true);
+        Graphics imageContext(*(alias_image));
+        imageContext.setColour(clr_base);
+        J_TextInstr_xy(imageContext, 0, (int)(ins->getHeight()), alias->string);
+    }
+}
+
 Sample::Sample(float* data, char* smp_path, char* smp_name, SF_INFO sfinfo)
 {
-    type = Instr_Sample;
+    instrtype = Instr_Sample;
+    subtype = ModSubtype_Sample;
+
     sample_data = data;
 
     if(smp_path != NULL)
@@ -1425,7 +1437,6 @@ Sample::Sample(float* data, char* smp_path, char* smp_name, SF_INFO sfinfo)
     rateUp = fSampleRate/sample_info.samplerate;
 
     last_note_length = 2.0f;
-    touchresized = false;
 
     // Init sample loop
     looptype = LoopType_NoLoop;
@@ -1450,6 +1461,9 @@ Sample::Sample(float* data, char* smp_path, char* smp_name, SF_INFO sfinfo)
     envVol->SetSustainPoint(envVol->AddPoint(0.0f, 1.0f));
     //envVol->AddPoint(0.3f, 0.5f);
     //envVol->AddPoint(0.6f, 0.0f);
+
+    // Init graphic stuff for this instrument
+    InitGraphics();
 }
 
 Sample::~Sample()
@@ -1503,7 +1517,7 @@ void Sample::ActivateTrigger(Trigger* tg)
         if(samplent->ed_note->relative == true)
         {
             jassert(tg->patt->parent_trigger != NULL);
-            Instance* pi = (Instance*)tg->patt->parent_trigger->el;
+            NoteInstance* pi = (NoteInstance*)tg->patt->parent_trigger->el;
             if(pi->freq_ratio > 0)
                 tg->freq_incr_base /= pi->freq_ratio;
             tg->note_val += pi->ed_note->value;
@@ -1763,7 +1777,7 @@ void Sample::CopyDataToClonedInstrument(Instrument * instr)
     {
         nsample->ToggleNormalize();
     }
-    nsample->touchresized = touchresized;
+    nsample->ResizeTouch(IsResizeTouched());
     nsample->SetLoopPoints(lp_start, lp_end);
     nsample->looptype = looptype;
 }
@@ -1777,14 +1791,124 @@ void Sample::DumpData()
     delete os;
 }
 
+NoteInstance* Sample::CreateNoteInstance()
+{
+    return new Samplent(this);
+}
+
+NoteInstance* Sample::ReassignNoteInstance(NoteInstance * ni)
+{
+    Samplent* smp = (Samplent*)CreateElement_Note(this, true);
+    smp->ed_note->value = ni->ed_note->value;
+    smp->ed_vol->value = ni->ed_vol->value;
+    smp->ed_pan->value = ni->ed_pan->value;
+    smp->loc_vol->SetNormalValue(ni->loc_vol->val);
+    smp->loc_pan->SetNormalValue(ni->loc_pan->val);
+
+    smp->ed_note->visible = ni->ed_note->visible;
+    smp->start_tick = ni->start_tick;
+    smp->track_line = ni->track_line;
+
+    smp->Update();
+    return smp;
+}
+
+int Sample::GetPixelNoteLength(float tickWidth, bool proll)
+{
+    int len = Calc_PixLength((long)sample_info.frames, (long)sample_info.samplerate, tickWidth);
+
+    if(proll)
+    {
+        // Adjust for pianoroll
+        int note = NUM_PIANOROLL_LINES - M.snappedLine;
+        len = (int)(len*(1.0f/(CalcFreqRatio(note - 60))));
+    }
+    return len;
+}
+
+void Sample::ShowInstrumentWindow()
+{
+    pEditorButton->Press();
+    instr_drawarea->Change();
+
+    if(SmpWnd != NULL)
+    {
+        if(SmpWnd->sample == NULL || SmpWnd->sample != this)
+        {
+            SmpWnd->SetSample((Sample*)this);
+
+            if(SmpWnd->isVisible() == false)
+            {
+                SmpWnd->Show();
+            }
+        }
+        else
+        {
+            if(SmpWnd->isVisible() == false)
+            {
+                SmpWnd->Show();
+            }
+            else
+            {
+                SmpWnd->Hide();
+                this->pEditorButton->Release();
+            }
+        }
+    }
+}
+
+Instrument* Sample::Clone()
+{
+    Instrument* instr = NULL;
+    char nalias[MAX_ALIAS_STRING];
+    GetOriginalInstrumentAlias(name, nalias);
+    ToLowerCase(nalias);
+    // TODO: rework sample cloning to copy from internal memory
+    instr = (Instrument*)AddSample(path, name, nalias);
+
+    CopyDataToClonedInstrument(instr);
+
+    // Do we need to clone autopattern for the cloned instrument? Postponed for now
+    /* if(autoPatt != NULL)
+    {
+        if(instr->autoPatt == NULL)
+            instr->CreateAutoPattern();
+
+        autoPatt->CopyElementsTo(instr->autoPatt, true);
+    }*/
+
+    return instr;
+}
+
+
+bool Sample::SwitchWindowOFFIfNeeded()
+{
+    pEditorButton->Release();
+    instr_drawarea->Change();
+
+    if(SmpWnd != NULL && SmpWnd->Showing() == true)
+    {
+        SmpWnd->Hide();
+        return true;
+    }
+
+    return false;
+}
+
+void Sample::InitGraphics()
+{
+    img_volbkg = img_smpvolback;
+    img_panbkg = img_smppanback;
+    img_instrsmall = img_instrsmall1;
+    clr_stepseq_name = Colour(0xffDFDFDF);
+    clr_fxdigits = Colour(35, 67, 71);
+    clr_base = Colour(190, 190, 190);
+}
+
 CGenerator::CGenerator()
 {
-    type = Instr_Generator;
-
-    //solo->SetImages(NULL, img_solo1off_c);
-    //mute->SetImages(NULL, img_mute1off_c);
-    //autopt->SetImages(NULL, img_autooff_g);
-    //pEditButton->SetImages(NULL, img_btwnd_g);
+    instrtype = Instr_Generator;
+    subtype = ModSubtype_Generator;
 }
 
 CGenerator::~CGenerator()
@@ -1793,14 +1917,14 @@ CGenerator::~CGenerator()
 
 void CGenerator::ActivateTrigger(Trigger* tg)
 {
-    Instance* ii = (Instance*)tg->el;
+    NoteInstance* ii = (NoteInstance*)tg->el;
 
     Instrument::ActivateTrigger(tg);
 
     if(ii->ed_note->relative == true)
     {
         jassert(tg->patt->parent_trigger != NULL);
-        Instance* pi = (Instance*)tg->patt->parent_trigger->el;
+        NoteInstance* pi = (NoteInstance*)tg->patt->parent_trigger->el;
         if(pi->freq_ratio > 0)
             tg->freq /= pi->freq_ratio;
         tg->note_val += pi->ed_note->value;
@@ -1810,7 +1934,7 @@ void CGenerator::ActivateTrigger(Trigger* tg)
     tg->wt_pos = 0;
 }
 
-void CGenerator::CheckBounds(Gennote* gnote, Trigger* tg, long num_frames)
+void CGenerator::CheckBounds(GenNote* gnote, Trigger* tg, long num_frames)
 {
 	if(tg->tgstate == TgState_Sustain && gnote->preview == false && tg->frame_phase >= gnote->frame_length)
     {
@@ -1836,6 +1960,99 @@ void CGenerator::CheckBounds(Gennote* gnote, Trigger* tg, long num_frames)
     }
 }
 
+NoteInstance* CGenerator::CreateNoteInstance()
+{
+    return new GenNote(this);
+}
+
+NoteInstance* CGenerator::ReassignNoteInstance(NoteInstance * ni)
+{
+    GenNote* gn = (GenNote*)CreateElement_Note(this, true);
+
+    gn->ed_note->value = ni->ed_note->value;
+    gn->ed_vol->value = ni->ed_vol->value;
+    gn->ed_pan->value = ni->ed_pan->value;
+    gn->loc_vol->SetNormalValue(ni->loc_vol->val);
+    gn->loc_pan->SetNormalValue(ni->loc_pan->val);
+
+    gn->ed_len->value = ni->ed_len->value;
+    gn->loc_len->SetNormalValue(ni->loc_len->val);
+
+    gn->start_tick = ni->start_tick;
+    gn->end_tick = gn->start_tick + ni->tick_length;
+    gn->track_line = ni->track_line;
+
+    gn->Update();
+    return gn;
+}
+
+int CGenerator::GetPixelNoteLength(float tickWidth, bool proll)
+{
+    return (int)(last_note_length*tickWidth);
+}
+
+void CGenerator::ShowInstrumentWindow()
+{
+    pEditorButton->Press();
+    instr_drawarea->Change();
+
+    //Synth* syn = (Synth*)i;
+    if(wnd == NULL)
+    {
+        CreateModuleWindow();
+    }
+
+    if(wnd->Showing() == false)
+    {
+        wnd->Show();
+    }
+    else
+    {
+        wnd->Hide();
+        pEditorButton->Release();
+    }
+}
+
+bool CGenerator::SwitchWindowOFFIfNeeded()
+{
+    pEditorButton->Release();
+    instr_drawarea->Change();
+
+    if(wnd == NULL)
+        CreateModuleWindow();
+
+    {
+        if(wnd->Showing() == true)
+        {
+            wnd->Hide();
+            return true;
+        }
+    }
+
+    return false;
+}
+
+Instrument* CGenerator::Clone()
+{
+    Instrument* instr = NULL;
+    char nalias[MAX_ALIAS_STRING];
+    GetOriginalInstrumentAlias(name, nalias);
+    ToLowerCase(nalias);
+    instr = (Instrument*)AddInternalGenerator(path, nalias);
+
+    CopyDataToClonedInstrument(instr);
+
+    // Do we need to clone autopattern for the cloned instrument? Postponed for now
+    /*if(autoPatt != NULL)
+    {
+        if(instr->autoPatt == NULL)
+            instr->CreateAutoPattern();
+
+        autoPatt->CopyElementsTo(instr->autoPatt, true);
+    }*/
+
+    return instr;
+}
 
 SineNoise::SineNoise()
 {
@@ -1852,6 +2069,7 @@ SineNoise::~SineNoise()
 
 Synth::Synth()
 {
+    subtype = ModSubtype_Synth1;
     uniqueID = MAKE_FOURCC('C','S','Y','N');
 
     fp = 0;
@@ -2138,6 +2356,7 @@ void Synth::CreateModuleWindow()
 {
     synthWin = MainWnd->CreateSynthWindow(this);
     wnd = synthWin;
+
     SynthComp = (SynthComponent*)synthWin->getContentComponent();
     SynthComp->UpdateEnvButts();
 }
@@ -2394,7 +2613,7 @@ long Synth::ProcessTrigger(Trigger * tg, long num_frames, long buffframe)
         int fqc = 0;
 
         int bc = buffframe*2;
-        Gennote* gnote = (Gennote*)tg->el;
+        GenNote* gnote = (GenNote*)tg->el;
         float d1, d2, d3, v1, v2, v3;
         int vnum = tg->voicenum;
         //if(fill)
@@ -3074,7 +3293,7 @@ bool Synth::IsTriggerAtTheEnd(Trigger* tg)
     return attheend;
 }
 
-void Synth::CheckBounds(Gennote* gnote, Trigger* tg, long num_frames)
+void Synth::CheckBounds(GenNote* gnote, Trigger* tg, long num_frames)
 {
 	int vnum = tg->voicenum;
 	if(tg->tgstate == TgState_Sustain && gnote->preview == false && tg->frame_phase >= gnote->frame_length)
@@ -3449,8 +3668,9 @@ VSTGenerator::VSTGenerator(char* fullpath, char* alias)
     AliasRecord ar;
     memset(&ar, 0, sizeof(AliasRecord));
     strcpy(ar.alias, alias);
-    ar.type = ModSubType_VSTPlugin;
-    this->type = Instr_VSTPlugin;
+    ar.type = ModSubtype_VSTPlugin;
+    this->instrtype = Instr_VSTPlugin;
+    subtype = ModSubtype_VSTPlugin;
     this->NumMidiEvents = 0;
     this->pEff = new VSTEffect(NULL, &ar, fullpath);
     scope.eff = this->pEff;
@@ -3473,8 +3693,9 @@ VSTGenerator::VSTGenerator(VSTGenerator* vst, char* alias)
     AliasRecord ar;
     memset(&ar, 0, sizeof(AliasRecord));
     strcpy(ar.alias, alias);
-    ar.type = ModSubType_VSTPlugin;
-    this->type = Instr_VSTPlugin;
+    ar.type = ModSubtype_VSTPlugin;
+    this->instrtype = Instr_VSTPlugin;
+    subtype = ModSubtype_VSTPlugin;
     this->NumMidiEvents = 0;
     this->pEff = vst->pEff->Clone(NULL);
     scope.eff = this->pEff;
@@ -3499,7 +3720,7 @@ VSTGenerator::~VSTGenerator()
     }
 }
 
-void VSTGenerator::CheckBounds(Gennote * gnote, Trigger * tg, long num_frames)
+void VSTGenerator::CheckBounds(GenNote * gnote, Trigger * tg, long num_frames)
 {
     long loc_num_frames = num_frames;
 
@@ -3533,8 +3754,8 @@ long VSTGenerator::ProcessTrigger(Trigger* tg, long num_frames, long buffframe)
 {
     float vol = 0;
     long loc_num_frames = num_frames;
-    Gennote* gnote = (Gennote*)tg->el;
-    vol = gnote->loc_vol->val*tg->patt->loc_vol->val;
+    GenNote* gnote = (GenNote*)tg->el;
+    vol = gnote->loc_vol->val*tg->patt->vol_local->val;
 
     if(gnote->frame_length - tg->frame_phase < loc_num_frames)
         loc_num_frames = gnote->frame_length - tg->frame_phase;
@@ -3614,7 +3835,7 @@ void VSTGenerator::PostProcessTrigger(Trigger* tg, long num_frames, long bufffra
 
 void VSTGenerator::DeactivateTrigger(Trigger* tg)
 {
-    Gennote* gnote = (Gennote*)tg->el;
+    GenNote* gnote = (GenNote*)tg->el;
     this->PostNoteOFF(gnote->ed_note->value, 127);
    ((Instrument*)this)->Instrument::DeactivateTrigger(tg);
 }
@@ -3964,166 +4185,114 @@ void VSTGenerator::Reset()
     StopAllNotes();
 }
 
-void ShowInstrumentWindow(Instrument* i)
+void VSTGenerator::ShowInstrumentWindow()
 {
-    i->pEditorButton->Press();
-    i->instr_drawarea->Change();
+    pEditorButton->Press();
+    instr_drawarea->Change();
 
-    if(i->type == Instr_VSTPlugin)
+    if(pEff != NULL)
     {
-        VSTGenerator* pGen = (VSTGenerator*)i;
-        if(pGen->pEff != NULL)
+        if(pEff->pPlug->HasEditor())
         {
-            if(pGen->pEff->pPlug->HasEditor())
+            if(pEff->pPlug->isWindowActive == false)
             {
-                if(pGen->pEff->pPlug->isWindowActive == false)
+                pEff->ShowEditor(true);
+                wnd = pEff->pPlug->pWnd;
+            }
+            else
+            {
+                pEff->ShowEditor(false);
+                wnd = NULL;
+                pEditorButton->Release();
+            }
+        }
+        else
+        {
+            if(pEff->pPlug->isWindowActive == false)
+            {
+                if(pEff->VSTParamWnd == NULL)
                 {
-                    pGen->pEff->ShowEditor(true);
-                    pGen->wnd = pGen->pEff->pPlug->pWnd;
+                    pEff->VSTParamWnd = MainWnd->CreateVSTParamWindow(pEff, &scope);
+                    //pGen->wnd = pGen->pEff->VSTParamWnd;
+                    pEff->VSTParamWnd->Show();
                 }
                 else
                 {
-                    pGen->pEff->ShowEditor(false);
-                    pGen->wnd = NULL;
-                    i->pEditorButton->Release();
+                    if(pEff->VSTParamWnd->isShowing() == false)
+                    {
+                        pEff->VSTParamWnd->Show();
+                    }
+                    else
+                    {
+                        pEff->VSTParamWnd->Hide();
+                        pEditorButton->Release();
+                    }
                 }
             }
             else
             {
-                if(pGen->pEff->pPlug->isWindowActive == false)
+                if(pEff->VSTParamWnd != NULL)
                 {
-                    if(pGen->pEff->VSTParamWnd == NULL)
-                    {
-                        pGen->pEff->VSTParamWnd = MainWnd->CreateVSTParamWindow(pGen->pEff, &pGen->scope);
-                        //pGen->wnd = pGen->pEff->VSTParamWnd;
-                        pGen->pEff->VSTParamWnd->Show();
-                    }
-                    else
-                    {
-                        if(pGen->pEff->VSTParamWnd->isShowing() == false)
-                        {
-                            pGen->pEff->VSTParamWnd->Show();
-                        }
-                        else
-                        {
-                            pGen->pEff->VSTParamWnd->Hide();
-                            i->pEditorButton->Release();
-                        }
-                    }
-                }
-                else
-                {
-                    if(pGen->pEff->VSTParamWnd != NULL)
-                    {
-                        pGen->pEff->VSTParamWnd->Hide();
-                        i->pEditorButton->Release();
-                    }
+                    pEff->VSTParamWnd->Hide();
+                    pEditorButton->Release();
                 }
             }
-        }
-
-        /* Just a temp hack to test midi keyboard */
-        //pMidiHost->Attach((Instrument*)pGen, 1);
-    }
-    else if(i->type == Instr_Sample)
-    {
-		if(SmpWnd != NULL)
-		{
-			if(SmpWnd->sample == NULL || SmpWnd->sample != i)
-			{
-				SmpWnd->SetSample((Sample*)i);
-
-				if(SmpWnd->isVisible() == false)
-					SmpWnd->Show();
-			}
-			else
-			{
-				if(SmpWnd->isVisible() == false)
-                {
-					SmpWnd->Show();
-                }
-				else
-                {
-                    SmpWnd->Hide();
-                    i->pEditorButton->Release();
-                }
-			}
-		}
-    }
-    else if(i->type == Instr_Generator)
-    {
-        Synth* syn = (Synth*)i;
-        if(syn->synthWin == NULL)
-            syn->CreateModuleWindow();
-
-        if(syn->synthWin->Showing() == false)
-        {
-            syn->synthWin->Show();
-        }
-        else
-        {
-            syn->synthWin->Hide();
-            i->pEditorButton->Release();
-
-            // This is a workaround shit because sometimes synthwindow becomes hidden somehow
-            //if(syn->synthWin->isVisible() == false)
-            //{
-            //    syn->synthWin->setVisible(true);
-            //}
-            //syn->synthWin->toFront(true);
         }
     }
 }
 
-bool SwitchCurrentInstrumentWindowOFFIfNeeded(Instrument* newinstr)
+void VSTGenerator::SetSampleRate(float fSampleRate)
 {
-    current_instr->pEditorButton->Release();
-    current_instr->instr_drawarea->Change();
+    pEff->SetSampleRate(fSampleRate);
+}
 
-    // Hide previous instrument's window
-    if(current_instr->type == Instr_VSTPlugin)
+void VSTGenerator::SetBufferSize(unsigned int uiBufferSize)
+{
+    pEff->SetBufferSize((unsigned int)uiBufferSize);
+}
+
+Instrument* VSTGenerator::Clone()
+{
+    Instrument* instr = NULL;
+    char nalias[MAX_ALIAS_STRING];
+    GetOriginalInstrumentAlias(name, nalias);
+    ToLowerCase(nalias);
+    instr = (Instrument*)AddVSTGenerator((VSTGenerator*)this, nalias);
+
+    CopyDataToClonedInstrument(instr);
+
+    // Do we need to clone autopattern for the cloned instrument? Postponed for now
+    /*if(autoPatt != NULL)
     {
-        VSTGenerator* pGen = (VSTGenerator*)current_instr;
-        if(pGen->pEff->pPlug->HasEditor())
-        {
-            if(pGen->pEff->pPlug->isWindowActive == true)
-            {
-                pGen->pEff->ShowEditor(false);
-                return true;
-            }
-        }
-        else
-        {
-            if(pGen->pEff->VSTParamWnd != NULL && pGen->pEff->VSTParamWnd->isShowing())
-            {
-                pGen->pEff->VSTParamWnd->Hide();
-                return true;
-            }
-        }
-    }
-    else if(current_instr->type == Instr_Sample)
+        if(instr->autoPatt == NULL)
+            instr->CreateAutoPattern();
+
+        autoPatt->CopyElementsTo(instr->autoPatt, true);
+    }*/
+
+    return instr;
+}
+
+
+bool VSTGenerator::SwitchWindowOFFIfNeeded()
+{
+    pEditorButton->Release();
+    instr_drawarea->Change();
+
+    if(pEff->pPlug->HasEditor())
     {
-        if(SmpWnd != NULL && SmpWnd->Showing() == true)
+        if(pEff->pPlug->isWindowActive == true)
         {
-            //if(newinstr->type != Instr_Sample)
-            {
-                SmpWnd->Hide();
-            }
+            pEff->ShowEditor(false);
             return true;
         }
     }
-    else if(current_instr->type == Instr_Generator)
+    else
     {
-        Synth* syn = (Synth*)current_instr;
-        if(syn->synthWin == NULL)
-            syn->CreateModuleWindow();
-
+        if(pEff->VSTParamWnd != NULL && pEff->VSTParamWnd->isShowing())
         {
-            if(syn->synthWin->Showing() == true)
-            {
-                syn->synthWin->Hide();
-                return true;
-            }
+            pEff->VSTParamWnd->Hide();
+            return true;
         }
     }
 
@@ -4132,8 +4301,8 @@ bool SwitchCurrentInstrumentWindowOFFIfNeeded(Instrument* newinstr)
 
 void GenWindowToggleOnClick(Object* owner, Object* self)
 {
-    Instrument* i = (Instrument*)self->owner;
-    ShowInstrumentWindow(i);
+    Instrument* instr = (Instrument*)self->owner;
+    instr->ShowInstrumentWindow();
 }
 
 void EditButtonClick(Object* owner, Object* self)

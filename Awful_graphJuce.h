@@ -58,6 +58,14 @@ extern Image*  img_autooff_g;
 extern Image*  img_btwnd_s;
 extern Image*  img_btwnd_g;
 
+extern Image*  img_genvolback;
+extern Image*  img_smpvolback;
+extern Image*  img_genpanback;
+extern Image*  img_smppanback;
+
+extern Image*  img_instrsmall1;
+extern Image*  img_instrsmall2;
+
 extern void	J_DrawAll(Graphics& g);
 extern void Init_Fonts();
 extern void J_MainScale(Graphics& g);

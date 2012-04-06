@@ -1485,7 +1485,7 @@ void Browser::UpdateFileData()
         if(firsttime_plugs_scanned == false)
         {
             firsttime_plugs_scanned = true;
-            if(RescanPluginsAutomatically == true || vstfileexists == false)
+            if(RescanPluginsAutomatically || vstfileexists == false)
             {
                 out_from_dialog = true;
                 RescanPlugins(false, false);
@@ -1499,11 +1499,11 @@ void Browser::UpdateFileData()
         ModListEntry *pEntry = pModulesList->pFirst;
         while (pEntry != NULL)
         {
-            if( ((pEntry->modtype == ModuleType_Generator)&& (btype == Brw_Generators)) ||
+            if( ((pEntry->modtype == ModuleType_Instrument)&& (btype == Brw_Generators)) ||
                 ((pEntry->modtype == ModuleType_Effect)&& (btype == Brw_Effects)) )
             {
                 filedata = new FileData;
-                if(pEntry->subtype == ModSubType_VSTPlugin) // temp hack
+                if(pEntry->subtype == ModSubtype_VSTPlugin) // temp hack
                 {
                     filedata->ftype = FType_VST;
                 }
@@ -1601,7 +1601,7 @@ void Browser::UpdateParamsData()
         if(current_instr != NULL)
         {
             module = current_instr;
-            if(current_instr->type == Instr_VSTPlugin)
+            if(current_instr->instrtype == Instr_VSTPlugin)
             {
                 module = ((VSTGenerator*)(current_instr))->pEff;
             }
@@ -1664,9 +1664,9 @@ void Browser::UpdatePresetData()
 
     if (this->btype == Brw_Generators)
     {
-        if(current_instr != NULL && current_instr->type != Instr_Sample)
+        if(current_instr != NULL && current_instr->instrtype != Instr_Sample)
         {
-            if(current_instr->type == Instr_VSTPlugin)
+            if(current_instr->instrtype == Instr_VSTPlugin)
             {
                 module = ((VSTGenerator*)(current_instr))->pEff;
             }
@@ -1684,7 +1684,7 @@ void Browser::UpdatePresetData()
         if(aux_panel->current_eff != NULL)
         {
             module = aux_panel->current_eff;
-			if(aux_panel->current_eff->type != ModSubType_VSTPlugin)
+			if(aux_panel->current_eff->subtype != ModSubtype_VSTPlugin)
 			{
                 // Rescan presets list since it can be changed outside of this module
 				module->DeletePresets();
@@ -1747,7 +1747,7 @@ void Browser::UpdateCurrentHighlight()
             }
             else if(this->btype == Brw_Generators)
             {
-                if(current_instr != NULL && current_instr->type == Instr_VSTPlugin)
+                if(current_instr != NULL && current_instr->instrtype == Instr_VSTPlugin)
                     eff = ((VSTGenerator*)current_instr)->pEff;
             }
 
@@ -2562,12 +2562,12 @@ void InstrPanel::Click(int mouse_x, int mouse_y, bool dbclick, unsigned flags)
         }
         else if(flags == 0 && dbclick == true && M.active_ctrl == NULL)
         {
-            if(M.active_instr->type == Instr_VSTPlugin)
+            if(M.active_instr->instrtype == Instr_VSTPlugin)
                 M.active_instr->ToggleParamWindow();
         }
 
         if(flags & kbd_shift && flags & kbd_alt && 
-            M.active_instr != NULL && M.active_instr->type == Instr_Sample)
+            M.active_instr != NULL && M.active_instr->instrtype == Instr_Sample)
         {
             Sample* sm = (Sample*)M.active_instr;
             sm->DumpData();
@@ -2576,7 +2576,7 @@ void InstrPanel::Click(int mouse_x, int mouse_y, bool dbclick, unsigned flags)
         if(flags & kbd_shift && Num_Selected > 0)
         {
             // If any instance is selected - change its instrument
-            Instance* ii;
+            NoteInstance* ii;
             Element* newel;
             Element* el = firstElem;
             while(el != NULL)
@@ -2586,7 +2586,7 @@ void InstrPanel::Click(int mouse_x, int mouse_y, bool dbclick, unsigned flags)
                     el->IsInstance() &&
                     el->patt->ibound == NULL)
                 {
-                    ii = (Instance*)el;
+                    ii = (NoteInstance*)el;
                     if(ii->instr != M.active_instr)
                     {
                         el = el->next;
@@ -2666,6 +2666,7 @@ void InstrPanel::GoDown()
 void InstrPanel::CloneInstrument(Instrument* i)
 {
     Instrument* ni = i->Clone();
+    ChangeCurrentInstrument(ni);
     if(i != last_instr->prev)
     {
         M.dropinstr1 = i;
@@ -2675,8 +2676,10 @@ void InstrPanel::CloneInstrument(Instrument* i)
 
         M.dropinstr1 = M.dropinstr2 = NULL;
     }
-	else
-		UpdateStepSequencers();
+    else
+    {   
+        UpdateStepSequencers();
+    }
 }
 
 Instrument* InstrPanel::GetInstrByIndex(int index)
@@ -2718,9 +2721,9 @@ void InstrPanel::RemoveInstrument(Instrument* i)
         }
 
 		// If we delete the current sample then reassign sample window.
-		if(i->type == Instr_Sample && SmpWnd->sample == i)
+		if(i->instrtype == Instr_Sample && SmpWnd->sample == i)
 		{
-			if(current_instr != NULL && current_instr->type == Instr_Sample)
+			if(current_instr != NULL && current_instr->instrtype == Instr_Sample)
 			{
 				SmpWnd->SetSample((Sample*)current_instr);
 				current_instr->pEditorButton->pressed = i->pEditorButton->pressed;
@@ -3058,7 +3061,7 @@ void MixChannel::Disable()
         eff->fold_toggle->Deactivate();
         eff->bypass_toggle->Deactivate();
         eff->wnd_toggle->Deactivate();
-        if(eff->type == ModSubType_VSTPlugin)
+        if(eff->subtype == ModSubtype_VSTPlugin)
             ((VSTEffect*)eff)->pEditButton->Deactivate();
         eff->Disable();
         eff = eff->cnext;
@@ -3090,7 +3093,7 @@ void MixChannel::Enable()
         eff->fold_toggle->Activate();
         eff->bypass_toggle->Activate();
         eff->wnd_toggle->Activate();
-        if(eff->type == ModSubType_VSTPlugin)
+        if(eff->subtype == ModSubtype_VSTPlugin)
             ((VSTEffect*)eff)->pEditButton->Activate();
         eff->Enable();
         eff = eff->cnext;
@@ -3432,19 +3435,6 @@ void MixChannel::Save(XmlElement * xmlChanNode)
 
         eff = eff->cnext;
     }
-
-    /*
-    Parameter* pParam = this->first_param;
-    while (pParam != NULL)
-    {
-        if(pParam->IsPresetable())
-        {
-            XmlElement * xmlParam = pParam->Save();
-            xmlChanNode->addChildElement(xmlParam);
-        }
-        pParam = pParam->next;
-    }
-    */
 }
 
 void MixChannel::Load(XmlElement * xmlNode)
@@ -4085,7 +4075,7 @@ void Aux::ConvertPatternType(Pattern* patt, PattType ptype)
             SlideNote* sn;
             bool line_taken = false;
             int trkline = 0;
-            Instance* ii;
+            NoteInstance* ii;
             Instrument* i  = first_instr;
             while(i != NULL)
             {
@@ -4094,7 +4084,7 @@ void Aux::ConvertPatternType(Pattern* patt, PattType ptype)
                 {
                     if(el->IsInstance())
                     {
-                        ii = (Instance*)el;
+                        ii = (NoteInstance*)el;
                         if(ii->instr == i)
                         {
                             line_taken = true;
@@ -4133,7 +4123,7 @@ void Aux::ConvertPatternType(Pattern* patt, PattType ptype)
 
         int trkline = 0;
         SlideNote* sn;
-        Instance* ii;
+        NoteInstance* ii;
         Instrument* i  = first_instr;
         while(i != NULL)
         {
@@ -4142,7 +4132,7 @@ void Aux::ConvertPatternType(Pattern* patt, PattType ptype)
             {
                 if(el->IsInstance())
                 {
-                    ii = (Instance*)el;
+                    ii = (NoteInstance*)el;
                     if(ii->instr == i)
                     {
                         ii->SetTrackLine(trkline);
@@ -4175,13 +4165,13 @@ void Aux::ConvertPatternType(Pattern* patt, PattType ptype)
     else if(ptype == Patt_Pianoroll)
     {
         SlideNote* sn;
-        Instance* ii;
+        NoteInstance* ii;
         Element* el = patt->first_elem;
         while(el != NULL)
         {
             if(el->IsInstance())
             {
-                ii = (Instance*)el;
+                ii = (NoteInstance*)el;
                 ii->SetTrackLine(NUM_PIANOROLL_LINES - 1 - ii->ed_note->value);
                 sn = ii->first_slide;
                 while(sn != NULL)
@@ -4778,7 +4768,7 @@ bool Aux::RescanPatternBounds()
     float endtick = workPt->start_tick + workPt->tick_length;
     float elend;
 
-	if(workPt->ptype != Patt_StepSeq && workPt->touchresized == false)
+	if(workPt->ptype != Patt_StepSeq && workPt->IsResizeTouched() == false)
 	{
 		workPt->tick_length = float(beats_per_bar*ticks_per_beat);
 		//workPt->num_lines = 1;
@@ -4829,12 +4819,12 @@ bool Aux::RescanPatternBounds()
     if(ticklength != workPt->tick_length)
     {
         undoMan->DoNewAction(Action_Resize, (void*)workPt, ticklength, workPt->tick_length, 0, 0);
-        workPt->touchresized = false;
+        workPt->ResizeTouch(false);
         workPt->Update();
         Pattern* pt = workPt->basePattern->der_first;
         while(pt != NULL)
         {
-            if(pt != workPt && pt->touchresized == false)
+            if(pt != workPt && pt->IsResizeTouched() == false)
             {
                 ticklength = pt->tick_length;
                 pt->SetEndTick(pt->StartTick() + workPt->tick_length);
@@ -5473,67 +5463,67 @@ Eff* Aux::AddEffectByType(ModuleSubType etype, MixChannel* mchan)
     Eff* pEff = NULL;
     switch(etype)
     {
-        case ModSubType_Gain:
+        case ModSubtype_Gain:
             //pEff = new Gain(mchan->mc_main, NULL);
             break;
-        case ModSubType_Send:
+        case ModSubtype_Send:
             //pEff = new Send(mchan->mc_main, NULL);
             break;
-        case ModSubType_Filter:
+        case ModSubtype_Filter:
             pEff = new Filter(mchan->mc_main, NULL);
             break;
-        case ModSubType_CFilter:
+        case ModSubtype_CFilter:
             pEff = new CFilter(mchan->mc_main, NULL);
             break;
-        case ModSubType_Equalizer1:
+        case ModSubtype_Equalizer1:
             pEff = new EQ1(mchan->mc_main, NULL);
             break;
-        case ModSubType_Equalizer3:
+        case ModSubtype_Equalizer3:
             pEff = new EQ3(mchan->mc_main, NULL);
             break;
-        case ModSubType_GraphicEQ:
+        case ModSubtype_GraphicEQ:
             pEff = new GraphicEQ(mchan->mc_main, NULL);
             break;
-        case ModSubType_XDelay:
+        case ModSubtype_XDelay:
             pEff = new XDelay(mchan->mc_main, NULL);
             break;
-        case ModSubType_Reverb:
+        case ModSubtype_Reverb:
             pEff = new CReverb(mchan->mc_main, NULL);
             break;
-        case ModSubType_Tremolo:
+        case ModSubtype_Tremolo:
             pEff = new CTremolo(mchan->mc_main, NULL);
             break;
-        case ModSubType_Compressor:
+        case ModSubtype_Compressor:
             pEff = new Compressor(mchan->mc_main, NULL);
             break;
-        case ModSubType_Chorus:
+        case ModSubtype_Chorus:
             pEff = new CChorus(mchan->mc_main, NULL);
             break;
-        case ModSubType_Flanger:
+        case ModSubtype_Flanger:
             pEff = new CFlanger(mchan->mc_main, NULL);
             break;
-        case ModSubType_Phaser:
+        case ModSubtype_Phaser:
             pEff = new CPhaser(mchan->mc_main, NULL);
             break;
-        case ModSubType_WahWah:
+        case ModSubtype_WahWah:
             pEff = new CWahWah(mchan->mc_main, NULL);
             break;
-        case ModSubType_Distortion:
+        case ModSubtype_Distortion:
             pEff = new CDistort(mchan->mc_main, NULL);
             break;
-        case ModSubType_BitCrusher:
+        case ModSubtype_BitCrusher:
             pEff = new CBitCrusher(mchan->mc_main, NULL);
             break;
-        case ModSubType_Stereo:
+        case ModSubtype_Stereo:
             pEff = new CStereo(mchan->mc_main, NULL);
             break;
-        case ModSubType_CFilter2:
+        case ModSubtype_CFilter2:
             pEff = new CFilter2(mchan->mc_main, NULL);
             break;
-        case ModSubType_CFilter3:
+        case ModSubtype_CFilter3:
             pEff = new CFilter3(mchan->mc_main, NULL);
             break;
-        case ModSubType_Default:
+        case ModSubtype_Default:
             pEff = new BlankEffect(mchan->mc_main, NULL);
             break;
         default:
@@ -5560,7 +5550,7 @@ Eff* Aux::AddVSTEffectByPath(const char * fullpath, MixChannel * mchan)
     VSTEffect* pEffect = NULL;
 
     AliasRecord ar;
-    ar.type = ModSubType_VSTPlugin;
+    ar.type = ModSubtype_VSTPlugin;
     strcpy(ar.alias, "plugins");
 
     pEffect = new VSTEffect(mchan->mc_main, &ar, (char*)fullpath);
@@ -5625,61 +5615,61 @@ Eff* Aux::AddEffectFromBrowser(FileData * fdi, MixChannel* mchan)
 
         switch(mlentry->subtype)
         {
-            case ModSubType_Gain:
+            case ModSubtype_Gain:
                 pEff = new Gain(mchan->mc_main, ar);
                 break;
-            case ModSubType_Filter:
+            case ModSubtype_Filter:
                 pEff = new Filter(mchan->mc_main, ar);
                 break;
-            case ModSubType_CFilter:
+            case ModSubtype_CFilter:
                 pEff = new CFilter(mchan->mc_main, ar);
                 break;
-            case ModSubType_CFilter3:
+            case ModSubtype_CFilter3:
                 pEff = new CFilter3(mchan->mc_main, ar);
                 break;
-            case ModSubType_Equalizer1:
+            case ModSubtype_Equalizer1:
                 pEff = new EQ1(mchan->mc_main, ar);
                 break;
-            case ModSubType_Equalizer3:
+            case ModSubtype_Equalizer3:
                 pEff = new EQ3(mchan->mc_main, ar);
                 break;
-            case ModSubType_GraphicEQ:
+            case ModSubtype_GraphicEQ:
                 pEff = new GraphicEQ(mchan->mc_main, ar);
                 break;
-            case ModSubType_XDelay:
+            case ModSubtype_XDelay:
                 pEff = new XDelay(mchan->mc_main, ar);
                 break;
-            case ModSubType_Reverb:
+            case ModSubtype_Reverb:
                 pEff = new CReverb(mchan->mc_main, ar);
                 break;
-            case ModSubType_Tremolo:
+            case ModSubtype_Tremolo:
                 pEff = new CTremolo(mchan->mc_main, ar);
                 break;
-            case ModSubType_Compressor:
+            case ModSubtype_Compressor:
                 pEff = new Compressor(mchan->mc_main, ar);
                 break;
-            case ModSubType_Chorus:
+            case ModSubtype_Chorus:
                 pEff = new CChorus(mchan->mc_main, ar);
                 break;
-            case ModSubType_Flanger:
+            case ModSubtype_Flanger:
                 pEff = new CFlanger(mchan->mc_main, ar);
                 break;
-            case ModSubType_Phaser:
+            case ModSubtype_Phaser:
                 pEff = new CPhaser(mchan->mc_main, ar);
                 break;
-            case ModSubType_WahWah:
+            case ModSubtype_WahWah:
                 pEff = new CWahWah(mchan->mc_main, ar);
                 break;
-            case ModSubType_Distortion:
+            case ModSubtype_Distortion:
                 pEff = new CDistort(mchan->mc_main, ar);
                 break;
-            case ModSubType_BitCrusher:
+            case ModSubtype_BitCrusher:
                 pEff = new CBitCrusher(mchan->mc_main, ar);
                 break;
-            case ModSubType_Stereo:
+            case ModSubtype_Stereo:
                 pEff = new CStereo(mchan->mc_main, ar);
                 break;
-            case ModSubType_Default:
+            case ModSubtype_Default:
                 pEff = new BlankEffect(mchan->mc_main, ar);
                 break;
             default:

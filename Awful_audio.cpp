@@ -29,7 +29,7 @@ extern PaError      PortAudio_Start();
 extern void			PlayMain();
 extern void         StopMain(bool forceresetmix);
 void                MixPreviewData(float* dataL, float* dataR);
-bool                IsCommandApplicable(Command* cmd, Instance* instr_instance);
+bool                IsCommandApplicable(Command* cmd, NoteInstance* instr_instance);
 extern inline float MixPans(float src_pan, float dst_pan);
 inline void		    GetMonoSampleData(Sample* sample, double cursor_pos, float* dataLR);
 inline void			GeStereoSampleData(Sample* sample, double cursor_pos, float* dataL, float* dataR);
@@ -275,10 +275,7 @@ void SetSampleRate(unsigned int uiSampleRate)
 
     while(instr != NULL)
     {
-        if (instr->type == Instr_VSTPlugin)
-        {
-            ((VSTGenerator*) (instr))->pEff->SetSampleRate((float)uiSampleRate);
-        }
+        instr->SetSampleRate((float)uiSampleRate);
         instr = instr->next;
     }
 }
@@ -295,11 +292,11 @@ bool Render_Start()
     long ullLastFrame;
     GetLastElementEndFrame(&ullLastFrame);
 
-	if(ullLastFrame > 0 && Playing == false)
-	{
-		if(Rendering == false)
-		{
-			CP->PosToHome();
+    if(ullLastFrame > 0 && Playing == false)
+    {
+        if(Rendering == false)
+        {
+            CP->PosToHome();
 
 #ifdef USE_JUCE_AUDIO
             audioDeviceManager->removeAudioCallback(audioCallBack);
@@ -446,7 +443,7 @@ void StopMain(bool forceresetmix)
         UpdateTime(Loc_MainGrid);
         AuxPos2MainPos();
     }
-    else if(aux_panel->playing == true)
+    else if(aux_panel->isPlaying())
     {
         aux_panel->Stop();
     }
@@ -479,7 +476,7 @@ void ResetUnstableElements()
     while(tg != NULL)
     {
         tgnext = tg->act_next;
-        if(((tg->el->type == El_GenNote) && ((Instance*)tg->el)->instr->type == Instr_VSTPlugin)||
+        if(((tg->el->type == El_GenNote) && ((NoteInstance*)tg->el)->instr->subtype == ModSubtype_VSTPlugin)||
               tg->el->type == El_Mute ||
               tg->el->type == El_Vibrate ||
               tg->el->type == El_Slider ||
@@ -585,7 +582,7 @@ void MidiToHost_AddNoteOn(Instrument* instr, int note, int vol)
             //Place_Note(((Instance*)(PrevSlot[ic].trig.el))->instr,
             //        note, PrevSlot[ic].trig.vol_val, PrevSlot[ic].start_frame, pbMain->currFrame - pbAux->currFrame);
 
-            if(instr->type == Instr_Sample)
+            if(instr->subtype == ModSubtype_Sample)
             {
                 // If this is a sample, then record it immediately, since it's released by itself, without
                 // waiting for user to release the key on MIDI keyboard
@@ -644,7 +641,7 @@ extern inline float MixPans(float src_pan, float dst_pan)
     return src_pan*(1 - abs(dst_pan)) + dst_pan;
 }
 
-inline bool IsCommandApplicable(Command* cmd, Instance* instance)
+inline bool IsCommandApplicable(Command* cmd, NoteInstance* instance)
 {
     if(cmd->scope->local == true)
     {
@@ -1272,17 +1269,14 @@ void PortAudio_SetBufferSize(float BufSize)
         Eff* eff = first_eff;
         while(eff != NULL)
         {
-            eff->SetBufferSize((unsigned int) BufSize);
+            eff->SetBufferSize((unsigned int)BufSize);
             eff = eff->next;
         }
 
         Instrument* instr = first_instr;
         while(instr != NULL)
         {
-            if (instr->type == Instr_VSTPlugin)
-            {
-                ((VSTGenerator*) (instr))->pEff->SetBufferSize((unsigned int) BufSize);
-            }
+            instr->SetBufferSize((unsigned int)BufSize);
             instr = instr->next;
         }
 
@@ -1315,10 +1309,7 @@ void JuceAudio_SetBufferSize(float BufSize)
     Instrument* instr = first_instr;
     while(instr != NULL)
     {
-        if (instr->type == Instr_VSTPlugin)
-        {
-            ((VSTGenerator*) (instr))->pEff->SetBufferSize((unsigned int) BufSize);
-        }
+        instr->SetBufferSize((unsigned int)BufSize);
         instr = instr->next;
     }
 
@@ -1568,7 +1559,7 @@ void CommonAudioCallback(const void* inputBuffer, void* outputBuffer, unsigned l
         Instrument* instr = first_instr;
         while(instr != NULL)
         {
-            if(instr->type == Instr_VSTPlugin)
+            if(instr->instrtype == Instr_VSTPlugin)
             {
                ((VSTGenerator*)instr)->pEff->Reset();
             }

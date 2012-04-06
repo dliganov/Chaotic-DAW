@@ -194,7 +194,7 @@ extern void             ActivateSymbolTrigger(Trigger* efftg);
 extern void             DeactivatePlayback(Playback* pbk);
 extern void             ActivatePlayback(Playback* pbk);
 extern void             DisableAllPlaybacks();
-extern void             AddAutopatternInstance(Trigger* tg, Instance* ii, bool add);
+extern void             AddAutopatternInstance(Trigger* tg, NoteInstance* ii, bool add);
 extern void             SetMixcell4Trigger(Trigger* tg);
 extern void             SetMixChannel4Trigger(Trigger* tg);
 extern void             PreInitEnvelopes(tframe frame, Pattern* pt, Event* firstev, bool activate_env, bool paraminit = true);

@@ -12,7 +12,7 @@ extern void         Preview_FinishAll();
 extern void         Preview_ReleaseAll();
 extern void         Preview_Release(Instrument* i, int note);
 extern void         Preview_Release(int key);
-extern int          Preview_Add(Instance* ii, Instrument* i, int key, int note, Pattern* pt, Trk* trk, Mixcell* mcell, bool noauto, bool setrelative);
+extern int          Preview_Add(NoteInstance* ii, Instrument* i, int key, int note, Pattern* pt, Trk* trk, Mixcell* mcell, bool noauto, bool setrelative);
 int                 Preview_GetFreeSlot(int key);
 extern void         Preview_ReleaseData(unsigned int ic);
 extern void         Preview_CheckStates(long num_frames);
@@ -96,7 +96,7 @@ int Preview_GetFreeSlot(int key)
     return 0xFFFF;
 }
 
-extern int Preview_Add(Instance* ii, Instrument* i, int key, int note, Pattern* pt, Trk* trk, Mixcell* mcell, bool noauto, bool setrelative)
+extern int Preview_Add(NoteInstance* ii, Instrument* i, int key, int note, Pattern* pt, Trk* trk, Mixcell* mcell, bool noauto, bool setrelative)
 {
     if(ii == NULL && i == NULL)
     {
@@ -113,7 +113,7 @@ extern int Preview_Add(Instance* ii, Instrument* i, int key, int note, Pattern* 
             pslot->key = key;
             if(ii != NULL)
             {
-                pslot->ii = (Instance*)ii->Clone(false);
+                pslot->ii = (NoteInstance*)ii->Clone(false);
             }
             else
             {
@@ -122,11 +122,9 @@ extern int Preview_Add(Instance* ii, Instrument* i, int key, int note, Pattern* 
                 {
                     pslot->ii->ed_note->SetRelative(true);
                 }
-                if(i->type == Instr_Sample)
-                {
-                    // Avoid partial length for instrument-only preview
-                   ((Samplent*)pslot->ii)->touchresized = false;
-                }
+
+                 // Avoid partial length for instrument-only preview
+                pslot->ii->ResizeTouch(false);
             }
             pslot->ii->preview = true;
 
@@ -218,7 +216,7 @@ void  Preview_Release(Instrument* i, int note)
                     if(frame2 <= frame1)
                         frame2 = frame1 + 44;
                     Grid_PutInstanceSpecific(PrevSlot[ic].ii->patt, 
-                                            ((Instance*)(PrevSlot[ic].trigger.el))->instr, 
+                                            ((NoteInstance*)(PrevSlot[ic].trigger.el))->instr, 
                                               PrevSlot[ic].ii->ed_note->value + 1, 
                                               PrevSlot[ic].ii->loc_vol->val, 
                                               frame1,
@@ -363,7 +361,7 @@ extern void Preview_StopAll()
     Instrument *p_cur_instr = first_instr;
     while (p_cur_instr != NULL)
     {
-        if (p_cur_instr->type == Instr_VSTPlugin)
+        if (p_cur_instr->subtype == ModSubtype_VSTPlugin)
         {
             ((VSTGenerator*)(p_cur_instr))->StopAllNotes();
         }
@@ -396,7 +394,7 @@ void Preview_CheckStates(long num_frames)
             else if(PrevSlot[ic].state == PState_Ready)
             {
                 Trigger* tg = &PrevSlot[ic].trigger;
-                Instrument* instr = ((Instance*)tg->el)->instr;
+                Instrument* instr = ((NoteInstance*)tg->el)->instr;
 
                 if(tg->tgworking == true)
                 {
@@ -427,7 +425,7 @@ void Preview_CheckStates(long num_frames)
                     tg->Deactivate();
                 if(tg->apatt_instance == NULL || !tg->apatt_instance->IsPlaybackActive())
                 {
-                    Instrument* instr = ((Instance*)tg->el)->instr;
+                    Instrument* instr = ((NoteInstance*)tg->el)->instr;
                     PrevSlot[ic].state = PState_Inactive;
                     NumPrevs--;
                 }

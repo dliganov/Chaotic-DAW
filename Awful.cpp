@@ -57,7 +57,7 @@ extern void                 CreateElement_EnvelopeCommon(Parameter* param);
 extern Command*             CreateElement_Command(Scope* scope, CmdType type);
 extern Command*             CreateElement_Command(Scope* scope, bool preventundo);
 extern Vibrate*				CreateElement_Vibrate();
-extern Instance*            CreateElement_Instance_byChar(char character);
+extern NoteInstance*            CreateElement_Instance_byChar(char character);
 extern SlideNote*           CreateElement_SlideNote(bool add);
 extern Muter*               CreateElement_Muter();
 extern Break*               CreateElement_Break();
@@ -68,7 +68,7 @@ extern Pattern*				CreateElement_Pattern(int x1, int x2, int y1, int y2);
 extern Pattern*             CreateElement_Pattern(char* pname, float tk1, float tk2, int tr1, int tr2);
 extern Transpose*           CreateElement_Transpose(int semitones);
 extern Txt*			        CreateElement_TextString();
-extern Instance*            CreateElement_Note(Instrument* instr, bool add, bool preventundo);
+extern NoteInstance*            CreateElement_Note(Instrument* instr, bool add, bool preventundo);
 extern Element*             CreateElement_CommonSymbol(ElemType eltype, bool add, bool preventundo);
 
 
@@ -701,6 +701,9 @@ int             numLastSessions;
 Sample*         barsample = NULL;
 Sample*         beatsample = NULL;
 
+// In release build, we retrieve the target path a bit differently
+bool            obtainReleasePathDir = false;
+
 
 void MakeCoolVUFallDownEffectYo()
 {
@@ -813,6 +816,11 @@ void CleanProject()
         aux_panel->Stop();
         aux_panel->playbt->Release();
     }
+    else
+    {
+        // Just stop any sounding
+        StopMain(true);
+    }
 
     aux_panel->AuxReset();
     pbkAux->SetPlayPatt(aux_Pattern); // force setting to blank pattern
@@ -913,7 +921,7 @@ void ActualizeStepSeqPositions()
     {
         if(el->IsPresent() && el->IsInstance() && el->patt->ptype == Patt_StepSeq)
         {
-            el->SetTrackLine(((Instance*)el)->instr->index);
+            el->SetTrackLine(((NoteInstance*)el)->instr->index);
         }
 
         el = el->next;
@@ -1185,7 +1193,7 @@ bool LoadProjectData(File chosenFile, LoadThread* thread)
                         String ename = xmlChildEff->getStringAttribute(T("EffName"));
                         String epath = xmlChildEff->getStringAttribute(T("EffPath"));
 
-                        if(etype == ModSubType_VSTPlugin)
+                        if(etype == ModSubtype_VSTPlugin)
                         {
                             File f(epath);
                             if(thread != NULL)
@@ -1198,7 +1206,7 @@ bool LoadProjectData(File chosenFile, LoadThread* thread)
                         }
 
                         Eff* eff = NULL;
-                        if(etype != ModSubType_VSTPlugin)
+                        if(etype != ModSubtype_VSTPlugin)
                         {
                             eff = aux_panel->AddEffectByType(etype, mchan);
                         }
@@ -1660,24 +1668,13 @@ void PlaceCursor()
 
 void R(int r)
 {
-	if(r & Refresh_GridContent)
-		int a = 1;
     MC->refresh |= r;
 }
 
-Instance* CreateElement_Note(Instrument* instr, bool add, bool preventundo)
+NoteInstance* CreateElement_Note(Instrument* instr, bool add, bool preventundo)
 {
-    Instance* ii = NULL;
-    if(instr->type == Instr_VSTPlugin || instr->type == Instr_Generator)
-    {
-        ii = new Gennote(instr);
-    }
-    else if(instr->type == Instr_Sample)
-    {
-        ii = new Samplent((Sample*)instr);
-    }
+    NoteInstance* ii = instr->CreateNoteInstance();
 
-    jassert(ii != NULL);
     if(add)
     {
         if(C.patt == aux_panel->workPt && aux_panel->workPt->autopatt == true && aux_panel->relative_oct)
@@ -1689,11 +1686,11 @@ Instance* CreateElement_Note(Instrument* instr, bool add, bool preventundo)
     return ii;
 }
 
-Instance* CreateElement_Instance_byChar(char character)
+NoteInstance* CreateElement_Instance_byChar(char character)
 {
     Instrument* instr = C.patt->ibound != NULL ? C.patt->ibound : current_instr;
     C.last_char = character;
-	Instance* ii = CreateElement_Note(instr, true);
+	NoteInstance* ii = CreateElement_Note(instr, true);
 
 	ii->ed_note->visible = true;
     ii->Switch2Param(ii->ed_note);
@@ -1703,9 +1700,9 @@ Instance* CreateElement_Instance_byChar(char character)
 	return ii;
 }
 
-Instance* CreateElement_Instance(bool preview)
+NoteInstance* CreateElement_Instance(bool preview)
 {
-    Instance* ii = NULL;
+    NoteInstance* ii = NULL;
     Instrument* instr = C.patt->ibound != NULL ? C.patt->ibound : current_instr;
     if(instr != current_instr)
     {
@@ -1736,7 +1733,7 @@ Instance* CreateElement_Instance(bool preview)
     return ii;
 }
 
-Instance* CreateElement_InstanceSpecific(Pattern* patt, Instrument *instr, int note, float vol, float starttick, float endtick, int line)
+NoteInstance* CreateElement_Instance_special(Pattern* patt, Instrument *instr, int note, float vol, float starttick, float endtick, int line)
 {
     Pattern* currPatt = C.patt;
     float currTick = CTick;
@@ -1746,7 +1743,7 @@ Instance* CreateElement_InstanceSpecific(Pattern* patt, Instrument *instr, int n
     CLine = line;
     C.patt = patt;
 
-    Instance* ii = CreateElement_Note(instr, false);
+    NoteInstance* ii = CreateElement_Note(instr, false);
 
     ii->end_tick = endtick;
     ii->ed_note->SetValue(note);
@@ -2894,7 +2891,7 @@ void HardDelete(Element* el, bool preventundo)
             C.ExitToDefaultMode();
         }
 
-        Instance* ii = (Instance*)el;
+        NoteInstance* ii = (NoteInstance*)el;
         SlideNote* sl = ii->first_slide;
         if(sl != NULL)
         {
@@ -3036,7 +3033,7 @@ void SoftDelete(Element *el, bool preventundo)
             C.ExitToDefaultMode();
         }
 
-        Instance* ii = (Instance*)el;
+        NoteInstance* ii = (NoteInstance*)el;
         SlideNote* sl = ii->first_slide;
         if(sl != NULL)
         {
@@ -3408,7 +3405,7 @@ void SwitchInputMode(CursMode mode)
     				}
     				else if(C.curElem->type == El_Samplent || C.curElem->type == El_GenNote)
     				{
-    					Instance* ii = (Instance*)C.curElem;
+    					NoteInstance* ii = (NoteInstance*)C.curElem;
                         if(ii->active_param != NULL)
                         {
     					    ii->ProcessKey(key_escape, 0);
@@ -3440,7 +3437,7 @@ void SwitchInputMode(CursMode mode)
                 if(C.mode == CMode_ElemEdit && 
                   (C.curElem->type == El_Samplent || C.curElem->type == El_GenNote))
                 {
-                    Instance* ii = (Instance*)C.curElem;
+                    NoteInstance* ii = (NoteInstance*)C.curElem;
                     ii->ProcessKey(key_escape, 0);
                 }
                 else
@@ -3588,7 +3585,7 @@ void ProcessColLane(int mouse_x, int mouse_y, ParamType paramtype, Loc loc, Trk*
     float nv;
     Samplent*   smpdata;
     SlideNote*  sldata;
-    Gennote*    gndata;
+    GenNote*    gndata;
     Pattern*    pdata;
     bool        go;
 
@@ -3689,7 +3686,7 @@ void ProcessColLane(int mouse_x, int mouse_y, ParamType paramtype, Loc loc, Trk*
 					}
 					if(el->type == El_GenNote)
 					{
-						gndata = (Gennote*)el;
+						gndata = (GenNote*)el;
 						locvol = gndata->loc_vol;
 					}
 					else if(el->type == El_SlideNote)
@@ -3700,14 +3697,14 @@ void ProcessColLane(int mouse_x, int mouse_y, ParamType paramtype, Loc loc, Trk*
 					else if(el->type == El_Pattern)
 					{
 						pdata = (Pattern*)el;
-						locvol = pdata->loc_vol;
+						locvol = pdata->vol_local;
 					}
 
                     //locvol->SetNormalValue(nv*VolRange);
                     undoMan->DoNewAction(Action_ParamChange, (void*)locvol, locvol->val, nv*VolRange, 0, 0);
                     if(el->IsInstance())
                     {
-                        Instance* ii = (Instance*)el;
+                        NoteInstance* ii = (NoteInstance*)el;
                         ii->instr->SetLastVol(locvol->val);
                     }
 				}
@@ -3726,7 +3723,7 @@ void ProcessColLane(int mouse_x, int mouse_y, ParamType paramtype, Loc loc, Trk*
 					}
 					if(el->type == El_GenNote)
 					{
-						gndata = (Gennote*)el;
+						gndata = (GenNote*)el;
 						locpan = gndata->loc_pan;
 					}
 					else if(el->type == El_SlideNote)
@@ -3737,14 +3734,14 @@ void ProcessColLane(int mouse_x, int mouse_y, ParamType paramtype, Loc loc, Trk*
 					else if(el->type == El_Pattern)
 					{
 						pdata = (Pattern*)el;
-						locpan = pdata->loc_pan;
+						locpan = pdata->pan_local;
 					}
 
 					//locpan->SetNormalValue(1 - nv*2);
                     undoMan->DoNewAction(Action_ParamChange, (void*)locpan, locpan->val, nv*2 - 1, 0, 0);
                     if(el->IsInstance())
                     {
-                        Instance* ii = (Instance*)el;
+                        NoteInstance* ii = (NoteInstance*)el;
                         ii->instr->SetLastPan(locpan->val);
                     }
 				}
@@ -4279,7 +4276,7 @@ void ClonePickedToNew(float dtick, int dtrack, float tW, int tH, bool ptcopy)
 
                 if(el->type == El_Samplent || el->type == El_GenNote)
                 {
-                    CloneSlideNotes((Instance*)el, (Instance*)nel, true);
+                    CloneSlideNotes((NoteInstance*)el, (NoteInstance*)nel, true);
                 }
 
                 nel->xs = el->xs;
@@ -4461,12 +4458,14 @@ void MovePickedUpElements(int mx, int my, unsigned flags)
                     }
                 }
 
-                // If we move VST plugin note, then need to stop this note to avoid infinite sounding
+                // If we move VST plugin note, then stop this note to avoid infinite sounding
                 if(el->IsInstance())
                 {
-                    Instance* ii = (Instance*)el;
-                    if(ii->instr->type == Instr_VSTPlugin)
+                    NoteInstance* ii = (NoteInstance*)el;
+                    if(ii->instr->subtype == ModSubtype_VSTPlugin)
+                    {
                         ((VSTGenerator*)(ii->instr))->PostNoteOFF(ii->ed_note->value, 0);
+                    }
                 }
 
                 if(JustMoved == true)
@@ -4493,7 +4492,7 @@ void MovePickedUpElements(int mx, int my, unsigned flags)
                     if(el->IsInstance())
                     {
                         Preview_FinishAll();
-                        Instance* ii = (Instance*)el;
+                        NoteInstance* ii = (NoteInstance*)el;
                         //ii->ed_note->ProcessChar(&C.last_char);
                         ii->ed_note->Kreview(-1);
                     }
@@ -4503,7 +4502,7 @@ void MovePickedUpElements(int mx, int my, unsigned flags)
                         Preview_FinishAll();
     					if(sn->parent != NULL)
     					{
-    						Instance* ii = (Instance*)(sn->parent);
+    						NoteInstance* ii = (NoteInstance*)(sn->parent);
 						    Preview_Add(ii, NULL, -1, sn->ed_note->value, M.patt, NULL, NULL, true, sn->ed_note->relative);
     					}
     					else
@@ -4524,12 +4523,12 @@ void MovePickedUpElements(int mx, int my, unsigned flags)
         {
             if(el->IsPresent() && el->picked == true && el->IsInstance())
             {
-                Instance* ii = (Instance*)el;
+                NoteInstance* ii = (NoteInstance*)el;
                 if(ii->instr != ii->trkdata->defined_instr)
                 {
                     el->Deselect();
                     el->picked = false;
-                    Element* nel = ReassignInstrument((Instance*)el, el->trkdata->defined_instr);
+                    Element* nel = ReassignInstrument((NoteInstance*)el, el->trkdata->defined_instr);
                     nel->Select();
                     nel->picked = true;
                 }
@@ -4644,7 +4643,7 @@ String GetPanString(float value)
             str += "L";
         else
             str += "R";
-		return str;
+        return str;
     }
 }
 
@@ -5280,8 +5279,8 @@ void PasteElements(bool mousepos)
                     }
                     else if(nel->IsInstance())
                     {
-                        Instance* ii = (Instance*)nel;
-                        Instance* ii0 = (Instance*)el;
+                        NoteInstance* ii = (NoteInstance*)nel;
+                        NoteInstance* ii0 = (NoteInstance*)el;
                         ii->track_line = NUM_PIANOROLL_LINES - ii0->ed_note->value - 1;
                         ii->Move(el->start_tick - BuffTick, 0);
                         if(M.patt->ibound != NULL)
@@ -5313,7 +5312,7 @@ void PasteElements(bool mousepos)
 
                     if(M.patt->ptype == Patt_StepSeq && nel->IsInstance())
                     {
-                        Instance* ii = (Instance*)nel;
+                        NoteInstance* ii = (NoteInstance*)nel;
                         if(ii->trkdata->defined_instr != NULL && ii->instr != ii->trkdata->defined_instr)
                         {
                             nel = ReassignInstrument(ii, ii->trkdata->defined_instr);
@@ -5543,64 +5542,64 @@ void SetMenuItemEffect(MItemType itype, MixChannel* mchan)
         switch(itype)
         {
             case MItem_SetMixCellToSend:
-                aux_panel->AddEffectByType(ModSubType_Send, mchan);
+                aux_panel->AddEffectByType(ModSubtype_Send, mchan);
                 break;
             case MItem_SetMixCellToGain:
-                aux_panel->AddEffectByType(ModSubType_Gain, mchan);
+                aux_panel->AddEffectByType(ModSubtype_Gain, mchan);
                 break;
             case MItem_SetMixCellToEQ1:
-                aux_panel->AddEffectByType(ModSubType_Equalizer1, mchan);
+                aux_panel->AddEffectByType(ModSubtype_Equalizer1, mchan);
                 break;
             case MItem_SetMixCellToEQ3:
-                aux_panel->AddEffectByType(ModSubType_Equalizer3, mchan);
+                aux_panel->AddEffectByType(ModSubtype_Equalizer3, mchan);
                 break;
             case MItem_SetMixCellToGraphicEQ:
-                aux_panel->AddEffectByType(ModSubType_GraphicEQ, mchan);
+                aux_panel->AddEffectByType(ModSubtype_GraphicEQ, mchan);
                 break;
             case MItem_SetMixCellToBlank:
-                aux_panel->AddEffectByType(ModSubType_Default, mchan);
+                aux_panel->AddEffectByType(ModSubtype_Default, mchan);
                 break;
             case MItem_SetMixCellToDelay:
-                aux_panel->AddEffectByType(ModSubType_XDelay, mchan);
+                aux_panel->AddEffectByType(ModSubtype_XDelay, mchan);
                 break;
             case MItem_SetMixCellToFilter:
-                aux_panel->AddEffectByType(ModSubType_CFilter3, mchan);
+                aux_panel->AddEffectByType(ModSubtype_CFilter3, mchan);
                 break;
             case MItem_SetMixCellToTremolo:
-                aux_panel->AddEffectByType(ModSubType_Tremolo, mchan);
+                aux_panel->AddEffectByType(ModSubtype_Tremolo, mchan);
                 break;
             case MItem_SetMixCellToCompressor:
-                aux_panel->AddEffectByType(ModSubType_Compressor, mchan);
+                aux_panel->AddEffectByType(ModSubtype_Compressor, mchan);
                 break;
             case MItem_SetMixCellToReverb:
-                aux_panel->AddEffectByType(ModSubType_Reverb, mchan);
+                aux_panel->AddEffectByType(ModSubtype_Reverb, mchan);
                 break;
             case MItem_SetMixCellToChorus:
-                aux_panel->AddEffectByType(ModSubType_Chorus, mchan);
+                aux_panel->AddEffectByType(ModSubtype_Chorus, mchan);
                 break;
             case MItem_SetMixCellToFlanger:
-                aux_panel->AddEffectByType(ModSubType_Flanger, mchan);
+                aux_panel->AddEffectByType(ModSubtype_Flanger, mchan);
                 break;
             case MItem_SetMixCellToPhaser:
-                aux_panel->AddEffectByType(ModSubType_Phaser, mchan);
+                aux_panel->AddEffectByType(ModSubtype_Phaser, mchan);
                 break;
             case MItem_SetMixCellToWahWah:
-                aux_panel->AddEffectByType(ModSubType_WahWah, mchan);
+                aux_panel->AddEffectByType(ModSubtype_WahWah, mchan);
                 break;
             case MItem_SetMixCellToDistortion:
-                aux_panel->AddEffectByType(ModSubType_Distortion, mchan);
+                aux_panel->AddEffectByType(ModSubtype_Distortion, mchan);
                 break;
             case MItem_SetMixCellToBitCrusher:
-                aux_panel->AddEffectByType(ModSubType_BitCrusher, mchan);
+                aux_panel->AddEffectByType(ModSubtype_BitCrusher, mchan);
                 break;
             case MItem_SetMixCellToStereoizer:
-                aux_panel->AddEffectByType(ModSubType_Stereo, mchan);
+                aux_panel->AddEffectByType(ModSubtype_Stereo, mchan);
                 break;
             case MItem_SetMixCellToFilter2:
-                aux_panel->AddEffectByType(ModSubType_CFilter2, mchan);
+                aux_panel->AddEffectByType(ModSubtype_CFilter2, mchan);
                 break;
             case MItem_SetMixCellToFilter3:
-                aux_panel->AddEffectByType(ModSubType_CFilter3, mchan);
+                aux_panel->AddEffectByType(ModSubtype_CFilter3, mchan);
                 break;
         }
 
@@ -5642,11 +5641,8 @@ void DoSavePreset(Instrument* instr)
         char name[25];
         nmstr.copyToBuffer(name, 25);
         instr->SavePresetAs(name);
-        if(genBrw->brwmode == Browse_Presets && 
-           instr->type != Instr_VSTPlugin)
+        if(genBrw->brwmode == Browse_Presets && instr->subtype != ModSubtype_VSTPlugin)
         {
-            //instr->DeletePresets();
-            //instr->ScanForPresets(true);
             genBrw->Update();
         }
     }
@@ -5671,7 +5667,7 @@ void DoSavePreset(Eff* eff)
         nmstr.copyToBuffer(name, 25);
         eff->SavePresetAs(name);
         if(mixBrw->brwmode == Browse_Presets && 
-           eff->type != ModSubType_VSTPlugin)
+           eff->subtype != ModSubtype_VSTPlugin)
         {
             //eff->DeletePresets();
             //eff->ScanForPresets(true);
@@ -5750,10 +5746,10 @@ void DeleteEffect(Eff* eff)
         R(Refresh_MixCenter);
     }
 
-	if(eff == aux_panel->current_eff)
-	{
-		aux_panel->current_eff = NULL;
-	}
+    if(eff == aux_panel->current_eff)
+    {
+        aux_panel->current_eff = NULL;
+    }
 
     RemoveEff(eff);
 
@@ -5799,7 +5795,9 @@ void ActivateMenuItem(MenuItem* mitem, MItemType itype, Menu* menu)
                     R(Refresh_Aux);
                 }
                 else
+                {
                     R(Refresh_AuxGrid);
+                }
             }
             R(Refresh_GridContent);
 
@@ -6633,47 +6631,13 @@ bool DragNDrop_Check(int mouse_x, int mouse_y)
                 M.drag_data.dragcount = 0;
                 M.drag_data.drag_type = Drag_Instrument_Alias;
                 M.drag_data.drag_stuff = (void*)M.active_instr->alias;
-                Instrument* i = M.active_instr;
-                if(i != NULL)
+                Instrument* instr = M.active_instr;
+                if(instr != NULL)
                 {
-                    if(i->type == Instr_Sample)
-                    {
-                        M.drag_data.instr_len = Calc_PixLength((long)((Sample*)i)->sample_info.frames, ((Sample*)i)->sample_info.samplerate, tickWidth);
-                    }
-                    else if((i->type == Instr_Generator) ||
-                            (i->type == Instr_VSTPlugin))
-                    {
-                        M.drag_data.instr_len = (int)(i->last_note_length*tickWidth);
-                    }
+                    M.drag_data.instr_len = instr->GetPixelNoteLength(tickWidth, false);
                     M.mmode |= MOUSE_DRAG_N_DROPPING;
                 }
             }
-        }
-    }
-    else if(M.mmode & MOUSE_TRACKING && M.current_trk->defined_instr != NULL && M.at_definer == true)
-    {
-        if(M.drag_data.dragcount < 1)
-        {
-            M.drag_data.dragcount++;
-        }
-        else
-        {
-            Instrument* instr = M.current_trk->defined_instr;
-            M.current_trk->defined_instr = NULL;
-    
-            M.drag_data.dragcount = 0;
-            M.drag_data.drag_type = Drag_Instrument_Alias;
-            M.drag_data.drag_stuff = (void*)instr->alias;
-            if(instr->type == Instr_Sample)
-            {
-                M.drag_data.instr_len = Calc_PixLength((long)((Sample*)instr)->sample_info.frames, ((Sample*)instr)->sample_info.samplerate, tickWidth);
-            }
-            else if((instr->type == Instr_Generator) ||
-                    (instr->type == Instr_VSTPlugin))
-            {
-                M.drag_data.instr_len = int(10*tickWidth);
-            }
-            M.mmode |= MOUSE_DRAG_N_DROPPING;
         }
     }
     else if(!(M.mmode & MOUSE_CONTROLLING)&&((M.mmode & MOUSE_BROWSING) == MOUSE_BROWSING))
@@ -6901,10 +6865,7 @@ void DragNDrop_Drop(int mouse_x, int mouse_y, unsigned int flags)
                 M.patt = field_pattern;
                 C.SetPattern(field_pattern, Loc_MainGrid);
                 C.SetPos(M.snappedTick, M.snappedLine);
-                if(al->instr->type == Instr_Sample)
-                {
-                   ((Sample*)al->instr)->touchresized = false;
-                }
+                al->instr->ResizeTouch(false);
                 C.curElem = CreateElement_Note(al->instr, true);
                 C.curElem->Switch2Param(NULL);
 
@@ -6927,10 +6888,7 @@ void DragNDrop_Drop(int mouse_x, int mouse_y, unsigned int flags)
                 M.patt = aux_panel->workPt;
                 C.SetPattern(aux_panel->workPt, Loc_SmallGrid);
                 C.SetPos(M.snappedTick, M.snappedLine);
-                if(al->instr->type == Instr_Sample)
-                {
-                   ((Sample*)al->instr)->touchresized = false;
-                }
+                al->instr->ResizeTouch(false);
                 C.curElem = CreateElement_Note(al->instr, true);
                 C.curElem->Switch2Param(NULL);
 
@@ -7152,7 +7110,7 @@ void ChangeCurrentInstrument(Instrument* instr)
         bool currvisible = false; // cancelled to avoid odd behaviour
         if(current_instr != NULL)
         {
-            currvisible = SwitchCurrentInstrumentWindowOFFIfNeeded(instr);
+            currvisible = current_instr->SwitchWindowOFFIfNeeded();
             //current_instr->alias->active = false;
             current_instr->instr_drawarea->Change();
         }
@@ -7360,7 +7318,7 @@ void Grid_ProcessBrush()
                     // stepseq specific
                     if(aux_panel->workPt->ptype == Patt_StepSeq)
                     {
-                        Instance* ii = (Instance*)el;
+                        NoteInstance* ii = (NoteInstance*)el;
                         el->last_edited_param = ii->ed_note; //Switch2Param(ii->ed_note);
                     }
                     else
@@ -7441,7 +7399,7 @@ void Grid_PutInstance(int mouse_x, int mouse_y, unsigned flags, bool slide)
         }
         else
         {
-            Instance* ii = CreateElement_Instance(true);
+            NoteInstance* ii = CreateElement_Instance(true);
 
             if(CP->NoteMode->pressed == true)
             {
@@ -7460,7 +7418,7 @@ void Grid_PutInstance(int mouse_x, int mouse_y, unsigned flags, bool slide)
         // stepseq specific
         if(el != NULL && M.loc == Loc_SmallGrid && aux_panel->workPt->ptype == Patt_StepSeq)
         {
-            Instance* ii = (Instance*)el;
+            NoteInstance* ii = (NoteInstance*)el;
             el->last_edited_param = ii->ed_note; //Switch2Param(ii->ed_note);
         }
 
@@ -7544,7 +7502,7 @@ void Grid_PutInstance(int mouse_x, int mouse_y, unsigned flags, bool slide)
     }
     else if(auxelemexists && aux_panel->workPt->ptype == Patt_StepSeq)
     {
-        Instance* ii = (Instance*)auxelem;
+        NoteInstance* ii = (NoteInstance*)auxelem;
         auxelem->last_edited_param = ii->ed_note;
         auxelem->Activate();
         ii->ed_note->ProcessChar('~');
@@ -7563,7 +7521,7 @@ void Grid_PutInstanceSpecific(Pattern* patt, Instrument *instr, int note, float 
 {
     if(patt != aux_panel->blankPt)
     {
-        Instance* i = NULL;
+        NoteInstance* i = NULL;
         float starttick = Frame2Tick(start_frame);
         float endtick = Frame2Tick(end_frame);
         int line = 10;
@@ -7578,7 +7536,7 @@ void Grid_PutInstanceSpecific(Pattern* patt, Instrument *instr, int note, float 
             line = Random::getSystemRandom().nextInt(8);;
         }
 
-        i = CreateElement_InstanceSpecific(patt, instr, note, vol, starttick, endtick, line);
+        i = CreateElement_Instance_special(patt, instr, note, vol, starttick, endtick, line);
 
         if(i != NULL && patt == aux_panel->workPt)
         {
@@ -7737,7 +7695,7 @@ void Grid_MouseClickDown(int mouse_x, int mouse_y, unsigned flags)
         {
             if(M.active_elem->type == El_Samplent || M.active_elem->type == El_GenNote)
             {
-                Instance* ii = (Instance*)M.active_elem;
+                NoteInstance* ii = (NoteInstance*)M.active_elem;
                 ii->ed_note->Kreview(-1);
                 if(M.loc == Loc_SmallGrid && aux_panel->workPt->ptype == Patt_Pianoroll)
                     M.prepianorolling = true;
@@ -7747,7 +7705,7 @@ void Grid_MouseClickDown(int mouse_x, int mouse_y, unsigned flags)
                 SlideNote* sn = (SlideNote*)M.active_elem;
                 if(sn->parent != NULL)
                 {
-                    Instance* ii = (Instance*)(sn->parent);
+                    NoteInstance* ii = (NoteInstance*)(sn->parent);
                     Preview_Add(ii, NULL, -1, sn->ed_note->value, M.patt, NULL, NULL, true, sn->ed_note->relative);
                     if(M.loc == Loc_SmallGrid && aux_panel->workPt->ptype == Patt_Pianoroll)
                         M.prepianorolling = true;
@@ -8795,7 +8753,7 @@ void ResizeSelectedElems(float dtick, Element* excludeel, Loc loc, unsigned flag
     			{
                     if(el->type == El_Samplent)
                     {
-                        t1 = ((Samplent*)el)->touchresized == false ? 0 : 1;
+                        t1 = (el->IsResizeTouched() == false) ? 0 : 1;
                     }
 
                     if(flags & kbd_alt)
@@ -8803,8 +8761,8 @@ void ResizeSelectedElems(float dtick, Element* excludeel, Loc loc, unsigned flag
                         // touchresized data for undo
                         t2 = 0;
 
-                       ((Samplent*)el)->touchresized = false;
-                       ((Samplent*)el)->sample->touchresized = false;
+                        el->ResizeTouch(false);
+                       ((NoteInstance*)el)->instr->ResizeTouch(false);
                         //newlen = 0;
                     }
                     else
@@ -8812,8 +8770,8 @@ void ResizeSelectedElems(float dtick, Element* excludeel, Loc loc, unsigned flag
                         // touchresized data for undo
                         t2 = 1;
 
-                       ((Samplent*)el)->touchresized = true;
-                       ((Samplent*)el)->sample->touchresized = true;
+                        el->ResizeTouch(true);
+                       ((NoteInstance*)el)->instr->ResizeTouch(true);
                     }
     			}
     //            else
@@ -8844,7 +8802,7 @@ void ResizeSelectedElems(float dtick, Element* excludeel, Loc loc, unsigned flag
                 {
     			    Pattern* pt = (Pattern*)el;
                     pt->basePattern->UpdateScaledImage();
-                    pt->touchresized = true;
+                    pt->ResizeTouch(true);
     			}
             }
             else if(M.edge == TOP_Y)
@@ -8990,24 +8948,24 @@ void Process_Resize(int mouse_x, int mouse_y, unsigned flags, Loc loc)
             float newlen;
             if(el->type == El_Samplent)
             {
-                t1 = ((Samplent*)el)->touchresized == false ? 0 : 1;
+                t1 = (el->IsResizeTouched() == false) ? 0 : 1;
 
                 if(flags & kbd_alt)
                 {
                     t2 = 0;
 
-                   ((Samplent*)el)->touchresized = false;
-                   ((Samplent*)el)->sample->touchresized = false;
+                    el->ResizeTouch(false);
+                   ((NoteInstance*)el)->instr->ResizeTouch(false);
                     newlen = 0;
                 }
                 else
                 {
                     t2 = 1;
 
-                    if(((Samplent*)el)->touchresized == false)
+                    if(el->IsResizeTouched() == false)
                     {
-                       ((Samplent*)el)->touchresized = true;
-                       ((Samplent*)el)->sample->touchresized = true;
+                        el->ResizeTouch(true);
+                       ((NoteInstance*)el)->instr->ResizeTouch(true);
                         el->tick_length = M.snappedTick - el->start_tick;
                         el->end_tick = el->start_tick + el->tick_length;
                     }
@@ -9046,7 +9004,7 @@ void Process_Resize(int mouse_x, int mouse_y, unsigned flags, Loc loc)
 
     			if(el->IsInstance())
     			{
-    				Instance* ii = (Instance*)el;
+    				NoteInstance* ii = (NoteInstance*)el;
     				ii->instr->SetLastLength(el->tick_length);
                     if(!(current_instr == ii->instr))
                     {
@@ -9062,7 +9020,7 @@ void Process_Resize(int mouse_x, int mouse_y, unsigned flags, Loc loc)
     			{
     			    Pattern* pt = (Pattern*)el;
                     pt->basePattern->UpdateScaledImage();
-                    pt->touchresized = true;
+                    pt->ResizeTouch(true);
     			}
 
                 ResizeSelectedElems(dlen, el, M.loc, flags);
@@ -9128,7 +9086,7 @@ void Process_Resize(int mouse_x, int mouse_y, unsigned flags, Loc loc)
 
         undoMan->DoNewAction(Action_Resize, (void*)pt, oldtick, newtick, 0, 0);
 
-        pt->touchresized = true;
+        pt->ResizeTouch(true);
         pt->Update();
         pt->basePattern->UpdateScaledImage();
 
@@ -9425,7 +9383,7 @@ void CreateContextMenu(int mouse_x, int mouse_y)
                 m.addItem(MItem_CreatePianorollPatternForInstrument, T("Create pianoroll at cursor pos."), C.patt == field_pattern);
                 m.addItem(MItem_BindInstrumentToCurrentPattern, T("Bind to current pattern"), (!aux_panel->isBlank() && aux_panel->workPt->ptype == Patt_Pianoroll));
                 //m.addSeparator();
-                if(M.active_instr->type != Instr_Sample)
+                if(M.active_instr->subtype != ModSubtype_Sample)
                 {
                     m.addItem(MItem_LoadPreset, T("View presets"));
                     m.addItem(MItem_ViewParams, T("View params"));
@@ -9494,7 +9452,7 @@ void CreateContextMenu(int mouse_x, int mouse_y)
             {
                 if(pEntry->modtype == ModuleType_Effect)
                 {
-                    if(pEntry->subtype != ModSubType_VSTPlugin)
+                    if(pEntry->subtype != ModSubtype_VSTPlugin)
                         mex.addItem(eindex, pEntry->name);
                     else
                         mexvst.addItem(eindex, pEntry->name);
@@ -9533,7 +9491,7 @@ void CreateContextMenu(int mouse_x, int mouse_y)
             {
                 if(pEntry->modtype == ModuleType_Effect)
                 {
-                    if(pEntry->subtype == ModSubType_VSTPlugin)
+                    if(pEntry->subtype == ModSubtype_VSTPlugin)
                         mex.addItem(eindex, pEntry->name);
                     eindex++;
                 }
@@ -11784,23 +11742,23 @@ void Init_Tables()
 void Init_InternalPlugins()
 {
     // Generators
-    pModulesList->AddEntry(ModuleType_Generator, ModSubType_Synth1, "Chaotic Synthesizer", "internal://synth1");
-    pModulesList->AddEntry(ModuleType_Generator, ModSubType_Synth1, "Chaotic Sinenoise", "internal://sinenoise");
+    pModulesList->AddEntry(ModuleType_Instrument, ModSubtype_Synth1, "Chaotic Synthesizer", "internal://synth1");
+    pModulesList->AddEntry(ModuleType_Instrument, ModSubtype_Sinenoise, "Chaotic Sinenoise", "internal://sinenoise");
 
     // Effects
-    pModulesList->AddEntry(ModuleType_Effect, ModSubType_Equalizer1, "Chaotic 1-band Equalizer", "internal://eq1");
-    pModulesList->AddEntry(ModuleType_Effect, ModSubType_Equalizer3, "Chaotic 3-band Equalizer", "internal://eq3");
-    pModulesList->AddEntry(ModuleType_Effect, ModSubType_GraphicEQ, "Chaotic Graphic Equalizer", "internal://eqg");
-    pModulesList->AddEntry(ModuleType_Effect, ModSubType_XDelay, "Chaotic Delay", "internal://delay");
-    pModulesList->AddEntry(ModuleType_Effect, ModSubType_CFilter, "Chaotic Filter", "internal://filter");
-    pModulesList->AddEntry(ModuleType_Effect, ModSubType_Compressor, "Chaotic Compressor", "internal://comp");
-    pModulesList->AddEntry(ModuleType_Effect, ModSubType_Reverb, "Chaotic Reverb", "internal://reverb");
-    pModulesList->AddEntry(ModuleType_Effect, ModSubType_Chorus, "Chaotic Chorus", "internal://chorus");
-    pModulesList->AddEntry(ModuleType_Effect, ModSubType_Flanger, "Chaotic Flanger", "internal://flanger");
-    pModulesList->AddEntry(ModuleType_Effect, ModSubType_Phaser, "Chaotic Phaser", "internal://phaser");
-    pModulesList->AddEntry(ModuleType_Effect, ModSubType_WahWah, "Chaotic WahWah", "internal://wahwah");
-    pModulesList->AddEntry(ModuleType_Effect, ModSubType_Distortion, "Chaotic Distortion", "internal://distortion");
-    pModulesList->AddEntry(ModuleType_Effect, ModSubType_BitCrusher, "Chaotic BitCrusher", "internal://bitcrusher");
+    pModulesList->AddEntry(ModuleType_Effect, ModSubtype_Equalizer1, "Chaotic 1-band Equalizer", "internal://eq1");
+    pModulesList->AddEntry(ModuleType_Effect, ModSubtype_Equalizer3, "Chaotic 3-band Equalizer", "internal://eq3");
+    pModulesList->AddEntry(ModuleType_Effect, ModSubtype_GraphicEQ, "Chaotic Graphic Equalizer", "internal://eqg");
+    pModulesList->AddEntry(ModuleType_Effect, ModSubtype_XDelay, "Chaotic Delay", "internal://delay");
+    pModulesList->AddEntry(ModuleType_Effect, ModSubtype_CFilter, "Chaotic Filter", "internal://filter");
+    pModulesList->AddEntry(ModuleType_Effect, ModSubtype_Compressor, "Chaotic Compressor", "internal://comp");
+    pModulesList->AddEntry(ModuleType_Effect, ModSubtype_Reverb, "Chaotic Reverb", "internal://reverb");
+    pModulesList->AddEntry(ModuleType_Effect, ModSubtype_Chorus, "Chaotic Chorus", "internal://chorus");
+    pModulesList->AddEntry(ModuleType_Effect, ModSubtype_Flanger, "Chaotic Flanger", "internal://flanger");
+    pModulesList->AddEntry(ModuleType_Effect, ModSubtype_Phaser, "Chaotic Phaser", "internal://phaser");
+    pModulesList->AddEntry(ModuleType_Effect, ModSubtype_WahWah, "Chaotic WahWah", "internal://wahwah");
+    pModulesList->AddEntry(ModuleType_Effect, ModSubtype_Distortion, "Chaotic Distortion", "internal://distortion");
+    pModulesList->AddEntry(ModuleType_Effect, ModSubtype_BitCrusher, "Chaotic BitCrusher", "internal://bitcrusher");
 }
 
 void GetStartupDir()
@@ -11969,9 +11927,10 @@ void Init_WorkData()
 
     pRenderer->SetConfig(&renderConfig);
 
-#if(RELEASEBUILD == TRUE)
-    if(0)
+    if(obtainReleasePathDir)
+    {
         GetStartupDir();
+    }
     else
     {
         //First, lets check how long is our working path
@@ -11988,22 +11947,6 @@ void Init_WorkData()
         }
         strcat(szWorkingDirectory, "\\");
     }
-
-#else
-    //First, lets check how long is our working path
-    int length = ::GetCurrentDirectory(0, NULL);
-    szWorkingDirectory = NULL;
-    if (length != 0)
-    {
-        szWorkingDirectory = (char*)malloc(length);
-    }
-
-    if (szWorkingDirectory != NULL)
-    {
-        ::GetCurrentDirectory(length, szWorkingDirectory);
-    }
-    strcat(szWorkingDirectory, "\\");
-#endif
 
     if(szWorkingDirectory[0] >= 0x61)
         szWorkingDirectory[0] -= 0x20;
@@ -12268,10 +12211,15 @@ void ClearVSTListFile()
 
     /* Check whether file-list of already scanned plugins exists */
     sprintf(list_path, "%s%s", ".\\", PLUGIN_LIST_FILENAME);
-    DeleteFile(list_path);
+
+    File f(list_path);
+    if(f.existsAsFile())
+    {
+        f.deleteFile();
+    }
 }
 
-void ScanDirForVST(char *path, char mode, FILE* fhandle, ScanThread* thread)
+void ScanDirForVST(char *path, XmlElement* xmlList, ScanThread* thread)
 {
 #if (START_SCAN_VST == TRUE)
     WIN32_FIND_DATA   founddata                          = {0};
@@ -12279,8 +12227,9 @@ void ScanDirForVST(char *path, char mode, FILE* fhandle, ScanThread* thread)
     bool              isGen                              = false;
     char              filename[MAX_PATH_STRING]          = {0};
     char              name[MAX_NAME_STRING]              = {0};
-    ModListEntry   *pEntry                             = NULL;
+    ModListEntry     *pEntry                             = NULL;
     char              temp_path[MAX_PATH_STRING*5]         = {0};
+    //XmlElement*       xmlPlug;
 
     sprintf(temp_path, "%s%s", path, "*.dll\0");
     shandle = FindFirstFile(temp_path, &founddata);
@@ -12291,12 +12240,9 @@ void ScanDirForVST(char *path, char mode, FILE* fhandle, ScanThread* thread)
             sprintf(filename, "%s%s", path, founddata.cFileName);
             memset(name, 0, MAX_NAME_STRING* sizeof(char));
 
-            if(mode == 0)
+            if (NULL != pModulesList->SearchEntryByPath(filename))
             {
-                if (NULL != pModulesList->SearchEntryByPath(filename))
-                {
-                    continue;
-                }
+                continue;
             }
 
             thread->setStatusMessage("Scanning: " + String(strrchr(filename, '\\') + 1));
@@ -12304,7 +12250,7 @@ void ScanDirForVST(char *path, char mode, FILE* fhandle, ScanThread* thread)
             {
                 pEntry = new ModListEntry;
 
-                pEntry->subtype = ModSubType_VSTPlugin;
+                pEntry->subtype = ModSubtype_VSTPlugin;
                 strcpy(pEntry->path, filename);
 
                 if ((name != NULL) && (name[0] != 0))
@@ -12320,19 +12266,20 @@ void ScanDirForVST(char *path, char mode, FILE* fhandle, ScanThread* thread)
 
                 if(true == isGen)
                 {
-                    pEntry->modtype = ModuleType_Generator;
+                    pEntry->modtype = ModuleType_Instrument;
                 }
                 else
                 {
                     pEntry->modtype = ModuleType_Effect;
                 }
+
             }
             else
             {
                 char * pName = NULL;
                 pEntry = new ModListEntry;
 
-                pEntry->subtype = ModSubType_VSTPlugin;
+                pEntry->subtype = ModSubtype_VSTPlugin;
                 strcpy(pEntry->path, filename);
                 pName = strrchr(filename, '\\');
 
@@ -12349,8 +12296,14 @@ void ScanDirForVST(char *path, char mode, FILE* fhandle, ScanThread* thread)
             }
 
             pModulesList->AddEntry(pEntry);
-            /* Store in effect list file */
-            fwrite(pEntry, sizeof(ModListEntry),1, fhandle);
+
+            /*
+            xmlPlug = new XmlElement(T("Plugin"));
+            xmlPlug->setAttribute(T("Name"), String(pEntry->name));;
+            xmlPlug->setAttribute(T("Filepath"), String(pEntry->path));;
+            xmlPlug->setAttribute(T("Modtype"), int(pEntry->modtype));;
+            xmlPlug->setAttribute(T("Subtype"), int(pEntry->subtype));;
+            xmlList->addChildElement(xmlPlug);*/
 
         }while (FindNextFile(shandle, &founddata));
         FindClose(shandle);
@@ -12368,50 +12321,36 @@ void ScanDirForVST(char *path, char mode, FILE* fhandle, ScanThread* thread)
                    strcmp(founddata.cFileName, "..") != 0)
                 {
                     sprintf(temp_path, "%s%s%s", path, founddata.cFileName, "\\");
-                    ScanDirForVST(temp_path, mode, fhandle, thread);
+                    ScanDirForVST(temp_path, xmlList, thread);
                 }
             }
         }while (FindNextFile(shandle, &founddata));
         FindClose(shandle);
     }
-
-#endif /* START_SCAN_VST == TRUE */
+#endif 
 }
 
-FILE* ReadPluginsFromFile()
+void ReadPluginsFromFile()
 {
-    FILE*             fhandle                            = 0;
-    char              list_path[MAX_PATH_STRING]         = {0};
-    char              mode                               = 0; // 0 - reading+ writing; 1 - writing;
-    ModListEntry   *pListEntry                         = NULL;
-    ModListEntry    ListEntry                          = {0};
+    ModListEntry   *pListEntry = NULL;
+    XmlElement*     xmlChild = NULL;
+    File            xmlFile(T(".\\vst_fxlist.xml"));
+    XmlDocument     xmlDoc(xmlFile);
+    XmlElement*     xmlPlugList = xmlDoc.getDocumentElement();
 
-    /* Check whether file-list of already scanned plugins exists */
-    sprintf(list_path, "%s%s", ".\\", PLUGIN_LIST_FILENAME);
-
-    if ((fhandle = fopen(list_path, "rb+")) == 0) //opens for reading and writing
+    if(xmlPlugList != NULL)
     {
-        //Opens for writing
-        fhandle = fopen(list_path, "wb+");
-        mode = 1;
-    }
-    else if (fhandle != 0)
-    {
-        /* Let's read all plugin records from the file */
-        while (fread(&ListEntry, sizeof(ModListEntry), 1, fhandle) != 0)
+        forEachXmlChildElementWithTagName(*xmlPlugList, xmlChild, T("Plugin"))
         {
             pListEntry = new ModListEntry;
-            memcpy(pListEntry, &ListEntry, sizeof(ModListEntry));
+            xmlChild->getStringAttribute(T("Name")).copyToBuffer(pListEntry->name, MAX_NAME_STRING);
+            xmlChild->getStringAttribute(T("Filepath")).copyToBuffer(pListEntry->path, MAX_PATH_STRING);
+            pListEntry->modtype = ParamModule::GetModuleTypeFromString(xmlChild->getStringAttribute(T("Modtype")));
+            pListEntry->subtype = ParamModule::GetModuleSubTypeFromString(xmlChild->getStringAttribute(T("Subtype")));
 
             pModulesList->AddEntry(pListEntry);
         }
-
-        //initialize file and variable for further usage
-        pListEntry = NULL;
-        fseek(fhandle, 0, SEEK_END);
     }
-
-    return fhandle;
 }
 
 void Init_ScanForVST(ScanThread* thread)
@@ -12419,161 +12358,116 @@ void Init_ScanForVST(ScanThread* thread)
 #if(START_SCAN_VST == TRUE)
     if (pModulesList != NULL)
     {
-        char              temp_path[MAX_PATH_STRING]         = {0};
-//        char              working_directory[MAX_PATH_STRING] = {0};
-//        int               drive                              = _getdrive();
+        char            temp_path[MAX_PATH_STRING]         = {0};
         ModListEntry   *pEntry                             = NULL;
-        FILE*             fhandle                            = 0;
-        char              list_path[MAX_PATH_STRING]         = {0};
-        char              mode                               = 0; // 0 - reading+ writing; 1 - writing;
         ModListEntry   *pListEntry                         = NULL;
         ModListEntry    ListEntry                          = {0};
-        bool              NeedUpdateList                     = false;
-        char             *env_path                           = NULL;
-        char              RegPath[MAX_PATH_STRING]           = {0};
-        DWORD             rPathSize                          = MAX_PATH_STRING - 1;
-        DWORD             rType                              = REG_SZ;
-        HKEY              hResult                            = 0;
+        bool            NeedUpdateList                     = false;
+        char           *env_path                           = NULL;
+        char            RegPath[MAX_PATH_STRING]           = {0};
+        DWORD           rPathSize                          = MAX_PATH_STRING - 1;
+        DWORD           rType                              = REG_SZ;
+        HKEY            hResult                            = 0;
 
-        fhandle = ReadPluginsFromFile();
-
-        //for some reason, file with plugins wasn't created - return immediately
-        if(fhandle == 0)
         {
-            MessageBox(NULL, "Cannot create/open file", "System error", MB_OK | MB_ICONERROR);
-            return ;
-        }
+            ReadPluginsFromFile();
 
-        /* scan local plugin folder */
-        //_getdcwd(drive, working_directory, MAX_PATH_STRING - 1 );
-        //sprintf_s(temp_path, MAX_PATH_STRING, "%s%s", szWorkingDirectory, LOCAL_PLUGIN_FOLDER);
-        sprintf_s(temp_path, MAX_PATH_STRING, "%s", LOCAL_PLUGIN_FOLDER);
-        ScanDirForVST(temp_path, mode, fhandle, thread);
+            // scan local plugin folder
+            //_getdcwd(drive, working_directory, MAX_PATH_STRING - 1 );
+            //sprintf_s(temp_path, MAX_PATH_STRING, "%s%s", szWorkingDirectory, LOCAL_PLUGIN_FOLDER);
+            sprintf_s(temp_path, MAX_PATH_STRING, "%s", LOCAL_PLUGIN_FOLDER);
+            ScanDirForVST(temp_path, NULL, thread);
 
-        /* Check whether environment has VST_PATH variable set*/
-        env_path = getenv( "VST_PATH" );
-        if (env_path != NULL)
-        {
-            memset(temp_path, 0, sizeof(temp_path));
-            sprintf(temp_path,"%s%s", env_path, "\\");
-
-            if ( (_stricmp(temp_path, VST_EXT_PATH_1) != 0) &&
-                 (_stricmp(temp_path, VST_EXT_PATH_2) != 0) )
+            // Check whether environment has VST_PATH variable set
+            env_path = getenv( "VST_PATH" );
+            if (env_path != NULL)
             {
-                ScanDirForVST(temp_path, mode, fhandle, thread);
-            }
-        }
+                memset(temp_path, 0, sizeof(temp_path));
+                sprintf(temp_path,"%s%s", env_path, "\\");
 
-        /* Scan special Steinberg's folder for plugins */
-//        SHGetValue(HKEY_LOCAL_MACHINE, "Software\\VST","VSTPluginsPath",&rType,&RegPath, &rPathSize);
-        //RegGetValue(HKEY_LOCAL_MACHINE, "Software\\VST", "VSTPluginsPath",RRF_RT_ANY,NULL, &RegPath, &rPathSize);
-        RegOpenKey(HKEY_LOCAL_MACHINE, "Software\\VST", &hResult);
-
-        if (hResult != 0)
-        {
-            RegQueryValueEx(hResult, "VSTPluginsPath", NULL, NULL, (LPBYTE)&RegPath, &rPathSize);
-            RegCloseKey(hResult);
-        }
-
-        if ( (rPathSize != 0) && (RegPath[0] != 0) )
-        {
-            memset(temp_path, 0, sizeof(temp_path));
-            sprintf(temp_path,"%s%s", RegPath, "\\");
-
-            if ( (_stricmp(temp_path, VST_EXT_PATH_1) != 0) &&
-                 (_stricmp(temp_path, VST_EXT_PATH_2) != 0) )
-            {
-                ScanDirForVST(temp_path, mode, fhandle, thread);
-            }
-        }
-
-        /* Last place to check for VST */
-        memset(temp_path, 0, sizeof(temp_path));
-        strcpy(temp_path, VST_EXT_PATH_1);
-        ScanDirForVST(temp_path, mode, fhandle, thread);
-
-        memset(temp_path, 0, sizeof(temp_path));
-        strcpy(temp_path, VST_EXT_PATH_2);
-        ScanDirForVST(temp_path, mode, fhandle, thread);
-
-        fclose(fhandle);
-        fhandle = 0;
-        _chdir(szWorkingDirectory);
-
-        /* Phase 2: go through the list and remove old plugins which don't exist */
-        pEntry = pModulesList->pFirst;
-
-        while(pEntry != NULL)
-        {
-            pListEntry = pEntry;
-            pEntry = pEntry->Next;
-            if ((strstr(pListEntry->path, "internal://") == NULL) &&
-                ((fhandle = fopen(pListEntry->path, "rb")) == 0) )
-            {
-                pModulesList->RemoveEntry(pListEntry);
-                NeedUpdateList = true;
-            }
-            else
-            {
-                if (fhandle != 0)
+                if ( (_stricmp(temp_path, VST_EXT_PATH_1) != 0) &&
+                     (_stricmp(temp_path, VST_EXT_PATH_2) != 0) )
                 {
-                    fclose(fhandle);
-                    fhandle = 0;
+                    ScanDirForVST(temp_path, NULL, thread);
                 }
             }
-        }
 
-        /* now re-write list-file by new list*/
-        if (NeedUpdateList == true)
-        {
-            fhandle = fopen(list_path, "wb+");
+            // Scan special Steinberg's folder for plugins 
+            //SHGetValue(HKEY_LOCAL_MACHINE, "Software\\VST","VSTPluginsPath",&rType,&RegPath, &rPathSize);
+            //RegGetValue(HKEY_LOCAL_MACHINE, "Software\\VST", "VSTPluginsPath",RRF_RT_ANY,NULL, &RegPath, &rPathSize);
+            RegOpenKey(HKEY_LOCAL_MACHINE, "Software\\VST", &hResult);
 
+            if (hResult != 0)
+            {
+                RegQueryValueEx(hResult, "VSTPluginsPath", NULL, NULL, (LPBYTE)&RegPath, &rPathSize);
+                RegCloseKey(hResult);
+            }
+
+            if ( (rPathSize != 0) && (RegPath[0] != 0) )
+            {
+                memset(temp_path, 0, sizeof(temp_path));
+                sprintf(temp_path,"%s%s", RegPath, "\\");
+
+                if ( (_stricmp(temp_path, VST_EXT_PATH_1) != 0) &&
+                     (_stricmp(temp_path, VST_EXT_PATH_2) != 0) )
+                {
+                    ScanDirForVST(temp_path, NULL, thread);
+                }
+            }
+
+            // Last place to check for VST
+            memset(temp_path, 0, sizeof(temp_path));
+            strcpy(temp_path, VST_EXT_PATH_1);
+            ScanDirForVST(temp_path, NULL, thread);
+
+            memset(temp_path, 0, sizeof(temp_path));
+            strcpy(temp_path, VST_EXT_PATH_2);
+            ScanDirForVST(temp_path, NULL, thread);
+
+            _chdir(szWorkingDirectory);
+
+            // Phase 2: go through the list and remove old plugins which don't exist
             pEntry = pModulesList->pFirst;
+
             while(pEntry != NULL)
             {
-                if (strstr(pEntry->path, "internal://") == NULL)
-                {
-                    fwrite(pEntry, sizeof(ModListEntry),1, fhandle);
-                }
+                pListEntry = pEntry;
                 pEntry = pEntry->Next;
+                if ((strstr(pListEntry->path, "internal://") == NULL) && File(pListEntry->path).existsAsFile() == FALSE)
+                {
+                    pModulesList->RemoveEntry(pListEntry);
+                    NeedUpdateList = true;
+                }
             }
-            fclose(fhandle);
+
+            File xmlFile(T(".\\vst_fxlist.xml"));
+            // now re-write list file by new list if needed
+            if (xmlFile.existsAsFile() == false || NeedUpdateList == true)
+            {
+                XmlElement* xmlPlugList = new XmlElement(T("ChaoticPluginsList"));
+
+                pEntry = pModulesList->pFirst;
+                while(pEntry != NULL)
+                {
+                    if (strstr(pEntry->path, "internal://") == NULL)
+                    {
+                        XmlElement* xmlPlug = new XmlElement(T("Plugin"));
+                        xmlPlug->setAttribute(T("Name"), String(pEntry->name));;
+                        xmlPlug->setAttribute(T("Filepath"), String(pEntry->path));;
+                        xmlPlug->setAttribute(T("Modtype"), ParamModule::GetModuleTypeString(pEntry->modtype));;
+                        xmlPlug->setAttribute(T("Subtype"), ParamModule::GetModuleSubTypeString(pEntry->subtype));;
+                        xmlPlugList->addChildElement(xmlPlug);
+                    }
+                    pEntry = pEntry->Next;
+                }
+
+                xmlFile.deleteFile();
+                xmlPlugList->writeToFile(xmlFile, String::empty);
+            }
         }
     }
-#endif /* START_SCAN_VST == TRUE */
-}
-
-/* 
-void Init_All()
-{
-    pMidiHost = new AwfulMidiWrapper();
-
-    // Initialize VST host module 
-#ifdef USE_JUCE
-    pVSTCollector = new VSTCollection((void*)MainWnd);
-#else
-    pVSTCollector = new VSTCollection((void*)hWnd);
 #endif
-    // Create list for all registered plugins and internal FX
-    pPluginList = new CPluginList(NULL);
-
-    Init_Keymap();
-    Init_Coords();
-    Init_WorkData();
-    Init_Tables();
-    Init_Aliases();
-    //Init_ScanForVST();
-
-    J_InitFonts();
-    
-    C.PlaceCursor();
-    C.PosUpdate();
-
-    Debug_Init_Samples();
-
-    PaError err = PortAudio_Init();
 }
-*/
 
 void ReleaseDataOnExit()
 {
@@ -13256,6 +13150,20 @@ public:
         gHwnd = hWnd;
         MainWnd = awfulWindow;
 
+        //xmlPlugList = NULL;
+        //xmlPlugList = new XmlElement(T("Chaotic plugins list"));
+        /*
+        sprintf(list_path_xml, "%s%s", ".\\", PLUGIN_LIST_FILENAME_XML);
+
+        xmlPlugList = new XmlElement(T("Chaotic plugins list"));
+        xmlFile = File(list_path_xml);
+
+        if(xmlFile.existsAsFile() == false)
+        {
+            xmlFile.create();
+        }*/
+
+
         Init_Fonts();
 
         Init_Images();
@@ -13421,7 +13329,6 @@ public:
     void shutdown()
     {
         // clear up..
-
         ReleaseDataOnExit();
     }
 

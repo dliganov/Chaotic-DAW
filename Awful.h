@@ -109,6 +109,7 @@
 #define VST_EXT_PATH_1                 ("C:\\Program Files\\Steinberg\\VstPlugins\\")
 #define VST_EXT_PATH_2                 ("C:\\Program Files\\VstPlugins\\")
 #define PLUGIN_LIST_FILENAME           ("vst_fxlist.lst")
+#define PLUGIN_LIST_FILENAME_XML       ("vst_fxlist.xml")
 #define MITEM_HEIGHT                (18)
 #define DIVIDER_HEIGHT              (10)
 #define PCSLIDERHEIGHT              (21)
@@ -175,8 +176,8 @@ class CReverb;
 class CChorus;
 
 class Element;
-class Instance;
-class Gennote;
+class NoteInstance;
+class GenNote;
 class Samplent;
 class Slide;
 class Muter;
@@ -519,29 +520,32 @@ typedef enum Symbol
 
 typedef enum ModuleSubType
 {
-    ModSubType_Default = 1,
-    ModSubType_Gain,
-    ModSubType_Send,
-    ModSubType_Filter,
-    ModSubType_CFilter,
-    ModSubType_CFilter2,
-    ModSubType_CFilter3,
-    ModSubType_Equalizer1,
-    ModSubType_Equalizer3,
-    ModSubType_GraphicEQ,
-    ModSubType_XDelay,
-    ModSubType_Reverb,
-    ModSubType_Tremolo,
-    ModSubType_Compressor,
-    ModSubType_Chorus,
-    ModSubType_Flanger,
-    ModSubType_Phaser,
-    ModSubType_WahWah,
-    ModSubType_BitCrusher,
-    ModSubType_Distortion,
-    ModSubType_Synth1,
-    ModSubType_Stereo,
-    ModSubType_VSTPlugin = 100
+    ModSubtype_Default = 1,
+    ModSubtype_Gain,
+    ModSubtype_Send,
+    ModSubtype_Filter,
+    ModSubtype_CFilter,
+    ModSubtype_CFilter2,
+    ModSubtype_CFilter3,
+    ModSubtype_Equalizer1,
+    ModSubtype_Equalizer3,
+    ModSubtype_GraphicEQ,
+    ModSubtype_XDelay,
+    ModSubtype_Reverb,
+    ModSubtype_Tremolo,
+    ModSubtype_Compressor,
+    ModSubtype_Chorus,
+    ModSubtype_Flanger,
+    ModSubtype_Phaser,
+    ModSubtype_WahWah,
+    ModSubtype_BitCrusher,
+    ModSubtype_Distortion,
+    ModSubtype_Stereo,
+    ModSubtype_Generator,
+    ModSubtype_Synth1,
+    ModSubtype_Sinenoise,
+    ModSubtype_Sample,
+    ModSubtype_VSTPlugin = 100
 }ModuleSubType;
 
 typedef struct AliasRecord
@@ -1112,7 +1116,7 @@ typedef void (*CLICK_HANDLER_FUNC)(Object*, Object*);
 
 typedef enum ModuleType
 {
-    ModuleType_Generator,
+    ModuleType_Instrument,
     ModuleType_Synth,
     ModuleType_Effect,
     ModuleType_Invalid
@@ -1128,14 +1132,14 @@ typedef struct ModListEntry
     ModListEntry*   Next;
 }ModListEntry;
 
-typedef struct EffPresetHeader_t
+typedef struct ModPresetHeader
 {
-    char      magic_string[32];
+    char            magic_string[32];
     ModuleSubType   effect_type;
-    long      uniqueID;
-    char      name[MAX_NAME_STRING];
-    char      fx_name[MAX_NAME_STRING];
-}EffPresetHeader_t;
+    long            uniqueID;
+    char            name[MAX_NAME_STRING];
+    char            fx_name[MAX_NAME_STRING];
+}ModPresetHeader;
 
 typedef enum MenuType
 {
@@ -1575,7 +1579,7 @@ extern bool            Metronome_ON;
 //*************************************************************************************************
 //                       ADD EXTERNAL FUNCTIONS DECLARATIONS HERE
 //*************************************************************************************************
-Instance*                   CreateElement_Note(Instrument* instr, bool add, bool preventundo = false);
+NoteInstance*                   CreateElement_Note(Instrument* instr, bool add, bool preventundo = false);
 extern void                 GetLastElementEndFrame(long *pLastFrame);
 extern void                 PortAudio_SetBufferSize(float BufSize);
 extern void                 SetSampleRate(unsigned int uiSampleRate);
@@ -1598,7 +1602,7 @@ extern float                Div100(float percent);
 extern float                Calc_SlideMultiplier(unsigned long frame_length, int semitones);
 extern float                CalcSampleFreqIncrement(Sample* sample, int semitones);
 extern void                 Vanish(Element* el);
-extern Instance*            CreateElement_Instance_byChar(char character);
+extern NoteInstance*            CreateElement_Instance_byChar(char character);
 extern SlideNote*           CreateElement_SlideNote(bool add);
 extern Muter*               CreateElement_Muter();
 extern Break*               CreateElement_Break();
@@ -1714,7 +1718,7 @@ extern Pattern*             CreateElement_DerivedPattern(Pattern* ptmain, float 
 extern void                 ExitFromApp();
 extern void                 SaveSettings();
 extern void                 ShowHintIfApplicable();
-extern FILE*                ReadPluginsFromFile();
+extern void                 ReadPluginsFromFile();
 extern void                 UpdateControlHint(Control* ct, int mouse_x, int mouse_y);
 
 #endif

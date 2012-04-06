@@ -511,7 +511,7 @@ void Cursor::ExitToSlidingMode(Element* parent, int note_num)
         if(parent != NULL && 
            (parent->type == El_GenNote || parent->type == El_Samplent))
         {
-            slideparent = (Instance*)parent;
+            slideparent = (NoteInstance*)parent;
         }
     	else
         {
@@ -1678,10 +1678,10 @@ void Mouse::ClickActiveElement(int mx, int my, bool dbclick, unsigned flags)
 
     if(el->IsInstance())
     {
-        Instance* ii = (Instance*)el;
-		ii->instr->SetLastLength(ii->tick_length);
-		ii->instr->SetLastVol(ii->loc_vol->val);
-		ii->instr->SetLastPan(ii->loc_pan->val);
+        NoteInstance* ii = (NoteInstance*)el;
+        ii->instr->SetLastLength(ii->tick_length);
+        ii->instr->SetLastVol(ii->loc_vol->val);
+        ii->instr->SetLastPan(ii->loc_pan->val);
         if(!(current_instr == ii->instr))
         {
             ChangeCurrentInstrument(ii->instr);

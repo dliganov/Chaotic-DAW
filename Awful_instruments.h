@@ -11,8 +11,6 @@
 
 #define BUFF_CHUNK_SIZE                  (64)
 
-extern bool                 SwitchCurrentInstrumentWindowOFFIfNeeded(Instrument* newinstr);
-extern void                 ShowInstrumentWindow(Instrument* i);
 extern Instrument*          GetInstrumentByIndex(int index);
 extern void                 UpdateInstrumentIndex();
 extern void                 UpdateInstrumentIndices();
@@ -34,7 +32,7 @@ typedef enum LoopType
 class Instrument: public ParamModule
 {
 public:
-    InstrType   type;
+    InstrType   instrtype;
 
     // Basic parameters set (volume, panning, etc)
     ParamSet*   params;
@@ -67,7 +65,7 @@ public:
     Pattern*    autoPatt;
 
     // Note instance for instrument preview (pre-listen)
-    Instance*   prevInst;
+    NoteInstance*   prevInst;
 
     DrawArea*   instr_drawarea;
 
@@ -98,11 +96,12 @@ public:
     Instrument* del_next;
 
     bool        dereferenced;
+    bool        resizetouched;
 
     int         rampCount;
 
     // Helpers for data generation
-    Instance*   ii;
+    NoteInstance*   ii;
     Envelope*   venv1;
     Envelope*   venv2;
     Envelope*   venv3;
@@ -124,13 +123,21 @@ public:
     float       cfsP;
     float       locPan;
 
+    // Graphics variables:
+    Image*      img_volbkg;
+    Image*      img_panbkg;
+    Image*      img_instrsmall;
+    Colour      clr_stepseq_name;
+    Colour      clr_fxdigits;
+    Colour      clr_base;
+
     Instrument();
     virtual ~Instrument();
     void QueueDeletion();
     virtual void Reset();
     void ForceDeactivate();
     void Update();
-    virtual Instrument* Clone();
+    virtual Instrument* Clone() {return NULL;};
     void ParamEditUpdate(PEdit* pe);
     void SetAlias(char* al);
     virtual void CreateAutoPattern();
@@ -157,6 +164,15 @@ public:
     virtual void Save(XmlElement* instrNode);
     virtual void Load(XmlElement* instrNode);
     virtual void CopyDataToClonedInstrument(Instrument* instr);
+    virtual NoteInstance* CreateNoteInstance() {return NULL;};
+    virtual int GetPixelNoteLength(float tickWidth, bool proll) {return 0;};
+    virtual NoteInstance* ReassignNoteInstance(NoteInstance* ni) {return NULL;};
+    virtual void ShowInstrumentWindow() {};
+    virtual void UpdateAliasImage();
+    void    ResizeTouch(bool touch);
+    bool    IsResizeTouched();
+    virtual bool SwitchWindowOFFIfNeeded() {return false;};
+    virtual void InitGraphics();
 };
 
 class Sample : public Instrument
@@ -180,8 +196,6 @@ public:
     long        lp_start;
     long        lp_end;
 
-    bool        touchresized;
-
     // Additional effects and parameters
     BoolParam*  delayOn;
     XDelay*     delay;
@@ -201,18 +215,33 @@ public:
     void Load(XmlElement* instrNode);
     void CopyDataToClonedInstrument(Instrument * instr);
     void DumpData();
+    NoteInstance* CreateNoteInstance();
+    NoteInstance* ReassignNoteInstance(NoteInstance* ni);
+    int GetPixelNoteLength(float tickWidth, bool proll);
+    void ShowInstrumentWindow();
+    Instrument* Clone();
+    bool SwitchWindowOFFIfNeeded();
+    void InitGraphics();
 };
 
 class CGenerator : public Instrument
 {
 public:
 
+    PluginCommonWindow* genWindow;
+    CComponent*         genComp;
+
     CGenerator();
     virtual ~CGenerator();
     void ActivateTrigger(Trigger* tg);
-    virtual void CheckBounds(Gennote* gnote, Trigger* tg, long num_frames);
+    virtual void CheckBounds(GenNote* gnote, Trigger* tg, long num_frames);
+    NoteInstance* CreateNoteInstance();
+    NoteInstance* ReassignNoteInstance(NoteInstance* ni);
+    int GetPixelNoteLength(float tickWidth, bool proll);
+    void ShowInstrumentWindow();
+    Instrument* Clone();
+    bool SwitchWindowOFFIfNeeded();
 };
-
 
 class SineNoise : public CGenerator
 {
@@ -221,7 +250,6 @@ public:
     SineNoise();
     virtual ~SineNoise();
 };
-
 
 /*
 class SoundFont : public CGenerator
@@ -252,12 +280,17 @@ public:
     void PostProcessTrigger(Trigger* tg = NULL, long num_frames = 0, long buffframe = 0, long mixbuffframe = 0, long remaining = 0);
     void DeactivateTrigger(Trigger* tg);
     long ProcessTrigger(Trigger* tg, long num_frames = 0, long buffframe = 0);
-    void CheckBounds(Gennote* gnote, Trigger* tg, long num_frames);
+    void CheckBounds(GenNote* gnote, Trigger* tg, long num_frames);
     void FlowTriggers(Trigger* tgfrom, Trigger* tgto) {}; // stub to avoid any action here
     void Save(XmlElement* instrNode);
     void Load(XmlElement* instrNode);
     void ToggleParamWindow();
     void Reset();
+    void ShowInstrumentWindow();
+    void SetSampleRate(float fSampleRate);
+    void SetBufferSize(unsigned int uiBufferSize);
+    Instrument* Clone();
+    bool SwitchWindowOFFIfNeeded();
 
 private:
     VstMidiEvent    MidiEvents[800];
@@ -476,7 +509,7 @@ public:
     void UpdateOsc2Mul();
     void UpdateOsc3Mul();
     void ParamUpdate(Parameter* param);
-    void CheckBounds(Gennote* gnote, Trigger* tg, long num_frames);
+    void CheckBounds(GenNote* gnote, Trigger* tg, long num_frames);
     void SaveCustomStateData(XmlElement & xmlParentNode);
     void RestoreCustomStateData(XmlElement & xmlStateNode);
     int  MapEnvPointerToNum(float* eV);

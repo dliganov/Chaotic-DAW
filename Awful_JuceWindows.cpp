@@ -18,7 +18,7 @@ Colour  rightedgecolour = Colour(64, 64, 64);
 Colour  rightedgecolour1 = Colour(180, 180, 180);
 
 AwfulWindow::AwfulWindow() 
-    : DocumentWindow (T("CMM beta"),
+    : DocumentWindow (T("Chaotic"),
                       Colour(50, 114, 99), 
                       DocumentWindow::allButtons,
                       true)
@@ -777,7 +777,7 @@ AboutComponent::AboutComponent()
     int x1 = 3;
     int y1 = 6;
     Colour clr = Colour(120, 185, 135);
-    PlaceTxtLabel1("Version 1.08", 
+    PlaceTxtLabel1("Chaotic, ver. 1.08", 
                     x1, y1, Colour(170, 225, 185));
 
     PlaceTxtLabel1("Visit program website at www.chaoticdaw.com", 

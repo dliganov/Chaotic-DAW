@@ -50,8 +50,6 @@ void    J_UnderPanel(Graphics& g);
 void    J_UnderPanelRefresh();
 int     J_DrawMixChannelContent(Graphics& g, int x, int y, MixChannel* mchan);
 
-Colour  smpcolour = Colour(190, 190, 190);
-Colour  gencolour = Colour(150, 150, 255);
 Colour  panelcolourOld = Colour(65, 134, 110);
 Colour  panelcolourOld1 = Colour(75, 105, 95);
 //Colour  panelcolour = Colour(70, 85, 103);
@@ -1428,14 +1426,7 @@ int J_DigitStr_xy(Graphics& g, int x, int y, DigitStr* dg, bool bright, Colour c
 
     if(dg->instr != NULL && false)
     {
-        if(dg->instr->type == Instr_Sample)
-        {
-            g.setColour(Colour(35, 67, 71));
-        }
-        else
-        {
-            g.setColour(Colour(36, 61, 89));
-        }
+        g.setColour(dg->instr->clr_fxdigits);
         g.fillRect(x - 1, y - 9, 18, 10);
     }
     else if(dg->send != NULL && false)
@@ -1824,12 +1815,12 @@ int J_ScopeWidth(Scope* scope)
 
         if(scope->eff != NULL)
         {
-    		if(scope->eff->category == ModuleType_Effect)
+    		if(scope->eff->modtype == ModuleType_Effect)
     		{
     			w += J_TextInstrWidth(scope->eff->name);
     			w += J_TextInstrWidth(".");
     		}
-    		else if(scope->eff->category == ModuleType_Generator)
+    		else if(scope->eff->modtype == ModuleType_Instrument)
     		{
     			w += J_TextInstrWidth(scope->eff->arec->alias);
     			w += J_TextInstrWidth(".");
@@ -1888,13 +1879,13 @@ void J_Scope_type(Graphics& g, Scope* scope)
 
         if(scope->eff != NULL && scope->eff->to_be_deleted == false)
         {
-    		if(scope->eff->category == ModuleType_Effect)
+    		if(scope->eff->modtype == ModuleType_Effect)
     		{
                 g.setColour(Colour(0xffFFFFFF));
     			J_TextSmall_type(g, scope->eff->name);
     			J_TextSmall_type(g, ".");
     		}
-    		else if(scope->eff->category == ModuleType_Generator)
+    		else if(scope->eff->modtype == ModuleType_Instrument)
     		{
                 g.setColour(Colour(0xff6496FF));
     			J_TextSmall_type(g, scope->eff->arec->alias);
@@ -3196,7 +3187,7 @@ void J_SlideNote(Graphics& g, SlideNote* sl, Loc loc, bool connected)
     }
 }
 
-int J_Layout(Graphics& g, Instance* ii, Loc loc)
+int J_Layout(Graphics& g, NoteInstance* ii, Loc loc)
 {
     int cx, scx;
     int cy, scy;
@@ -3696,7 +3687,7 @@ void J_Txt(Graphics& g, Txt* t, Loc loc)
     CursX0 = cx0;
 }
 
-void J_StepSeqEl(Graphics& g, Instance* ii)
+void J_StepSeqEl(Graphics& g, NoteInstance* ii)
 {
     int x = ii->s_StartTickX();
     int y = ii->s_TrackLine2Y();
@@ -3829,7 +3820,7 @@ void J_Samplent(Graphics& g, Samplent* s, Loc loc)
     CursY = yc;
 }
 
-void J_Gennote(Graphics& g, Gennote* gn, Loc loc)
+void J_Gennote(Graphics& g, GenNote* gn, Loc loc)
 {
     gn->GetRealCoordinates(loc);
 
@@ -5161,41 +5152,6 @@ void J_WindowToggle(Graphics& g, ButtFix* wbt, int x, int y)
     }
 }
 
-void J_InstrFoldToggle(Graphics& g, Toggle* ftg, Instrument* instr, int x, int y)
-{
-    ftg->active = true;
-
-    ftg->x = x;
-    ftg->y = y;
-
-    ftg->width = 11;
-    ftg->height = 11;
-
-    g.setColour(Colour(0xff000000));
-    //J_FilledRect(g, x, y, x + ftg->width - 1, y + ftg->height - 1);
-
-    if(instr->type == Instr_Sample)
-    {
-        g.setColour(Colour(49, 138, 206));
-    }
-    else
-    {
-        //glColor3ub(70, 72, 120);
-        g.setColour(Colour(0xff464878));
-    }
-
-    //J_LineRect(g, x, y, x + ftg->width - 1, y + ftg->height - 1);
-    if(*(ftg->state) == true)
-    {
-        //g.drawImageAt(img_instrfold1, x, y, false);
-        //J_FilledRect(g, x + 3, y + 3, x + ftg->width - 3, y + ftg->height - 3);
-    }
-    else
-    {
-        //g.drawImageAt(img_instrfold2, x, y, false);
-    }
-}
-
 void J_StepSeqCur(Graphics& g, int x, int y)
 {
     int xc = CursX, yc = CursY;
@@ -5280,15 +5236,12 @@ bool J_GetMouseCursorRect(int* x, int* y, int* w, int* h)
                *x = Tick2X(M.snappedTick, Loc_MainGrid);
                *y = Line2Y((M.mouse_y - GridY1)/lineHeight + OffsLine, Loc_MainGrid) - *h + 1;
 
-                if(instr->type == Instr_Sample)
+               *w = al->instr->GetPixelNoteLength(tickWidth, false);
+
+                if(*w < alw)
                 {
-                   *w = Calc_PixLength((long)((Sample*)instr)->sample_info.frames, ((Sample*)instr)->sample_info.samplerate, tickWidth);
+                   *w = alw;
                 }
-                else
-                {
-                   *w = int(instr->last_note_length*tickWidth);
-                }
-                if(*w < alw) *w = alw;
             }
             else if(M.loc == Loc_SmallGrid && aux_panel->workPt->ptype != Patt_StepSeq)
             {
@@ -5301,19 +5254,7 @@ bool J_GetMouseCursorRect(int* x, int* y, int* w, int* h)
 
                 Loc loc = aux_panel->workPt->ptype == Patt_Pianoroll ? Loc_SmallGrid : Loc_MainGrid;
 
-                if(al->instr->type == Instr_Sample)
-                {
-                   *w = (int)Calc_PixLength((long)((Sample*)instr)->sample_info.frames, ((Sample*)instr)->sample_info.samplerate, aux_panel->tickWidth);
-                    if(loc == Patt_Pianoroll)
-                    {
-                        int note = NUM_PIANOROLL_LINES - M.snappedLine;
-                       *w = (int)(*w * (1.0f/(CalcFreqRatio(note - 60))));
-                    }
-                }
-                else
-                {
-                   *w = int(instr->last_note_length*aux_panel->tickWidth);
-                }
+               *w = al->instr->GetPixelNoteLength(aux_panel->tickWidth, (loc == Patt_Pianoroll));
                 if(*w < alw) *w = alw;
             }
             else
@@ -5449,19 +5390,17 @@ void J_MouseCursor(Graphics& g)
                 Instrument* instr = al->instr;
                 int x = Tick2X(M.snappedTick, Loc_MainGrid);
                 int y = Line2Y((M.mouse_y - GridY1)/lineHeight + OffsLine, Loc_MainGrid);
-                if(instr->type == Instr_Sample)
+                if(instr->instrtype == Instr_Sample)
                 {
-                    int len = Calc_PixLength((long)((Sample*)instr)->sample_info.frames, ((Sample*)instr)->sample_info.samplerate, tickWidth);
-                    J_SmpNoteLen(g, x, y, len, len, Loc_MainGrid);
+                    int len = instr->GetPixelNoteLength(tickWidth, false);
 
-                    g.setColour(Colour(smpcolour));
+                    J_SmpNoteLen(g, x, y, len, len, Loc_MainGrid);
                 }
                 else
                 {
-                    J_GenNoteLen(g, x, y, int(instr->last_note_length*tickWidth), Loc_MainGrid);
-
-                    g.setColour(Colour(gencolour));
+                    J_GenNoteLen(g, x, y, instr->GetPixelNoteLength(tickWidth, false), Loc_MainGrid);
                 }
+                g.setColour(instr->clr_base);
                 J_TextInstr_xy(g, x, y, al->string);
                 g.restoreState();
             }
@@ -5474,22 +5413,16 @@ void J_MouseCursor(Graphics& g)
                 int x = Tick2X(M.snappedTick, Loc_SmallGrid);
                 int y = Line2Y(M.snappedLine, Loc_SmallGrid) - aux_panel->bottomincr;
                 Loc loc = aux_panel->workPt->ptype == Patt_Pianoroll ? Loc_SmallGrid : Loc_MainGrid;
-                if(al->instr->type == Instr_Sample)
+                if(al->instr->instrtype == Instr_Sample)
                 {
-                    float len = (float)Calc_PixLength((long)((Sample*)instr)->sample_info.frames, ((Sample*)instr)->sample_info.samplerate, aux_panel->tickWidth);
-                    if(loc == Patt_Pianoroll)
-                    {
-						int note = NUM_PIANOROLL_LINES - M.snappedLine;
-                        len *= (1.0f/(CalcFreqRatio(note - 60)));
-                    }
+                    float len = (float)instr->GetPixelNoteLength(aux_panel->tickWidth, (loc == Patt_Pianoroll));
                     J_SmpNoteLen(g, x, y, (int)len, (int)len, loc);
-                    g.setColour(Colour(smpcolour));
                 }
                 else
                 {
-                    J_GenNoteLen(g, x, y, int(instr->last_note_length*aux_panel->tickWidth), loc);
-                    g.setColour(Colour(gencolour));
+                    J_GenNoteLen(g, x, y, instr->GetPixelNoteLength(aux_panel->tickWidth, false), loc);
                 }
+                g.setColour(instr->clr_base);
                 J_TextInstr_xy(g, x, y, al->string);
                 g.restoreState();
             }
@@ -5497,14 +5430,7 @@ void J_MouseCursor(Graphics& g)
             {
                 TString* al = (TString*)M.drag_data.drag_stuff;
                 Instrument* instr = al->instr;
-				if(instr->type == Instr_Sample)
-                {
-                    g.setColour(Colour(smpcolour));
-                }
-                else
-                {
-                    g.setColour(Colour(gencolour));
-                }
+                g.setColour(instr->clr_base);
                 J_String_Instr_Ranged(g, M.mouse_x - ins->getStringWidth(instr->name)/2, M.mouse_y + 2, instr->name, GenBrowserWidth - 20);
             }
         }
@@ -6328,14 +6254,7 @@ void J_SliderInstrPan(Graphics& g, SliderHPan* sl, Instrument* instr, int x, int
     //J_Line(g, sl->x + anch, sl->y - 1, sl->x + anch + 3, sl->y - 1);
     //J_Line(g, sl->x + anch, sl->y + sl->height + 1, sl->x + anch + 3, sl->y + sl->height + 1);
 
-    if(instr->type == Instr_Sample)
-    {
-        g.drawImageAt(img_smppanback, x - tw, y, false);
-    }
-    else
-    {
-        g.drawImageAt(img_genpanback, x - tw, y, false);
-    }
+    g.drawImageAt(instr->img_panbkg, x - tw, y, false);
 
     if(sl->pos >= sl->width*0.5)
     {
@@ -6458,14 +6377,7 @@ void J_SliderInstrVol(Graphics& g, SliderHVol* sl, Instrument* instr, int x, int
     J_LineRect(g, sl->x, sl->y, sl->x + sl->width + 2, sl->y + sl->height);
 */
 
-    if(instr->type == Instr_Sample)
-    {
-        g.drawImageAt(img_smpvolback, x - tw, y, false);
-    }
-    else
-    {
-        g.drawImageAt(img_genvolback, x - tw, y, false);
-    }
+    g.drawImageAt(instr->img_volbkg, x - tw, y, false);
 
     g.saveState();
     g.reduceClipRegion(x - tw - 1, y + 1, sl->pos + tw, sl->height);
@@ -8096,7 +8008,7 @@ void J_VolLane(Graphics& g, Loc loc, Trk* trk, Pattern* pt, int lx1, int ly1, in
                         //outval = ((Samplent*)el)->loc_vol->outval;
                         break;
                     case El_GenNote:
-                        val = ((Gennote*)el)->loc_vol->val;
+                        val = ((GenNote*)el)->loc_vol->val;
                         //outval = ((Gennote*)el)->loc_vol->outval;
                         break;
                     case El_SlideNote:
@@ -8104,7 +8016,7 @@ void J_VolLane(Graphics& g, Loc loc, Trk* trk, Pattern* pt, int lx1, int ly1, in
     					//outval = ((SlideNote*)el)->loc_vol->outval;
                         break;
                     case El_Pattern:
-                        val = (((Pattern*)el)->loc_vol->val);
+                        val = (((Pattern*)el)->vol_local->val);
                         //outval = (((Pattern*)el)->loc_vol->outval);
                         break;
                 }
@@ -8216,7 +8128,7 @@ void J_VolLane(Graphics& g, Loc loc, Trk* trk, Pattern* pt, int lx1, int ly1, in
                         //outval = ((Samplent*)el)->loc_vol->outval;
                         break;
                     case El_GenNote:
-                        val = ((Gennote*)el)->loc_vol->val;
+                        val = ((GenNote*)el)->loc_vol->val;
                         //outval = ((Gennote*)el)->loc_vol->outval;
                         break;
                     case El_SlideNote:
@@ -8224,7 +8136,7 @@ void J_VolLane(Graphics& g, Loc loc, Trk* trk, Pattern* pt, int lx1, int ly1, in
     					//outval = ((SlideNote*)el)->loc_vol->outval;
                         break;
                     case El_Pattern:
-                        val = (((Pattern*)el)->loc_vol->val);
+                        val = (((Pattern*)el)->vol_local->val);
                         //outval = (((Pattern*)el)->loc_vol->outval);
                         break;
                 }
@@ -8366,13 +8278,13 @@ void J_PanLane(Graphics& g, Loc loc, Trk* trk, Pattern* pt, int lx1, int ly1, in
 
                         break;
                     case El_GenNote:
-                        val = ((((Gennote*)el)->loc_pan->val)*50 + 50);
+                        val = ((((GenNote*)el)->loc_pan->val)*50 + 50);
                         break;
                     case El_SlideNote:
                         val = ((((SlideNote*)el)->loc_pan->val)*50 + 50);
                         break;
                     case El_Pattern:
-                        val = ((((Pattern*)el)->loc_pan->val)*50 + 50);
+                        val = ((((Pattern*)el)->pan_local->val)*50 + 50);
                         break;
                 }
 
@@ -8506,13 +8418,13 @@ void J_PanLane(Graphics& g, Loc loc, Trk* trk, Pattern* pt, int lx1, int ly1, in
 
                         break;
                     case El_GenNote:
-                        val = ((((Gennote*)el)->loc_pan->val)*50 + 50);
+                        val = ((((GenNote*)el)->loc_pan->val)*50 + 50);
                         break;
                     case El_SlideNote:
                         val = ((((SlideNote*)el)->loc_pan->val)*50 + 50);
                         break;
                     case El_Pattern:
-                        val = ((((Pattern*)el)->loc_pan->val)*50 + 50);
+                        val = ((((Pattern*)el)->pan_local->val)*50 + 50);
                         break;
                 }
 
@@ -8768,7 +8680,7 @@ void J_Content_Main(Graphics& g)
                     }break;
                     case El_GenNote:
                     {
-                        J_Gennote(g, (Gennote*)el, Loc_MainGrid);
+                        J_Gennote(g, (GenNote*)el, Loc_MainGrid);
                         J_HighlightElement(g, el);
                         exclude = true;
                     }break;
@@ -8987,19 +8899,19 @@ void J_Content_Aux(Graphics& g)
                             }
                             else
                             {
-                                J_StepSeqEl(g, (Instance*)tg->el);
+                                J_StepSeqEl(g, (NoteInstance*)tg->el);
                                 J_HighlightSelectedElement(g, tg->el);
                             }
                             break;
                         case El_GenNote:
                             if(pt->ptype != Patt_StepSeq)
                             {
-                                J_Gennote(g, (Gennote*)tg->el, Loc_SmallGrid);
+                                J_Gennote(g, (GenNote*)tg->el, Loc_SmallGrid);
                                 J_HighlightElement(g, tg->el);
                             }
                             else
                             {
-                                J_StepSeqEl(g, (Instance*)tg->el);
+                                J_StepSeqEl(g, (NoteInstance*)tg->el);
                                 J_HighlightSelectedElement(g, tg->el);
                             }
                             break;
@@ -9267,7 +9179,7 @@ void J_StepVU1(Graphics& g, int x, int y, VU* vu)
     vu->y = y;
 
     float vval = (vu->getL() + vu->getR())/2;
-    if(vu->instr->type == Instr_Sample)
+    if(vu->instr->instrtype == Instr_Sample)
     {
         g.setColour(Colour(0xff012121));
     }
@@ -9279,7 +9191,7 @@ void J_StepVU1(Graphics& g, int x, int y, VU* vu)
     J_FillRect(g, x, y, x + 8, y + 7);
 
     Colour col;
-    if(vu->instr->type == Instr_Sample)
+    if(vu->instr->instrtype == Instr_Sample)
     {
         col = Colour(57, 130, 130);
     }
@@ -9318,7 +9230,7 @@ void J_StepVU(Graphics& g, int x, int y, VU* vu)
     J_VLine(g, x + 3, y, y + 4);
     J_VLine(g, x + 1, y, y + 4);
 
-    if(vu->instr->type == Instr_Sample)
+    if(vu->instr->instrtype == Instr_Sample)
     {
         g.setColour(Colour(26, 53, 56));
     }
@@ -10116,14 +10028,7 @@ void J_Aux_Grid(Graphics& g)
                         if(line == trk->start_line)
                         {
                             g.setColour(Colour(0xffFFFFFF));
-                            if(trk->defined_instr->type == Instr_Sample)
-                            {
-                                g.drawImageAt(img_instrsmall1, px1 - aux_panel->keywidth - 2, yc + 1, false);
-                            }
-                            else
-                            {
-                                g.drawImageAt(img_instrsmall2, px1 - aux_panel->keywidth - 2, yc + 1, false);
-                            }
+                            g.drawImageAt(trk->defined_instr->img_instrsmall, px1 - aux_panel->keywidth - 2, yc + 1, false);
                             //g.setColour(Colour(0xff1F2F30));
                             //J_HLine(g, yc + 16, px1 - gAux->keywidth - 2, px1 - 1);
 
@@ -10149,14 +10054,7 @@ void J_Aux_Grid(Graphics& g)
 
                             //g.setColour(Colour(0xff2A2A2A));
                             //J_String_Small_Ranged(g, px1 - gAux->keywidth + 2, yc + gAux->lineHeight - 4, trk->defined_instr->name, gAux->keywidth - 2);
-                            if(trk->defined_instr->type == Instr_Sample)
-                            {
-                                g.setColour(Colour(0xffDFDFDF));
-                            }
-                            else
-                            {
-                                g.setColour(Colour(0xff8FBFFF));
-                            }
+                            g.setColour(trk->defined_instr->clr_stepseq_name);
                             J_String_Small_Ranged(g, px1 - aux_panel->keywidth + 1, yc + aux_panel->lineHeight - 5, trk->defined_instr->name, aux_panel->keywidth - 2);
                         }
                     }
@@ -10358,14 +10256,7 @@ void J_Aux_PattMode(Graphics& g)
         }
         else
         {
-            if(aux_panel->workPt->basePattern->instr_owner->type == Instr_Sample)
-            {
-                g.setColour(smpcolour);
-            }
-            else
-            {
-                g.setColour(gencolour);
-            }
+            g.setColour(aux_panel->workPt->basePattern->instr_owner->clr_base);
             J_String_Instr_Ranged(g, aux_panel->pattx1, aux_panel->patty1 + 1 + 10, aux_panel->workPt->basePattern->instr_owner->name, aux_panel->keywidth + 2);
         }
     }
@@ -10404,14 +10295,7 @@ void J_Aux_PattMode(Graphics& g)
         {
             //g.drawImageAt(gAux->workPt->ibound->alimg, gAux->bindX, gAux->bindY + 5, false);
 
-            if(aux_panel->workPt->ibound->type == Instr_Sample)
-            {
-                g.setColour(smpcolour);
-            }
-            else
-            {
-                g.setColour(gencolour);
-            }
+            g.setColour(aux_panel->workPt->ibound->clr_base);
             J_String_Small_Ranged(g, aux_panel->bindX, aux_panel->bindY + 15, aux_panel->workPt->ibound->name, aux_panel->keywidth + 2);
         }
     }
@@ -11959,7 +11843,7 @@ void J_InstrVU(Graphics& g, int xv, int yv, VU* vu)
     {
         g.setColour(Colour(0xff412525));
     }
-    else if(vu->instr->type == Instr_Sample)
+    else if(vu->instr->instrtype == Instr_Sample)
     {
         clroff = Colour(95, 107, 111);
     }
@@ -11983,7 +11867,7 @@ void J_InstrVU(Graphics& g, int xv, int yv, VU* vu)
     {
         clron = Colour(0xffAFAFAF).withAlpha(0.9f);
     }
-    else if(vu->instr->type == Instr_Sample)
+    else if(vu->instr->instrtype == Instr_Sample)
     {
         clron = Colour(0xffd5e1ef).withAlpha(0.9f);
     }
@@ -12023,7 +11907,7 @@ void J_InstrVU1(Graphics& g, int xv, int yv, VU* vu)
     {
         g.setColour(Colour(0xff412525));
     }
-    else if(vu->instr->type == Instr_Sample)
+    else if(vu->instr->instrtype == Instr_Sample)
     {
         g.setColour(Colour(58, 92, 96));
     }
@@ -12048,7 +11932,7 @@ void J_InstrVU1(Graphics& g, int xv, int yv, VU* vu)
     {
         clron = Colour(0xffAFAFAF);
     }
-    else if(vu->instr->type == Instr_Sample)
+    else if(vu->instr->instrtype == Instr_Sample)
     {
         clron = Colour(0xff7FFFAF);
     }
@@ -12096,7 +11980,7 @@ int J_Instr(Graphics& g, int x, int y, Instrument* instr)
     g.setColour(Colour(0xffFFFFFF));
 
     height = InstrUnfoldedHeight;
-    if(instr->type == Instr_Sample)
+    if(instr->instrtype == Instr_Sample)
         g.drawImageAt(img_instropened1, x + 2, y + 2, false);
     else
         g.drawImageAt(img_instropened, x + 2, y + 2, false);
@@ -12110,7 +11994,7 @@ int J_Instr(Graphics& g, int x, int y, Instrument* instr)
     //g.setColour(Colour(0xff000000));
     //J_String_Base_Ranged(g, x + 7, y + InstrFoldedHeight - 1, ((Sample*)instr)->sample_name, InstrAliasOffset - 21);
 
-    if(instr->type == Instr_Sample)
+    if(instr->instrtype == Instr_Sample)
     {
         g.setColour(Colour(0xffE5E5E5));
     }
@@ -12137,14 +12021,8 @@ int J_Instr(Graphics& g, int x, int y, Instrument* instr)
     instr->alias->edx = 39;
     instr->alias->edy = 12;
 
-    if(instr->type == Instr_Sample)
-    {
-        g.setColour(smpcolour);
-    }
-    else
-    {
-        g.setColour(gencolour);
-    }
+    g.setColour(instr->clr_base);
+
     //g.setColour(Colour(0xff6496FF));
     int aw = J_TString_Instr_xy(g, alx, y + InstrFoldedHeight - 3, instr->alias);
     g.restoreState();
@@ -13337,102 +13215,102 @@ int J_DrawMixChannelContent(Graphics& g, int x, int y, MixChannel* mchan)
 		eff->width = MixChanWidth - 2;
         eff->y = y + h;
 		effh = 0; // Insurance
-        switch(eff->type)
+        switch(eff->subtype)
         {
-            case ModSubType_Tremolo:
+            case ModSubtype_Tremolo:
             {
                 //ret_val = J_Tremolo(g, x, y, (CTremolo*)(mcell->effect), mcell);
             }break;
-            case ModSubType_Default:
+            case ModSubtype_Default:
             {
                 //ret_val = J_BlankEffect(g, x, y, (BlankEffect*)(mcell->effect), mcell);
             }break;
-            case ModSubType_VSTPlugin:
+            case ModSubtype_VSTPlugin:
             {
                 effh = J_VSTPlugin(g, x, y + h, (VSTEffect*)eff, mchan);
                 //mcell->mixstr->active = false;
             }
             break;
-            case ModSubType_Gain:
+            case ModSubtype_Gain:
             {
                 //J_GainFolded(g, x, y, (Gain*)eff, mchan);
             }break;
-            case ModSubType_Send:
+            case ModSubtype_Send:
             {
                 //J_SendFolded(g, x, y, (Send*)eff, mchan);
             }break;
-            case ModSubType_Filter:
+            case ModSubtype_Filter:
             {
                 //ret_val = J_Filter(g, x, y, (Filter*)(mcell->effect), mcell);
             }break;
-            case ModSubType_Equalizer1:
+            case ModSubtype_Equalizer1:
             {
                 effh = J_FXNative(g, x, y + h, eff, mchan);
                 //effh = J_Equalizer1(g, x, y + h, (EQ1*)eff, mchan);
             }break;
-            case ModSubType_Equalizer3:
+            case ModSubtype_Equalizer3:
             {
                 effh = J_FXNative(g, x, y + h, eff, mchan);
                 //effh = J_Equalizer3(g, x, y + h, (EQ3*)eff, mchan);
             }break;
-            case ModSubType_GraphicEQ:
+            case ModSubtype_GraphicEQ:
             {
                 effh = J_FXNative(g, x, y + h, eff, mchan);
                 //effh = J_GraphicEQ(g, x, y + h, (GraphicEQ*)eff, mchan);
             }break;
-            case ModSubType_CFilter:
+            case ModSubtype_CFilter:
             {
                 effh = J_FXNative(g, x, y + h, eff, mchan);
                 //effh = J_CFilter(g, x, y + h, (CFilter*)eff, mchan);
             }break;
-            case ModSubType_XDelay:
+            case ModSubtype_XDelay:
             {
                 effh = J_FXNative(g, x, y + h, eff, mchan);
                 //effh = J_XDelay(g, x, y + h, (XDelay*)eff, mchan);
             }break;
-            case ModSubType_Compressor:
+            case ModSubtype_Compressor:
             {
                 effh = J_FXNative(g, x, y + h, eff, mchan);
                 //effh = J_Compressor(g, x, y + h, (Compressor*)eff, mchan);
             }break;
-            case ModSubType_Reverb:
+            case ModSubtype_Reverb:
             {
                 effh = J_FXNative(g, x, y + h, eff, mchan);
                 //effh = J_Reverb(g, x, y + h, (CReverb*)eff, mchan);
             }break;
-            case ModSubType_Chorus:
+            case ModSubtype_Chorus:
             {
                 effh = J_FXNative(g, x, y + h, eff, mchan);
             }break;
-            case ModSubType_Flanger:
+            case ModSubtype_Flanger:
             {
                 effh = J_FXNative(g, x, y + h, eff, mchan);
             }break;
-            case ModSubType_Phaser:
+            case ModSubtype_Phaser:
             {
                 effh = J_FXNative(g, x, y + h, eff, mchan);
             }break;
-            case ModSubType_WahWah:
+            case ModSubtype_WahWah:
             {
                 effh = J_FXNative(g, x, y + h, eff, mchan);
             }break;
-            case ModSubType_Distortion:
+            case ModSubtype_Distortion:
             {
                 effh = J_FXNative(g, x, y + h, eff, mchan);
             }break;
-            case ModSubType_BitCrusher:
+            case ModSubtype_BitCrusher:
             {
                 effh = J_FXNative(g, x, y + h, eff, mchan);
             }break;
-            case ModSubType_Stereo:
+            case ModSubtype_Stereo:
             {
                 effh = J_FXNative(g, x, y + h, eff, mchan);
             }break;
-            case ModSubType_CFilter2:
+            case ModSubtype_CFilter2:
             {
                 effh = J_FXNative(g, x, y + h, eff, mchan);
             }break;
-            case ModSubType_CFilter3:
+            case ModSubtype_CFilter3:
             {
                 effh = J_FXNative(g, x, y + h, eff, mchan);
             }break;

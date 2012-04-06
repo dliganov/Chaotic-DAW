@@ -276,8 +276,8 @@ void UndoManagerC::Unperform(Action* act)
             if(el->type == El_Samplent)
             {
                 Samplent* sn = (Samplent*)el;
-                sn->touchresized = act->i1 == 1;
-                sn->sample->touchresized = act->i1 == 1;
+                sn->ResizeTouch(act->i1 == 1);
+                sn->sample->ResizeTouch(act->i1 == 1);
             }
 
             el->tick_length = act->f1;
@@ -414,8 +414,8 @@ void UndoManagerC::Perform(Action* act)
             if(el->type == El_Samplent)
             {
                 Samplent* sn = (Samplent*)el;
-                sn->touchresized = act->i2 == 1;
-                sn->sample->touchresized = act->i2 == 1;
+                sn->ResizeTouch(act->i2 == 1);
+                sn->sample->ResizeTouch(act->i2 == 1);
             }
 
             el->tick_length = act->f2;

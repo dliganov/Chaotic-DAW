@@ -8,9 +8,9 @@
 #include "awful_tracks_lanes.h"
 
 
-extern Element* ReassignInstrument(Instance* ii, Instrument* instr);
+extern Element* ReassignInstrument(NoteInstance* ii, Instrument* instr);
 extern void     BindPatternToInstrument(Pattern* pt, Instrument* instr);
-extern void     CloneSlideNotes(Instance* src, Instance* dst, bool select);
+extern void     CloneSlideNotes(NoteInstance* src, NoteInstance* dst, bool select);
 extern void     UpdateStepSequencers();
 
 
@@ -69,7 +69,6 @@ public:
     bool            visible;
     bool            auxvisible;
     bool            displayable;
-    bool            touchresized;
 
     bool            deleted;
     bool            to_be_deleted;
@@ -86,6 +85,9 @@ public:
 
     Element*        pr_next;
     Element*        pr_prev;
+
+    bool            resizetouched;
+
 
     Element();
 	virtual ~Element();
@@ -149,9 +151,11 @@ public:
     void            Deselect();
     virtual void    MarkAsCopied();
     Loc             GetElemLoc();
+    void            ResizeTouch(bool touch);
+    bool            IsResizeTouched();
 };
 
-class Instance : public Element
+class NoteInstance : public Element
 {
 public:
     Instrument*     instr;
@@ -181,8 +185,8 @@ public:
     float           freq;
     float           freq_ratio;
 
-    Instance();
-    virtual ~Instance();
+    NoteInstance();
+    virtual ~NoteInstance();
     void    SwitchVol();
     void    SwitchPan();
     void    SwitchNote();
@@ -206,17 +210,17 @@ public:
     void    Mute();
 };
 
-class Gennote : public Instance
+class GenNote : public NoteInstance
 {
 public:
 
-    Gennote(Instrument* instr);
-	virtual ~Gennote();
-    Gennote* Clone(bool add);
+    GenNote(Instrument* instr);
+    virtual ~GenNote();
+    GenNote* Clone(bool add);
     void    Update(bool tonly = false);
 };
 
-class Samplent : public Instance
+class Samplent : public NoteInstance
 {
 public:
 	Sample*         sample;
@@ -231,7 +235,6 @@ public:
     long            smp_left_frame;
     long            smp_right_frame;
     float           freq_incr_base;
-    bool            touchresized;
 
     Samplent(Sample* sample);
     virtual ~Samplent();
@@ -307,7 +310,7 @@ public:
 class SlideNote : public Slide
 {
 public:
-	Instance*       parent;
+	NoteInstance*       parent;
 
     Note*           ed_note;
     //Digits*         ed_vol;
@@ -325,7 +328,7 @@ public:
     SlideNote*      s_next;
     SlideNote*      s_prev;
 
-    SlideNote(int note_num, Instance* par);
+    SlideNote(int note_num, NoteInstance* par);
     SlideNote* Clone(bool add);
 	void	UpdateNote();
 	void	ProcessKey(unsigned int key, unsigned int flags);
@@ -520,15 +523,15 @@ public:
     Percent*    ed_pan;
     Note*       ed_note;
 
-    Vol*        loc_vol;
-    Pan*        loc_pan;
+    Vol*        vol_local;
+    Pan*        pan_local;
 
     PattType    ptype;
     bool        autopatt;
     bool        folded;
     bool        muted;
     Instrument* instr_owner;
-    Instance*   parent_instance;
+    NoteInstance*   parent_instance;
     Trigger*    parent_trigger;
     Trigger*    symtrig;
     Trigger*    tgenv;

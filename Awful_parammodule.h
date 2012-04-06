@@ -11,6 +11,9 @@ class PluginCommonWindow;
 class ParamModule : public Object
 {
 public:
+    ModuleType      modtype;
+    ModuleSubType   subtype;
+
     bool        to_be_deleted;
     bool        temp;
     bool        internalModule;
@@ -47,7 +50,7 @@ public:
 
     int         index;
 
-    PluginCommonWindow* wnd; // Internal reference to the window, to delete it first
+    PluginCommonWindow* wnd; // Internal reference to the window
 
     ParamWindow* paramWnd;
 
@@ -118,6 +121,13 @@ public:
     virtual void    ToggleParamWindow();
     void EnqueueParamEnvelopeTrigger(Trigger* tg);
     void DequeueParamEnvelopeTrigger(Trigger* tg);
+    static String  GetModuleTypeString(ModuleType mtype);
+    static String  GetModuleSubTypeString(ModuleSubType subtype);
+    static ModuleType  GetModuleTypeFromString(String mtype);
+    static ModuleSubType  GetModuleSubTypeFromString(String subtype);
+    virtual void CreateModuleWindow() {};
+    virtual void SetSampleRate(float fSampleRate) {};
+    virtual void SetBufferSize(unsigned int uiBufferSize) {};
 
 private:
     bool    m_ParamLocked;

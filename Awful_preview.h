@@ -12,7 +12,7 @@ extern HANDLE       hPreviewMutex;
 
 typedef struct PreviewSlot
 {
-    Instance*           ii;
+    NoteInstance*           ii;
     PrevState           state;
     Trigger             trigger;
     bool                sustainable;    // Indicates immediate release after trigger activation. Useful shit.
@@ -31,7 +31,7 @@ extern void                 Preview_StopAll();
 extern void                 Preview_MouseRelease();
 extern void                 Preview_FinishAll();
 extern void                 Preview_ReleaseAll();
-extern int                  Preview_Add(Instance* ii, Instrument* i, int key, int note, Pattern* pt, Trk* trk, Mixcell* mcell, bool noauto = false, bool setrelative = false);
+extern int                  Preview_Add(NoteInstance* ii, Instrument* i, int key, int note, Pattern* pt, Trk* trk, Mixcell* mcell, bool noauto = false, bool setrelative = false);
 extern void                 Preview_Release(Instrument* i, int note);
 extern void                 Preview_Release(int key);
 extern inline void          Preview_SetNoteVolume(unsigned int note, float volume);

@@ -25,6 +25,8 @@ void EffWindowClick(Object* owner, Object* self);
 //=================================================================================================
 Eff::Eff(Mixcell* mc)
 {
+    this->modtype = ModuleType_Effect;
+
     x = y = width = height = 1;
     folded = true;
     bypass = false;
@@ -61,7 +63,6 @@ Eff::Eff(Mixcell* mc)
     memset(this->name, 0, MAX_NAME_STRING*sizeof(char));
     memset(this->preset_path, 0, MAX_PATH_STRING*sizeof(char));
     memset(this->path, 0, MAX_PATH_STRING*sizeof(char));
-    this->category = ModuleType_Effect;
 }
 
 Eff::~Eff()
@@ -201,7 +202,7 @@ void Eff::Save(XmlElement * xmlEff)
 {
     xmlEff->setAttribute(T("EffIndex"), index);
 
-    xmlEff->setAttribute(T("EffType"), int(type));
+    xmlEff->setAttribute(T("EffType"), int(subtype));
     xmlEff->setAttribute(T("EffName"), String(name));
     xmlEff->setAttribute(T("EffPath"), String(path));
 
@@ -237,7 +238,7 @@ void Eff::Load(XmlElement * xmlEff)
 
 BlankEffect::BlankEffect(Mixcell* mc, AliasRecord* ar) : Eff(mc)
 {
-    type = ModSubType_Default;
+    subtype = ModSubtype_Default;
     strcpy(this->name, "Blank effect");
     strcpy(this->preset_path, ".\\Presets\\Blank Effect\\");
     strcpy(this->path,"internal://blank");
@@ -373,7 +374,7 @@ void BlankEffect::ProcessData(float* in_buff, float* out_buff, int num_frames)
 
 Gain::Gain(Mixcell* mc, AliasRecord* ar) : Eff(mc)
 {
-    type = ModSubType_Gain;
+    subtype = ModSubtype_Gain;
 
     strcpy(this->name, "Gain");
     strcpy(this->preset_path, ".\\Data\\Presets\\Effects\\Native\\Gain\\");
@@ -435,7 +436,7 @@ void Gain::ParamUpdate(Parameter* param)
 
 Filter::Filter(Mixcell* mc, AliasRecord* ar) : Eff(mc)
 {
-    type = ModSubType_Filter;
+    subtype = ModSubtype_Filter;
     strcpy(this->name, "Simple Filter");
     strcpy(this->preset_path, ".\\Presets\\Simple Filter\\");
     strcpy(this->path,"internal://lp");
@@ -548,7 +549,7 @@ void Filter::ProcessData(float* in_buff, float* out_buff, int num_frames)
 
 CFilter3::CFilter3(Mixcell* mc, AliasRecord* ar) : Eff(mc)
 {
-    type = ModSubType_CFilter3;
+    subtype = ModSubtype_CFilter3;
     strcpy(this->name, "Filter");
     strcpy(this->preset_path, ".\\Presets\\Filter\\");
     strcpy(this->path,"internal://filter3");
@@ -736,7 +737,7 @@ void CFilter3::ProcessData(float* in_buff, float* out_buff, int num_frames)
 
 CFilter2::CFilter2(Mixcell* mc, AliasRecord* ar) : Eff(mc)
 {
-    type = ModSubType_CFilter2;
+    subtype = ModSubtype_CFilter2;
     strcpy(this->name, "Filter");
     strcpy(this->preset_path, ".\\Presets\\Filter\\");
     strcpy(this->path,"internal://filter2");
@@ -889,7 +890,8 @@ void CFilter2::ProcessData(float* in_buff, float* out_buff, int num_frames)
 
 CFilter::CFilter(Mixcell* mc, AliasRecord* ar) : Eff(mc)
 {
-    type = ModSubType_CFilter;
+    subtype = ModSubtype_CFilter;
+
     strcpy(this->name, "Filter");
     strcpy(this->preset_path, ".\\Presets\\Filter\\");
     strcpy(this->path,"internal://filter");
@@ -1122,7 +1124,7 @@ void CFilter::ProcessData(float* in_buff, float* out_buff, int num_frames)
 
 CChorus::CChorus(Mixcell* mc, AliasRecord* ar) : Eff(mc)
 {
-    type = ModSubType_Chorus;
+    subtype = ModSubtype_Chorus;
     strcpy(this->name, "Chorus");
     strcpy(this->preset_path, ".\\Presets\\Chorus\\");
     strcpy(this->path,"internal://chorus");
@@ -1223,7 +1225,7 @@ void CChorus::ProcessData(float* in_buff, float* out_buff, int num_frames)
 
 CFlanger::CFlanger(Mixcell* mc, AliasRecord* ar) : Eff(mc)
 {
-    type = ModSubType_Flanger;
+    subtype = ModSubtype_Flanger;
     strcpy(this->name, "Flanger");
     strcpy(this->preset_path, ".\\Presets\\Flanger\\");
     strcpy(this->path,"internal://flanger");
@@ -1354,7 +1356,7 @@ void CFlanger::ProcessData(float* in_buff, float* out_buff, int num_frames)
 
 CPhaser::CPhaser(Mixcell* mc, AliasRecord* ar) : Eff(mc)
 {
-    type = ModSubType_Phaser;
+    subtype = ModSubtype_Phaser;
     strcpy(this->name, "Phaser");
     strcpy(this->preset_path, ".\\Presets\\Phaser\\");
     strcpy(this->path,"internal://phaser");
@@ -1500,7 +1502,7 @@ void CPhaser::ProcessData(float* in_buff, float* out_buff, int num_frames)
 
 EQ1::EQ1(Mixcell* mc, AliasRecord* ar) : Eff(mc)
 {
-    type = ModSubType_Equalizer1;
+    subtype = ModSubtype_Equalizer1;
     strcpy(this->name, "EQ1");
     strcpy(this->preset_path, ".\\Presets\\EQ1\\");
     strcpy(this->path,"internal://eq1");
@@ -1588,7 +1590,7 @@ void EQ1::ProcessData(float* in_buff, float* out_buff, int num_frames)
 
 GraphicEQ::GraphicEQ(Mixcell* mc, AliasRecord* ar) : Eff(mc)
 {
-    type = ModSubType_GraphicEQ;
+    subtype = ModSubtype_GraphicEQ;
     strcpy(this->name, "GraphicEQ");
     strcpy(this->preset_path, ".\\Presets\\GraphicEQ\\");
     strcpy(this->path,"internal://eqg");
@@ -1741,7 +1743,7 @@ void GraphicEQ::ProcessData(float* in_buff, float* out_buff, int num_frames)
 
 EQ3::EQ3(Mixcell* mc, AliasRecord* ar) : Eff(mc)
 {
-    type = ModSubType_Equalizer3;
+    subtype = ModSubtype_Equalizer3;
     strcpy(this->name, "EQ3");
     strcpy(this->preset_path, ".\\Presets\\EQ3\\");
     strcpy(this->path,"internal://eq3");
@@ -1887,7 +1889,7 @@ void EQ3::ProcessData(float* in_buff, float* out_buff, int num_frames)
 
 CTremolo::CTremolo(Mixcell* mc, AliasRecord* ar) : Eff(mc)
 {
-    type = ModSubType_Tremolo;
+    subtype = ModSubtype_Tremolo;
     strcpy(this->name, "Tremolo");
     strcpy(this->preset_path, ".\\Presets\\Tremolo\\");
     strcpy(this->path,"internal://tremolo");
@@ -1962,7 +1964,7 @@ void CTremolo::ProcessData(float* in_buff, float* out_buff, int num_frames)
 
 XDelay::XDelay(Mixcell* mc, AliasRecord* ar) : Eff(mc), dspCorePingPongDelay()
 {
-    type = ModSubType_XDelay;
+    subtype = ModSubtype_XDelay;
     strcpy(this->name, "Delay");
     strcpy(this->preset_path, ".\\Presets\\Delay\\");
     strcpy(this->path,"internal://ppd");
@@ -2115,7 +2117,7 @@ void XDelay::ProcessData(float* in_buff, float* out_buff, int num_frames)
 
 CReverb::CReverb(Mixcell* mc, AliasRecord* ar) : Eff(mc), dspCoreReverb()
 {
-    type = ModSubType_Reverb;
+    subtype = ModSubtype_Reverb;
     strcpy(this->name, "Reverb");
     strcpy(this->preset_path, ".\\Presets\\Reverb\\");
     strcpy(this->path,"internal://reverb");
@@ -2260,7 +2262,7 @@ void CReverb::ProcessData(float* in_buff, float* out_buff, int num_frames)
 
 Compressor::Compressor(Mixcell* mc, AliasRecord* ar) : Eff(mc)
 {
-    type = ModSubType_Compressor;
+    subtype = ModSubtype_Compressor;
     strcpy(this->name, "Compressor");
     strcpy(this->preset_path, ".\\Presets\\Compressor\\");
     strcpy(this->path,"internal://compressor");
@@ -2414,7 +2416,7 @@ void Compressor::ProcessData(float* in_buff, float* out_buff, int num_frames)
 
 CWahWah::CWahWah(Mixcell* mc, AliasRecord* ar) : Eff(mc)
 {
-    type = ModSubType_WahWah;
+    subtype = ModSubtype_WahWah;
     strcpy(this->name, "WahWah");
     strcpy(this->preset_path, ".\\Presets\\WahWah\\");
     strcpy(this->path,"internal://wahwah");
@@ -2505,7 +2507,7 @@ void CWahWah::ProcessData(float* in_buff, float* out_buff, int num_frames)
 
 CDistort::CDistort(Mixcell* mc, AliasRecord* ar) : Eff(mc)
 {
-    type = ModSubType_Distortion;
+    subtype = ModSubtype_Distortion;
     strcpy(this->name, "Distortion");
     strcpy(this->preset_path, ".\\Presets\\Distortion\\");
     strcpy(this->path,"internal://distortion");
@@ -2587,7 +2589,7 @@ void CDistort::ProcessData(float* in_buff, float* out_buff, int num_frames)
 
 CBitCrusher::CBitCrusher(Mixcell* mc, AliasRecord* ar) : Eff(mc)
 {
-    type = ModSubType_BitCrusher;
+    subtype = ModSubtype_BitCrusher;
     strcpy(this->name, "BitCrusher");
     strcpy(this->preset_path, ".\\Presets\\BitCrusher\\");
     strcpy(this->path,"internal://bitcrusher");
@@ -2654,7 +2656,7 @@ void CBitCrusher::ProcessData(float* in_buff, float* out_buff, int num_frames)
 
 CStereo::CStereo(Mixcell* mc, AliasRecord* ar) : Eff(mc)
 {
-    type = ModSubType_Stereo;
+    subtype = ModSubtype_Stereo;
     strcpy(this->name, "Stereoizer");
     strcpy(this->preset_path, ".\\Presets\\Stereoizer\\");
     strcpy(this->path,"internal://stereoizer");
@@ -2768,7 +2770,7 @@ VSTEffect::VSTEffect(Mixcell * mc, AliasRecord * ar, char* path) : Eff(mc)
 {
     internalModule = false;
     this->bLoading = true;
-    this->type = ModSubType_VSTPlugin;
+    this->subtype = ModSubtype_VSTPlugin;
     memset(this->preset_path, 0, MAX_PATH_STRING * sizeof(char));
     strcpy(this->preset_path, ".\\Data\\Presets\\");
     this->arec = new AliasRecord();
@@ -2826,12 +2828,12 @@ VSTEffect::VSTEffect(Mixcell * mc, AliasRecord * ar, char* path) : Eff(mc)
 
         if (this->pPlug->isGenerator == true)
         {
-            this->category = ModuleType_Generator;
-            strcat(this->preset_path, "Generators\\VST\\");
+            this->modtype = ModuleType_Instrument;
+            strcat(this->preset_path, "Instruments\\VST\\");
         }
         else
         {
-            this->category = ModuleType_Effect;
+            this->modtype = ModuleType_Effect;
             strcat(this->preset_path, "Effects\\VST\\");
         }
 
@@ -3110,7 +3112,7 @@ bool VSTEffect::OnUpdateDisplay()
     Preset* pNewPreset = NULL;
 
     UpdatePresets();
-    if ((this->category == ModuleType_Effect) && (aux_panel->current_eff == this))
+    if ((this->modtype == ModuleType_Effect) && (aux_panel->current_eff == this))
     {
         if(mixbrowse && mixBrw->brwmode == Browse_Presets)
         {
@@ -3119,7 +3121,7 @@ bool VSTEffect::OnUpdateDisplay()
             mixBrw->main_offs = oldoffs;
         }
     }
-    else if ( (current_instr->type == Instr_VSTPlugin) &&
+    else if ( (current_instr->instrtype == Instr_VSTPlugin) &&
               (((VSTGenerator*)current_instr)->pEff == this) )
     {
         if(genBrw->brwmode == Browse_Presets)
@@ -3141,11 +3143,11 @@ bool VSTEffect::OnUpdateDisplay()
         this->CurrentPreset = pNewPreset;
 
         // Find out what browser to re-fresh and whether we really need to refresh anything
-        if ((this->category == ModuleType_Effect) && (aux_panel->current_eff == this))
+        if ((this->modtype == ModuleType_Effect) && (aux_panel->current_eff == this))
         {
             mixBrw->UpdateCurrentHighlight();
         }
-        else if ( (current_instr->type == Instr_VSTPlugin) &&
+        else if ( (current_instr->instrtype == Instr_VSTPlugin) &&
                   (((VSTGenerator*)current_instr)->pEff == this) )
         {
             genBrw->UpdateCurrentHighlight();

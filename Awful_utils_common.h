@@ -60,7 +60,6 @@ extern void     RefreshSeparates();
 extern void     PanConstantRule(float pan, float* volL, float* volR);
 extern void     PanLinearRule(float pan, float* volL, float* volR);
 extern void     GetPatternNameImage(Pattern* pt);
-extern void     GetInstrAliasImage(Instrument* instr);
 extern Pattern* CheckStringForPatternName(char* string);
 extern float    GetVolOutput(float val);
 extern float    Second2Tick(float sec);

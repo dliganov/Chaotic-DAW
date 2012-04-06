@@ -1305,28 +1305,6 @@ void GetPatternNameImage(Pattern* pt)
     }
 }
 
-void GetInstrAliasImage(Instrument* instr)
-{
-    if(instr->alias_image != NULL)
-	{
-       delete instr->alias_image;
-	   instr->alias_image = NULL;
-	}
-
-    int aw = ins->getStringWidth(instr->alias->string);
-	if(aw > 0)
-	{
-		instr->alias_image = new Image(Image::ARGB, aw, (int)(ins->getHeight() + 3), true);
-		Graphics imageContext(*(instr->alias_image));
-		//imageContext.setColour(Colour(0xff6496FF));
-		if(instr->type == Instr_Sample)
-		    imageContext.setColour(Colour(smpcolour));
-        else
-		    imageContext.setColour(Colour(gencolour));
-		J_TextInstr_xy(imageContext, 0, (int)(ins->getHeight()), instr->alias->string);
-	}
-}
-
 inline float GetVolOutput(float val)
 {
     if(val < 1)

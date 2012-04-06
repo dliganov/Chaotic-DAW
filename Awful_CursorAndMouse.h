@@ -13,7 +13,7 @@ public:
     float           qsize;
     Element*        curElem;
     PEdit*          curParam;
-    Instance*       slideparent;
+    NoteInstance*       slideparent;
     Pattern*        patt; // Only derived pattern can be referred here. No originator.
     Pattern*        tmp_patt;
     Loc             tmp_loc;
@@ -91,7 +91,7 @@ public:
     Element*    active_elem;
     Element*    resize_elem;
     Samplent*   active_samplent;
-    Gennote*    active_longnote;
+    GenNote*    active_longnote;
     Mixcell*    active_mixcell;
     Mixcell*    active_dropmixcell;
     MixChannel* active_mixchannel;

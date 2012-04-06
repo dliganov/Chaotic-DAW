@@ -14,7 +14,7 @@
 //#include "math.h"
 
 
-extern Element* ReassignInstrument(Instance* ii, Instrument* instr);
+extern Element* ReassignInstrument(NoteInstance* ii, Instrument* instr);
 extern void     BindPatternToInstrument(Pattern* pt, Instrument* instr);
 extern void     UpdateStepSequencers();
 
@@ -75,6 +75,7 @@ Element::Element()
     gridauxed = auxauxed = 0xFFFF;
     to_be_deleted = false;
     deleted = false;
+    resizetouched = false;
 
 	if(patt != NULL)
 	{
@@ -790,6 +791,16 @@ Loc Element::GetElemLoc()
         return Loc_Other;
 }
 
+void Element::ResizeTouch(bool touch)
+{
+    resizetouched = touch;
+}
+
+bool Element::IsResizeTouched()
+{
+    return resizetouched;
+}
+
 Txt::Txt()
 {
     type = El_TextString;
@@ -1123,7 +1134,7 @@ void Txt::Load(XmlElement * xmlNode)
     bookmark = xmlNode->getBoolAttribute(T("Bookmark"));
 }
 
-Instance::Instance()
+NoteInstance::NoteInstance()
 {
     instr = NULL;
     first_slide = NULL;
@@ -1150,7 +1161,7 @@ Instance::Instance()
     AddParamedit(ed_note);
 }
 
-Instance::~Instance()
+NoteInstance::~NoteInstance()
 {
     delete loc_vol;
     delete loc_pan;
@@ -1159,7 +1170,7 @@ Instance::~Instance()
     delete ed_note;
 }
 
-void Instance::ProcessChar(char character)
+void NoteInstance::ProcessChar(char character)
 {
 /*  if(*character == 0x2E)  // dot transitions to command
     {
@@ -1202,7 +1213,7 @@ void Instance::ProcessChar(char character)
     }
 }
 
-void Instance::Mute()
+void NoteInstance::Mute()
 {
     Trigger* tg = tg_first;
     while(tg != NULL)
@@ -1213,7 +1224,7 @@ void Instance::Mute()
     }
 }
 
-void Instance::ProcessKey(unsigned int key, unsigned int flags)
+void NoteInstance::ProcessKey(unsigned int key, unsigned int flags)
 {
     if(key == key_escape)
     {
@@ -1308,7 +1319,7 @@ void Instance::ProcessKey(unsigned int key, unsigned int flags)
     }
 }
 
-void Instance::SwitchVol()
+void NoteInstance::SwitchVol()
 {
     if(ed_vol->visible == false)
     {
@@ -1326,7 +1337,7 @@ void Instance::SwitchVol()
     }
 }
 
-void Instance::SwitchPan()
+void NoteInstance::SwitchPan()
 {
     if(ed_pan->visible == false)
     {
@@ -1344,7 +1355,7 @@ void Instance::SwitchPan()
     }
 }
 
-void Instance::SwitchNote()
+void NoteInstance::SwitchNote()
 {
     CP->CurrentMode->Refresh();
     if(ed_note->visible == false)
@@ -1378,7 +1389,7 @@ void Instance::SwitchNote()
     MC->refresh |= Refresh_Buttons;
 }
 
-void Instance::SwitchLen()
+void NoteInstance::SwitchLen()
 {
     if(ed_len->visible == false)
     {
@@ -1396,7 +1407,7 @@ void Instance::SwitchLen()
     }
 }
 
-void Instance::Activate()
+void NoteInstance::Activate()
 {
     CTick = start_tick;
     CLine = track_line;
@@ -1418,7 +1429,7 @@ void Instance::Activate()
 /////////////////////////////////////////////
 // Connect to the proper place in slides list. We have a linked list of slides for each instrument, and
 // we need to keep their sequence according to their actual timing.
-void Instance::AddSlideNote(SlideNote* sl)
+void NoteInstance::AddSlideNote(SlideNote* sl)
 {
 	sl->parent = this;
 	if(first_slide == NULL)
@@ -1467,7 +1478,7 @@ void Instance::AddSlideNote(SlideNote* sl)
     SpreadSlideNotes();
 }
 
-void Instance::RemoveSlidenote(SlideNote* sl)
+void NoteInstance::RemoveSlidenote(SlideNote* sl)
 {
     if(sl->parent == this)
     {
@@ -1490,7 +1501,7 @@ void Instance::RemoveSlidenote(SlideNote* sl)
     }
 }
 
-void Instance::SpreadSlideNotes()
+void NoteInstance::SpreadSlideNotes()
 {
     SlideNote* sn;
     Trigger* ptg = tg_first;
@@ -1543,7 +1554,7 @@ void Instance::SpreadSlideNotes()
     }
 }
 
-SlideNote* Instance::GetLastSlide()
+SlideNote* NoteInstance::GetLastSlide()
 {
     SlideNote* ls = first_slide;
 
@@ -1556,7 +1567,7 @@ SlideNote* Instance::GetLastSlide()
 }
 
 //// Rearranges slidenotes in list to correspond to their actual timing (in ticks)
-void Instance::RearrangeSlideNotes()
+void NoteInstance::RearrangeSlideNotes()
 {
     SlideNote*  s_current;
     SlideNote*  s_closer;
@@ -1618,7 +1629,7 @@ void Instance::RearrangeSlideNotes()
     SpreadSlideNotes();
 }
 
-void Instance::CalcSlideNotes()
+void NoteInstance::CalcSlideNotes()
 {
     float	 base_vol = loc_vol->val;
     float    base_pan = loc_pan->val;
@@ -1651,7 +1662,7 @@ void Instance::CalcSlideNotes()
     }
 }
 
-void Instance::Reset()
+void NoteInstance::Reset()
 {
     active = false;
 
@@ -1665,19 +1676,19 @@ void Instance::Reset()
     ed_note->Reinit();
 }
 
-int Instance::TrackLine2Y()
+int NoteInstance::TrackLine2Y()
 {
     int line = trkdata->start_line;
     return Line2Y(patt->track_line + line, Loc_MainGrid);
 }
 
-int Instance::EndLine2Y()
+int NoteInstance::EndLine2Y()
 {
     int line = trkdata->start_line;
     return Line2Y(patt->track_line + line, Loc_MainGrid);
 }
 
-void Instance::UpdateNote()
+void NoteInstance::UpdateNote()
 {
     if(preview == false && patt->ptype == Patt_Pianoroll)
     {
@@ -1696,7 +1707,7 @@ void Instance::UpdateNote()
     CalcSlideNotes();
 }
 
-void Instance::Move(float dtick, int dtrack)
+void NoteInstance::Move(float dtick, int dtrack)
 {
 	start_tick += dtick;
 	end_tick += dtick;
@@ -1713,7 +1724,7 @@ void Instance::Move(float dtick, int dtrack)
     Update();
 }
 
-void Instance::Save(XmlElement * xmlNode)
+void NoteInstance::Save(XmlElement * xmlNode)
 {
     Element::Save(xmlNode);
     xmlNode->setAttribute(T("InstrIndex"), instr->index);
@@ -1724,7 +1735,7 @@ void Instance::Save(XmlElement * xmlNode)
     xmlNode->setAttribute(T("NoteRelative"), int(ed_note->relative));
 }
 
-void Instance::Load(XmlElement * xmlNode)
+void NoteInstance::Load(XmlElement * xmlNode)
 {
     Element::Load(xmlNode);
     loc_vol->SetNormalValue((float)xmlNode->getDoubleAttribute(T("Volume")));
@@ -1734,7 +1745,7 @@ void Instance::Load(XmlElement * xmlNode)
     ed_note->relative = xmlNode->getBoolAttribute(T("NoteRelative"));
 }
 
-Gennote::Gennote(Instrument* instr)
+GenNote::GenNote(Instrument* instr)
 {
     type = El_GenNote;
     this->instr = instr;
@@ -1754,16 +1765,16 @@ Gennote::Gennote(Instrument* instr)
     this->owner = (Object*)instr;
 }
 
-Gennote::~Gennote()
+GenNote::~GenNote()
 {
     delete loc_len;
     delete ed_len;
 }
 
-Gennote* Gennote::Clone(bool add)
+GenNote* GenNote::Clone(bool add)
 {
-    Gennote* clone;
-    clone = (Gennote*)CreateElement_Note(instr, false);
+    GenNote* clone;
+    clone = (GenNote*)CreateElement_Note(instr, false);
 	clone->ed_note->SetRelative(ed_note->relative);
     clone->ed_note->SetValue(ed_note->value);
     clone->ed_note->visible = ed_note->visible;
@@ -1796,7 +1807,7 @@ Gennote* Gennote::Clone(bool add)
     return clone;
 }
 
-void Gennote::Update(bool tonly)
+void GenNote::Update(bool tonly)
 {
     if(tonly)
     {
@@ -1838,12 +1849,12 @@ Samplent::Samplent(Sample* smp)
     loc_offs->AddParamedit(ed_offs);
     if(RememberLengths)
     {
-        touchresized = sample->touchresized;
+        ResizeTouch(sample->IsResizeTouched());
         tick_length = sample->last_note_length;
     }
     else
     {
-        touchresized = false;
+        ResizeTouch(false);
     }
 }
 
@@ -1885,7 +1896,8 @@ Samplent* Samplent::Clone(bool add)
     clone->trkdata = trkdata;
     clone->field_trkdata = field_trkdata;
     clone->first_slide = NULL;
-    clone->touchresized = touchresized;
+    clone->ResizeTouch(IsResizeTouched());
+
     if(add)
     {
         AddNewElement(clone, false);
@@ -2153,7 +2165,7 @@ void Samplent::UpdateNote()
         freq_incr_base = CalcSampleFreqIncrement(sample, ed_note->value);
     }
 
-    if(touchresized == false)
+    if(IsResizeTouched() == false)
     {
         tick_length = Frame2Tick(sample_frame_len)*sample->rateUp*freq_ratio;
     }
@@ -2308,15 +2320,15 @@ void Samplent::Update(bool tonly)
 
 void Samplent::Save(XmlElement * xmlNode)
 {
-    Instance::Save(xmlNode);
-    xmlNode->setAttribute(T("TouchResized"), int(touchresized));
+    NoteInstance::Save(xmlNode);
+    xmlNode->setAttribute(T("TouchResized"), int(IsResizeTouched()));
     xmlNode->setAttribute(T("Reversed"), int(revB));
 }
 
 void Samplent::Load(XmlElement * xmlNode)
 {
-    Instance::Load(xmlNode);
-    touchresized = xmlNode->getBoolAttribute(T("TouchResized"));
+    NoteInstance::Load(xmlNode);
+    ResizeTouch(xmlNode->getBoolAttribute(T("TouchResized")));
     revB = xmlNode->getBoolAttribute(T("Reversed"));
 }
 
@@ -2329,7 +2341,7 @@ void EffElement::Move(float dtick, int dtrack)
     Element::Move(dtick, dtrack);
 }
 
-SlideNote::SlideNote(int note_num, Instance* par) : Slide(0)
+SlideNote::SlideNote(int note_num, NoteInstance* par) : Slide(0)
 {
     type = El_SlideNote;
 
@@ -2964,7 +2976,7 @@ void Command::InitLocVolEnv()
 
     if(scope->instr != NULL)
     {
-        if(scope->instr->type == Instr_Sample)
+        if(scope->instr->instrtype == Instr_Sample)
         {
             v_env->AddPoint(0.0f, 1.0f/VolRange);
             v_env->SetSustainPoint(v_env->AddPoint(1.0f, 1.0f/VolRange));
@@ -4142,8 +4154,8 @@ void Pattern::Init(char* nm, bool tracks)
 
     // params
     params = new ParamSet(100, 50, &scope);
-    loc_vol = new Vol(100);
-    loc_pan = new Pan(50);
+    vol_local = new Vol(100);
+    pan_local = new Pan(50);
     // paramedits
     name = new TString(nm, false, this);
     name->pt = this;
@@ -4151,10 +4163,10 @@ void Pattern::Init(char* nm, bool tracks)
     default_param = name;
     ed_vol = new Percent(100, 3, this, Param_Vol);
     AddParamedit(ed_vol);
-    loc_vol->AddParamedit(ed_vol);
+    vol_local->AddParamedit(ed_vol);
     ed_pan = new Percent(50, 3, this, Param_Pan);
     AddParamedit(ed_pan);
-    loc_pan->AddParamedit(ed_pan);
+    pan_local->AddParamedit(ed_pan);
     ed_note = new Note(baseNote, this);
     AddParamedit(ed_note);
     pe_mode = ParamEdit_Block;
@@ -4162,7 +4174,6 @@ void Pattern::Init(char* nm, bool tracks)
     ranged = false;
     folded = true;
     autopatt = false;
-    touchresized = false;
     muted = false;
     is_fat = true;
     aliasModeName = true;
@@ -4207,8 +4218,8 @@ void Pattern::Init(char* nm, bool tracks)
 Pattern::~Pattern()
 {
     delete params;
-    delete loc_vol;
-    delete loc_pan;
+    delete vol_local;
+    delete pan_local;
 	delete name;
 	delete ed_vol;
 	delete ed_pan;
@@ -4256,7 +4267,7 @@ void Pattern::CopyElementsTo(Pattern * dst, bool add)
 			nel = el->Clone(add);
             if(el->IsInstance())
             {
-                CloneSlideNotes((Instance*)el, (Instance*)nel, false);
+                CloneSlideNotes((NoteInstance*)el, (NoteInstance*)nel, false);
             }
 		}
         el = el->patt_next;
@@ -4290,8 +4301,8 @@ Pattern* Pattern::Copy(bool add)
     copy->folded = folded;
     copy->symtrig = NULL;
 
-    copy->loc_vol->SetNormalValue(loc_vol->val);
-    copy->loc_pan->SetNormalValue(loc_pan->val);
+    copy->vol_local->SetNormalValue(vol_local->val);
+    copy->pan_local->SetNormalValue(pan_local->val);
 
     copy->patt = field_pattern;
     copy->ptype = ptmain->ptype = ptype;
@@ -4331,8 +4342,8 @@ Pattern* Pattern::Clone(bool add, float new_tick, int new_trackline)
     clone->ed_note->visible = ed_note->visible;
     clone->folded = folded;
 
-    clone->loc_vol->SetNormalValue(loc_vol->val);
-    clone->loc_pan->SetNormalValue(loc_pan->val);
+    clone->vol_local->SetNormalValue(vol_local->val);
+    clone->pan_local->SetNormalValue(pan_local->val);
 
     if(ptype == Patt_StepSeq)
     {
@@ -4357,7 +4368,7 @@ Pattern* Pattern::Clone(bool add, float new_tick, int new_trackline)
     clone->last_pianooffs = last_pianooffs;
     clone->muted = muted;
     clone->is_fat = is_fat;
-    clone->touchresized = touchresized;
+    clone->ResizeTouch(IsResizeTouched());
 
     clone->Update();
 
@@ -4374,8 +4385,8 @@ Pattern* Pattern::Clone(bool add)
     clone->ed_vol->visible = ed_vol->visible;
     clone->ed_pan->visible = ed_pan->visible;
     clone->ed_note->visible = ed_note->visible;
-    clone->loc_vol->SetNormalValue(loc_vol->val);
-    clone->loc_pan->SetNormalValue(loc_pan->val);
+    clone->vol_local->SetNormalValue(vol_local->val);
+    clone->pan_local->SetNormalValue(pan_local->val);
     clone->folded = folded;
 
     if(ptype == Patt_StepSeq)
@@ -4401,7 +4412,7 @@ Pattern* Pattern::Clone(bool add)
     clone->last_pianooffs = last_pianooffs;
     clone->muted = muted;
     clone->is_fat = is_fat;
-    clone->touchresized = touchresized;
+    clone->ResizeTouch(IsResizeTouched());
 
     clone->Update();
 
@@ -4910,13 +4921,13 @@ void Pattern::AddDerivedPattern(Pattern * pt, bool skipadd)
         el = el->patt_next;
     }
 
-    Instance* ii;
+    NoteInstance* ii;
     el = first_elem;
     while(el != NULL)
     {
         if(el->IsInstance())
         {
-            ii = (Instance*)el;
+            ii = (NoteInstance*)el;
             ii->SpreadSlideNotes();
         }
         el = el->patt_next;
@@ -5168,24 +5179,24 @@ bool Pattern::IsAnyDerivedPresent()
 void Pattern::Save(XmlElement * xmlNode)
 {
     Element::Save(xmlNode);
-    xmlNode->setAttribute(T("Volume"), loc_vol->val);
-    xmlNode->setAttribute(T("Panning"), loc_pan->val);
+    xmlNode->setAttribute(T("Volume"), vol_local->val);
+    xmlNode->setAttribute(T("Panning"), pan_local->val);
     xmlNode->setAttribute(T("OffsLine"), offs_line);
     xmlNode->setAttribute(T("LastPianoOffs"), last_pianooffs);
     xmlNode->setAttribute(T("Muted"), muted ? 1 : 0);
-    xmlNode->setAttribute(T("TouchResized"), touchresized ? 1 : 0);
+    xmlNode->setAttribute(T("ResizeTouched"), IsResizeTouched() ? 1 : 0);
     xmlNode->setAttribute(T("IsFat"), is_fat);
 }
 
 void Pattern::Load(XmlElement * xmlNode)
 {
     Element::Load(xmlNode);
-    loc_vol->SetNormalValue((float)xmlNode->getDoubleAttribute(T("Volume")));
-    loc_pan->SetNormalValue((float)xmlNode->getDoubleAttribute(T("Panning")));
+    vol_local->SetNormalValue((float)xmlNode->getDoubleAttribute(T("Volume")));
+    pan_local->SetNormalValue((float)xmlNode->getDoubleAttribute(T("Panning")));
     offs_line = xmlNode->getIntAttribute(T("OffsLine"));
     last_pianooffs = xmlNode->getIntAttribute(T("LastPianoOffs"));
     muted = xmlNode->getBoolAttribute(T("Muted"));
-    touchresized = xmlNode->getBoolAttribute(T("TouchResized"));
+    ResizeTouch(xmlNode->getBoolAttribute(T("ResizeTouched")));
     is_fat = xmlNode->getBoolAttribute(T("IsFat"), true);
 }
 
@@ -5225,7 +5236,7 @@ void Pattern::UpdateScaledImage()
         }
 
         int val;
-        Instance* ii;
+        NoteInstance* ii;
         Element* elmin = NULL;
         Element* elmax = NULL;
         Element* el = first_elem;
@@ -5237,7 +5248,7 @@ void Pattern::UpdateScaledImage()
                 {
                     if(el->IsInstance())
                     {
-                        ii = (Instance*)el;
+                        ii = (NoteInstance*)el;
                         if(ptype == Patt_Pianoroll)
                         {
                             val = ii->ed_note->value;
@@ -5554,7 +5565,7 @@ void Pattern::UpdateScaledImage()
                     {
                         if(el->IsInstance())
                         {
-                            ii = (Instance*)el;
+                            ii = (NoteInstance*)el;
                             if(ptype == Patt_Pianoroll)
                             {
                                 val = ii->ed_note->value;
@@ -5802,7 +5813,7 @@ void Pattern::UpdateScaledImage()
                     {
                         if(el->IsInstance())
                         {
-                            ii = (Instance*)el;
+                            ii = (NoteInstance*)el;
                             if(ptype == Patt_Pianoroll)
                             {
                                 val = ii->ed_note->value;
@@ -5971,47 +5982,16 @@ N/A
 
 OUTPUT: Newly created element
 ==================================================================================================*/
-Element* ReassignInstrument(Instance* ii, Instrument* instr)
+Element* ReassignInstrument(NoteInstance* ii, Instrument* instr)
 {
-    Element* retel = NULL;
+    Element* new_elem = NULL;
     C.SaveState();
     C.SetPattern(ii->patt, C.loc);
-    if(instr->type == Instr_Sample)
-    {
-        Samplent* smp = (Samplent*)CreateElement_Note(instr, true);
-        smp->ed_note->value = ii->ed_note->value;
-        smp->ed_note->visible = ii->ed_note->visible;
-        smp->ed_vol->value = ii->ed_vol->value;
-        smp->ed_pan->value = ii->ed_pan->value;
-        smp->loc_vol->SetNormalValue(ii->loc_vol->val);
-        smp->loc_pan->SetNormalValue(ii->loc_pan->val);
-        smp->start_tick = ii->start_tick;
-        smp->track_line = ii->track_line;
-        smp->Update();
-        retel = smp;
-    }
-    else if(instr->type == Instr_Generator || instr->type == Instr_VSTPlugin)
-    {
-        Gennote* gn = (Gennote*)CreateElement_Note(instr, true);
-        gn->ed_note->value = ii->ed_note->value;
-        gn->ed_vol->value = ii->ed_vol->value;
-        gn->ed_pan->value = ii->ed_pan->value;
-        if(ii->type == El_GenNote)
-            gn->ed_len->value = ii->ed_len->value;
-        gn->loc_vol->SetNormalValue(ii->loc_vol->val);
-        gn->loc_pan->SetNormalValue(ii->loc_pan->val);
-        if(ii->type == El_GenNote)
-            gn->loc_len->SetNormalValue(ii->loc_len->val);
-        gn->start_tick = ii->start_tick;
-        gn->end_tick = gn->start_tick + ii->tick_length;
-        gn->track_line = ii->track_line;
-        gn->Update();
-        retel = gn;
-    }
-    CloneSlideNotes(ii, (Instance*)retel, false);
+    new_elem = instr->ReassignNoteInstance(ii);
+    CloneSlideNotes(ii, (NoteInstance*)new_elem, false);
     DeleteElement(ii, false, false);
     C.RestoreState();
-    return retel;
+    return new_elem;
 }
 
 void BindPatternToInstrument(Pattern* pt, Instrument* instr)
@@ -6028,13 +6008,13 @@ void BindPatternToInstrument(Pattern* pt, Instrument* instr)
 
     //Pattern* cpt = C.patt;
     //C.patt = pt;
-    Instance* ii;
+    NoteInstance* ii;
     Element* el = pt->basePattern->first_elem;
     while(el != NULL)
     {
         if(el->IsPresent() && (el->type == El_Samplent || el->type == El_GenNote))
         {
-            ii = (Instance*)el;
+            ii = (NoteInstance*)el;
             if(ii->instr != instr)
             {
                 el = el->patt_next;
@@ -6057,7 +6037,7 @@ void UpdateStepSeqPatt(Pattern* pt)
         aux_panel->PopulatePatternWithInstruments(pt->basePattern);
 
         // Update instances
-        Instance* ii;
+        NoteInstance* ii;
         Trk* trk = pt->basePattern->first_trkdata;
         while(trk != pt->basePattern->bottom_trk)
         {
@@ -6068,7 +6048,7 @@ void UpdateStepSeqPatt(Pattern* pt)
                 {
                     if(el->IsInstance())
                     {
-                        ii = (Instance*)el;
+                        ii = (NoteInstance*)el;
                         if(ii->instr == trk->defined_instr)
                         {
                             ii->trkdata = trk;
@@ -6136,7 +6116,7 @@ void UpdateStepSequencers()
     UpdateStepSeqPatt(aux_panel->blankPt);
 }
 
-void CloneSlideNotes(Instance* src, Instance* dst, bool select)
+void CloneSlideNotes(NoteInstance* src, NoteInstance* dst, bool select)
 {
     SlideNote* sn;
     SlideNote* sn0 = src->first_slide;

@@ -967,3 +967,159 @@ void ParamModule::SetPresetPath(char* presetpath)
     }
 }
 
+String ParamModule::GetModuleTypeString(ModuleType mtype)
+{
+    switch(mtype)
+    {
+        case ModuleType_Instrument:
+            return "ModuleType_Instrument";
+            break;
+        case ModuleType_Effect:
+            return "ModuleType_Effect";
+            break;
+        default:
+            return "";
+    }
+}
+
+ModuleType ParamModule::GetModuleTypeFromString(String mtype)
+{
+    if(mtype == String("ModuleType_Instrument"))
+    {
+        return ModuleType_Instrument;
+    }
+    else if(mtype == String("ModuleType_Effect"))
+    {
+        return ModuleType_Effect;
+    }
+    else
+    {
+        return ModuleType_Invalid;
+    }
+}
+
+String ParamModule::GetModuleSubTypeString(ModuleSubType subtype)
+{
+    switch(subtype)
+    {
+        // Generators
+        case ModSubtype_Synth1:
+            return "ModSubtype_Synth1";
+            break;
+        case ModSubtype_VSTPlugin:
+            return "ModSubtype_VSTPlugin";
+            break;
+
+        // Effects
+        case ModSubtype_CFilter:
+            return "ModSubtype_CFilter";
+            break;
+        case ModSubtype_Equalizer1:
+            return "ModSubtype_Equalizer1";
+            break;
+        case ModSubtype_Equalizer3:
+            return "ModSubtype_Equalizer3";
+            break;
+        case ModSubtype_GraphicEQ:
+            return "ModSubtype_GraphicEQ";
+            break;
+        case ModSubtype_XDelay:
+            return "ModSubtype_XDelay";
+            break;
+        case ModSubtype_Reverb:
+            return "ModSubtype_Reverb";
+            break;
+        case ModSubtype_Compressor:
+            return "ModSubtype_Compressor";
+            break;
+        case ModSubtype_Chorus:
+            return "ModSubtype_Chorus";
+            break;
+        case ModSubtype_Flanger:
+            return "ModSubtype_Flanger";
+            break;
+        case ModSubtype_Phaser:
+            return "ModSubtype_Phaser";
+            break;
+        case ModSubtype_WahWah:
+            return "ModSubtype_WahWah";
+            break;
+        case ModSubtype_Distortion:
+            return "ModSubtype_Distortion";
+            break;
+        case ModSubtype_BitCrusher:
+            return "ModSubtype_BitCrusher";
+            break;
+        default:
+            return "";
+    }
+}
+
+ModuleSubType ParamModule::GetModuleSubTypeFromString(String subtype)
+{
+    if(subtype == String("ModSubtype_Synth1"))
+    {
+        return ModSubtype_Synth1;
+    }
+    else if(subtype == String("ModSubtype_VSTPlugin"))
+    {
+        return ModSubtype_VSTPlugin;
+    }
+    else if(subtype == String("ModSubtype_CFilter"))
+    {
+        return ModSubtype_CFilter;
+    }
+    else if(subtype == String("ModSubtype_Equalizer1"))
+    {
+        return ModSubtype_Equalizer1;
+    }
+    else if(subtype == String("ModSubtype_Equalizer3"))
+    {
+        return ModSubtype_Equalizer3;
+    }
+    else if(subtype == String("ModSubtype_GraphicEQ"))
+    {
+        return ModSubtype_GraphicEQ;
+    }
+    else if(subtype == String("ModSubtype_XDelay"))
+    {
+        return ModSubtype_XDelay;
+    }
+    else if(subtype == String("ModSubtype_Reverb"))
+    {
+        return ModSubtype_Reverb;
+    }
+    else if(subtype == String("ModSubtype_Compressor"))
+    {
+        return ModSubtype_Compressor;
+    }
+    else if(subtype == String("ModSubtype_Chorus"))
+    {
+        return ModSubtype_Chorus;
+    }
+    else if(subtype == String("ModSubtype_Flanger"))
+    {
+        return ModSubtype_Flanger;
+    }
+    else if(subtype == String("ModSubtype_Phaser"))
+    {
+        return ModSubtype_Phaser;
+    }
+    else if(subtype == String("ModSubtype_WahWah"))
+    {
+        return ModSubtype_WahWah;
+    }
+    else if(subtype == String("ModSubtype_Distortion"))
+    {
+        return ModSubtype_Distortion;
+    }
+    else if(subtype == String("ModSubtype_BitCrusher"))
+    {
+        return ModSubtype_BitCrusher;
+    }
+    else
+    {
+        return ModSubtype_Default;
+    }
+}
+
